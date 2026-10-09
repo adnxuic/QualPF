@@ -1,0 +1,93 @@
+#ifndef DBRESULTSWIDGET_H
+#define DBRESULTSWIDGET_H
+
+#include <QWidget>
+#include <QVector>
+#include <QColor>
+#include <QToolBar>
+#include "gui/model/cardtype.h"
+
+// Returns the display color associated with a card ID (same golden-ratio hue mapping
+// used in DbResultsWidget and cardBrowser).
+QColor cardColor(const QString &id);
+
+class QStandardItemModel;
+class TextFilterProxyModel;
+class PaginationModel;
+class QToolBar;
+class QToolButton;
+class QSpinBox;
+
+QT_BEGIN_NAMESPACE
+namespace Ui { class DbResultsWidget; }
+QT_END_NAMESPACE
+
+class DbResultsWidget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit DbResultsWidget(QWidget* parent = nullptr);
+    ~DbResultsWidget();
+
+    std::vector<qualpf::application::ProductCard> orderForPublication(const std::vector<qualpf::application::ProductCard> &) const;
+    void refresh();
+    void setResults(const QVector<CardType>& results);
+    void mergeResults(const QVector<CardType>& newCards);
+    void addCard(const CardType &card);
+    bool hasResults() const;
+    bool hasSelection() const;
+    QVector<CardType> allCards() const;
+    QVector<CardType> displayCards() const;
+    void selectFirstCard();
+    void selectCard(const QString &id);
+    void deleteSelectedCards();
+    void acceptSelectedCards();
+    void changeSelectedCardColor();
+    void setEntryToolBar(QToolBar *tb);
+    void setContextMenuActions(const QList<QAction *> &actions);
+
+    QStandardItemModel *sourceModel;
+
+signals:
+    void hasResultsChanged(bool hasResults);
+    void cardSelected(const QString &id);
+    void cardDataSelected(const CardType &card);
+    void phaseAccepted(const CardType &card);
+    void phasesAccepted(const QVector<CardType> &cards);
+    void cardColorChanged(const QString &id);
+    void entrySelectionChanged(bool hasSelection);
+    void selectedCardsChanged(const QVector<CardType> &cards);
+
+private:
+    QVector<CardType> selectedCards() const;
+
+private slots:
+    void currentPageChanged(int page);
+    void pageCountChanged(int count);
+    void updateButtons();
+    void onHeaderSectionClicked(int column);
+    void populateRow(int row, const CardType &card);
+    void onAcceptClicked();
+
+private:
+    Ui::DbResultsWidget* ui;
+
+    TextFilterProxyModel* filterModel;
+    PaginationModel*      pageModel;
+
+    int            m_sortColumn = 8; // FOM column: results are sorted by FOM (best match first) by default
+    Qt::SortOrder  m_sortOrder  = Qt::DescendingOrder;
+
+    QToolBar   *navToolBar = nullptr;
+    QToolButton *firstBtn  = nullptr;
+    QToolButton *prevBtn   = nullptr;
+    QSpinBox    *pageSpin  = nullptr;
+    QToolButton *nextBtn   = nullptr;
+    QToolButton *lastBtn   = nullptr;
+    QSpinBox    *maxRowSpin = nullptr;
+
+    QAction *clearSelAction = nullptr;
+};
+
+#endif // DBRESULTSWIDGET_H

@@ -1,0 +1,48 @@
+--- original.f90
++++ traced.f90
+@@ -71,6 +71,7 @@
+ !
+ !  Count number of peaks in the range
+    nd = count((tth(:tsize) >= tthmin .and. tth(:tsize) <= tthmax))
++   write(*,*) 'ND', nd
+    if (nd == 0) return
+    if (nd > cap_nd) then
+        if (allocated(xd_buf)) deallocate(xd_buf, Id_buf, ass_buf, pkad_buf)
+@@ -83,6 +84,7 @@
+    do i=1, tsize
+       if (tth(i) >= tthmin .and. tth(i) <= tthmax) then
+           nd = nd + 1
++          write(*,*) 'REF', i-1
+           xd_buf(nd) = real(tth(i))
+           Id_buf(nd) = real(intensity(i))
+       endif
+@@ -116,6 +118,9 @@
+       endif
+    enddo
+ !
++   write(*,*) 'NATOT', natot
++   write(*,'(a,1x,es26.17e3)') 'DIFF',fomd
++   write(*,*) 'ASS',pkad_buf(1:nd)
+    if (natot > 0) then
+        Idmult_buf(1:exp_size) = 0
+        iass_buf(1:exp_size) = .false.
+@@ -126,6 +131,7 @@
+           iass_buf(i) = .true.
+        enddo
+ 
++       write(*,'(a,*(1x,es26.17e3))') 'MERGED',Idmult_buf(1:exp_size)
+        if (kscal) then
+            sumId2 = 0.0
+            sumIoId = 0.0
+@@ -228,6 +234,11 @@
+        fom_tot = sqrt(fom_tot)
+    endif
+ 
++   if (natot > 0) then
++     write(*,*) 'COUNTS',nda,nsa,ndmin,nts
++     write(*,'(a,*(1x,es26.17e3))') 'SCALED',Idmult_buf(1:exp_size)
++     write(*,'(a,8(1x,es26.17e3))') 'TERMS',sumsa,sumda,sumstot,sumdtot,fomdb,foms,SQRTDA,SQRTDS
++   endif
+    cfom_tot          = real(fom_tot,    c_double)
+    fompeakpos_out    = real(fomd,       c_double)
+    fomintensity_out  = real(fomI,       c_double)

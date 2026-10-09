@@ -1,0 +1,30 @@
+{
+  "sources": {
+    "share/qualx/files/AtomProperties.xen": "5062942c7d0b5a92fac7b864e046bcba77313f00764c2f941178cd2b4cc6996e",
+    "legacy/fortran/crystallography/scatt_params.F90": "fd267c16d52a7ebe39284dbe6be50b66d3e7efc55d32323ef1f922a116e6fe8f",
+    "legacy/fortran/crystallography/nist_table.f90": "eaed0142962ebb40116486e134e0a8d9a468371d7e355a8619968a93b26654d3"
+  },
+  "generator_sha256": "2d4593ac68a8346a24e1f979d604dda416ec37f166c2b8e293508aab01d7ff71",
+  "output_sha256": "639abc5babf0f43ab03253b6ed47ee07cd53908ab231f53db01af91de08f1eb5",
+  "species": 299,
+  "xray_entries": 283,
+  "neutron_entries": 267,
+  "electron_entries": 291,
+  "electron_atomic_numbers": 103,
+  "anomalous_atomic_numbers": 92,
+  "nist_points": 40179,
+  "units": {
+    "xray": "electrons",
+    "neutron": "10^-12 cm",
+    "electron": "retained Lobato amplitude at s\u00b2 in Angstrom^-2"
+  },
+  "constant_semantics": "XEN and NIST decimals binary64; Lobato unsuffixed REAL literals exactly widened to binary64; all runtime arithmetic binary64",
+  "unsupported": "All-zero X-ray fits and zero neutron placeholders are unavailable; electron Z>103 and anomalous Z>92 unavailable",
+  "omitted": [
+    "chemistry UI metadata",
+    "bond tables",
+    "mass attenuation",
+    "obsolete fMo/fCu",
+    "inactive electron fits"
+  ]
+}

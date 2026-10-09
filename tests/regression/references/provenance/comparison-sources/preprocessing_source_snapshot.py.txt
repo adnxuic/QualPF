@@ -1,0 +1,48 @@
+"""Read two inert capture-source snapshots through the original comparison gate."""
+import pathlib
+
+import preprocessing_compare as original
+
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+COMPARATOR_SHA256 = "6ca479ee5d5cb0af95c6e6eaca12c152f416a58ed4317cec06d1d939999d0007"
+SOURCE_SNAPSHOTS = {
+    ROOT / "tests/data/preprocessing-fortran/capture-wrapper.f90":
+        "9e9ef0afc403f8f60b21d49379cfacd34f18ee8d7d7ffe58077c378b5f210e9b",
+    ROOT / "tests/data/preprocessing-export-fortran/capture-wrapper.f90":
+        "6b0fdd4939cc53fdc84c428141b5f7f82a3cceb6d5291dbe78e920e7763f4f56",
+}
+original_sha = original.sha
+
+
+def snapshot_digest(source, snapshot, expected):
+    if source.exists():
+        raise ValueError("Ambiguous active capture source: " + str(source))
+    digest = original_sha(snapshot)
+    if digest != expected:
+        raise ValueError("Frozen capture-source snapshot changed: " + str(snapshot))
+    return digest
+
+
+def provenance_sha(path):
+    path = path.resolve()
+    if path in SOURCE_SNAPSHOTS:
+        return snapshot_digest(path, path.with_suffix(".f90.txt"), SOURCE_SNAPSHOTS[path])
+    if path.name == "capture-wrapper.f90":
+        raise ValueError("Unapproved capture-source snapshot: " + str(path))
+    return original_sha(path)
+
+
+def main():
+    if original_sha(pathlib.Path(original.__file__)) != COMPARATOR_SHA256:
+        raise ValueError("Original preprocessing comparator changed")
+    # Preserve every original policy/case hash, exception, decode and assertion.
+    previous = original.sha
+    original.sha = provenance_sha
+    try:
+        return original.main()
+    finally:
+        original.sha = previous
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

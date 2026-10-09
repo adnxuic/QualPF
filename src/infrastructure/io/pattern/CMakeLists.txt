@@ -1,0 +1,5 @@
+add_library(qualpf_pattern_file STATIC file_reader.cpp)
+target_compile_features(qualpf_pattern_file PUBLIC cxx_std_20)
+target_include_directories(qualpf_pattern_file PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../..")
+target_link_libraries(qualpf_pattern_file PUBLIC qualpf_core)
+set_target_properties(qualpf_pattern_file PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)

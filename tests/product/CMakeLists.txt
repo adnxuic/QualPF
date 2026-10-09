@@ -1,0 +1,255 @@
+if(QUALPF_BUILD_PRODUCT_TESTS)
+    add_test(NAME qualpf.cli.search_boundary COMMAND "${Python3_EXECUTABLE}" -B
+        "${PROJECT_SOURCE_DIR}/tests/product/cli/search_boundary.py"
+        --executable "$<TARGET_FILE:${EXECUTABLE_NAME}>" --source "${PROJECT_SOURCE_DIR}"
+        --output "${CMAKE_BINARY_DIR}/cli-search-boundary.json")
+    set_tests_properties(qualpf.cli.search_boundary PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;MKL_NUM_THREADS=1" TIMEOUT 90)
+    add_executable(qualpf_synchronous_search_tests "${PROJECT_SOURCE_DIR}/tests/integration/gui/synchronous_search_service_test.cpp")
+    qualpf_configure_qt_boundary(qualpf_synchronous_search_tests Widgets Sql PrintSupport Network)
+    target_link_libraries(qualpf_synchronous_search_tests PRIVATE qualpf_infrastructure qualpf_application qualpf_gui
+        qualpf_session qualpf_core qualpf_qcustomplot qualpf_gui_reference  )
+    add_test(NAME qualpf.cli.synchronous_boundaries COMMAND qualpf_synchronous_search_tests)
+    set_tests_properties(qualpf.cli.synchronous_boundaries PROPERTIES TIMEOUT 30)
+    add_executable(qualpf_workspace_context_tests "${PROJECT_SOURCE_DIR}/tests/integration/gui/workspace_context_test.cpp")
+    qualpf_configure_qt_boundary(qualpf_workspace_context_tests Widgets Sql PrintSupport Network)
+    target_link_libraries(qualpf_workspace_context_tests PRIVATE qualpf_infrastructure qualpf_application qualpf_gui
+        qualpf_qcustomplot qualpf_gui_reference  )
+    add_test(NAME qualpf.gui.workspace_context COMMAND qualpf_workspace_context_tests)
+    set_tests_properties(qualpf.gui.workspace_context PROPERTIES TIMEOUT 45)
+    add_executable(qualpf_window_lifecycle_tests "${PROJECT_SOURCE_DIR}/tests/integration/gui/window_lifecycle_test.cpp")
+    qualpf_configure_qt_boundary(qualpf_window_lifecycle_tests Widgets Sql PrintSupport Network)
+    target_include_directories(qualpf_window_lifecycle_tests PRIVATE "${PROJECT_SOURCE_DIR}/tests/support")
+    target_link_libraries(qualpf_window_lifecycle_tests PRIVATE qualpf_infrastructure qualpf_application qualpf_gui
+        qualpf_session qualpf_core qualpf_qcustomplot qualpf_gui_reference  )
+    add_test(NAME qualpf.gui.window_lifecycle COMMAND qualpf_window_lifecycle_tests)
+    add_test(NAME qualpf.gui.window_queued_close COMMAND qualpf_window_lifecycle_tests queued)
+    add_test(NAME qualpf.gui.window_child_close COMMAND qualpf_window_lifecycle_tests child)
+    set_tests_properties(qualpf.gui.window_child_close qualpf.gui.window_lifecycle qualpf.gui.window_queued_close PROPERTIES TIMEOUT 45)
+    add_executable(qualpf_memory_io_tests "${PROJECT_SOURCE_DIR}/tests/unit/core/memory_io_test.cpp")
+    target_include_directories(qualpf_memory_io_tests PRIVATE "${PROJECT_SOURCE_DIR}/src")
+    target_link_libraries(qualpf_memory_io_tests PRIVATE qualpf_core qualpf_cif_syntax qualpf_pattern_file)
+    set_target_properties(qualpf_memory_io_tests PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_test(NAME qualpf.io.memory_boundary COMMAND qualpf_memory_io_tests "${CMAKE_BINARY_DIR}/memory-io")
+    add_executable(qualpf_threaded_reader_tests "${PROJECT_SOURCE_DIR}/tests/integration/database/threaded_reader_test.cpp")
+    qualpf_configure_qt_boundary(qualpf_threaded_reader_tests Widgets Sql PrintSupport Network)
+    target_link_libraries(qualpf_threaded_reader_tests PRIVATE qualpf_infrastructure qualpf_application qualpf_gui
+        qualpf_session qualpf_core qualpf_qcustomplot qualpf_gui_reference  )
+    add_test(NAME qualpf.database.threaded_reader COMMAND qualpf_threaded_reader_tests)
+    add_executable(qualpf_search_coordinator_tests "${PROJECT_SOURCE_DIR}/tests/unit/application/search_coordinator_test.cpp")
+    target_link_libraries(qualpf_search_coordinator_tests PRIVATE qualpf_session)
+    set_target_properties(qualpf_search_coordinator_tests PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_test(NAME qualpf.application.search_coordinator COMMAND qualpf_search_coordinator_tests)
+    add_executable(qualpf_preprocessing_evaluation_tests "${PROJECT_SOURCE_DIR}/tests/unit/application/preprocessing_evaluation_test.cpp")
+    target_include_directories(qualpf_preprocessing_evaluation_tests PRIVATE "${PROJECT_SOURCE_DIR}/tests/support")
+    target_link_libraries(qualpf_preprocessing_evaluation_tests PRIVATE qualpf_session)
+    set_target_properties(qualpf_preprocessing_evaluation_tests PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_test(NAME qualpf.application.preprocessing_evaluation COMMAND qualpf_preprocessing_evaluation_tests)
+    add_executable(qualpf_candidate_reader_tests "${PROJECT_SOURCE_DIR}/tests/integration/database/candidate_reader_test.cpp")
+    qualpf_configure_qt_boundary(qualpf_candidate_reader_tests Widgets Sql PrintSupport Network)
+    target_link_libraries(qualpf_candidate_reader_tests PRIVATE qualpf_infrastructure qualpf_application qualpf_gui
+        qualpf_session qualpf_core qualpf_qcustomplot qualpf_gui_reference  )
+    add_test(NAME qualpf.database.candidate_reader COMMAND qualpf_candidate_reader_tests)
+    add_executable(qualpf_search_engine_tests "${PROJECT_SOURCE_DIR}/tests/unit/application/search_engine_test.cpp")
+    target_include_directories(qualpf_search_engine_tests PRIVATE "${PROJECT_SOURCE_DIR}/tests/support")
+    target_link_libraries(qualpf_search_engine_tests PRIVATE qualpf_session)
+    set_target_properties(qualpf_search_engine_tests PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_test(NAME qualpf.application.search_engine COMMAND qualpf_search_engine_tests)
+    add_executable(qualpf_product_session_tests "${PROJECT_SOURCE_DIR}/tests/unit/application/product_session_test.cpp")
+    target_link_libraries(qualpf_product_session_tests PRIVATE qualpf_session)
+    set_target_properties(qualpf_product_session_tests PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_test(NAME qualpf.application.product_session COMMAND qualpf_product_session_tests)
+    add_executable(qualpf_product_values_tests "${PROJECT_SOURCE_DIR}/tests/unit/application/product_values_test.cpp")
+    target_include_directories(qualpf_product_values_tests PRIVATE "${PROJECT_SOURCE_DIR}/src")
+    target_link_libraries(qualpf_product_values_tests PRIVATE qualpf_session qualpf_application qualpf_gui
+        qualpf_infrastructure qualpf_qcustomplot qualpf_gui_reference   Qt6::Core)
+    set_target_properties(qualpf_product_values_tests PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_test(NAME qualpf.application.product_values COMMAND qualpf_product_values_tests)
+    add_executable(qualpf_project_boundaries_tests "${PROJECT_SOURCE_DIR}/tests/unit/application/project_boundaries_test.cpp")
+    target_include_directories(qualpf_project_boundaries_tests PRIVATE "${PROJECT_SOURCE_DIR}/src")
+    target_link_libraries(qualpf_project_boundaries_tests PRIVATE qualpf_application qualpf_gui qualpf_infrastructure
+        qualpf_qcustomplot qualpf_gui_reference   Qt6::Core)
+    set_target_properties(qualpf_project_boundaries_tests PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_test(NAME qualpf.project.boundaries COMMAND qualpf_project_boundaries_tests)
+    add_executable(qualpf_settings_migration_tests
+        "${PROJECT_SOURCE_DIR}/tests/unit/infrastructure/settings_migration_test.cpp"
+        "${PROJECT_SOURCE_DIR}/src/infrastructure/settings/settings_migration.cpp"
+        "${PROJECT_SOURCE_DIR}/src/infrastructure/settings/preference_store.cpp"
+        "${PROJECT_SOURCE_DIR}/tests/unit/infrastructure/preference_transport_test.cpp")
+    target_include_directories(qualpf_settings_migration_tests PRIVATE "${PROJECT_SOURCE_DIR}/src" "${PROJECT_SOURCE_DIR}/src/application/include")
+    target_link_libraries(qualpf_settings_migration_tests PRIVATE Qt6::Core Qt6::Gui)
+    set_target_properties(qualpf_settings_migration_tests PROPERTIES
+        AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    target_compile_definitions(qualpf_settings_migration_tests PRIVATE
+        QUALPF_TEST_CIF="${PROJECT_SOURCE_DIR}/tests/data/cif/CoO.cif"
+        QUALPF_PRODUCT_EXECUTABLE="$<TARGET_FILE:${EXECUTABLE_NAME}>")
+    add_dependencies(qualpf_settings_migration_tests ${EXECUTABLE_NAME})
+    add_test(NAME qualpf.settings.migration COMMAND qualpf_settings_migration_tests)
+    set_tests_properties(qualpf.settings.migration PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;MKL_NUM_THREADS=1" TIMEOUT 150)
+endif()
+
+# Long-term product tests; final validated sources, no configure-time source rewriting.
+if(QUALPF_BUILD_PRODUCT_TESTS)
+    add_executable(qualpf_stable_export_probe "${CMAKE_CURRENT_LIST_DIR}/stable-export/probe.cpp")
+    qualpf_configure_qt_boundary(qualpf_stable_export_probe Widgets Sql PrintSupport Network)
+    target_include_directories(qualpf_stable_export_probe PRIVATE "${PROJECT_SOURCE_DIR}/tests/product/support")
+    target_link_libraries(qualpf_stable_export_probe PRIVATE
+        qualpf_core qualpf_application qualpf_infrastructure qualpf_gui
+        qualpf_qcustomplot qualpf_gui_reference  )
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        target_sources(qualpf_stable_export_probe PRIVATE "${PROJECT_SOURCE_DIR}/tests/product/support/pattern_link_guard.cpp")
+        target_compile_definitions(qualpf_stable_export_probe PRIVATE QUALPF_PATTERN_LINK_GUARD)
+        target_link_options(qualpf_stable_export_probe PRIVATE
+            "-Wl,--wrap=open_diffraction_patt" "-Wl,--wrap=legacy_kalpha2_values"
+            "-Wl,--wrap=kalpha2_stripping")
+    endif()
+    if(WIN32)
+        target_link_libraries(qualpf_stable_export_probe PRIVATE opengl32)
+    endif()
+    add_executable(qualpf_cif_product_probe "${PROJECT_SOURCE_DIR}/tests/product/cif/probe.cpp")
+    qualpf_configure_qt_boundary(qualpf_cif_product_probe Widgets Sql PrintSupport Network)
+    target_link_libraries(qualpf_cif_product_probe PRIVATE
+        qualpf_core qualpf_application qualpf_infrastructure qualpf_gui
+        qualpf_qcustomplot qualpf_gui_reference  )
+    if(WIN32)
+        target_link_libraries(qualpf_cif_product_probe PRIVATE opengl32)
+    endif()
+    add_test(NAME qualpf.cif.compatibility.selectors
+        COMMAND qualpf_cif_product_probe --legacy "${PROJECT_SOURCE_DIR}")
+    set_tests_properties(qualpf.cif.compatibility.selectors PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;MKL_NUM_THREADS=1" TIMEOUT 90)
+    add_test(NAME qualpf.cif.product.lifecycle
+        COMMAND qualpf_cif_product_probe --lifecycle "${PROJECT_SOURCE_DIR}")
+    add_executable(qualpf_cif_product_search "${CMAKE_CURRENT_LIST_DIR}/cif-search/probe.cpp")
+    qualpf_configure_qt_boundary(qualpf_cif_product_search Widgets Sql PrintSupport Network)
+    target_link_libraries(qualpf_cif_product_search PRIVATE
+        qualpf_core qualpf_application qualpf_infrastructure qualpf_gui
+        qualpf_qcustomplot qualpf_gui_reference  )
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        target_sources(qualpf_cif_product_search PRIVATE "${PROJECT_SOURCE_DIR}/tests/product/support/pattern_link_guard.cpp")
+        target_compile_definitions(qualpf_cif_product_search PRIVATE QUALPF_PATTERN_LINK_GUARD)
+        target_link_options(qualpf_cif_product_search PRIVATE
+            "-Wl,--wrap=open_diffraction_patt" "-Wl,--wrap=legacy_kalpha2_values"
+            "-Wl,--wrap=kalpha2_stripping")
+    endif()
+    if(WIN32)
+        target_link_libraries(qualpf_cif_product_search PRIVATE opengl32)
+    endif()
+endif()
+
+if(QUALPF_BUILD_PRODUCT_TESTS)
+    # Historical probe sources and approved runners remain immutable. New
+    # product targets use the Application startup with unchanged assertions.
+    foreach(target qualpf_product_probe qualpf_stable_export_probe qualpf_cif_product_search)
+        add_dependencies(${target} ${EXECUTABLE_NAME})
+        target_compile_definitions(${target} PRIVATE
+            QUALPF_PRODUCT_EXECUTABLE="$<TARGET_FILE:${EXECUTABLE_NAME}>"
+            QUALPF_CURRENT_POOL_FIXTURE="${PROJECT_SOURCE_DIR}/tests/data/current-preprocessing-pool.qxp")
+        target_include_directories(${target} PRIVATE "${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/tests/product/support")
+    endforeach()
+    target_include_directories(qualpf_product_probe BEFORE PRIVATE "${CMAKE_CURRENT_LIST_DIR}/workflow")
+    target_include_directories(qualpf_stable_export_probe BEFORE PRIVATE "${CMAKE_CURRENT_LIST_DIR}/stable-export")
+    target_include_directories(qualpf_cif_product_search BEFORE PRIVATE "${CMAKE_CURRENT_LIST_DIR}/cif-search")
+    add_test(NAME qualpf.preprocessing.current_probe_state COMMAND qualpf_product_probe
+        --current-preprocessing-state "${PROJECT_SOURCE_DIR}/share/qualx/examples/example1.dat"
+        "${PROJECT_SOURCE_DIR}/share/qualx/files" "${CMAKE_BINARY_DIR}/current-probe-state-example1")
+    set_tests_properties(qualpf.preprocessing.current_probe_state PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;MKL_NUM_THREADS=1;QUALPF_PREPROCESSING_BACKEND=cpp" TIMEOUT 90)
+    add_test(NAME qualpf.pattern.canonical_projection COMMAND qualpf_product_probe
+        --canonical-pattern-projection "${CMAKE_BINARY_DIR}/canonical-pattern-projection.json")
+    set_tests_properties(qualpf.pattern.canonical_projection PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;MKL_NUM_THREADS=1" TIMEOUT 30)
+endif()
+
+if(QUALPF_BUILD_PRODUCT_TESTS)
+    add_executable(qualpf_plot_sink_controls "${CMAKE_CURRENT_LIST_DIR}/presentation/sink_controls.cpp" "${PROJECT_SOURCE_DIR}/tests/support/retired_presentation_probe.cpp" )
+    qualpf_configure_qt_boundary(qualpf_plot_sink_controls Widgets Sql PrintSupport Network)
+    target_link_libraries(qualpf_plot_sink_controls PRIVATE qualpf_core qualpf_application qualpf_infrastructure
+        qualpf_gui qualpf_qcustomplot qualpf_gui_reference  )
+    if(WIN32)
+        target_link_libraries(qualpf_plot_sink_controls PRIVATE opengl32)
+    endif()
+    add_test(NAME qualpf.plot.sink.controls COMMAND qualpf_plot_sink_controls)
+    set_tests_properties(qualpf.plot.sink.controls PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;MKL_NUM_THREADS=1")
+endif()
+
+if(QUALPF_BUILD_PRODUCT_TESTS)
+    set(capture "${CMAKE_CURRENT_LIST_DIR}/export/product_capture.cpp")
+    foreach(target qualpf_export_service_controls qualpf_export_application_replay qualpf_export_gui_controls qualpf_export_product_capture)
+        if(target STREQUAL "qualpf_export_service_controls")
+            set(source "${CMAKE_CURRENT_LIST_DIR}/export/service_controls.cpp")
+        elseif(target STREQUAL "qualpf_export_application_replay")
+            set(source "${CMAKE_CURRENT_LIST_DIR}/export/application_replay.cpp")
+        elseif(target STREQUAL "qualpf_export_gui_controls")
+            set(source "${CMAKE_CURRENT_LIST_DIR}/export/gui_controls.cpp")
+        else()
+            set(source "${capture}")
+        endif()
+        add_executable(${target} "${source}")
+        qualpf_configure_qt_boundary(${target} Widgets Sql PrintSupport Network)
+        target_link_libraries(${target} PRIVATE qualpf_core qualpf_application qualpf_infrastructure
+            qualpf_gui qualpf_qcustomplot qualpf_gui_reference  )
+        if(WIN32)
+            target_link_libraries(${target} PRIVATE opengl32)
+        endif()
+    endforeach()
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        target_compile_options(qualpf_export_product_capture PRIVATE -O0)
+        target_compile_options(qualpf_export_gui_controls PRIVATE -O0)
+    endif()
+    add_test(NAME qualpf.export.service.controls COMMAND qualpf_export_service_controls)
+    set_tests_properties(qualpf.export.service.controls PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;MKL_NUM_THREADS=1")
+    add_executable(qualpf_export_product_coordinate_probe "${CMAKE_CURRENT_LIST_DIR}/export/coordinate_probe.cpp")
+    target_link_libraries(qualpf_export_product_coordinate_probe PRIVATE qualpf_export_coordinates)
+    add_executable(qualpf_export_product_boundary_probe "${CMAKE_CURRENT_LIST_DIR}/export/boundary_probe.cpp")
+    target_link_libraries(qualpf_export_product_boundary_probe PRIVATE qualpf_export_coordinates)
+endif()
+
+if(QUALPF_BUILD_PRODUCT_TESTS)
+    foreach(target qualpf_powder_probe qualpf_powder_math qualpf_powder_controls)
+        if(target STREQUAL "qualpf_powder_probe")
+            set(source "${CMAKE_CURRENT_LIST_DIR}/powder/probe.cpp")
+        elseif(target STREQUAL "qualpf_powder_math")
+            set(source "${CMAKE_CURRENT_LIST_DIR}/powder/math_probe.cpp")
+        else()
+            set(source "${CMAKE_CURRENT_LIST_DIR}/powder/controls.cpp")
+        endif()
+        add_executable(${target} "${source}")
+        target_link_libraries(${target} PRIVATE qualpf_powder_cif)
+        set_target_properties(${target} PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    endforeach()
+    foreach(target qualpf_powder_application_probe qualpf_powder_gui_probe qualpf_powder_service_controls qualpf_powder_workflow_probe)
+        if(target STREQUAL "qualpf_powder_application_probe")
+            set(source "${CMAKE_CURRENT_LIST_DIR}/powder/application_probe.cpp")
+        elseif(target STREQUAL "qualpf_powder_gui_probe")
+            set(source "${CMAKE_CURRENT_LIST_DIR}/powder/gui_probe.cpp")
+        elseif(target STREQUAL "qualpf_powder_service_controls")
+            set(source "${CMAKE_CURRENT_LIST_DIR}/powder/service_controls.cpp")
+        else()
+            set(source "${CMAKE_CURRENT_LIST_DIR}/powder/workflow_probe.cpp")
+        endif()
+        add_executable(${target} "${source}")
+        qualpf_configure_qt_boundary(${target} Widgets Sql PrintSupport Network)
+        target_link_libraries(${target} PRIVATE qualpf_core qualpf_application qualpf_infrastructure
+            qualpf_gui qualpf_qcustomplot qualpf_gui_reference  )
+        if(WIN32)
+            target_link_libraries(${target} PRIVATE opengl32)
+        endif()
+    endforeach()
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        target_compile_options(qualpf_powder_gui_probe PRIVATE -O0)
+    endif()
+    add_test(NAME qualpf.powder_import.service.controls COMMAND qualpf_powder_service_controls)
+    add_test(NAME qualpf.powder_import.math.asin64 COMMAND qualpf_powder_math verify-asin64)
+    set_tests_properties(qualpf.powder_import.service.controls PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;MKL_NUM_THREADS=1")
+endif()
+
+if(QUALPF_BUILD_PRODUCT_TESTS)
+    add_executable(qualpf_cif_storage_capture "${PROJECT_SOURCE_DIR}/tests/compatibility/cif_storage_capture_main.cpp"
+        "${PROJECT_SOURCE_DIR}/tests/compatibility/support/cif_capture_writer.cpp"
+        "${PROJECT_SOURCE_DIR}/tests/compatibility/support/cif_capture_writer.h")
+    target_include_directories(qualpf_cif_storage_capture PRIVATE "${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/src")
+    target_link_libraries(qualpf_cif_storage_capture PRIVATE qualpf_cif_database Qt6::Core Qt6::Sql)
+    set_target_properties(qualpf_cif_storage_capture PROPERTIES AUTOMOC ON)
+endif()

@@ -1,53 +1,68 @@
-#list of files to ignore
+# Local build trees (root-relative: scripts/build remains a source directory).
+/build*/
+/cmake-build*/
+/debug/
+/debug_gfor/
+/release/
+/release_gfor/
 
-#building files
-Makefile.in
-aclocal.m4
-autom4te.cache/
-compile
-config.guess
-config.h.in
-config.sub
-configure
-depcomp
-expodir/Makefile.in
-install-sh
-missing
-Makefile
-CMakeLists.txt.user
-.qtcreator/
+# In-source CMake/Ninja outputs; out-of-source builds are preferred.
+/CMakeCache.txt
+/CMakeFiles/
+/Makefile
+/cmake_install.cmake
+/install_manifest*.txt
+/CTestTestfile.cmake
+/Testing/
+/build.ninja
+/rules.ninja
+/.ninja_deps
+/.ninja_log
+/compile_commands.json
+/CPackConfig.cmake
+/CPackSourceConfig.cmake
+/configured_files/
 
-#executable and objects files
-expo
-expo_*
-*.deb
-*.AppImage
-debug/
-debug_gfor/
-release/
-release_gfor/
-build*/
+# Machine-local SDK and IDE settings.
+/CMakeUserPresets.json
+/CMakeLists.txt.user*
+/.qtcreator/
+/.vs/
+/.idea/
+/run_gui.bat
 
-#input and output files
-*.out*
-*.exp
-*.bin
-*.expo
-*.pow
-*.xy
-*.cif
-*.fra
-*.frac
-*.hkl
-*.pdb
-*.csv
-*.fc
-*.pea
+# Local databases and release/package products.
+/DB/
+/releases/
+/_CPack_Packages/
+/*.deb
+/*.AppImage
+/QualXPF-*-win64.exe
+/QualPF-*-win64.exe
 
-# Documentation build artifacts
-docs/.venv/
-docs/site/
-docs/qualx_manual.pdf
+# Local example collections; retain the independently tracked CoO fixture.
+/tests/real_example_data/*
+!/tests/real_example_data/03_reference_structures/
+/tests/real_example_data/03_reference_structures/*
+!/tests/real_example_data/03_reference_structures/CoO.cif
 
-# Database files (too large for GitHub, distribute separately)
-DB/
+# Documentation build outputs and local Python environments.
+/.venv/
+/docs/.venv/
+/docs/site/
+/docs/qualx_manual.pdf
+/docs/qualpf_manual.pdf
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Materialized historical evidence; tracked reviews and frozen inputs remain.
+/.evidence/
+/docs/refactoring/phase-19/
+/docs/refactoring/phase-20/profile-core/entry-*/
+/docs/refactoring/phase-20/profile-core/native-oracle-*/
+/docs/refactoring/phase-20/profile-core/native-oracle-*.zip
+
+# Scientific input/reference formats are intentionally not ignored globally.
+# Place new generated outputs in a local build tree, not beside source fixtures.

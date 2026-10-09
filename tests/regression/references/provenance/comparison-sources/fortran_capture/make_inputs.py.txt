@@ -1,0 +1,105 @@
+"""Deterministic controlled inputs, not expected outputs or identified phases.
+
+The three repository patterns retain all samples. Their fixture peaks/cards
+are explicitly selected sampling positions, NOT output of a peak finder or a
+real reference database. This script never loads or invokes the C++ scorer.
+"""
+import copy
+import hashlib
+import json
+import math
+from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[3]
+
+
+def base():
+    data = {
+        "operation": "score", "range": [0, 60],
+        "pattern": [[0, 0], [10, 100], [20, 200], [30, 100], [40, 0], [50, 0], [60, 0]],
+        "parameters": {"delta": 0.25, "weight_position": 0.5, "weight_intensity": 0.5,
+                       "weight_phases": 0.5, "minimum_score": 0.6, "maximum_entries": 20,
+                       "include_deleted": True, "filter_strongest": False, "strongest_count": 3},
+        "cards": [{"database_id": "controlled-input", "card_id": "A", "quality": "", "reflections": []}],
+        "peaks": []}
+    peaks(data, [(10, 100), (20, 200), (30, 100)])
+    card(data, [(10, 10), (20, 20), (30, 10)])
+    return data
+
+
+def peaks(data, rows):
+    data["peaks"] = [{"id": i+1, "two_theta": x, "intensity": y, "original_intensity": y,
+                      "d_spacing": None, "delta_d": None, "fwhm": None, "integrated_intensity": None}
+                     for i, (x, y) in enumerate(rows)]
+
+
+def card(data, rows):
+    data["cards"][0]["reflections"] = [{"id": i+1, "two_theta": x, "intensity": y} for i, (x, y) in enumerate(rows)]
+
+
+def main(output):
+    output.mkdir(parents=True, exist_ok=False)
+    cases = []
+    def add(name, data, **metadata):
+        path = output / (name + ".json")
+        path.write_text(json.dumps(data, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+        cases.append({"id": name, "input": {"path": path.name, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}, **metadata})
+    add("perfect", base())
+    d = base(); peaks(d, [(10, 50)]); card(d, [(10, 10)]); add("single-associated", d)
+    d = base(); peaks(d, [(10, 100), (20, 200)]); card(d, [(10, 50), (20, 50)]); add("intensity-mismatch", d)
+    d = base(); card(d, [(10, 6), (10.125, 4), (20, 20), (30, 10)]); add("merged-reflections", d)
+    d = base(); card(d, [(10.1, 10), (19.9, 20), (30.05, 10)]); add("offsets", d)
+    for name, value in (("below", 9.999999), ("equal", 10), ("above", 10.000001)):
+        d = base(); d["pattern"][4][1] = value; card(d, [(10, 10), (20, 20), (40, 1)])
+        add("observed-" + name, d)
+    d = base(); card(d, [(10, 10), (20, 20), (35, 1)]); add("observed-nearest-tie", d)
+    for name, value in (("inside", 10.249999), ("equal", 10.25), ("outside", 10.250001)):
+        d = base(); card(d, [(value, 10), (20, 20)]); add("delta-" + name, d)
+    d = base(); d["range"] = [10, 30]; card(d, [(9.75, 10), (20, 20), (30.25, 10), (30.25000001, 10)])
+    add("range-before-narrowing", d)
+    d = base(); peaks(d, [(10, 100), (10.5, 200), (20, 100)]); card(d, [(10.25, 10), (20, 10)])
+    d["parameters"]["delta"] = 0.5; add("nearest-tie", d)
+    d = base(); peaks(d, [(10, 100), (10, 200), (20, 100)]); card(d, [(10, 10), (20, 10)])
+    add("duplicate-first-endpoint", d)
+    d = base(); peaks(d, [(10, 100), (20, 100), (20, 200)]); card(d, [(10, 10), (20, 10)])
+    add("duplicate-last-endpoint", d)
+    d = base(); peaks(d, [(10, 100), (10.00000001, 200), (20, 100)]); card(d, [(10.00000001, 10), (20, 10)])
+    add("float-collapsed-coordinate", d)
+    for name, value in (("below", math.nextafter(0.5, 0)), ("half", 0.5), ("above", math.nextafter(0.5, 1)), ("one", 1)):
+        d = base(); peaks(d, [(i+10, i+100) for i in range(13)]); card(d, [(10, 10), (20, 20)])
+        d["parameters"]["weight_phases"] = value; add("phase-weight-" + name, d)
+    for name in ("example1", "CPD2", "MIXT_5"):
+        path = ROOT / "share/qualx/examples" / (name + ".dat")
+        lines = path.read_text().splitlines()
+        head = list(map(float, lines[0].split()))
+        if len(head) == 3:
+            start, step, stop = head
+            ys = [float(s) for row in lines[1:] for s in row.split()]
+            samples = [[start + i*step, y] for i, y in enumerate(ys)]
+            if abs(samples[-1][0] - stop) > step:
+                raise ValueError("Unexpected range for " + name)
+        else:
+            samples = [list(map(float, row.split())) for row in lines if row.strip()]
+        d = base(); d["pattern"] = samples; d["range"] = [samples[0][0], samples[-1][0]]
+        # Fixed evenly spaced positive sample positions, explicitly not peak search.
+        selected = [samples[len(samples)*i//17] for i in range(1, 17)]
+        peaks(d, selected)
+        card(d, [(x + (0.01 if i % 2 else 0), y/10) for i, (x, y) in enumerate(selected)])
+        add("pattern-" + name, d, pattern_source=path.relative_to(ROOT).as_posix(),
+            pattern_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+            scope="Full measured sample grid; controlled sampling positions/cards, not phase identification or upstream preprocessing")
+    # Ordered calls deliberately exercise grow/shrink buffers and SAVE state.
+    add("perfect-after-large", base())
+    d = base(); card(d, [(100, 10)]); add("undefined-no-range", d, classification="legacy_undefined", reason="nd=0 returns without assigning ABI outputs")
+    d = base(); card(d, [(45, 10)]); add("undefined-no-association", d, classification="legacy_undefined", reason="fomI uninitialized and crd_scale retains previous successful call")
+    d = base(); peaks(d, [(10, 0)]); card(d, [(10, 10)]); add("undefined-zero-intensity", d, classification="legacy_undefined", reason="zero scale and zero total intensities cause 0/0")
+    d = base(); d["parameters"].update(weight_position=0, weight_intensity=0, weight_phases=0)
+    add("undefined-zero-weights", d, classification="legacy_undefined", reason="zero final weight denominator")
+    add("perfect-after-undefined", base())
+    (output / "inputs.json").write_text(json.dumps({"schema_version": 1, "kind": "controlled_inputs_not_reference_outputs", "cases": cases}, indent=2) + "\n", encoding="utf-8")
+    print(f"Prepared {len(cases)} inputs; no expected values generated")
+
+
+if __name__ == "__main__":
+    main(Path(sys.argv[1]).resolve())

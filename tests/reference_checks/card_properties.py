@@ -1,0 +1,58 @@
+from reference_paths import reference_path
+"""Run deterministic composition and complete Phase 13–18 pipeline properties."""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import subprocess
+import zipfile
+from card_capture import environment
+
+ROOT=Path(__file__).resolve().parents[2]
+
+def fixtures():
+    with zipfile.ZipFile(reference_path(ROOT/'tests/data/theoretical-card-reference.zip')) as z:cases=json.loads(z.read('cases.json'))
+    out=[];seen=set()
+    for c in cases:
+        if not c['sites'] or not any(s['occupancy']>0 for s in c['sites']) or any(not 0<=s['occupancy']<=1 for s in c['sites']):continue
+        key=json.dumps([c['group'],c['setting'],c['cell'],c['sites']],sort_keys=True)
+        if key in seen:continue
+        seen.add(key)
+        c['full_pipeline']=c['mode']=='EXPORT' and c['anomalous']==0
+        out.append(c)
+    return out
+
+def protocol(cases):
+    lines=[]
+    def row(x):lines.append(' '.join(map(str,x)))
+    for c in cases:
+        row([c['id'],c['group'],c['setting'],len(c['sites']),int(c['full_pipeline'])]);row(c['cell'])
+        for s in c['sites']:row([s['species'],*s['xyz'],s['occupancy'],s['adp'],*s['tensor']])
+    return '\n'.join(lines)+'\n'
+
+def main():
+    ap=argparse.ArgumentParser();ap.add_argument('--runner',type=Path,required=True);ap.add_argument('--output',type=Path,required=True);a=ap.parse_args()
+    cases=fixtures();inp=protocol(cases)
+    p=subprocess.run([str(a.runner.resolve())],input=inp,text=True,capture_output=True,env=environment(),timeout=180)
+    a.output.parent.mkdir(parents=True,exist_ok=True)
+    a.output.with_suffix('.input.txt').write_text(inp);a.output.with_suffix('.stdout.txt').write_text(p.stdout)
+    a.output.with_suffix('.stderr.txt').write_text(p.stderr)
+    completed=[];pipelines=[];errors=[];summary=None
+    for line in p.stdout.splitlines():
+        x=line.split()
+        if x[0]=='FIXTURE':completed.append(int(x[1]))
+        elif x[0]=='PIPELINE':pipelines.append(dict(zip(('case','friedel','anomalous','source_reflections','card_rows'),map(int,x[1:]))))
+        elif x[0]=='ERROR_TEST':errors.append(dict(name=x[1],field=x[2],reason=x[3]))
+        elif x[0]=='SUMMARY':summary=dict(zip(('checks','failures','pipelines','source_reflections'),map(int,x[1:])))
+        else:raise ValueError('Unknown properties protocol record')
+    success=p.returncode==0 and summary and summary['failures']==0 and completed==[c['id'] for c in cases]
+    result=dict(success=bool(success),returncode=p.returncode,fixtures=len(cases),completed=len(completed),
+        summary=summary,pipeline_results=pipelines,runner_sha256=hashlib.sha256(a.runner.read_bytes()).hexdigest(),
+        script_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),seed=180018)
+    a.output.write_text(json.dumps(result,indent=2)+'\n')
+    a.output.with_name(a.output.stem+'-errors.json').write_text(json.dumps(dict(success=bool(success),checked=errors),indent=2)+'\n')
+    print(json.dumps({k:v for k,v in result.items() if k!='pipeline_results'}))
+    if not success:print(p.stderr[-4000:])
+    raise SystemExit(0 if success else 1)
+
+if __name__=='__main__':main()

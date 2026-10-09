@@ -1,0 +1,203 @@
+"""Opt-in, test-only reference capture from pinned Legacy source. No C++ oracle.
+
+Creates a NEW output directory, never overwrites a reviewed reference. The
+manifest remains captured (not reviewed). Full product/ABI equivalence is out
+of scope: variables is an explicit four-component state carrier; clocate is
+extracted verbatim. Original and WRITE-only instrumented FOM are both run.
+"""
+import argparse
+import difflib
+import hashlib
+import json
+import math
+from pathlib import Path
+import platform
+import re
+import shutil
+import subprocess
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]
+BASELINE = "9bf3ef5"  # Resolved and recorded as a full Git object ID below.
+SOURCES = {
+    "legacy/fortran/peaks_search/fom.f90": "e2d32e77c9b060c7905f94f060a2207537790c488fa63426a0a70ca88a28f6e8",
+    "legacy/fortran/numerics_support/arrayutil.f90": "ba29cbbe4124699a166f13010139d10e7506d10f5e38fdd8d6c8f4e49de5f9b4",
+}
+FLAGS = ["-O0", "-fno-fast-math", "-ffp-contract=off", "-fcheck=all", "-fbacktrace"]
+
+
+def sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def save(path, value):
+    path.write_text(json.dumps(value, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
+
+
+def descriptor(path, base):
+    return {"path": path.relative_to(base).as_posix(), "sha256": sha(path)}
+
+
+def instrument(source):
+    # Only WRITE statements and a diagnostic IF block are inserted. Every
+    # original line remains present, including early returns and SAVE locals.
+    insertions = {
+        "   if (nd == 0) return": "   write(*,*) 'ND', nd\n",
+        "          xd_buf(nd) = real(tth(i))": "          write(*,*) 'REF', i-1\n",
+        "   if (natot > 0) then": "   write(*,*) 'NATOT', natot\n   write(*,'(a,1x,es26.17e3)') 'DIFF',fomd\n   write(*,*) 'ASS',pkad_buf(1:nd)\n",
+        "       if (kscal) then": "       write(*,'(a,*(1x,es26.17e3))') 'MERGED',Idmult_buf(1:exp_size)\n",
+        "   cfom_tot          = real(fom_tot,    c_double)": (
+            "   if (natot > 0) then\n"
+            "     write(*,*) 'COUNTS',nda,nsa,ndmin,nts\n"
+            "     write(*,'(a,*(1x,es26.17e3))') 'SCALED',Idmult_buf(1:exp_size)\n"
+            "     write(*,'(a,8(1x,es26.17e3))') 'TERMS',sumsa,sumda,sumstot,sumdtot,fomdb,foms,SQRTDA,SQRTDS\n"
+            "   endif\n")
+    }
+    for anchor, addition in insertions.items():
+        if source.count(anchor) != 1:
+            raise ValueError("Capture anchor changed: " + anchor)
+        source = source.replace(anchor, addition + anchor)
+    return source
+
+
+def wire(cases):
+    rows = [str(len(cases))]
+    for data in cases:
+        rows += [" ".join(map(str, data["range"])), str(len(data["pattern"]))]
+        rows += [" ".join(format(v, ".17g") for v in row) for row in data["pattern"]]
+        rows.append(str(len(data["peaks"])))
+        rows += [f'{p["two_theta"]:.17g} {p["intensity"]:.17g}' for p in data["peaks"]]
+        refs = data["cards"][0]["reflections"]
+        rows.append(str(len(refs)))
+        rows += [f'{r["two_theta"]:.17g} {r["intensity"]:.17g}' for r in refs]
+        p = data["parameters"]
+        rows.append(" ".join(format(p[k], ".17g") for k in ("weight_position", "weight_intensity", "weight_phases", "delta")))
+    return "\n".join(rows) + "\n"
+
+
+def records(output):
+    result = []
+    for line in output.splitlines():
+        parts = line.split()
+        if not parts:
+            continue
+        if parts[0] == "ENV":
+            if parts[1:] != ["4", "32", "64"]:
+                raise ValueError("Unsupported REAL kinds: " + line)
+        elif parts[0] == "BEGIN":
+            result.append({})
+        elif parts[0] != "END":
+            result[-1].setdefault(parts[0], []).extend(parts[1:])
+    return result
+
+
+def observation(record):
+    # Parse printed Legacy variables; no reimplementation of FOM arithmetic.
+    fields = dict(zip(("total", "position", "intensity", "scale"), ([float(x)] for x in record["SCORE"])))
+    for label, key in (("MERGED", "merged_intensities"), ("SCALED", "scaled_intensities"), ("DIFF", "position_difference_sum")):
+        fields[key] = list(map(float, record[label]))
+    for key, value in zip(("associated_sample_sum", "associated_card_sum", "total_sample_sum", "total_card_sum",
+                           "database_fraction", "sample_fraction", "sqrt_database", "sqrt_sample"), record["TERMS"]):
+        fields[key] = [float(value)]
+    if any(not math.isfinite(x) for row in fields.values() for x in row):
+        raise ValueError("Nonfinite reference: classify separately, never bless as a score")
+    return {"error": None, "fields": fields, "discrete": {
+        "disposition": ["0"], "counts": record["COUNTS"], "reflection_indices": record["REF"],
+        "experimental_indices": [str(int(i)-1) if int(i) else "none" for i in record["ASS"]]}}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--compiler", required=True, type=Path)
+    parser.add_argument("--inputs", required=True, type=Path)
+    parser.add_argument("--output", required=True, type=Path)
+    args = parser.parse_args()
+    compiler = args.compiler.resolve(strict=True)
+    output = args.output.resolve()
+    output.mkdir(parents=True, exist_ok=False)
+    commit = subprocess.check_output(["git", "rev-parse", BASELINE], cwd=ROOT, text=True).strip()
+    sources = {}
+    for name, expected in SOURCES.items():
+        path = ROOT / name
+        if sha(path) != expected:
+            raise ValueError("Pinned Legacy source changed: " + name)
+        content = path.read_text(encoding="utf-8")
+        git_content = subprocess.check_output(["git", "show", f"{commit}:{name}"], cwd=ROOT).decode()
+        if content.replace("\r\n", "\n") != git_content.replace("\r\n", "\n"):
+            raise ValueError("Legacy source does not match baseline")
+        sources[name] = content
+    original = sources[next(iter(SOURCES))]
+    traced = instrument(original)
+    locate = re.search(r"   integer function clocate\(xv,x\).*?   end function clocate", list(sources.values())[1], re.S)[0]
+    (output / "instrumentation.diff").write_text("".join(difflib.unified_diff(original.splitlines(True), traced.splitlines(True), fromfile="original.f90", tofile="traced.f90")), encoding="utf-8")
+    corpus = json.loads(args.inputs.read_text(encoding="utf-8"))
+    inputs = []
+    for item in corpus["cases"]:
+        path = args.inputs.parent / item["input"]["path"]
+        if sha(path) != item["input"]["sha256"]:
+            raise ValueError("Input hash mismatch")
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if data["operation"] != "score" or len(data["cards"]) != 1:
+            raise ValueError("Capture supports one card per request")
+        inputs.append(data)
+    (output / "input.wire").write_text(wire(inputs), encoding="ascii")
+    shutil.copyfile(HERE / "tolerances.json", output / "tolerances.json")
+    runs = {}
+    commands = []
+    for name, body in (("original", original), ("traced", traced)):
+        build = output / name
+        build.mkdir()
+        shutil.copyfile(HERE / "driver.f90", build / "driver.f90")
+        shutil.copyfile(HERE / "main.f90", build / "main.f90")
+        (build / "arrayutil.f90").write_text("module arrayutil\nimplicit none\ncontains\n" + locate + "\nend module\n", encoding="utf-8")
+        (build / "fom.f90").write_text(body, encoding="utf-8")
+        exe = build / ("capture.exe" if platform.system() == "Windows" else "capture")
+        command = [str(compiler), *FLAGS, "driver.f90", "arrayutil.f90", "fom.f90", "main.f90", "-o", str(exe)]
+        commands.append(command)
+        compiled = subprocess.run(command, cwd=build, text=True, capture_output=True, timeout=120)
+        (build / "compile.log").write_text(compiled.stdout + compiled.stderr, encoding="utf-8")
+        compiled.check_returncode()
+        run = subprocess.run([str(exe)], input=wire(inputs), text=True, capture_output=True, timeout=60)
+        (output / f"{name}.txt").write_text(run.stdout + run.stderr, encoding="utf-8")
+        run.check_returncode()
+        runs[name] = records(run.stdout)
+    if any(len(rows) != len(inputs) for rows in runs.values()):
+        raise ValueError("Incomplete capture output")
+    version = subprocess.check_output([str(compiler), "--version"], text=True).splitlines()[0]
+    env = {"source_commit": commit, "compiler": version, "flags": " ".join(FLAGS),
+           "platform": platform.platform(), "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+           "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+           "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+           "review_evidence": "PENDING: capture does not grant review"}
+    rules = json.loads((output / "tolerances.json").read_text(encoding="utf-8"))["rules"]
+    cases, exceptions = [], []
+    for item, data, plain, traced_record in zip(corpus["cases"], inputs, runs["original"], runs["traced"]):
+        if item.get("classification") == "legacy_undefined":
+            exceptions.append({"id": item["id"], "reason": item["reason"], "original": plain, "traced": traced_record})
+            continue
+        # Check instrumentation against unmodified routine BEFORE normalizing.
+        if list(map(float, plain["SCORE"])) != list(map(float, traced_record["SCORE"])):
+            raise ValueError("Instrumentation changed ABI outputs for " + item["id"])
+        expected = observation(traced_record)
+        input_path = output / (item["id"] + "-input.json")
+        expected_path = output / (item["id"] + "-expected.json")
+        save(input_path, data)
+        save(expected_path, expected)
+        cases.append({"id": item["id"], "operation": "score", "status": "captured", "reference_origin": "fortran_capture",
+                      "legacy_tolerances_frozen": True, "input": descriptor(input_path, output),
+                      "expected": descriptor(expected_path, output), "environment": env,
+                      "tolerances": {key: {"absolute": rules[key][0], "relative": rules[key][1], "unit": rules[key][2],
+                                            "approval_evidence": "s6-capture-tolerances-1; tolerances.json"} for key in expected["fields"]}})
+    save(output / "manifest.json", {"schema_version": 1, "kind": "legacy_capture", "scope": "isolated FOM only; product switch blocked", "cases": cases})
+    save(output / "exceptions.json", exceptions)
+    save(output / "provenance.json", {"environment": env, "source_sha256": SOURCES, "compiler_sha256": sha(compiler),
+                                      "commands": commands, "input_manifest_sha256": sha(args.inputs),
+                                      "tolerances_sha256": sha(output / "tolerances.json"),
+                                      "capture_script_sha256": sha(__file__),
+                                      "driver_sha256": sha(HERE / "driver.f90"), "main_sha256": sha(HERE / "main.f90"),
+                                      "artifacts": [descriptor(p, output) for p in sorted(output.rglob("*")) if p.is_file()]})
+    print(f"CAPTURED {len(cases)} defined scores, {len(exceptions)} classified exceptions; review still required")
+
+
+if __name__ == "__main__":
+    main()

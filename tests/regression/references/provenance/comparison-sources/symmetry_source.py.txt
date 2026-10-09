@@ -1,0 +1,46 @@
+"""Strict rational decoder of the checked-in Legacy symmetry resource.
+
+This is capture/review tooling, not the production C++ implementation.
+"""
+from fractions import Fraction
+import re
+
+def operation(text):
+    rotation=[]; translation=[]
+    for row in text.replace(' ','').split(','):
+        terms=re.findall(r'[+-]?[^+\-]+',row)
+        if ''.join(terms)!=row: raise ValueError(row)
+        coefficients=[0,0,0]; shift=Fraction(0)
+        for term in terms:
+            if term[-1:] in ('x','y','z'):
+                sign=term[:-1]
+                if sign not in ('','+','-'): raise ValueError(term)
+                coefficients['xyz'.index(term[-1])]+= -1 if sign=='-' else 1
+            else: shift+=Fraction(term)
+        rotation+=coefficients
+        translation.append(shift%1)
+    if len(rotation)!=9: raise ValueError(text)
+    return rotation,translation
+
+def read_resource(text):
+    groups=[]
+    for block in text.split('begin_spacegroup')[1:]:
+        # The header also mentions begin_spacegroup, so only real blocks count.
+        block=block.split('end_spacegroup')[0]
+        match=re.search(r'^number\s+(\d+)',block,re.M)
+        if not match: continue
+        primitive=[operation(x) for x in re.findall(r'^symop\s+(.+)$',block,re.M)]
+        centering=[operation(x)[1] for x in re.findall(r'^cenop\s+(.+)$',block,re.M)]
+        assert centering[0]==[0,0,0]
+        ops=[]
+        for center in centering:
+            for rotation,shift in primitive:
+                rational=[(a+b)%1 for a,b in zip(shift,center)]
+                twelfths=[t*12 for t in rational]
+                assert all(t.denominator==1 for t in twelfths)
+                ops.append(dict(rotation=rotation,translation_twelfths=list(map(int,twelfths))))
+        groups.append(dict(id=len(groups),number=int(match[1]),operations=ops,
+                           primitive_expressions=re.findall(r'^symop\s+(.+)$',block,re.M),
+                           centering_expressions=re.findall(r'^cenop\s+(.+)$',block,re.M)))
+    assert len(groups)==551
+    return groups

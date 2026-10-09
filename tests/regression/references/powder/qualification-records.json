@@ -1,0 +1,62 @@
+{
+  "status": "pending_explicit_user_acceptance",
+  "records": [
+    {
+      "case": 67,
+      "field": "line.1.relative",
+      "legacy": 5.5425610829752493e-17,
+      "cpp_by_compiler": {
+        "GNU": 341.46507817532273,
+        "MSVC": 341.46507817532273
+      },
+      "category": "legacy_epsilon_normalization_floor",
+      "independent_decimal": "341.4650781753226244410740806684837947055031997162392823759160572882786835393895736",
+      "independent_check_passed": true,
+      "downstream": {
+        "membership_changed": false,
+        "position_changed": false,
+        "raw_intensity_changed_beyond_tolerance": false,
+        "normalized_rank_changed": false,
+        "meaning": "Core uses physical max=1000. Legacy writer substitutes divisor=1 below float epsilon; DB ABI omits the entire tiny pattern."
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "239e2f67e41c05d93cd0b374ee3b2c5f28808161f0c708f8d58fa07d84ae87a9"
+    },
+    {
+      "case": 67,
+      "field": "line.2.relative",
+      "legacy": 1.6231709573590899e-16,
+      "cpp_by_compiler": {
+        "GNU": 1000.0,
+        "MSVC": 1000.0
+      },
+      "category": "legacy_epsilon_normalization_floor",
+      "independent_decimal": "1000.0",
+      "independent_check_passed": true,
+      "downstream": {
+        "membership_changed": false,
+        "position_changed": false,
+        "raw_intensity_changed_beyond_tolerance": false,
+        "normalized_rank_changed": false,
+        "meaning": "Core uses physical max=1000. Legacy writer substitutes divisor=1 below float epsilon; DB ABI omits the entire tiny pattern."
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "079077a110302b1e081c5e90ee667cafd6ce842dd0746657a736b234a0a8500a"
+    }
+  ],
+  "counts": {
+    "records": 2
+  },
+  "compiler_fingerprints": {
+    "GNU": {
+      "runner_sha256": "115440d80e08ab4b468289d8d66654411abfe765547b13c9ee0e1527b3b7ecc5"
+    },
+    "MSVC": {
+      "runner_sha256": "407ce233bb499f4267996bc82fe8c8824f3ee3e98221fe2d27e9c6b5df2e5103"
+    }
+  },
+  "proof_sha256": "a62ee74c5a1123462f9128522dce7be28ee6cb200bb29d8e596d2aaf1dcd88b0",
+  "script_sha256": "82667d4fa8b5ab1fda4e94d5c341ce18212e9f58263e9dabd523c2093635a1f2",
+  "frozen_reference_unchanged": true,
+  "frozen_tolerance_unchanged": true
+}

@@ -1,0 +1,115 @@
+{
+  "operation": "residual",
+  "range": [
+    0,
+    60
+  ],
+  "pattern": [
+    [
+      0,
+      0
+    ],
+    [
+      10,
+      100
+    ],
+    [
+      20,
+      200
+    ],
+    [
+      30,
+      100
+    ],
+    [
+      40,
+      0
+    ],
+    [
+      50,
+      0
+    ],
+    [
+      60,
+      0
+    ]
+  ],
+  "parameters": {
+    "delta": 0.25,
+    "weight_position": 0.5,
+    "weight_intensity": 0.5,
+    "weight_phases": 0.5,
+    "minimum_score": 0.6,
+    "maximum_entries": 20,
+    "include_deleted": true,
+    "filter_strongest": false,
+    "strongest_count": 3
+  },
+  "cards": [
+    {
+      "database_id": "controlled-input",
+      "card_id": "A",
+      "quality": "",
+      "reflections": [
+        {
+          "id": 1,
+          "two_theta": 10.0625,
+          "intensity": 40
+        },
+        {
+          "id": 2,
+          "two_theta": 20.25,
+          "intensity": 20
+        },
+        {
+          "id": 3,
+          "two_theta": 30,
+          "intensity": 100
+        }
+      ]
+    }
+  ],
+  "peaks": [
+    {
+      "id": 1,
+      "two_theta": 10,
+      "intensity": 100,
+      "original_intensity": 0,
+      "d_spacing": null,
+      "delta_d": null,
+      "fwhm": null,
+      "integrated_intensity": null
+    },
+    {
+      "id": 2,
+      "two_theta": 10.125,
+      "intensity": 80,
+      "original_intensity": 80,
+      "d_spacing": null,
+      "delta_d": null,
+      "fwhm": null,
+      "integrated_intensity": null
+    },
+    {
+      "id": 3,
+      "two_theta": 20,
+      "intensity": 200,
+      "original_intensity": 200,
+      "d_spacing": null,
+      "delta_d": null,
+      "fwhm": null,
+      "integrated_intensity": null
+    },
+    {
+      "id": 4,
+      "two_theta": 30,
+      "intensity": 100,
+      "original_intensity": 100,
+      "d_spacing": null,
+      "delta_d": null,
+      "fwhm": null,
+      "integrated_intensity": null
+    }
+  ],
+  "residual_scale": 1
+}

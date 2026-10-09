@@ -1,0 +1,235 @@
+# Current source and frozen regression bytes; historical attributes remain in protected Git snapshots.
+/tests/data/symmetry-reference-manifest.json -text
+/tests/data/symmetry-reference.zip binary
+/src/core/crystallography/space_group_data.inc text eol=lf
+/tests/data/cif/** -text -whitespace
+/tests/reference_checks/*.py text eol=lf
+/tests/reference_checks/preprocessing_compare.py -text -whitespace
+/tests/reference_checks/preprocessing_tolerances.json -text -whitespace
+/src/core/crystallography/phase_sincos.* text eol=lf
+/tests/CMakeLists.txt text eol=lf
+/tests/data/current-phase-provider.json text eol=lf
+/tests/data/phase-sincos-reference.txt text eol=lf
+/tests/data/phase-successor-fields.json -text -whitespace
+/src/core/crystallography/powder_intensity.cpp text eol=lf
+/tests/data/current-lp-provider.json text eol=lf
+/tests/data/lp-successor-fields.json text eol=lf
+/tests/data/lp-formed-angle-reference.txt text eol=lf
+/src/core/profile/*.cpp text eol=lf
+/src/core/profile/CMakeLists.txt text eol=lf
+/src/core/include/qualpf/profile/* text eol=lf
+/.gitattributes text eol=lf
+/src/application/presentation/* text eol=lf
+/CMakeLists.txt text eol=lf
+/apps/qualpf/main.cpp text eol=lf
+/src/application/CMakeLists.txt text eol=lf
+/src/gui/CMakeLists.txt text eol=lf
+/src/gui/dialogs/preprocessing_dialog.* text eol=lf
+/src/gui/mainwindow.* text eol=lf
+/src/gui/plotting/qt_plot_sink.* text eol=lf
+/src/gui/plotting/xpdviewwidget.* text eol=lf
+/src/gui/widgets/peaklistwidget.cpp text eol=lf
+/tests/data/preprocessing-fortran/capture-wrapper.f90.txt -text
+/tests/data/preprocessing-export-fortran/capture-wrapper.f90.txt -text
+/share/qualx/files/AtomProperties.xen text eol=crlf
+/src/core/crystallography/reflection.cpp text eol=crlf
+/tests/data/card-reference-manifest.json text eol=crlf
+/tests/data/classic-reference-manifest.json text eol=crlf
+/tests/data/composition-density-reference-manifest.json text eol=crlf
+/tests/data/crystallography-foundation-reference-manifest.json text eol=crlf
+/tests/data/crystallography-real-cells.json text eol=crlf
+/tests/data/kalpha2-reference-manifest.json text eol=crlf
+/tests/data/numerical-reference-manifest.json text eol=crlf
+/tests/data/overlap-reference-manifest.json text eol=crlf
+/tests/data/pattern-abi-reference-manifest.json text eol=crlf
+/tests/data/pattern-edge-reference-manifest.json text eol=crlf
+/tests/data/pattern-reference-manifest.json text eol=crlf
+/tests/data/pattern-vendor-reference-manifest.json text eol=crlf
+/tests/data/powder-intensity-reference-manifest.json text eol=crlf
+/tests/data/reference-manifest.json text eol=crlf
+/tests/data/reflection-reference-manifest.json text eol=crlf
+/tests/data/rir-reference-manifest.json text eol=crlf
+/tests/data/scattering-reference-manifest.json text eol=crlf
+/tests/data/structure-factor-reference-manifest.json text eol=crlf
+/tests/data/current-preprocessing-pool.qxp text eol=crlf
+/tests/data/classic-synthetic/*.json text eol=crlf
+/tests/data/classic-workflow-fortran/*.json text eol=crlf
+/tests/data/classic-workflow-fortran/*.txt text eol=crlf
+/tests/data/numerical-fortran/*.json text eol=crlf
+/tests/data/numerical-fortran/*.txt text eol=crlf
+/tests/data/numerical-fortran/*.wire text eol=crlf
+/tests/data/preprocessing-export-fortran/manifest.json text eol=crlf
+/tests/data/preprocessing-export-fortran/*.out text eol=crlf
+/tests/data/preprocessing-export-fortran/*.wire text eol=crlf
+/tests/data/preprocessing-fortran/duplicate-grid.err text eol=crlf
+/tests/data/preprocessing-fortran/manifest.json text eol=crlf
+/tests/data/preprocessing-fortran/*.out text eol=crlf
+/tests/data/preprocessing-fortran/*.wire text eol=crlf
+/src/core/crystallography/chemistry.cpp text eol=lf
+/src/core/crystallography/chemistry_data.inc text eol=lf
+/src/core/crystallography/composition.cpp text eol=lf
+/src/core/crystallography/powder_intensity.cpp text eol=lf
+/src/core/crystallography/scattering.cpp text eol=lf
+/src/core/crystallography/scattering_data.inc text eol=lf
+/src/core/crystallography/space_group_data.inc text eol=lf
+/src/core/crystallography/structure_factor.cpp text eol=lf
+/src/core/crystallography/symmetry.cpp text eol=lf
+/src/core/crystallography/theoretical_card.cpp text eol=lf
+/src/core/crystallography/unit_cell.cpp text eol=lf
+/src/core/include/qualpf/crystallography/chemistry.h text eol=lf
+/src/core/include/qualpf/crystallography/composition.h text eol=lf
+/src/core/include/qualpf/crystallography/powder_intensity.h text eol=lf
+/src/core/include/qualpf/crystallography/reflection.h text eol=lf
+/src/core/include/qualpf/crystallography/scattering.h text eol=lf
+/src/core/include/qualpf/crystallography/structure_factor.h text eol=lf
+/src/core/include/qualpf/crystallography/symmetry.h text eol=lf
+/src/core/include/qualpf/crystallography/theoretical_card.h text eol=lf
+/src/core/include/qualpf/crystallography/unit_cell.h text eol=lf
+/src/core/include/qualpf/domain/pattern.h text eol=lf
+/src/core/include/qualpf/domain/peaks.h text eol=lf
+/src/core/include/qualpf/domain/radiation.h text eol=lf
+/src/core/include/qualpf/domain/reference_card.h text eol=lf
+/src/core/include/qualpf/domain/result.h text eol=lf
+/src/core/include/qualpf/domain/search.h text eol=lf
+/src/core/include/qualpf/domain/units.h text eol=lf
+/src/core/include/qualpf/domain/validation.h text eol=lf
+/tests/compatibility/card_replay.cpp text eol=lf
+/tests/compatibility/powder_replay.cpp text eol=lf
+/tests/compatibility/scattering_replay.cpp text eol=lf
+/tools/crystallography/generate_chemistry.py text eol=lf
+/tools/crystallography/generate_scattering.py text eol=lf
+/tests/real_example_data/03_reference_structures/CoO.cif text eol=lf whitespace=-blank-at-eof
+/src/gui/plotting/xpdutils.cpp text eol=lf
+/tests/compatibility/preprocessing_tolerances.json text eol=lf
+/tests/data/numerical-fortran/capture-script.py text eol=lf
+/tests/data/classic-workflow-fortran/capture-script.py text eol=lf
+/tests/data/preprocessing-fortran/capture-script.py text eol=lf
+/tests/data/preprocessing-export-fortran/capture-script.py text eol=lf
+/tests/data/current-cell-provider.json text eol=lf
+/tests/data/cell-successor-fields.json text eol=lf
+/tests/data/cell-scattering-environments.json text eol=lf
+/tests/data/unit-cell-formed-angle-reference.txt text eol=lf
+/src/core/crystallography/rounded_transcendentals.* text eol=lf
+/src/core/crystallography/chemistry.cpp text eol=lf
+/src/core/crystallography/scattering.cpp text eol=lf
+/tests/compatibility/scattering_replay.cpp text eol=lf
+/tests/data/current-transcendental-provider.json text eol=lf
+/tests/data/transcendental-successor-fields.json text eol=lf
+/tests/data/rounded-transcendentals-reference.txt text eol=lf
+/install.sh text eol=lf
+/cmake/** text eol=lf
+/CMakePresets.json text eol=lf
+/tests/unit/core/scattering_properties.cpp text eol=lf
+/tests/unit/core/powder_properties.cpp text eol=lf
+/tests/unit/core/card_properties.cpp text eol=lf
+/tests/unit/core/crystallography_properties.cpp text eol=lf
+/tests/unit/core/rounded_transcendentals_properties.cpp text eol=lf
+/src/application/**/*.cpp text eol=lf
+/src/application/**/*.h text eol=lf
+/src/application/**/CMakeLists.txt text eol=lf
+/src/infrastructure/**/*.cpp text eol=lf
+/src/infrastructure/**/*.h text eol=lf
+/src/infrastructure/**/CMakeLists.txt text eol=lf
+/src/gui/**/*.cpp text eol=lf
+/src/gui/**/*.h text eol=lf
+/src/gui/**/CMakeLists.txt text eol=lf
+/tests/product/**/*.cpp text eol=lf
+/tests/product/**/*.h text eol=lf
+/tests/integration/**/*.cpp text eol=lf
+/tests/unit/application/**/*.cpp text eol=lf
+/tests/regression/references/** -text -whitespace
+/tools/architecture/** text eol=lf
+/tools/validation/** text eol=lf
+/docs/development/repository-consolidation/** text eol=lf
+/docs/development/project-baseline.json text eol=lf
+/.agent/** text eol=lf
+/AGENTS.md text eol=lf
+/docs/architecture/** text eol=lf
+/docs/numerical/** text eol=lf
+/tools/agent/** text eol=lf
+/.github/workflows/quality.yml text eol=lf
+/docs/migration-history.md text eol=lf
+/docs/development/repository-layout.md text eol=lf
+/docs/development/building.md text eol=lf
+/docs/development/agent-governance.md text eol=lf
+/tests/README.md text eol=lf
+/README.md text eol=lf
+
+# Exact frozen fixtures retain original whitespace and line-ending bytes.
+/tests/data/classic-fortran/captured-manifest.json -whitespace
+/tests/data/classic-fortran/delta-equal-expected.json -whitespace
+/tests/data/classic-fortran/delta-equal-input.json -whitespace
+/tests/data/classic-fortran/delta-inside-expected.json -whitespace
+/tests/data/classic-fortran/delta-inside-input.json -whitespace
+/tests/data/classic-fortran/delta-outside-expected.json -whitespace
+/tests/data/classic-fortran/delta-outside-input.json -whitespace
+/tests/data/classic-fortran/duplicate-first-endpoint-expected.json -whitespace
+/tests/data/classic-fortran/duplicate-first-endpoint-input.json -whitespace
+/tests/data/classic-fortran/duplicate-last-endpoint-expected.json -whitespace
+/tests/data/classic-fortran/duplicate-last-endpoint-input.json -whitespace
+/tests/data/classic-fortran/exceptions.json -whitespace
+/tests/data/classic-fortran/float-collapsed-coordinate-expected.json -whitespace
+/tests/data/classic-fortran/float-collapsed-coordinate-input.json -whitespace
+/tests/data/classic-fortran/input-catalog.json -whitespace
+/tests/data/classic-fortran/input.wire -whitespace
+/tests/data/classic-fortran/instrumentation.diff -whitespace
+/tests/data/classic-fortran/intensity-mismatch-expected.json -whitespace
+/tests/data/classic-fortran/intensity-mismatch-input.json -whitespace
+/tests/data/classic-fortran/manifest.json -whitespace
+/tests/data/classic-fortran/merged-reflections-expected.json -whitespace
+/tests/data/classic-fortran/merged-reflections-input.json -whitespace
+/tests/data/classic-fortran/nearest-tie-expected.json -whitespace
+/tests/data/classic-fortran/nearest-tie-input.json -whitespace
+/tests/data/classic-fortran/observed-above-expected.json -whitespace
+/tests/data/classic-fortran/observed-above-input.json -whitespace
+/tests/data/classic-fortran/observed-below-expected.json -whitespace
+/tests/data/classic-fortran/observed-below-input.json -whitespace
+/tests/data/classic-fortran/observed-equal-expected.json -whitespace
+/tests/data/classic-fortran/observed-equal-input.json -whitespace
+/tests/data/classic-fortran/observed-nearest-tie-expected.json -whitespace
+/tests/data/classic-fortran/observed-nearest-tie-input.json -whitespace
+/tests/data/classic-fortran/offsets-expected.json -whitespace
+/tests/data/classic-fortran/offsets-input.json -whitespace
+/tests/data/classic-fortran/original.txt -whitespace
+/tests/data/classic-fortran/pattern-CPD2-expected.json -whitespace
+/tests/data/classic-fortran/pattern-CPD2-input.json -whitespace
+/tests/data/classic-fortran/pattern-MIXT_5-expected.json -whitespace
+/tests/data/classic-fortran/pattern-MIXT_5-input.json -whitespace
+/tests/data/classic-fortran/pattern-example1-expected.json -whitespace
+/tests/data/classic-fortran/pattern-example1-input.json -whitespace
+/tests/data/classic-fortran/perfect-after-large-expected.json -whitespace
+/tests/data/classic-fortran/perfect-after-large-input.json -whitespace
+/tests/data/classic-fortran/perfect-after-undefined-expected.json -whitespace
+/tests/data/classic-fortran/perfect-after-undefined-input.json -whitespace
+/tests/data/classic-fortran/perfect-expected.json -whitespace
+/tests/data/classic-fortran/perfect-input.json -whitespace
+/tests/data/classic-fortran/phase-weight-above-expected.json -whitespace
+/tests/data/classic-fortran/phase-weight-above-input.json -whitespace
+/tests/data/classic-fortran/phase-weight-below-expected.json -whitespace
+/tests/data/classic-fortran/phase-weight-below-input.json -whitespace
+/tests/data/classic-fortran/phase-weight-half-expected.json -whitespace
+/tests/data/classic-fortran/phase-weight-half-input.json -whitespace
+/tests/data/classic-fortran/phase-weight-one-expected.json -whitespace
+/tests/data/classic-fortran/phase-weight-one-input.json -whitespace
+/tests/data/classic-fortran/provenance.json -whitespace
+/tests/data/classic-fortran/range-before-narrowing-expected.json -whitespace
+/tests/data/classic-fortran/range-before-narrowing-input.json -whitespace
+/tests/data/classic-fortran/single-associated-expected.json -whitespace
+/tests/data/classic-fortran/single-associated-input.json -whitespace
+/tests/data/classic-fortran/traced.txt -whitespace
+/tests/data/classic-fortran/undefined-no-association.json -whitespace
+/tests/data/classic-fortran/undefined-no-range.json -whitespace
+/tests/data/classic-fortran/undefined-zero-intensity.json -whitespace
+/tests/data/classic-fortran/undefined-zero-weights.json -whitespace
+/tests/data/numerical-fortran/N01-reductions.wire -whitespace
+/tests/data/numerical-fortran/N04-constant.wire -whitespace
+/tests/data/numerical-fortran/N04-offset-dp.wire -whitespace
+/tests/data/numerical-fortran/N04-sample.wire -whitespace
+/tests/data/numerical-fortran/N05-singleton.wire -whitespace
+/tests/data/numerical-fortran/N05-trapezoid.wire -whitespace
+/tests/data/numerical-fortran/N08-polynomial.wire -whitespace
+/tests/data/symmetry-reference-manifest.json -whitespace
+
+# Current integration metadata and composition CMake use canonical LF.
+/.gitignore text eol=lf
+/apps/qualpf/CMakeLists.txt text eol=lf

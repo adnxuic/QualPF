@@ -1,0 +1,25 @@
+from reference_paths import reference_path, provenance_path
+"""CXX-only replay of separately frozen Phase 9.3 Fortran product references."""
+import argparse, hashlib, json, pathlib, subprocess, zipfile
+from preprocessing_compare import POLICY_SHA256, compare, decode
+ARCHIVE_SHA256='0e86a1b8f14aca6be14ed517b647318bdecc6598ddd9f4d5dfb94cb614680a62'
+def sha(data):return hashlib.sha256(data).hexdigest()
+def main():
+ p=argparse.ArgumentParser();p.add_argument('--runner',required=True,type=pathlib.Path);p.add_argument('--report',required=True,type=pathlib.Path)
+ a=p.parse_args();root=pathlib.Path(__file__).resolve().parents[2]
+ policy=reference_path(root/'tests/compatibility/preprocessing_tolerances.json');assert sha(policy.read_bytes())==POLICY_SHA256
+ archive=reference_path(root/'docs/refactoring/phase-9.3/advanced-reference.zip');assert sha(archive.read_bytes())==ARCHIVE_SHA256
+ results=[]
+ with zipfile.ZipFile(archive) as z:
+  manifest=json.loads(z.read('report.json'))
+  for name,digest in manifest['artifacts'].items():assert sha(z.read(name))==digest,name
+  for name in sorted({case['id'] for case in manifest['cases']}):
+   wire=z.read(name+'.wire').decode();op=int(wire.split()[0]);decode_op={4:0,5:1,6:2}[op]
+   r=subprocess.run([str(a.runner.resolve())],input=wire,text=True,capture_output=True,timeout=60)
+   if r.returncode:raise RuntimeError(r.stderr)
+   result=compare(decode(r.stdout,decode_op),decode(z.read(name+'.oracle').decode(),decode_op),json.loads(policy.read_text()))
+   result['id']=name;results.append(result)
+ report={'passed':sum(r['status']=='passed' for r in results),'total':len(results),'archive_sha256':ARCHIVE_SHA256,'policy_sha256':POLICY_SHA256,'cases':results}
+ a.report.write_text(json.dumps(report,indent=2));print(json.dumps({k:v for k,v in report.items() if k!='cases'}))
+ return int(report['passed']!=report['total'])
+if __name__=='__main__':raise SystemExit(main())

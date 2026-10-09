@@ -1,0 +1,4 @@
+# Phase 19 implementation fingerprints use exact source bytes.
+cif_*.h -text
+cif_*.cpp -text
+CMakeLists.txt -text

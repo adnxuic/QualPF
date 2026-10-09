@@ -1,0 +1,54 @@
+{
+  "error": null,
+  "fields": {
+    "peak.1.intensity": [
+      60
+    ],
+    "peak.1.original_intensity": [
+      0
+    ],
+    "peak.1.two_theta": [
+      10
+    ],
+    "peak.2.intensity": [
+      80
+    ],
+    "peak.2.original_intensity": [
+      80
+    ],
+    "peak.2.two_theta": [
+      10.125
+    ],
+    "peak.3.intensity": [
+      180
+    ],
+    "peak.3.original_intensity": [
+      200
+    ],
+    "peak.3.two_theta": [
+      20
+    ],
+    "quality": [
+      0.705,
+      0,
+      0,
+      1
+    ]
+  },
+  "discrete": {
+    "associations": [
+      "0",
+      "none",
+      "1",
+      "2"
+    ],
+    "remaining_ids": [
+      "1",
+      "2",
+      "3"
+    ],
+    "removed_ids": [
+      "4"
+    ]
+  }
+}

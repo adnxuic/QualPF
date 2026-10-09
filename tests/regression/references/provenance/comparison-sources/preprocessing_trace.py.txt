@@ -1,0 +1,131 @@
+"""Build diagnostic copies; never edit production Fortran or frozen references.
+
+The added statements only print existing intermediate expressions to stderr.
+Compare stdout with the uninstrumented oracle before using a trace as evidence.
+"""
+import argparse
+import os
+from pathlib import Path
+import re
+import subprocess
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def replace(source, old, new):
+    if source.count(old) != 1:
+        raise ValueError(f"Expected one instrumentation anchor: {old!r}")
+    return source.replace(old, new)
+
+
+def build(build_dir, output, msvc_library=None):
+    output.mkdir(parents=True, exist_ok=True)
+    compiler = ROOT / "build-phase7/qt/Tools/mingw1310_64/bin"
+    env = dict(os.environ)
+    env["PATH"] = str(compiler) + os.pathsep + str(ROOT / "build-phase7/qt/6.8.3/mingw_64/bin") + os.pathsep + env["PATH"]
+    modules = build_dir / "legacy/fortran/modules"
+    replacements = {}
+    for name, edits in {
+        "numerics_support/recipes.f90": [
+            ("        END FUNCTION savgol", "        write(0,*) 'sg.coefficients',poly(real(irng(:),sp),b(:))\n        END FUNCTION savgol"),
+            ("    anorm=maxval(abs(w)+abs(rv1))\n    do i=n,1,-1", "    write(0,*) 'svd.bidiagonal',reshape(a,[size(a)]),w,rv1\n    anorm=maxval(abs(w)+abs(rv1))\n    do i=n,1,-1"),
+            ("                tempm(l:m)=matmul(a(l:m,l:n),a(i,l:n))", "                tempm(l:m)=matmul(a(l:m,l:n),a(i,l:n))\n                write(0,*) 'svd.right',tempm(l:m)"),
+            ("                a(i:m,i)=scale*a(i:m,i)", "                a(i:m,i)=scale*a(i:m,i)\n                write(0,*) 'svd.left_state',reshape(a,[size(a)])"),
+            ("    END SUBROUTINE svdcmp_sp", "    write(0,*) 'svd.final',reshape(a,[size(a)]),w,reshape(v,[size(v)])\n    END SUBROUTINE svdcmp_sp"),
+            ("    END SUBROUTINE svbksb_sp", "    write(0,*) 'svd.backsub',tmp,x\n    END SUBROUTINE svbksb_sp"),
+        ],
+        "numerics_support/genlsq.f90": [
+            ("   ata = matmul(transpose(a),a)", "   ata = matmul(transpose(a),a)\n   write(0,*) 'normal',reshape(ata,[size(ata)])\n   write(0,*) 'rhs',bb"),
+            ("   call svdfit(xs,y,sig,pcoef,v,w,chisq,fpoly)", "   write(0,*) 'gaussian.stats',ave,stdvar\n   write(0,*) 'gaussian.log',y\n   call svdfit(xs,y,sig,pcoef,v,w,chisq,fpoly)"),
+            ("   mu(1) = ave", "   write(0,*) 'gaussian.coefficients',pcoef\n   mu(1) = ave"),
+        ],
+        "preprocessing/background.f90": [
+            ("   call solve_linlsq(am,bm,x,ier)", "   write(0,*) 'basis',reshape(am,[size(am)])\n   call solve_linlsq(am,bm,x,ier)\n   write(0,*) 'solution',x"),
+        ],
+        "peaks_search/peakutil.f90": [
+            ("   call polyfit(xdata(ini:fin),log(ydata(ini:fin)),pcoef,mu)", "   write(0,*) 'gaussian.window',real(ini-1),real(fin-1)\n   call polyfit(xdata(ini:fin),log(ydata(ini:fin)),pcoef,mu)"),
+            ("      pk(i)%yint = integrate(xdata,ydata,p1(i),p2(i))", "      write(0,*) 'integration',real(p1(i)-1),real(p2(i)-1),line,pk(i)%y\n      pk(i)%yint = integrate(xdata,ydata,p1(i),p2(i))"),
+        ],
+    }.items():
+        original = ROOT / "legacy/fortran" / name
+        source = original.read_text(encoding="utf-8")
+        for old, new in edits:
+            if name.endswith("recipes.f90"):
+                # Restrict instrumentation to REAL(SP), retaining the DP body.
+                before, after = source.rsplit("    SUBROUTINE svdcmp_dp", 1)
+                at = before.rindex(old)
+                source = before[:at] + new + before[at+len(old):] + "    SUBROUTINE svdcmp_dp" + after
+            else:
+                source = replace(source, old, new)
+        source = source.replace("write(0,*) '", "write(0,'(a,*(1x,es25.17e3))') '")
+        dest = output / original.name
+        dest.write_text(source, encoding="utf-8")
+        obj = dest.with_suffix(".obj")
+        subprocess.run([str(compiler / "gfortran.exe"), "-O0", "-ffree-line-length-none", "-I"+str(modules), "-J"+str(output), "-c", str(dest), "-o", str(obj)], check=True, env=env)
+        replacements["legacy/fortran/CMakeFiles/qualx_fortran.dir/"+name+".obj"] = str(obj)
+    ninja = (build_dir / "build.ninja").read_text()
+    line = next(x for x in ninja.splitlines() if x.startswith("build qualpf_preprocessing_capture.exe:"))
+    objects = line.split(": ", 1)[1].split(" | ", 1)[0].split()[1:]
+    block = ninja[ninja.index(line):]
+    libraries = re.search(r"^  LINK_LIBRARIES = (.+)$", block, re.M)[1].split()
+    args = [replacements.get(x, x) for x in objects] + libraries + ["-o", str(output/"oracle.exe")]
+    response = output/"link.rsp"
+    response.write_text("\n".join('"'+x.replace('\\', '/')+'"' for x in args))
+    subprocess.run([str(compiler/"g++.exe"), "@"+str(response)], cwd=build_dir, check=True, env=env)
+    cpp_objects = []
+    helper = '''\n#include <iostream>
+#include <iomanip>
+template<class T> void trace(const char* name, const T& values) {
+    std::cerr << std::setprecision(17) << name;
+    for (auto v : values) std::cerr << ' ' << v;
+    std::cerr << '\\n';
+}
+'''
+    for name, edits in {
+        "peaks/legacy_polynomial.cpp": [
+            ("                a[k][i] = scale * a[k][i];", "                a[k][i] = scale * a[k][i];\n            {std::vector<float> f; for(int j=0;j<n;++j) for(auto& row:a) f.push_back(row[j]); trace(\"svd.left_state\",f);}"),
+            ("                for (int k = l; k < m; ++k)\n                    for (int j = l; j < n; ++j)", "                trace(\"svd.right\",std::span(work).subspan(l));\n                for (int k = l; k < m; ++k)\n                    for (int j = l; j < n; ++j)"),
+            ("    float norm = 0;", "    std::vector<float> flat;\n    for(int j=0;j<n;++j) for(auto& row:a) flat.push_back(row[j]);\n    flat.insert(flat.end(),w.begin(),w.end()); flat.insert(flat.end(),rv.begin(),rv.end());\n    trace(\"svd.bidiagonal\",flat);\n    float norm = 0;"),
+            ("    float cutoff =", "    flat.clear();\n    for(int j=0;j<n;++j) for(auto& row:a) flat.push_back(row[j]);\n    flat.insert(flat.end(),w.begin(),w.end());\n    for(int j=0;j<n;++j) for(auto& row:v) flat.push_back(row[j]);\n    trace(\"svd.final\",flat);\n    float cutoff ="),
+            ("    return result;", "    flat.assign(temp.begin(),temp.end()); flat.insert(flat.end(),result.begin(),result.end()); trace(\"svd.backsub\",flat);\n    return result;"),
+        ],
+        "preprocessing/legacy_smoothing.cpp": [
+            ("    return Result<Vector>{std::move(c)};", "    trace(\"sg.coefficients\",c);\n    return Result<Vector>{std::move(c)};"),
+        ],
+        "preprocessing/legacy_background.cpp": [
+            ("    for (int i = 0; i < count; ++i) {\n        double dot = 0;\n        for (int k = 0; k < i; ++k)\n            dot += a[i * count + k] * a[i * count + k];", "    std::vector<double> flat;\n    for(int j=0;j<count;++j) for(auto& row:rows) flat.push_back(row[j]);\n    trace(\"basis\", flat); trace(\"normal\", a); trace(\"rhs\", rhs);\n    for (int i = 0; i < count; ++i) {\n        double dot = 0;\n        for (int k = 0; k < i; ++k)\n            dot += a[i * count + k] * a[i * count + k];"),
+            ("    Vector result;", "    trace(\"solution\", solution);\n    Vector result;"),
+        ],
+        "peaks/legacy_peaks.cpp": [
+            ("    auto values = std::span(x).subspan(begin, n);", "    trace(\"gaussian.window\", std::array<float,2>{float(begin),float(end)});\n    auto values = std::span(x).subspan(begin, n);"),
+            ("    auto c = fit_log_quadratic(std::move(matrix), rhs);", "    trace(\"gaussian.stats\", std::array<float,2>{mean,sd}); trace(\"gaussian.log\", rhs);\n    auto c = fit_log_quadratic(std::move(matrix), rhs);\n    trace(\"gaussian.coefficients\", c);"),
+            ("        float integral = 0;", "        trace(\"integration\", std::array<float,5>{float(first),float(last),slope,intercept,peak.y});\n        float integral = 0;"),
+        ],
+    }.items():
+        original = ROOT/"src/core"/name
+        source = original.read_text()
+        # Preserve quoted includes relative to the original source directory.
+        source = re.sub(r'#include "([^"]+)"', lambda m: '#include "'+str((original.parent/m[1]).resolve()).replace('\\','/')+'"' if (original.parent/m[1]).exists() else m[0], source)
+        for old, new in edits:
+            source = replace(source, old, new)
+        dest = output/original.name
+        dest.write_text(helper+source)
+        obj = dest.with_suffix(".cpp.obj")
+        if msvc_library:
+            subprocess.run(["cl", "/nologo", "/O2", "/std:c++20", "/EHsc", "/MD", "/fp:strict", "/I"+str(ROOT/"src/core/include"), "/c", str(dest), "/Fo"+str(obj)],check=True)
+        else:
+            subprocess.run([str(compiler/"g++.exe"), "-O3", "-std=c++20", "-fno-fast-math", "-ffp-contract=off", "-I"+str(ROOT/"src/core/include"), "-c", str(dest), "-o", str(obj)], check=True, env=env)
+        cpp_objects.append(str(obj))
+    if msvc_library:
+        subprocess.run(["cl", "/nologo", "/std:c++20", "/EHsc", "/MD", "/I"+str(ROOT/"src/core/include"), str(ROOT/"tests/compatibility/preprocessing_replay.cpp"), *cpp_objects, str(msvc_library), "/Fe"+str(output/"replay.exe"), "/Fo"+str(output/"main.obj")],check=True)
+    else:
+        subprocess.run([str(compiler/"g++.exe"), "-std=c++20", "-I"+str(ROOT/"src/core/include"), str(ROOT/"tests/compatibility/preprocessing_replay.cpp"), *cpp_objects, str(build_dir/"src/core/libqualpf_core.a"), "-o", str(output/"replay.exe")], check=True, env=env)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--build", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--msvc-library", type=Path)
+    args = parser.parse_args()
+    build(args.build.resolve(), args.output.resolve(),args.msvc_library.resolve() if args.msvc_library else None)

@@ -1,0 +1,193 @@
+"""Independent 80-digit direct sum; never generates frozen expected values.
+
+Metric inversion uses mpmath, symmetry uses the frozen exact rational source,
+and each ASU site is expanded directly. No new C++ function or output is used
+to obtain the independent value. Compiler output is only compared afterwards.
+"""
+import argparse
+from collections import Counter
+import hashlib
+import importlib.util
+import json
+from pathlib import Path
+import re
+import sys
+import zipfile
+import mpmath as mp
+
+ROOT=Path(__file__).resolve().parents[3]
+HERE=Path(__file__).resolve().parent
+sys.path.insert(0,str(ROOT/'tests/compatibility'))
+from scattering_capture import parse
+
+spec=importlib.util.spec_from_file_location('source_tables',ROOT/'tools/crystallography/generate_scattering.py')
+tables=importlib.util.module_from_spec(spec);spec.loader.exec_module(tables)
+species,lobato,nist=tables.data()
+species={s['label'].lower():s for s in species}
+mp.mp.dps=80
+M=lambda x:mp.mpf(str(x))
+with zipfile.ZipFile(ROOT/'tests/data/scattering-reference.zip') as z:
+    cases={c['id']:c for c in json.loads(z.read('cases.json'))}
+    native=json.loads(z.read('expected.json'))
+with zipfile.ZipFile(ROOT/'tests/data/symmetry-reference.zip') as z:
+    groups={g['id']:g for g in json.loads(z.read('exact-table.json'))}
+
+
+def anomaly(z,wave,energy_override=None):
+    table=nist[z-1];points=table['points']
+    conversion=M('1e7')*M('6.62607015e-34')*M('2.998e8')/M('1.602176634e-19')
+    energy=conversion/M(wave) if energy_override is None else energy_override
+    if energy<M(points[0][0]) or energy>M(points[-1][0]): return None
+    upper=next(i for i,p in enumerate(points) if M(p[0])>=energy)
+    e2,f12,f22=map(M,points[upper])
+    if upper==0 or e2==energy: f1,f2=f12,f22
+    else:
+        e1,f11,f21=map(M,points[upper-1])
+        f1=f11+(f12-f11)*(energy-e1)/(e2-e1)
+        f2=mp.mpf(0) if f21==0 or f22==0 else mp.exp(mp.log(f21)+(mp.log(f22)-mp.log(f21))*mp.log(energy/e1)/mp.log(e2/e1))
+    return f1-z+M(table['frel']),f2
+
+
+def amplitude(label,s2,rad,wave,anomalous):
+    entry=species[label.lower()]
+    if rad==0: value=M(entry['c'])+sum(M(a)*mp.exp(-M(b)*s2) for a,b in zip(entry['a'],entry['b']))
+    elif rad==1: value=M(entry['neutron'])
+    else:
+        # REAL literals are widened exactly; binary32 source semantics are data,
+        # not emulated runtime arithmetic. Evaluate the original rational form.
+        p=[mp.mpf(x) for x in lobato[entry['z']-1]]
+        value=sum(p[i]*(2+p[i+5]*s2)/(1+p[i+5]*s2)**2 for i in range(5))
+    if anomalous:
+        corr=anomaly(entry['z'],wave);value+=mp.mpc(*corr)
+    return mp.mpc(value)
+
+
+def model(c):
+    vals=list(map(M,c['cell']));a,b,d,alpha,beta,gamma=vals
+    co=lambda angle:mp.mpf(0) if angle==90 else -mp.mpf(1)/2 if angle==120 else mp.cos(mp.pi*angle/180)
+    metric=mp.matrix([[a*a,a*b*co(gamma),a*d*co(beta)],
+                      [a*b*co(gamma),b*b,b*d*co(alpha)],
+                      [a*d*co(beta),b*d*co(alpha),d*d]])
+    reciprocal=metric**-1
+    group=groups[native['cases'][str(c['id'])]['group_id']]
+    expanded=[];counts=[]
+    for site in c['sites']:
+        seen=[]
+        x=mp.matrix(list(map(M,site['xyz'])))
+        for op in group['operations']:
+            r=mp.matrix([op['rotation'][i:i+3] for i in (0,3,6)])
+            t=mp.matrix([mp.mpf(n)/12 for n in op['translation_twelfths']])
+            pos=r*x+t;pos=[v-mp.floor(v) for v in pos]
+            if any(all(min(abs(u-v),1-abs(u-v))<mp.mpf('1e-30') for u,v in zip(pos,old)) for old in seen): continue
+            seen.append(pos);expanded.append((site,r,pos))
+        counts.append(len(seen))
+    return reciprocal,expanded,counts,len(group['operations'])
+
+
+cache={}
+def structure(c,index):
+    if c['id'] not in cache:cache[c['id']]=model(c)
+    reciprocal,expanded,counts,operations=cache[c['id']]
+    h=mp.matrix([c['reflections'][index-1]])
+    s2=(h*reciprocal*h.T)[0]/4
+    total=mp.mpc(0)
+    for site,r,pos in expanded:
+        tensor=list(map(M,site['tensor']));adp=site['adp']
+        if not c['anisotropic'] and adp>=2: exponent=mp.mpf(0)
+        elif adp<2:
+            b=tensor[0] if adp==0 else 8*mp.pi**2*tensor[0]
+            exponent=b*s2
+        else:
+            pairs=[(0,0),(1,1),(2,2),(0,1),(0,2),(1,2)]
+            if adp==2: tensor=[2*mp.pi**2*u*mp.sqrt(reciprocal[i,i]*reciprocal[j,j]) for u,(i,j) in zip(tensor,pairs)]
+            mat=mp.matrix([[tensor[0],tensor[3],tensor[4]],[tensor[3],tensor[1],tensor[5]],[tensor[4],tensor[5],tensor[2]]])
+            hr=h*r;exponent=(hr*mat*hr.T)[0]
+        phase=(h*mp.matrix(pos))[0]
+        total+=M(site['occupancy'])*amplitude(site['species'],s2,c['radiation'],c['wavelength'],c['anomalous'])*mp.exp(-exponent)*mp.exp(2*mp.pi*mp.j*phase)
+    return dict(real=total.real,imaginary=total.imag,fc=abs(total),fc2=abs(total)**2,
+                rounded_phase=int(mp.floor(mp.arg(total)*180/mp.pi+mp.mpf('360.5')))%360),counts,operations
+
+
+def main():
+    ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);args=ap.parse_args()
+    args.output.mkdir(parents=True,exist_ok=False)
+    paths={'GNU':ROOT/'build-phase16/mingw-differential.json','MSVC':ROOT/'build-phase16/msvc-differential.json'}
+    reports={k:json.loads(p.read_text()) for k,p in paths.items()}
+    actual={k:parse(p.with_suffix('.stdout.txt').read_text()) for k,p in paths.items()}
+    records={};proof_failures=[]
+    for compiler,report in reports.items():
+        for f in report['raw_failures']:
+            c=cases[f['case']];key=(f['case'],f['field'])
+            if key not in records:
+                independent=None;category='';reason='';passed=True;detail={}
+                if f['field'].startswith('site.'):
+                    index=int(f['field'].split('.')[1]);reciprocal,expanded,counts,ops=model(c)
+                    independent=mp.mpf(counts[index])/ops
+                    category='binary32_occupancy_fraction';reason='Integer unique/operation count is exact; Legacy stores its quotient in REAL.'
+                    detail=dict(unique=counts[index],operations=ops)
+                elif f['field'].startswith('reflection.'):
+                    _,index,field=f['field'].split('.');values,counts,ops=structure(c,int(index));independent=values[field]
+                    if abs(values['fc'])<mp.mpf('1e-50'):
+                        category='centering_precondition';reason='Direct sum over exact translated operations cancels. Legacy scales the primitive sum by ncoper and assumes upstream absence filtering.'
+                    elif c['anomalous'] and c['anisotropic'] and groups[native['cases'][str(c['id'])]['group_id']]['centrosymmetry']!=1:
+                        category='acentric_anomalous_fprime';reason='Native sfcalc_anis_anomal acentric branch omits fprime; independent complex amplitude includes the captured NIST fprime.'
+                    else:
+                        category='binary32_structure_arithmetic';reason='80-digit direct sum verifies binary64 phase, metric and accumulation against retained REAL evaluation.'
+                elif f['field'] in ('fprime','fdoubleprime'):
+                    independent=anomaly(c['z'],c['wavelength'])[0 if f['field']=='fprime' else 1]
+                    category='binary32_anomalous_interpolation';reason='80-digit linear/logarithmic interpolation of source decimal table and retained physical constants.'
+                elif c.get('category')=='boundary-observation':
+                    category='binary64_interpolation_endpoint';reason='Input is at a source table endpoint. Native REAL energy conversion and rounded table nodes can accept/reject differently from binary64.'
+                    proof=anomaly(c['z'],c['wavelength'])
+                    conversion=1e7*6.62607015e-34*2.998e8/1.602176634e-19
+                    energy=conversion/c['wavelength'];points=nist[c['z']-1]['points']
+                    binary64_inside=points[0][0]<=energy<=points[-1][0]
+                    independent='inside' if proof is not None else 'outside'
+                    cpp_inside=f['field']=='error.reason' and f['cpp'] is None
+                    passed=cpp_inside==binary64_inside
+                    detail=dict(input_wavelength=c['wavelength'],binary64_energy=energy,
+                                interval=[points[0][0],points[-1][0]],binary64_inside=binary64_inside,
+                                mathematical_interval=independent,
+                                mathematical_energy=mp.nstr(M('1e7')*M('6.62607015e-34')*M('2.998e8')/M('1.602176634e-19')/M(c['wavelength']),65))
+                else: raise RuntimeError(f'Unexplained failure: {f}')
+                if isinstance(independent,(mp.mpf,int)):
+                    passed=abs(M(f['cpp'])-independent)<=mp.mpf('2e-10')*(1+abs(independent))
+                    if f['field'].endswith('rounded_phase'): passed=f['cpp']==independent
+                    display=mp.nstr(independent,65)
+                else: display=independent
+                records[key]=dict(case=f['case'],fixture=c.get('name',c['mode']),field=f['field'],
+                    legacy=f['legacy'],cpp_by_compiler={},independent_expected=display,
+                    category=category,mathematical_reason=reason,detail=detail,
+                    independent_check_passed=bool(passed),approval='pending')
+            record=records[key];record['cpp_by_compiler'][compiler]=f['cpp']
+            if record['category']!='binary64_interpolation_endpoint':
+                independent=M(record['independent_expected'])
+                good=abs(M(f['cpp'])-independent)<=mp.mpf('2e-10')*(1+abs(independent))
+                if f['field'].endswith('rounded_phase'):good=f['cpp']==independent
+                record['independent_check_passed'] &= bool(good)
+            elif record['detail']['binary64_inside']:
+                points=nist[c['z']-1]['points']
+                energy=max(M(points[0][0]),min(M(points[-1][0]),M(record['detail']['binary64_energy'])))
+                limit=anomaly(c['z'],c['wavelength'],energy)
+                observed=actual[compiler]['cases'][str(c['id'])]['values']
+                values=[float(observed[3]),float(observed[4])]
+                good=all(abs(M(value)-exact)<=mp.mpf('2e-10')*(1+abs(exact)) for value,exact in zip(values,limit))
+                record['independent_check_passed'] &= bool(good)
+                record['detail'].setdefault('cpp_boundary_amplitude_by_compiler',{})[compiler]=values
+                record['detail']['independent_boundary_amplitude']=[mp.nstr(v,65) for v in limit]
+    for record in records.values():
+        record['fingerprint']=hashlib.sha256(json.dumps({k:record[k] for k in ('case','field','legacy','cpp_by_compiler')},sort_keys=True).encode()).hexdigest()
+        if not record['independent_check_passed']:proof_failures.append(record)
+    results=list(records.values())
+    payload=dict(approval=dict(status='pending-explicit-user-approval'),records=results,
+        counts=dict(records=len(results),categories=dict(Counter(r['category'] for r in results))),
+        compiler_fingerprints={k:dict(runner_sha256=v['runner_sha256'],report_sha256=hashlib.sha256(paths[k].read_bytes()).hexdigest()) for k,v in reports.items()},
+        independent_method='mpmath 80 decimal digits: general metric inverse, exact rational archived symmetry, unique-site direct complex sum, source scattering tables',
+        independent_failures=len(proof_failures),script_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
+    (args.output/'qualification-records.json').write_text(json.dumps(payload,indent=2)+'\n')
+    (args.output/'qualification-proof.json').write_text(json.dumps(dict(success=not proof_failures,
+        records=len(results),failures=proof_failures,precision_decimal_digits=80),indent=2)+'\n')
+    print(json.dumps(payload['counts']));print('Independent failures:',len(proof_failures))
+
+
+if __name__=='__main__':main()

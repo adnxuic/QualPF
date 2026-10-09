@@ -1,0 +1,140 @@
+{
+  "scope_id": "36D-WINDOWS-LP-FORMED-ANGLE-CONTRACT",
+  "proposal_SHA256": "091a1baf70b89232075c82c5d053b468edae04a499926517b4812ca528d4a1a6",
+  "status": "AI_APPROVED_WITH_BOUNDED_CONTRACT",
+  "classification": "AI_APPROVED_NUMERICAL_CORRECTION",
+  "selected_option": "B",
+  "human_approved": false,
+  "considered_alternatives": [
+    {
+      "option": "A",
+      "description": "Retain host sin/cos",
+      "rejected_reason": "Reproduced version/CPU dependent bits; not deterministic or consistently correct RNE"
+    },
+    {
+      "option": "B",
+      "description": "Reuse qualified exact bounded phase owner for the already formed theta and two-theta",
+      "recommendation": true
+    },
+    {
+      "option": "C",
+      "description": "Imitate old CRT approximation or accept one ULP",
+      "rejected_reason": "No deliberate compatibility authority for accidental CRT rounding; exact implementation already available"
+    }
+  ],
+  "recommendation_rationale": "Host CRT observations are not stable mathematical RNE. The already qualified integer owner yields exact independently proved formed-angle trigonometry without changing accepted LP formula or operation order.",
+  "numerical_state_dependency_analysis": {
+    "contract": "Mathematical RNE binary64 sin/cos of existing formed th/tth; preserve constant, angle multiplication order, Lorentz/polarization and raw/merge/normalization order; existing floating environment remains for elementary arithmetic",
+    "domain": {
+      "radians_bits": "3f91df46a2529d39",
+      "largest_admitted_degrees": "40667fffffffffff",
+      "exact_endpoint_product_less_than_binary64_pi": true,
+      "parameter_only_impossible_cell_guard_precedes_private_trigonometry": true,
+      "valid_cell_formula_and_90_degree_cosine_convention_unchanged": true,
+      "LP_parameter_validation_unchanged": true
+    },
+    "state": "Stateless value calculation; validation order/error fields and nonfinite rejection unchanged; no publication/state/schema changes"
+  },
+  "independent_proof_references": [
+    {
+      "path": ".evidence/raw/phase36d-formed-angle-contract/batch-001/independent-proof001.py",
+      "sha256": "4eca82f41287f88bae2ac9d5ec525df9dbccc3ad94e06ce5e752578b625fc39a"
+    },
+    {
+      "path": ".evidence/raw/phase36d-formed-angle-contract/batch-001/independent-proof001.json",
+      "sha256": "dfdab7b05ab9dbf5820f3e52df96cf06ddc48e046ec55be67428d40194250b7a"
+    },
+    {
+      "path": ".evidence/raw/phase36d-formed-angle-contract/batch-001/lp-independent-review001.md",
+      "sha256": "a6e781b8cda7774b290c61fb4973a1641bb5269970de0b8015846b3c8f76848c"
+    },
+    {
+      "path": ".evidence/raw/phase36d-formed-angle-contract/batch-001/lp-premise-conformance001.json",
+      "sha256": "b4005576f7ce2679fb8f1f0c5ce5a07131497774481fbdd7030815edce62d814"
+    }
+  ],
+  "native_observations": "Original frozen Phase17 Native numerical differences and its two human-approved normalization-floor records preserved, not broadened",
+  "current_CPP_observations": [
+    {
+      "compiler": "GNU",
+      "exact_reflections": 8361,
+      "unchanged_case_shapes_errors_membership_order": true,
+      "independent_expected_from_CPP": false,
+      "Card_and_Scattering_byte_unchanged": true
+    },
+    {
+      "compiler": "MSVC",
+      "exact_reflections": 8361,
+      "unchanged_case_shapes_errors_membership_order": true,
+      "independent_expected_from_CPP": false,
+      "Card_and_Scattering_byte_unchanged": true
+    }
+  ],
+  "known_differences": {
+    "original_GNU_fields": 10,
+    "original_MSVC_fields": 2315,
+    "actual_guest_MSVC_entry_to_original": 1783,
+    "all_successor_expected_independent": true
+  },
+  "excluded_scope": [
+    "UnitCell",
+    "Card numerical changes",
+    "Scattering",
+    "ADP",
+    "exp/log/asin/atan/hypot",
+    "GUI/lifecycle/state",
+    "schema",
+    "architecture/PFSM",
+    "Linux/macOS"
+  ],
+  "source_fingerprints": {
+    "src/core/crystallography/powder_intensity.cpp": "da6055402c7b493759d57cce6d11d9401ca457097f51381e52db8ec215d4495d",
+    "src/core/crystallography/unit_cell.cpp": "d80ea785e97a2caa4f4011b62db80cc6c0b231b483c8c61041e9a7b9bbdf89e2",
+    "src/core/crystallography/phase_sincos.cpp": "503f0fb1b912c79cc964461c20af6e34640b01a2b980ff06d0ee412f0548eac3",
+    "src/core/crystallography/phase_sincos.h": "e5e44de697702a5224974694bcff8b2276623c0c6c66a69ce3b1fefdee97880d"
+  },
+  "approved_candidate_source": {
+    "path": ".evidence/raw/phase36d-formed-angle-contract/batch-001/powder-intensity-candidate001.cpp",
+    "sha256": "acdbda45acec5155d4e456741b46c297fc644c2e58dcaa981f0b9d1126c3bc5e"
+  },
+  "runner_evidence_fingerprints": [
+    {
+      "path": ".evidence/raw/phase36d-formed-angle-contract/batch-001/host-trial-gnu003/trial.json",
+      "sha256": "1790fec63ff96c29a7ce8b8e0d821c2c98952bee5849b969c83b588c9535ba13"
+    },
+    {
+      "path": ".evidence/raw/phase36d-formed-angle-contract/batch-001/host-trial-gnu003/powder-candidate.stdout",
+      "sha256": "1bdb67ef3571c2c73c63c78ca3d1e57679862a00f399239d29e5167555636242"
+    },
+    {
+      "path": ".evidence/raw/phase36d-formed-angle-contract/batch-001/GNU-powder-independent-expected001.json",
+      "sha256": "6ecc4866724fe1daca6c5437d06b0eb63bf4b6cf94dda67fa71bb8b569ac5ae3"
+    },
+    {
+      "path": ".evidence/raw/phase36d-formed-angle-contract/batch-001/host-trial-msvc003/trial.json",
+      "sha256": "670cb2ed209fad50fdefbc0ec27798ddbb039eed9653a819eeed66071aea00db"
+    },
+    {
+      "path": ".evidence/raw/phase36d-formed-angle-contract/batch-001/host-trial-msvc003/powder-candidate.stdout",
+      "sha256": "1bdb67ef3571c2c73c63c78ca3d1e57679862a00f399239d29e5167555636242"
+    },
+    {
+      "path": ".evidence/raw/phase36d-formed-angle-contract/batch-001/MSVC-powder-independent-expected001.json",
+      "sha256": "6ecc4866724fe1daca6c5437d06b0eb63bf4b6cf94dda67fa71bb8b569ac5ae3"
+    },
+    {
+      "path": "tests/data/lp-successor-fields.json",
+      "sha256": "9d04ac5e742ead75c240a104cef4ec6e1ba72343ea629906070ab80f2658a3e4"
+    },
+    {
+      "path": "tests/data/lp-formed-angle-reference.txt",
+      "sha256": "237effc96d0ec877c115e3b1345f1b6dc88c1d9b60727631e5c4255beb3cdf6a"
+    }
+  ],
+  "regression_impact": "Exactly bounded 10 GNU and2315 MSVC original full-output fields; no changed native-input geometry/Fc2/membership/rank/errors or old qualification authority. Current Card failure retained out of scope.",
+  "confidence": "EVIDENCE_STRONG",
+  "evidence_completeness": "Independent exact arithmetic, complete bounded inputs/output mapping, GNU/MSVC off-tree caller and physical-property conformance. Actual rebuilt product/guest gate remains mandatory.",
+  "final_gate": "IMPLEMENTATION_ALLOWED; actual normal GNU/MSVC product conformance and exact successor protocol required before batch commit",
+  "new_tolerance": false,
+  "old_human_approvals_not_extended": true
+}

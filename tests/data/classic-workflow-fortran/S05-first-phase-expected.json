@@ -1,0 +1,86 @@
+{
+  "error": null,
+  "fields": {
+    "peak.1.d_spacing": [
+      9.090909090909092
+    ],
+    "peak.1.delta_d": [
+      0.01
+    ],
+    "peak.1.fwhm": [
+      0.1
+    ],
+    "peak.1.integrated_intensity": [
+      10
+    ],
+    "peak.1.intensity": [
+      50
+    ],
+    "peak.1.original_intensity": [
+      100
+    ],
+    "peak.1.two_theta": [
+      10
+    ],
+    "peak.2.d_spacing": [
+      4.761904761904762
+    ],
+    "peak.2.delta_d": [
+      0.01
+    ],
+    "peak.2.fwhm": [
+      0.1
+    ],
+    "peak.2.integrated_intensity": [
+      20
+    ],
+    "peak.2.intensity": [
+      100
+    ],
+    "peak.2.original_intensity": [
+      200
+    ],
+    "peak.2.two_theta": [
+      20
+    ],
+    "peak.3.d_spacing": [
+      3.225806451612903
+    ],
+    "peak.3.delta_d": [
+      0.01
+    ],
+    "peak.3.fwhm": [
+      0.1
+    ],
+    "peak.3.integrated_intensity": [
+      10
+    ],
+    "peak.3.intensity": [
+      50
+    ],
+    "peak.3.original_intensity": [
+      100
+    ],
+    "peak.3.two_theta": [
+      30
+    ],
+    "quality": [
+      0.95,
+      0.9,
+      0.95
+    ]
+  },
+  "discrete": {
+    "associations": [
+      "0",
+      "1",
+      "2"
+    ],
+    "remaining_ids": [
+      "1",
+      "2",
+      "3"
+    ],
+    "removed_ids": []
+  }
+}

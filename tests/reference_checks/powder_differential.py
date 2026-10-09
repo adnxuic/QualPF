@@ -1,0 +1,115 @@
+from reference_paths import reference_path
+"""Phase 17 numerical/membership gate; immutable original native observations."""
+import argparse
+import hashlib
+import json
+import math
+import os
+from pathlib import Path
+import subprocess
+import zipfile
+from powder_capture import parse
+from powder_qualification import apply
+
+ROOT=Path(__file__).resolve().parents[2]
+
+
+def inputs(cases, expected):
+    out=[]
+    for c in cases:
+        old=expected[str(c['id'])]
+        out.append(' '.join(map(str,[c['id'],c['radiation'],c['sync'],c['wavelength'],c['tolerance'],old['count']])))
+        for r in old['reflections']:
+            # NaN Fc2 is the retained sqrt(negative) observation. Angle/d sentinels
+            # are not silently corrected. No new C++ quantities create expected.
+            out.append(' '.join(map(str,[r['id'],*r['hkl'],r['multiplicity'],r['d'],r['two_theta'],r['fc2']])))
+    return '\n'.join(out)+'\n'
+
+
+def compare(cases, old, new, errors, tolerances):
+    ids={str(c['id']) for c in cases}
+    assert set(old)==ids and not (set(new)&set(errors)) and set(new)|set(errors)==ids, 'incomplete case protocol'
+    failed=[]; observations=[]; counts={}; checks=0
+    def eq(cid,field,a,b,t=None):
+        nonlocal checks
+        checks+=1
+        if t is None: good=a==b
+        else: good=math.isfinite(a) and math.isfinite(b) and abs(a-b)<=t['absolute']+t['relative']*abs(a)
+        if not good: failed.append(dict(case=int(cid),field=field,legacy=a,cpp=b))
+    reasons={'all-zero':'all_zero_normalization','singular-zero':'invalid_d_spacing',
+        'singular-180':'lp_singularity','invalid-negative-fc2':'invalid_fc_squared',
+        'invalid-multiplicity':'invalid_multiplicity','invalid-radiation':'unsupported_radiation',
+        'invalid-angle-nan':'invalid_d_spacing','invalid-overlap':'invalid_overlap_configuration',
+        'empty':'empty_reflection_set'}
+    for c in cases:
+        cid=str(c['id']); a=old[cid]; b=new.get(cid)
+        counts[c['category']]=counts.get(c['category'],0)+1
+        if c['name'] in reasons:
+            eq(cid,'error.reason',reasons[c['name']],errors.get(cid,{}).get('reason'))
+            observations.append(dict(case=c['id'],category=c['category'],legacy=a,cpp=errors.get(cid)))
+            continue
+        if b is None:
+            eq(cid,'case.error','complete finite result',errors.get(cid));continue
+        assert len(b['reflections'])==len(a['reflections']), f'{cid}: missing reflection'
+        assert len({r['id'] for r in b['reflections']})==len(b['reflections']), f'{cid}: duplicate reflection'
+        for ar,br in zip(a['reflections'],b['reflections']):
+            prefix=f'reflection.{ar["id"]}.'
+            for f in ('id','hkl','multiplicity','d','two_theta','fc2'): eq(cid,prefix+f,ar[f],br[f])
+            for f in ('lorentz','polarization','lp'): eq(cid,prefix+f,ar[f],br[f],tolerances['correction'])
+            eq(cid,prefix+'raw',ar['raw'],br['raw'],tolerances['raw'])
+        eq(cid,'groups',a['groups'],b['groups'])
+        eq(cid,'line_count',len(a['lines']),len(b['lines']))
+        if len(a['lines'])!=len(b['lines']): continue
+        for al,bl in zip(a['lines'],b['lines']):
+            prefix=f'line.{al["id"]}.'
+            for f in ('id','representative','d','two_theta'): eq(cid,prefix+f,al[f],bl[f])
+            for f in ('raw','relative'): eq(cid,prefix+f,al[f],bl[f],tolerances[f])
+        # Physical output order is exact above. Inspect normalized ranking as
+        # ordered tie groups, never granting a broad float/order exemption.
+        def ranks(lines):
+            groups=[]
+            for line in sorted(lines,key=lambda r:(-r['relative'],r['representative'])):
+                if not groups or groups[-1][0]!=line['relative']: groups.append((line['relative'],[]))
+                groups[-1][1].append(line['representative'])
+            return [ids for _,ids in groups]
+        eq(cid,'normalized_rank',ranks(a['lines']),ranks(b['lines']))
+    return dict(checks=checks,counts=counts,raw_failures=failed,raw_failure_count=len(failed),observations=observations)
+
+
+def run(runner,output,compiler):
+    manifest=json.loads((reference_path(ROOT/'tests/data/powder-intensity-reference-manifest.json')).read_text())
+    archive=reference_path(ROOT/'tests/data'/manifest['archive'])
+    assert hashlib.sha256(archive.read_bytes()).hexdigest()==manifest['archive_sha256']
+    with zipfile.ZipFile(archive) as z:
+        cases=json.loads(z.read('cases.json')); expected=json.loads(z.read('expected.json'))
+        for name,digest in manifest['native_manifest']['files'].items():
+            assert hashlib.sha256(z.read(name)).hexdigest()==digest
+    inp=inputs(cases,expected)
+    output.parent.mkdir(parents=True,exist_ok=True)
+    output.with_suffix('.input.txt').write_text(inp)
+    env=os.environ.copy()
+    result=subprocess.run([str(runner.resolve())],input=inp,capture_output=True,text=True,env=env,timeout=90)
+    output.with_suffix('.stdout.txt').write_text(result.stdout);output.with_suffix('.stderr.txt').write_text(result.stderr)
+    assert result.returncode==0,result.stderr
+    new=parse(result.stdout);errors={}
+    for line in result.stdout.splitlines():
+        p=line.split()
+        if p and p[0]=='ERROR':
+            assert len(p)==4 and p[1] not in errors
+            errors[p[1]]=dict(field=p[2],reason=p[3])
+    report=compare(cases,expected,new,errors,manifest['native_manifest']['tolerances'])
+    runner_hash=hashlib.sha256(runner.read_bytes()).hexdigest()
+    accepted,unresolved,approval=apply(ROOT,runner_hash,compiler,report['raw_failures'])
+    report.update(compiler=compiler,runner_sha256=runner_hash,
+                  archive_sha256=manifest['archive_sha256'],qualified_count=len(accepted),
+                  unresolved=unresolved,unresolved_count=len(unresolved),
+                  qualification_approval=approval,success=not unresolved)
+    output.write_text(json.dumps(report,indent=2)+'\n')
+    print(json.dumps({k:v for k,v in report.items() if k not in ('raw_failures','unresolved','observations')}))
+    return report
+
+
+if __name__=='__main__':
+    ap=argparse.ArgumentParser();ap.add_argument('--runner',type=Path,required=True)
+    ap.add_argument('--output',type=Path,required=True);ap.add_argument('--compiler',required=True)
+    a=ap.parse_args();raise SystemExit(0 if run(a.runner,a.output,a.compiler)['success'] else 1)

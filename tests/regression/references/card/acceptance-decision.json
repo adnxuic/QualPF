@@ -1,0 +1,57 @@
+{
+  "status": "approved-by-user",
+  "qualification_count": 109,
+  "scope": "Only the 109 exact case/field records in qualification-review.md and qualification-records.json",
+  "compiler_fingerprints": {
+    "GNU": {
+      "runner_sha256": "1099b0ab9a2b8024831344ff2211f30dd8bed9f8288a1efd713fdb178c697032"
+    },
+    "MSVC": {
+      "runner_sha256": "1fb8af7fa397d0793ac934fa0802d4d72a9f879cf59b532af34c9a3b4d207e26"
+    }
+  },
+  "evidence_sha256": {
+    "docs/refactoring/phase-18/chemistry-resource-hashes.json": "8afce21e14d847aeebdfaa9d2bb3f7c58cf8864553f4578370ebded1ba4bc44e",
+    "docs/refactoring/phase-18/contracts.md": "45b7745c832b43914c2f7296695c9207aa98006adb9cbbc5fda50d70119e58aa",
+    "docs/refactoring/phase-18/cpp-replay-evidence-manifest.json": "2b25c32c19dbea50cbf41036622cc6f2b0f09ba1bdba6c6d4b95052751cad801",
+    "docs/refactoring/phase-18/cpp-replay-evidence.zip": "3e4169ae5629dd4860ce542233c72ecc7e6dd8ea70cbbb1bfbdc5d651e694827",
+    "docs/refactoring/phase-18/oracle-seal.json": "b800846b4688c57899e1882ff0f0425a9eee2818a57bf8520a42044e6c4fa41e",
+    "docs/refactoring/phase-18/prove_qualification.py": "fb8deaf2bfe3def43144da8abdc04a27ced5a2c0df684e84af6e8801ab59ca19",
+    "docs/refactoring/phase-18/qualification-proof.json": "8f3acf6123f55faf9c9bd2c2d2c796c00da8e2771ca2b2ce8b0eb7c2a84f7db8",
+    "docs/refactoring/phase-18/qualification-records.json": "b0c2d206b11827d03da2e4ed1862097e8df0010957b2d838e4fd317ac058d3fa",
+    "docs/refactoring/phase-18/qualification-review.md": "13f92d2b12415cd1cdef67834641ed48d307a19617640f6bdb81c7ec0c43ed2c",
+    "legacy/fortran/crystallography/nist_table.f90": "eaed0142962ebb40116486e134e0a8d9a468371d7e355a8619968a93b26654d3",
+    "share/qualx/files/AtomProperties.xen": "5062942c7d0b5a92fac7b864e046bcba77313f00764c2f941178cd2b4cc6996e",
+    "src/core/CMakeLists.txt": "6f0890d24a6a2f073c5a9c8e5bbdabae02718025efb543da72752bb8b916cf52",
+    "src/core/crystallography/chemistry.cpp": "037f2b84e881c810acf8b02bf59d8aa947d732e1e88ec56a5f82c456e3b30b05",
+    "src/core/crystallography/chemistry_data.inc": "8e5e9186d8f025aa7aa679a58bd202cfcb5a163a33f1d7eb4d7c8bdcfc513397",
+    "src/core/crystallography/composition.cpp": "7530547011e487e7a31202018a9fbb025932409c7856cae023cd853120eb99dc",
+    "src/core/crystallography/theoretical_card.cpp": "76fcb4f5acb6375982f73d15f97d214983545971c637861d811fc5a1bcb6251b",
+    "src/core/include/qualpf/crystallography/chemistry.h": "40598c0174d3124e427d87660703c4021aadce824c472f43458f7f95ce953268",
+    "src/core/include/qualpf/crystallography/composition.h": "2afb0f9c0ce6f103c87f45a9d124c62dfd5d0ef86545a2ed555bd962b0d3c5d0",
+    "src/core/include/qualpf/crystallography/theoretical_card.h": "1e6daaa25d3828a2c6229e48bfa71349c3caf4df98090ff41c087bf072b3d1db",
+    "tests/CMakeLists.txt": "6352fc14b3574ea7f8d6fabfb2a119cd46b65d91b0d472da6dc80d020d79f678",
+    "tests/compatibility/card_acceptance_test.py": "7aa3d24f7315a75650dae388c88df7e82c451e6b1c6f92f0f2f43b8cdd1ad07b",
+    "tests/compatibility/card_differential.py": "f1a8d686d4696cf279f9b69ed6c45fa257f820da2393b5d53b50955d2ff0a17b",
+    "tests/compatibility/card_properties.py": "3c41f99a06ad3ff8a0aacc2747888a3a3725b57f35165109fc6269cb779c22ea",
+    "tests/compatibility/card_qualification.py": "2244a1ac5832bc8fd79a43a2533992270db1df4ccb1d14f8ddf26411d532641f",
+    "tests/compatibility/card_replay.cpp": "0de1846319fb4975fc42632b4ea41d7fa3572b18af3ec18028761dd853f0e05c",
+    "tests/data/card-reference-manifest.json": "bf10ba2d63017b4363707ec51413123cd0de0dbac8813a6929820f5341f710bc",
+    "tests/data/composition-density-reference-manifest.json": "1187488f938dedea802d82836df75feac3512130ec804168e25334d5dfc5f891",
+    "tests/data/rir-reference-manifest.json": "b147fdaf923f147473ef77de4987c26738a40421fb346107d461d2faedf8010e",
+    "tests/data/theoretical-card-reference.zip": "19312fffd4a1e4bec2630701d7f4088f1baf60a1953a7414da6e1ad833a02a0f",
+    "tests/unit/card_properties.cpp": "889730db1a3ee48e0f9ecf7795b8b47927775a148d808e0a83e834eb289e8a65",
+    "tools/crystallography/generate_chemistry.py": "aa5488fe1cd7306a3752eee4b44e88d095f419bb4f6798f1571b79e793d9ae69"
+  },
+  "numerical_equivalence_to_legacy": false,
+  "raw_failures_preserved": true,
+  "reference_changed": false,
+  "tolerance_changed": false,
+  "authority": "Explicit user response in the active Phase 18 goal conversation",
+  "stale_or_new_or_changed_fields": "fail closed",
+  "user_approval": "\u6279\u51c6\u5168\u90e8 109 \u9879\uff0c\u5b8c\u6210\u9a8c\u6536",
+  "recorded_at_utc": "2026-09-26T11:02:02.076590+00:00",
+  "proposal_sha256": "ce766585c64caa639d256bb8aba176c1ce71b66271615662440357e61209daba",
+  "qualification_records_sha256": "b0c2d206b11827d03da2e4ed1862097e8df0010957b2d838e4fd317ac058d3fa",
+  "historical_review_status": "The pending proposal/review/records are retained unchanged; this separate decision records approval of every listed case and field."
+}

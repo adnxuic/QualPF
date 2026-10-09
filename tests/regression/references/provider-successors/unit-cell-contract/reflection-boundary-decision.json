@@ -1,0 +1,552 @@
+{
+  "scope_id": "36D-UNITCELL-REFLECTION-BOUNDARY-SUCCESSOR",
+  "status": "AI_APPROVED_WITH_BOUNDED_CONTRACT",
+  "risk": "D",
+  "parent_batch": "36D-WINDOWS-UNIT-CELL-FORMED-ANGLE-CONTRACT",
+  "baseline": "5306b94c072999ed8faaf89705ab660706182d12",
+  "cause": "The approved exact formed-angle owner now gives MSVC the already accepted GNU half-angle determinant; source-order inverse factor makes z-axis d strictly below the exact cutoffs",
+  "alternatives": [
+    {
+      "option": "A",
+      "description": "Retain old MSVC validator and reject otherwise proved UnitCell arithmetic"
+    },
+    {
+      "option": "B",
+      "description": "Accept only these four exact already-human-approved GNU fingerprints as an AI MSVC successor, retaining the original two superseded MSVC failures"
+    },
+    {
+      "option": "C",
+      "description": "Change formula or widen/snap bounds, contrary to the approved UnitCell/Reflection contract"
+    }
+  ],
+  "recommended": "B",
+  "independent_proof": {
+    "method": "Exact Fraction Taylor/enclosure RNE, rational square-root rounding, source-order binary64; analytical hypot(0,0,x)=abs(x)",
+    "determinant_bits": "3feffffffffffffe",
+    "inverse_factor_z_bits": "3fd0000000000001",
+    "axes": [
+      {
+        "hkl": [
+          0,
+          0,
+          1
+        ],
+        "norm_bits": "3fd0000000000001",
+        "d_bits": "400ffffffffffffe",
+        "d": 3.999999999999999,
+        "cutoff": 4.0,
+        "rejected": true
+      },
+      {
+        "hkl": [
+          0,
+          0,
+          2
+        ],
+        "norm_bits": "3fe0000000000001",
+        "d_bits": "3ffffffffffffffe",
+        "d": 1.9999999999999996,
+        "cutoff": 2.0,
+        "rejected": true
+      }
+    ],
+    "expected_from_new_CPP": false
+  },
+  "native_observations": "Original Legacy exact cubic endpoints included; frozen source/reference and prior qualification unchanged",
+  "current_CPP_observations": {
+    "GNU_status": "passed",
+    "MSVC_status": "failed",
+    "case555_complete_equal": true,
+    "raw_failure_count": 537,
+    "unchanged_approved_MSVC_count": 533,
+    "new_exact_GNU_fingerprints": [
+      {
+        "case": 555,
+        "name": "exact-cubic-boundaries",
+        "group_id": 0,
+        "field": "membership",
+        "location": {
+          "enumeration": 0
+        },
+        "legacy": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            2
+          ],
+          [
+            0,
+            1,
+            -1
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            2,
+            0
+          ],
+          [
+            1,
+            -1,
+            -1
+          ],
+          [
+            1,
+            -1,
+            0
+          ],
+          [
+            1,
+            -1,
+            1
+          ],
+          [
+            1,
+            0,
+            -1
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            -1
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            0,
+            0
+          ]
+        ],
+        "cpp": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            -1
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            2,
+            0
+          ],
+          [
+            1,
+            -1,
+            -1
+          ],
+          [
+            1,
+            -1,
+            0
+          ],
+          [
+            1,
+            -1,
+            1
+          ],
+          [
+            1,
+            0,
+            -1
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            -1
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            0,
+            0
+          ]
+        ],
+        "fingerprint": "a91d9b7dd352cfb40c8ab386584bdde066271e8419d5b4d6df0116f46a3c00a9"
+      },
+      {
+        "case": 555,
+        "name": "exact-cubic-boundaries",
+        "group_id": 0,
+        "field": "ordering",
+        "location": {
+          "enumeration": 0
+        },
+        "legacy": [
+          [
+            0,
+            2,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            -1
+          ],
+          [
+            0,
+            0,
+            2
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            -1,
+            -1
+          ],
+          [
+            1,
+            -1,
+            0
+          ],
+          [
+            1,
+            -1,
+            1
+          ],
+          [
+            1,
+            0,
+            -1
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            -1
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            0,
+            0
+          ]
+        ],
+        "cpp": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            -1
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            -1,
+            0
+          ],
+          [
+            1,
+            0,
+            -1
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            -1,
+            -1
+          ],
+          [
+            1,
+            -1,
+            1
+          ],
+          [
+            1,
+            1,
+            -1
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            0,
+            2,
+            0
+          ],
+          [
+            2,
+            0,
+            0
+          ]
+        ],
+        "fingerprint": "46f20db8e187b886348b4070177b907169c5929ac07fe17a7646ec8f178a4367"
+      },
+      {
+        "case": 555,
+        "name": "exact-cubic-boundaries",
+        "group_id": 0,
+        "field": "membership",
+        "location": {
+          "enumeration": 1
+        },
+        "legacy": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ]
+        ],
+        "cpp": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ]
+        ],
+        "fingerprint": "8469c26974e149ea2a42202d7fe03d2323033f65061e5acd56253a0cb9d4cf12"
+      },
+      {
+        "case": 555,
+        "name": "exact-cubic-boundaries",
+        "group_id": 0,
+        "field": "ordering",
+        "location": {
+          "enumeration": 1
+        },
+        "legacy": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ]
+        ],
+        "cpp": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ]
+        ],
+        "fingerprint": "dc51a7b3a480cc92a04c29a7eff8469bcdf19183d46efd8eef3ae68c21e6abf4"
+      }
+    ],
+    "superseded_MSVC_fingerprints": [
+      "03033072846edcc2756f9328de82edb52ca9fa0b0b92e533472772e961e13425",
+      "79fb81ba79623e9cb63593f38af74d6a327526e956dda099bc7aac8cca836982"
+    ]
+  },
+  "dependencies": "Pure UnitCell creation -> d_spacing -> unchanged generate_reflections minimum-d guard and unchanged order; direct caller boundary only",
+  "excluded": [
+    "other Reflection cases",
+    "new tolerance",
+    "new snapping convention",
+    "Reflection algorithm change",
+    "GUI/state/lifecycle",
+    "architecture/PFSM"
+  ],
+  "regression_impact": "Only MSVC case555 enumerations0/1 membership/order validation successor; production stays the already approved UnitCell candidate",
+  "source_fingerprints": [
+    {
+      "path": "src/core/crystallography/unit_cell.cpp",
+      "sha256": "465513b782a5a60d5669616913df6950029e067c5c5d8d9f89fecbf6f1a33868"
+    },
+    {
+      "path": "src/core/crystallography/reflection.cpp",
+      "sha256": "830ae1eb88f0a99a4f46a62f9857c350db52141eaa4b2c10b4ad498888022267"
+    },
+    {
+      "path": "tests/compatibility/reflection_differential.py",
+      "sha256": "af35e90fef174632c568099c7be2a0daa55f566bdb01adf6ff9cc310ddbc807b"
+    }
+  ],
+  "evidence_fingerprints": [
+    {
+      "path": "docs/refactoring/phase-15/acceptance-decision.json",
+      "sha256": "2584800282643bb6fb64352b133ed1b710bfd0e8b6bae3f60f210a28670ba981"
+    },
+    {
+      "path": "docs/refactoring/phase-15/qualification-records.json",
+      "sha256": "8b15b717a64f9a172d52a42507c84953204b392092da514255db72590b51f921"
+    },
+    {
+      "path": ".evidence/raw/phase36d-formed-angle-contract/batch-001/independent-proof001.py",
+      "sha256": "4eca82f41287f88bae2ac9d5ec525df9dbccc3ad94e06ce5e752578b625fc39a"
+    },
+    {
+      "path": ".evidence/raw/phase36d-unit-cell-contract/batch-001/reflection-entry-failure001.json",
+      "sha256": "2445421ee845696c3c0ad277096898cbafccca63b299494b9962b48f192238f5"
+    },
+    {
+      "path": "build-phase36c/gnu-product-001/tests/reflection-differential.json",
+      "sha256": "8d173f6e981dcbdb2bf03af14420dac286944094f214295489e17bbdc08e0ebb"
+    }
+  ],
+  "runner_fingerprints": [
+    {
+      "path": "build-phase36c/gnu-product-001/qualpf_reflection_replay.exe",
+      "sha256": "9c7facf91f8212deb2437acaf41250b3beca69b274a054fb2acc2b89109695d7"
+    },
+    {
+      "path": "build-phase36c/msvc-product-002/qualpf_reflection_replay.exe",
+      "sha256": "1ee86a9f86604128dc0515b04e44cef089873e162afacb2f391623993bb73098"
+    }
+  ],
+  "confidence": "EVIDENCE_STRONG",
+  "final_gate": "Implementation of exact four-fingerprint successor allowed; current Windows conformance required before UnitCell commit; no old approval/result altered",
+  "schema": "qualpf.reflection_boundary_successor.v1",
+  "proposal_SHA256": "6cc9927ec3cc69295cca796ab324a6d99fd354e40c2f32cbf19ea52e771cb4b2",
+  "classification": "AI_APPROVED_EXISTING_CANONICAL_AUTHORITY",
+  "selected_option": "B",
+  "human_approved": false,
+  "independent_review": {
+    "path": ".evidence/raw/phase36d-unit-cell-contract/batch-001/reflection-boundary-review001.md",
+    "sha256": "75a3325679d57157feaf544b2f746593d84312f5e40603fe9acab912d8332f7d"
+  }
+}

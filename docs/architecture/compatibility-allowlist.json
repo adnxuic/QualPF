@@ -1,0 +1,119 @@
+{
+  "retained": [
+    {
+      "component": "qualpf_test_snapshot",
+      "layer": "Tests",
+      "purpose": "Owned binary32-to-Core transport at tests/support/snapshot",
+      "consumers": [
+        "qualpf_contract_tests",
+        "qualpf_search_integration_tests"
+      ],
+      "contract": "Existing copied values and structured conversion errors; no live numerical storage"
+    },
+    {
+      "component": "Application Kalpha2 use case",
+      "layer": "Application",
+      "purpose": "Per-operation backend selection and retained size/error mapping to the accepted Core owner",
+      "consumers": [
+        "GUI single Kalpha2 use case",
+        "preprocessing contracts"
+      ],
+      "contract": "External cpp/legacy tokens, binary32 precision and historical size/nonfinite errors"
+    },
+    {
+      "component": "qualpf_gui_reference",
+      "layer": "GUI",
+      "purpose": "Element colours, GUI geometry and plot interval lookup",
+      "consumers": [
+        "MainWindow composition",
+        "ManageDatabasesDialog",
+        "XpdViewWidget",
+        "GraphItem"
+      ],
+      "contract": "Existing data/formulas retained; Qt Widgets only, no Application dependency"
+    },
+    {
+      "component": "CifCaptureWriter/CifCrystalInfo",
+      "layer": "Tests",
+      "purpose": "Retired storage capture oracle, absent from production",
+      "consumers": [
+        "qualpf_cif_storage_capture"
+      ],
+      "contract": "Original float/char capacity and SQL capture protocol"
+    },
+    {
+      "component": "LegacyPresentationMirror/native call counter",
+      "layer": "Tests",
+      "purpose": "Historical negative observation fixture only",
+      "consumers": [
+        "plot sink controls",
+        "CIF product probe"
+      ],
+      "contract": "No runtime production owner; actual absence requires separate production source/import inspection"
+    },
+    {
+      "component": "external diagnostics and tokens",
+      "layer": "Adapters",
+      "purpose": "Public compatibility text and selected precision/error routes",
+      "consumers": [
+        "existing CLI/GUI settings and diagnostics"
+      ],
+      "contract": "QUALPF_*_BACKEND cpp/legacy tokens, QualXDB folder, error strings and SQL tables unchanged"
+    },
+    {
+      "component": "SessionView",
+      "layer": "GUI",
+      "purpose": "Immutable Qt projection and intent conversion for one borrowed canonical Session",
+      "consumers": [
+        "GUI widgets and editors"
+      ],
+      "contract": "No mutable canonical state; subscription releases on view destruction"
+    },
+    {
+      "component": "SynchronousSearchService",
+      "layer": "GUI boundary",
+      "purpose": "Synchronous Qt request/projection adapter for CLI and compatibility fixtures",
+      "consumers": [
+        "CLI",
+        "current compatibility probes"
+      ],
+      "contract": "Shared Application SearchEngine; no scorer or cancellation source"
+    },
+    {
+      "component": "AppState fixture",
+      "layer": "Tests",
+      "purpose": "Existing probe setup only, owned by the test Qt application",
+      "consumers": [
+        "current product probes"
+      ],
+      "contract": "No production source, target or global canonical owner"
+    }
+  ],
+  "removed": [
+    "empty qualx_fortran target",
+    "empty ABI/search/dataset bridge headers",
+    "production presentation mirror",
+    "unused CifReader",
+    "production CIF native counter",
+    "constant cppPeakProduct/cppBackgroundProduct selectors",
+    "production AppState facade",
+    "static product plot presenter",
+    "SQL scoring configuration fields",
+    "Unconsumed Attesa/FineAttesa GUI wait-cursor event-pump helpers",
+    "unused qualpf_configure_transitional_cpp forwarding entry after reference source became inert",
+    "src/compat",
+    "qualpf_compatibility_transport target",
+    "qualpf_snapshot_transport product target"
+  ],
+  "renamed": {
+    "DbManager": "qualpf::infrastructure::SqlConnection",
+    "DbQueryBuilder": "qualpf::infrastructure::SqlCandidateQuery",
+    "QualxDbManager": "qualpf::infrastructure::SqlReferenceRepository",
+    "QualxDbCreator": "qualpf::infrastructure::SqlSchemaBuilder",
+    "QualxDbPopulator": "qualpf::infrastructure::Pdf2DatabaseWriter"
+  },
+  "nonsearch_event_pump_scope": {
+    "src/gui/database/databasebuilder.cpp": "Existing modal database-creation progress only; all reference search and close/drain paths exclude it"
+  },
+  "original": "phase37e-entry-20261009:docs/architecture/phase-37/compatibility-allowlist.json"
+}

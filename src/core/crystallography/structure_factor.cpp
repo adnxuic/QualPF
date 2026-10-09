@@ -1,0 +1,400 @@
+#include "qualpf/crystallography/structure_factor.h"
+#include "phase_sincos.h"
+#include <algorithm>
+#include <cmath>
+#include <limits>
+#include <numbers>
+#include <tuple>
+
+namespace qualpf::crystallography {
+namespace {
+constexpr double pi = std::numbers::pi_v<double>;
+constexpr double duplicate_tolerance = 1e-10;
+Error invalid(const char *field, const char *reason) {
+  return {ErrorCode::invalid_input, field, reason, reason};
+}
+Error numerical(const char *field, const char *reason) {
+  return {ErrorCode::numerical_failure, field, reason, reason};
+}
+bool finite(const DisplacementTensor &t) {
+  return std::all_of(t.begin(), t.end(),
+                     [](double x) { return std::isfinite(x); });
+}
+// Sylvester's PSD criterion needs ALL principal minors, not determinant alone.
+// Normalize first; tolerate only the rounding of the determinant calculation.
+bool psd(const DisplacementTensor &v) {
+  double scale = 0;
+  for (double x : v)
+    scale = std::max(scale, std::abs(x));
+  if (scale == 0)
+    return true;
+  DisplacementTensor t{};
+  for (std::size_t i = 0; i < 6; ++i)
+    t[i] = v[i] / scale;
+  constexpr double tol = 32 * std::numeric_limits<double>::epsilon();
+  if (t[0] < 0 || t[1] < 0 || t[2] < 0)
+    return false;
+  if (t[0] * t[1] - t[3] * t[3] < -tol || t[0] * t[2] - t[4] * t[4] < -tol ||
+      t[1] * t[2] - t[5] * t[5] < -tol)
+    return false;
+  return t[0] * t[1] * t[2] + 2 * t[3] * t[4] * t[5] - t[0] * t[5] * t[5] -
+             t[1] * t[4] * t[4] - t[2] * t[3] * t[3] >=
+         -tol;
+}
+std::array<double, 9> matrix(const DisplacementTensor &b) {
+  return {b[0], b[3], b[4], b[3], b[1], b[5], b[4], b[5], b[2]};
+}
+DisplacementTensor transform(const DisplacementTensor &b,
+                             const SymmetryOperation &op) {
+  const auto m = matrix(b);
+  const auto &r = op.rotation();
+  std::array<double, 9> result{};
+  for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j)
+      for (int a = 0; a < 3; ++a)
+        for (int c = 0; c < 3; ++c)
+          result[3 * i + j] += r[3 * i + a] * m[3 * a + c] * r[3 * j + c];
+  return {result[0], result[4], result[8], result[1], result[2], result[5]};
+}
+bool same_position(const FractionalPosition &a, const FractionalPosition &b) {
+  for (int i = 0; i < 3; ++i) {
+    const double d = std::abs(a.coordinates()[i] - b.coordinates()[i]);
+    if (std::min(d, 1 - d) > duplicate_tolerance)
+      return false;
+  }
+  return true;
+}
+bool same_tensor(const DisplacementTensor &a, const DisplacementTensor &b) {
+  double scale = 0;
+  for (std::size_t i = 0; i < 6; ++i)
+    scale = std::max({scale, std::abs(a[i]), std::abs(b[i])});
+  for (std::size_t i = 0; i < 6; ++i)
+    if (std::abs(a[i] - b[i]) > 1e-10 * scale + 1e-15)
+      return false;
+  return true;
+}
+// Uses Phase 13's metric, with the same dimensionless compatibility criterion
+// as Phase 15; no new cell, reciprocal or Bragg implementation.
+bool compatible(const UnitCell &cell, const SpaceGroup &group) {
+  const auto &g = cell.metric().angstrom_squared;
+  const auto &lengths = cell.parameters().lengths_angstrom;
+  for (const auto &op : group.operations()) {
+    const auto &r = op.rotation();
+    for (int i = 0; i < 3; ++i)
+      for (int j = 0; j < 3; ++j) {
+        double transformed = 0;
+        const double scale = lengths[i] * lengths[j];
+        for (int a = 0; a < 3; ++a)
+          for (int b = 0; b < 3; ++b)
+            transformed += r[3 * a + i] * (g[3 * a + b] / scale) * r[3 * b + j];
+        if (!std::isfinite(transformed) ||
+            std::abs(transformed - g[3 * i + j] / scale) > 1e-10)
+          return false;
+      }
+  }
+  return true;
+}
+bool ordered(const ExpandedAtomicSite &a, const ExpandedAtomicSite &b) {
+  return std::tuple{a.species.index(), a.position.coordinates(),
+                    a.occupancy.value(), a.beta} <
+         std::tuple{b.species.index(), b.position.coordinates(),
+                    b.occupancy.value(), b.beta};
+}
+class Sum {
+public:
+  void add(double x) {
+    const double next = sum_ + x;
+    correction_ +=
+        std::abs(sum_) >= std::abs(x) ? (sum_ - next) + x : (x - next) + sum_;
+    sum_ = next;
+  }
+  double value() const { return sum_ + correction_; }
+
+private:
+  double sum_ = 0, correction_ = 0;
+};
+bool close(double a, double b, double tolerance = 1e-10) {
+  return std::isfinite(a) && std::isfinite(b) &&
+         std::abs(a - b) <= tolerance * std::max(std::abs(a), std::abs(b));
+}
+} // namespace
+
+Result<FractionalPosition> FractionalPosition::create(std::array<double, 3> x) {
+  for (double v : x)
+    if (!std::isfinite(v))
+      return Result<FractionalPosition>(
+          invalid("site.position", "invalid_fractional_coordinate"));
+  auto wrapped = SymmetryOperation::wrap_fractional(x);
+  if (!wrapped)
+    return Result<FractionalPosition>(wrapped.error());
+  return Result<FractionalPosition>(FractionalPosition(wrapped.value()));
+}
+Result<Occupancy> Occupancy::create(double value) {
+  if (!std::isfinite(value) || value < 0 || value > 1)
+    return Result<Occupancy>(invalid("site.occupancy", "invalid_occupancy"));
+  return Result<Occupancy>(Occupancy(value == 0 ? 0 : value));
+}
+Result<Displacement> Displacement::isotropic_b(double b) {
+  if (!std::isfinite(b) || b < 0)
+    return Result<Displacement>(
+        invalid("site.displacement", "invalid_isotropic_displacement"));
+  return Result<Displacement>(
+      Displacement(Kind::isotropic_b, {b, 0, 0, 0, 0, 0}));
+}
+Result<Displacement> Displacement::isotropic_u(double u) {
+  if (!std::isfinite(u) || u < 0)
+    return Result<Displacement>(
+        invalid("site.displacement", "invalid_isotropic_displacement"));
+  return isotropic_b(8 * pi * pi * u);
+}
+Result<Displacement> Displacement::anisotropic_u(DisplacementTensor u) {
+  if (!finite(u))
+    return Result<Displacement>(
+        invalid("site.displacement", "nonfinite_displacement"));
+  if (!psd(u))
+    return Result<Displacement>(
+        invalid("site.displacement", "invalid_anisotropic_tensor"));
+  return Result<Displacement>(Displacement(Kind::crystallographic_u, u));
+}
+Result<Displacement> Displacement::anisotropic_b(DisplacementTensor b) {
+  if (!finite(b))
+    return Result<Displacement>(
+        invalid("site.displacement", "nonfinite_displacement"));
+  if (!psd(b))
+    return Result<Displacement>(
+        invalid("site.displacement", "invalid_anisotropic_tensor"));
+  for (double &v : b)
+    v /= 8 * pi * pi;
+  return anisotropic_u(b);
+}
+Result<Displacement> Displacement::anisotropic_beta(DisplacementTensor b) {
+  if (!finite(b))
+    return Result<Displacement>(
+        invalid("site.displacement", "nonfinite_displacement"));
+  if (!psd(b))
+    return Result<Displacement>(
+        invalid("site.displacement", "invalid_anisotropic_tensor"));
+  return Result<Displacement>(Displacement(Kind::beta, b));
+}
+Result<DisplacementTensor> Displacement::beta(const UnitCell &cell) const {
+  if (kind_ == Kind::beta)
+    return Result<DisplacementTensor>(values_);
+  const auto &g = cell.reciprocal_metric().inverse_angstrom_squared;
+  DisplacementTensor out{};
+  constexpr int indices[6][2] = {{0, 0}, {1, 1}, {2, 2},
+                                 {0, 1}, {0, 2}, {1, 2}};
+  for (int i = 0; i < 6; ++i) {
+    const int a = indices[i][0], b = indices[i][1];
+    out[i] = kind_ == Kind::isotropic_b
+                 ? .25 * values_[0] * g[3 * a + b]
+                 : 2 * pi * pi * values_[i] * std::sqrt(g[3 * a + a]) *
+                       std::sqrt(g[3 * b + b]);
+  }
+  if (!finite(out))
+    return Result<DisplacementTensor>(
+        numerical("site.displacement", "nonfinite_displacement"));
+  return Result<DisplacementTensor>(out);
+}
+Result<std::vector<ExpandedAtomicSite>> expand_site(const AtomicSite &site,
+                                                    const UnitCell &cell,
+                                                    const SpaceGroup &group) {
+  if (!compatible(cell, group))
+    return Result<std::vector<ExpandedAtomicSite>>(
+        invalid("structure.cell", "incompatible_symmetry"));
+  auto beta = site.displacement.beta(cell);
+  if (!beta)
+    return Result<std::vector<ExpandedAtomicSite>>(beta.error());
+  std::vector<ExpandedAtomicSite> expanded;
+  for (const auto &op : group.operations()) {
+    auto x = op.apply(site.position.coordinates());
+    if (!x)
+      return Result<std::vector<ExpandedAtomicSite>>(x.error());
+    auto p = FractionalPosition::create(x.value());
+    if (!p)
+      return Result<std::vector<ExpandedAtomicSite>>(p.error());
+    auto tensor = transform(beta.value(), op);
+    if (!finite(tensor))
+      return Result<std::vector<ExpandedAtomicSite>>(
+          numerical("site.displacement", "nonfinite_displacement"));
+    auto found =
+        std::find_if(expanded.begin(), expanded.end(), [&](const auto &s) {
+          return same_position(s.position, p.value());
+        });
+    if (found != expanded.end()) {
+      if (!same_tensor(found->beta, tensor))
+        return Result<std::vector<ExpandedAtomicSite>>(invalid(
+            "site.displacement", "incompatible_special_position_tensor"));
+    } else
+      expanded.push_back({site.species, p.value(), site.occupancy, tensor});
+  }
+  std::sort(expanded.begin(), expanded.end(), ordered);
+  return Result<std::vector<ExpandedAtomicSite>>(std::move(expanded));
+}
+Result<DisplacementTensor> crystallographic_u_from_beta(DisplacementTensor b,
+                                                        const UnitCell &cell) {
+  auto valid = Displacement::anisotropic_beta(b);
+  if (!valid)
+    return Result<DisplacementTensor>(valid.error());
+  const auto &g = cell.reciprocal_metric().inverse_angstrom_squared;
+  constexpr int indices[6][2] = {{0, 0}, {1, 1}, {2, 2},
+                                 {0, 1}, {0, 2}, {1, 2}};
+  for (int i = 0; i < 6; ++i) {
+    const int a = indices[i][0], c = indices[i][1];
+    b[i] /= 2 * pi * pi * std::sqrt(g[3 * a + a]) * std::sqrt(g[3 * c + c]);
+  }
+  if (!finite(b))
+    return Result<DisplacementTensor>(
+        numerical("site.displacement", "nonfinite_displacement"));
+  return Result<DisplacementTensor>(b);
+}
+Result<DisplacementTensor> crystallographic_b_from_beta(DisplacementTensor b,
+                                                        const UnitCell &cell) {
+  auto u = crystallographic_u_from_beta(b, cell);
+  if (!u)
+    return u;
+  for (double &v : u.value())
+    v *= 8 * pi * pi;
+  if (!finite(u.value()))
+    return Result<DisplacementTensor>(
+        numerical("site.displacement", "nonfinite_displacement"));
+  return u;
+}
+Result<double> equivalent_isotropic_b(DisplacementTensor b,
+                                      const UnitCell &cell) {
+  auto valid = Displacement::anisotropic_beta(b);
+  if (!valid)
+    return Result<double>(valid.error());
+  const auto &g = cell.metric().angstrom_squared;
+  const double result = 4. / 3 *
+                        (b[0] * g[0] + b[1] * g[4] + b[2] * g[8] +
+                         2 * b[3] * g[1] + 2 * b[4] * g[2] + 2 * b[5] * g[5]);
+  if (!std::isfinite(result))
+    return Result<double>(
+        numerical("site.displacement", "nonfinite_displacement"));
+  return Result<double>(result);
+}
+Result<CrystalStructure>
+CrystalStructure::create(UnitCell cell, SpaceGroup group,
+                         std::vector<AtomicSite> sites) {
+  if (sites.empty())
+    return Result<CrystalStructure>(
+        invalid("structure.sites", "empty_structure"));
+  if (!compatible(cell, group))
+    return Result<CrystalStructure>(
+        invalid("structure.cell", "incompatible_symmetry"));
+  std::vector<ExpandedAtomicSite> expanded;
+  for (const auto &site : sites) {
+    auto result = expand_site(site, cell, group);
+    if (!result)
+      return Result<CrystalStructure>(result.error());
+    expanded.insert(expanded.end(), result.value().begin(),
+                    result.value().end());
+  }
+  std::sort(expanded.begin(), expanded.end(), ordered);
+  return Result<CrystalStructure>(CrystalStructure(
+      std::move(cell), group, std::move(sites), std::move(expanded)));
+}
+Result<StructureFactor> structure_factor(const CrystalStructure &structure,
+                                         Hkl hkl,
+                                         ScatteringRadiation radiation) {
+  auto valid = validate_radiation(radiation);
+  if (!valid)
+    return Result<StructureFactor>(valid.error());
+  auto d = structure.cell().d_spacing(hkl);
+  if (!d)
+    return Result<StructureFactor>(d.error());
+  auto s = ScatteringVariable::from_d(d.value());
+  if (!s)
+    return Result<StructureFactor>(s.error());
+  auto absence = systematically_absent(hkl, structure.group());
+  if (!absence)
+    return Result<StructureFactor>(absence.error());
+  Sum real, imag;
+  const double h[3] = {double(hkl.h), double(hkl.k), double(hkl.l)};
+  for (const auto &site : structure.expanded_sites()) {
+    auto f = scattering_amplitude(site.species, s.value(), radiation);
+    if (!f)
+      return Result<StructureFactor>(f.error());
+    if (site.occupancy.value() == 0 || absence.value())
+      continue;
+    const auto &x = site.position.coordinates();
+    // Reduce cycles before trig. Each h_i*x_i is bounded by int32 range.
+    const double cycles =
+        std::remainder(h[0] * x[0] + h[1] * x[1] + h[2] * x[2], 1.);
+    const double phase = 2 * pi * cycles;
+    if (!std::isfinite(phase))
+      return Result<StructureFactor>(
+          numerical("structure_factor.phase", "nonfinite_phase"));
+    const auto &b = site.beta;
+    double exponent = h[0] * h[0] * b[0] + h[1] * h[1] * b[1] +
+                      h[2] * h[2] * b[2] + 2 * h[0] * h[1] * b[3] +
+                      2 * h[0] * h[2] * b[4] + 2 * h[1] * h[2] * b[5];
+    if (!std::isfinite(exponent))
+      return Result<StructureFactor>(numerical(
+          "structure_factor.displacement", "nonfinite_displacement_exponent"));
+    // A PSD form may have a tiny negative value from cancellation at its
+    // nullspace.
+    exponent = std::max(0., exponent);
+    const double scale = site.occupancy.value() * std::exp(-exponent);
+    const auto contribution =
+        f.value() * detail::phase_phasor(phase) * scale;
+    real.add(contribution.real());
+    imag.add(contribution.imag());
+  }
+  const std::complex<double> f{real.value(), imag.value()};
+  const double fc2 = std::norm(f);
+  if (!std::isfinite(f.real()) || !std::isfinite(f.imag()) ||
+      !std::isfinite(fc2))
+    return Result<StructureFactor>(
+        numerical("structure_factor.result", "nonfinite_result"));
+  return Result<StructureFactor>(StructureFactor{f, fc2});
+}
+Result<StructureFactor> structure_factor(const CrystalStructure &structure,
+                                         const Reflection &reflection,
+                                         ScatteringRadiation radiation) {
+  auto d = structure.cell().d_spacing(reflection.hkl);
+  if (!d)
+    return Result<StructureFactor>(d.error());
+  if (!close(d.value().value, reflection.d.value))
+    return Result<StructureFactor>(
+        invalid("reflection.d", "reflection_cell_mismatch"));
+  auto angle = two_theta(d.value(), radiation.wavelength);
+  if (!angle)
+    return Result<StructureFactor>(angle.error());
+  if (!close(angle.value().value, reflection.two_theta.value, 1e-9))
+    return Result<StructureFactor>(
+        invalid("reflection.two_theta", "reflection_radiation_mismatch"));
+  return structure_factor(structure, reflection.hkl, radiation);
+}
+Result<std::vector<StructureFactor>>
+structure_factors(const CrystalStructure &structure,
+                  const ReflectionSet &reflections,
+                  ScatteringRadiation radiation) {
+  auto valid = validate_radiation(radiation);
+  if (!valid)
+    return Result<std::vector<StructureFactor>>(valid.error());
+  if (reflections.options().wavelength.value != radiation.wavelength.value)
+    return Result<std::vector<StructureFactor>>(
+        invalid("reflection_set.wavelength", "reflection_radiation_mismatch"));
+  std::vector<StructureFactor> result;
+  result.reserve(reflections.reflections().size());
+  for (const auto &ref : reflections.reflections()) {
+    auto cls = reflection_class(ref.hkl, structure.group(),
+                                reflections.options().friedel);
+    if (!cls)
+      return Result<std::vector<StructureFactor>>(cls.error());
+    auto absent = systematically_absent(ref.hkl, structure.group());
+    if (!absent)
+      return Result<std::vector<StructureFactor>>(absent.error());
+    if (absent.value() || cls.value().multiplicity() != ref.multiplicity ||
+        !equal_hkl(cls.value().canonical(), ref.hkl))
+      return Result<std::vector<StructureFactor>>(
+          invalid("reflection_set.group", "reflection_group_mismatch"));
+    auto f = structure_factor(structure, ref, radiation);
+    if (!f)
+      return Result<std::vector<StructureFactor>>(f.error());
+    result.push_back(f.value());
+  }
+  return Result<std::vector<StructureFactor>>(std::move(result));
+}
+} // namespace qualpf::crystallography

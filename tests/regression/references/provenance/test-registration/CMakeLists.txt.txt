@@ -1,0 +1,474 @@
+# Standalone use is intentionally CXX-only; it never enters the product root's
+# Qt product configuration. Neither mode fetches dependencies or enables tests by default.
+cmake_minimum_required(VERSION 3.20)
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    project(QualpfContracts LANGUAGES CXX)
+    add_subdirectory(../src/core "${CMAKE_CURRENT_BINARY_DIR}/core")
+    add_subdirectory(../src/application/session "${CMAKE_CURRENT_BINARY_DIR}/session")
+    add_subdirectory(../legacy/bridge/snapshot "${CMAKE_CURRENT_BINARY_DIR}/snapshot")
+endif()
+
+if(QUALPF_BUILD_PRODUCT_TESTS OR QUALPF_BUILD_CONTRACT_TESTS)
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    add_executable(qualpf_card_replay compatibility/card_replay.cpp)
+    target_link_libraries(qualpf_card_replay PRIVATE qualpf_core)
+    set_target_properties(qualpf_card_replay PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_executable(qualpf_card_properties unit/card_properties.cpp)
+    target_link_libraries(qualpf_card_properties PRIVATE qualpf_core)
+    set_target_properties(qualpf_card_properties PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_test(NAME qualpf.card.properties COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/card_properties.py"
+        --runner $<TARGET_FILE:qualpf_card_properties>
+        --output "${CMAKE_CURRENT_BINARY_DIR}/card-properties.json")
+    add_test(NAME qualpf.card.reference COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/current_transcendental_reference.py" --domain card
+        --runner $<TARGET_FILE:qualpf_card_replay> --compiler "${CMAKE_CXX_COMPILER_ID}"
+        --output "${CMAKE_CURRENT_BINARY_DIR}/card-differential.json")
+    add_test(NAME qualpf.card.acceptance_gate COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/card_acceptance_test.py")
+    add_test(NAME qualpf.card.chemistry_registry COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../tools/crystallography/generate_chemistry.py" --check)
+    add_executable(qualpf_powder_replay compatibility/powder_replay.cpp)
+    target_link_libraries(qualpf_powder_replay PRIVATE qualpf_core)
+    set_target_properties(qualpf_powder_replay PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_executable(qualpf_powder_properties unit/powder_properties.cpp)
+    target_link_libraries(qualpf_powder_properties PRIVATE qualpf_core)
+    set_target_properties(qualpf_powder_properties PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_test(NAME qualpf.powder.properties COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/powder_properties.py"
+        --runner $<TARGET_FILE:qualpf_powder_properties>
+        --output "${CMAKE_CURRENT_BINARY_DIR}/powder-properties.json")
+    add_test(NAME qualpf.powder.reference COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/current_transcendental_reference.py" --domain powder
+        --runner $<TARGET_FILE:qualpf_powder_replay> --compiler "${CMAKE_CXX_COMPILER_ID}"
+        --output "${CMAKE_CURRENT_BINARY_DIR}/powder-differential.json")
+    add_test(NAME qualpf.powder.protocol_integrity COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/powder_protocol_test.py")
+    add_executable(qualpf_scattering_replay compatibility/scattering_replay.cpp)
+    target_link_libraries(qualpf_scattering_replay PRIVATE qualpf_core)
+    set_target_properties(qualpf_scattering_replay PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_executable(qualpf_scattering_properties unit/scattering_properties.cpp)
+    target_link_libraries(qualpf_scattering_properties PRIVATE qualpf_core)
+    set_target_properties(qualpf_scattering_properties PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    add_test(NAME qualpf.scattering.reference COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/current_transcendental_reference.py" --domain scattering
+        --runner $<TARGET_FILE:qualpf_scattering_replay> --compiler "${CMAKE_CXX_COMPILER_ID}"
+        --output "${CMAKE_CURRENT_BINARY_DIR}/scattering-differential.json")
+    add_test(NAME qualpf.scattering.properties COMMAND qualpf_scattering_properties
+        "${CMAKE_CURRENT_BINARY_DIR}/scattering-properties.json"
+        "${CMAKE_CURRENT_SOURCE_DIR}/data/phase-sincos-reference.txt")
+    add_test(NAME qualpf.scattering.protocol_integrity COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/scattering_protocol_test.py")
+    add_test(NAME qualpf.scattering.table_reproducible COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../tools/crystallography/generate_scattering.py" --check)
+    add_executable(qualpf_reflection_replay compatibility/reflection_replay.cpp)
+    target_link_libraries(qualpf_reflection_replay PRIVATE qualpf_core)
+    set_target_properties(qualpf_reflection_replay PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_executable(qualpf_reflection_properties unit/reflection_properties.cpp)
+    target_link_libraries(qualpf_reflection_properties PRIVATE qualpf_core)
+    set_target_properties(qualpf_reflection_properties PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    add_test(NAME qualpf.reflection.reference COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/current_transcendental_reference.py" --domain reflection
+        --compiler "${CMAKE_CXX_COMPILER_ID}"
+        --runner $<TARGET_FILE:qualpf_reflection_replay>
+        --output "${CMAKE_CURRENT_BINARY_DIR}/reflection-differential.json")
+    add_test(NAME qualpf.reflection.properties COMMAND qualpf_reflection_properties
+        "${CMAKE_CURRENT_BINARY_DIR}/reflection-properties.json")
+    add_executable(qualpf_symmetry_replay compatibility/symmetry_replay.cpp)
+    add_executable(qualpf_symmetry_properties unit/symmetry_properties.cpp)
+    target_link_libraries(qualpf_symmetry_replay PRIVATE qualpf_core)
+    target_link_libraries(qualpf_symmetry_properties PRIVATE qualpf_core)
+    set_target_properties(qualpf_symmetry_replay qualpf_symmetry_properties
+        PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    add_test(NAME qualpf.symmetry.reference COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/symmetry_differential.py"
+        --runner $<TARGET_FILE:qualpf_symmetry_replay>
+        --output "${CMAKE_CURRENT_BINARY_DIR}/symmetry-differential.json")
+    add_test(NAME qualpf.symmetry.properties COMMAND qualpf_symmetry_properties
+        "${CMAKE_CURRENT_BINARY_DIR}/symmetry-properties.json")
+    add_test(NAME qualpf.symmetry.table_reproducible COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../tools/crystallography/generate_space_groups.py" --check)
+    add_executable(qualpf_crystallography_replay compatibility/crystallography_replay.cpp)
+    target_link_libraries(qualpf_crystallography_replay PRIVATE qualpf_core)
+    add_executable(qualpf_crystallography_properties unit/crystallography_properties.cpp)
+    target_link_libraries(qualpf_crystallography_properties PRIVATE qualpf_core)
+    set_target_properties(qualpf_crystallography_replay qualpf_crystallography_properties
+        PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    add_test(NAME qualpf.crystallography.reference COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/crystallography_differential.py"
+        --runner $<TARGET_FILE:qualpf_crystallography_replay>
+        --output "${CMAKE_CURRENT_BINARY_DIR}/crystallography-differential.json"
+        --errors "${CMAKE_CURRENT_BINARY_DIR}/crystallography-errors.json")
+    add_test(NAME qualpf.crystallography.properties COMMAND qualpf_crystallography_properties
+        "${CMAKE_CURRENT_BINARY_DIR}/crystallography-properties.json"
+        "${CMAKE_CURRENT_SOURCE_DIR}/data/unit-cell-formed-angle-reference.txt")
+    add_test(NAME qualpf.math.current_reference_protocol COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/current_transcendental_reference_test.py")
+    add_executable(qualpf_rounded_transcendentals_properties unit/rounded_transcendentals_properties.cpp)
+    target_link_libraries(qualpf_rounded_transcendentals_properties PRIVATE qualpf_core)
+    set_target_properties(qualpf_rounded_transcendentals_properties PROPERTIES
+        AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_test(NAME qualpf.math.rounded_transcendentals COMMAND qualpf_rounded_transcendentals_properties
+        "${CMAKE_CURRENT_SOURCE_DIR}/data/rounded-transcendentals-reference.txt")
+    add_executable(qualpf_pattern_replay compatibility/pattern_replay.cpp)
+    target_link_libraries(qualpf_pattern_replay PRIVATE qualpf_core)
+    set_target_properties(qualpf_pattern_replay PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    add_test(NAME qualpf.pattern.reference COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/current_pattern_reference.py"
+        --runner $<TARGET_FILE:qualpf_pattern_replay>
+        --output "${CMAKE_CURRENT_BINARY_DIR}/pattern-differential.json")
+    add_test(NAME qualpf.pattern.abi_reference COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/current_pattern_reference.py"
+        --runner $<TARGET_FILE:qualpf_pattern_replay>
+        --manifest "${CMAKE_CURRENT_SOURCE_DIR}/data/pattern-abi-reference-manifest.json"
+        --output "${CMAKE_CURRENT_BINARY_DIR}/pattern-abi-differential.json")
+    add_test(NAME qualpf.pattern.vendor_reference COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/current_pattern_reference.py"
+        --runner $<TARGET_FILE:qualpf_pattern_replay>
+        --manifest "${CMAKE_CURRENT_SOURCE_DIR}/data/pattern-vendor-reference-manifest.json"
+        --output "${CMAKE_CURRENT_BINARY_DIR}/pattern-vendor-differential.json")
+    add_test(NAME qualpf.pattern.edge_reference COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/current_pattern_reference.py"
+        --runner $<TARGET_FILE:qualpf_pattern_replay>
+        --manifest "${CMAKE_CURRENT_SOURCE_DIR}/data/pattern-edge-reference-manifest.json"
+        --output "${CMAKE_CURRENT_BINARY_DIR}/pattern-edge-differential.json")
+endif()
+
+if(QUALPF_BUILD_PRODUCT_TESTS)
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+        message(FATAL_ERROR "Product tests require the complete root Qt build")
+    endif()
+    add_executable(qualpf_product_probe integration/product_workflow_probe.cpp)
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        target_sources(qualpf_product_probe PRIVATE integration/pattern_link_guard.cpp)
+        target_compile_definitions(qualpf_product_probe PRIVATE QUALPF_PATTERN_LINK_GUARD)
+        target_link_options(qualpf_product_probe PRIVATE "-Wl,--wrap=open_diffraction_patt")
+        target_link_options(qualpf_product_probe PRIVATE "-Wl,--wrap=legacy_kalpha2_values")
+        target_link_options(qualpf_product_probe PRIVATE "-Wl,--wrap=kalpha2_stripping")
+    endif()
+    add_executable(qualpf_undefined_fom_contract integration/undefined_fom_contract.cpp)
+    qualpf_configure_transitional_cpp(qualpf_undefined_fom_contract)
+    target_link_libraries(qualpf_undefined_fom_contract PRIVATE
+        qualpf_core qualpf_application qualpf_infrastructure qualpf_gui qualpf_qcustomplot
+        qualpf_legacy_support qualpf_legacy_bridge qualx_fortran qualpf_legacy_snapshot)
+    if(WIN32)
+        target_link_libraries(qualpf_undefined_fom_contract PRIVATE opengl32)
+    endif()
+    add_test(NAME qualpf.classic.undefined_product COMMAND qualpf_undefined_fom_contract)
+    qualpf_configure_transitional_cpp(qualpf_product_probe)
+    target_link_libraries(qualpf_product_probe PRIVATE
+        qualpf_core qualpf_application qualpf_infrastructure qualpf_gui
+        qualpf_qcustomplot qualpf_legacy_support qualpf_legacy_bridge qualx_fortran
+        qualpf_legacy_snapshot)
+    if(WIN32)
+        target_link_libraries(qualpf_product_probe PRIVATE opengl32)
+    endif()
+    add_test(NAME qualpf.project.codec COMMAND qualpf_product_probe --codec)
+    add_test(NAME qualpf.product.startup COMMAND qualpf_product_probe --startup)
+    add_test(NAME qualpf.pdf2.lifecycle COMMAND qualpf_product_probe --pdf2-lifecycle
+        "${CMAKE_CURRENT_BINARY_DIR}/pdf2-lifecycle.json")
+    set_tests_properties(qualpf.pdf2.lifecycle PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 120)
+    add_test(NAME qualpf.pattern.lifecycle COMMAND qualpf_product_probe --pattern-lifecycle
+        "${PROJECT_SOURCE_DIR}/share/qualx/files" "${CMAKE_CURRENT_BINARY_DIR}/pattern-lifecycle.json")
+    set_tests_properties(qualpf.pattern.lifecycle PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 60)
+    foreach(backend cpp legacy)
+        add_test(NAME qualpf.kalpha2.lifecycle.${backend} COMMAND "${CMAKE_COMMAND}" -E env
+            --unset=QUALPF_PREPROCESSING_BACKEND --unset=QUALPF_SEARCH_BACKEND --unset=QUALPF_CPP_PREPROCESSING_DIALOGS
+            QUALPF_KALPHA2_BACKEND=${backend} $<TARGET_FILE:qualpf_product_probe> --kalpha2-lifecycle
+            "${PROJECT_SOURCE_DIR}/share/qualx/files" "${CMAKE_CURRENT_BINARY_DIR}/kalpha2-lifecycle-${backend}.json")
+        set_tests_properties(qualpf.kalpha2.lifecycle.${backend} PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 120)
+    endforeach()
+    set_tests_properties(qualpf.project.codec qualpf.product.startup PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 30)
+    set(QUALPF_WORKFLOW_DATABASE "" CACHE FILEPATH "Provenanced four-file database prefix for product acceptance")
+    set(QUALPF_WORKFLOW_EXAMPLES "" CACHE PATH "Real measured example directory for product acceptance")
+    if(QUALPF_WORKFLOW_DATABASE AND QUALPF_WORKFLOW_EXAMPLES)
+        foreach(sample example1 CPD2 MIXT_5)
+            add_test(NAME qualpf.kalpha2.workflow.${sample} COMMAND "${CMAKE_COMMAND}" -E env
+                --unset=QUALPF_KALPHA2_BACKEND --unset=QUALPF_PREPROCESSING_BACKEND
+                --unset=QUALPF_SEARCH_BACKEND --unset=QUALPF_CPP_PREPROCESSING_DIALOGS
+                $<TARGET_FILE:qualpf_product_probe> "${QUALPF_WORKFLOW_DATABASE}"
+                "${QUALPF_WORKFLOW_EXAMPLES}/${sample}.dat" "${PROJECT_SOURCE_DIR}/share/qualx/files"
+                "${CMAKE_CURRENT_BINARY_DIR}/kalpha2-${sample}" --kalpha2-workflow)
+            set_tests_properties(qualpf.kalpha2.workflow.${sample} PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
+                TIMEOUT 180 FIXTURES_SETUP kalpha2_${sample})
+            add_test(NAME qualpf.kalpha2.reopen.${sample} COMMAND "${CMAKE_COMMAND}" -E env
+                --unset=QUALPF_PREPROCESSING_BACKEND --unset=QUALPF_SEARCH_BACKEND --unset=QUALPF_CPP_PREPROCESSING_DIALOGS
+                $<TARGET_FILE:qualpf_product_probe> "${QUALPF_WORKFLOW_DATABASE}"
+                "${CMAKE_CURRENT_BINARY_DIR}/kalpha2-${sample}.qxp" "${PROJECT_SOURCE_DIR}/share/qualx/files"
+                "${CMAKE_CURRENT_BINARY_DIR}/kalpha2-reopen-${sample}" --reopen96)
+            set_tests_properties(qualpf.kalpha2.reopen.${sample} PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
+                TIMEOUT 180 FIXTURES_REQUIRED kalpha2_${sample})
+            add_test(NAME qualpf.radiation.cli.${sample} COMMAND qualpf_product_probe
+                "${QUALPF_WORKFLOW_DATABASE}" "${QUALPF_WORKFLOW_EXAMPLES}/${sample}.dat"
+                "${PROJECT_SOURCE_DIR}/share/qualx/files" "${CMAKE_CURRENT_BINARY_DIR}/radiation-${sample}" --radiation-cli)
+            set_tests_properties(qualpf.radiation.cli.${sample} PROPERTIES
+                ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 30)
+            add_test(NAME qualpf.product.cpp96.undefined.${sample}
+                COMMAND "${CMAKE_COMMAND}" -E env --unset=QUALPF_CPP_PREPROCESSING_DIALOGS
+                --unset=QUALPF_SEARCH_BACKEND QUALPF_PREPROCESSING_BACKEND=cpp
+                $<TARGET_FILE:qualpf_product_probe>
+                "${QUALPF_WORKFLOW_DATABASE}" "${QUALPF_WORKFLOW_EXAMPLES}/${sample}.dat"
+                "${PROJECT_SOURCE_DIR}/share/qualx/files" "${CMAKE_CURRENT_BINARY_DIR}/contract96-${sample}" --contract96)
+            set_tests_properties(qualpf.product.cpp96.undefined.${sample} PROPERTIES
+                ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 90 LABELS "product_contract;undefined_preprocessing")
+            if(NOT sample STREQUAL "CPD2")
+                if(sample STREQUAL "example1")
+                    add_test(NAME qualpf.product.gui_defaults96.example1
+                        COMMAND "${CMAKE_COMMAND}" -E env --unset=QUALPF_CPP_PREPROCESSING_DIALOGS
+                        --unset=QUALPF_SEARCH_BACKEND QUALPF_PREPROCESSING_BACKEND=cpp
+                        $<TARGET_FILE:qualpf_product_probe>
+                        "${QUALPF_WORKFLOW_DATABASE}" "${QUALPF_WORKFLOW_EXAMPLES}/${sample}.dat"
+                        "${PROJECT_SOURCE_DIR}/share/qualx/files"
+                        "${CMAKE_CURRENT_BINARY_DIR}/gui-defaults96-example1" --finite-default96)
+                    set_tests_properties(qualpf.product.gui_defaults96.example1 PROPERTIES
+                        ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 180 LABELS "search_tolerance_regression;finite_e2e")
+                endif()
+                set(finite96 "${CMAKE_CURRENT_BINARY_DIR}/finite96-${sample}")
+                add_test(NAME qualpf.product.cpp96.finite.${sample}
+                    COMMAND "${CMAKE_COMMAND}" -E env --unset=QUALPF_CPP_PREPROCESSING_DIALOGS
+                    --unset=QUALPF_SEARCH_BACKEND QUALPF_PREPROCESSING_BACKEND=cpp
+                    $<TARGET_FILE:qualpf_product_probe>
+                    "${QUALPF_WORKFLOW_DATABASE}" "${QUALPF_WORKFLOW_EXAMPLES}/${sample}.dat"
+                    "${PROJECT_SOURCE_DIR}/share/qualx/files" "${finite96}" --finite96)
+                set_tests_properties(qualpf.product.cpp96.finite.${sample} PROPERTIES
+                    ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 180 LABELS "product_contract;finite_e2e"
+                    FIXTURES_SETUP finite96_${sample})
+                foreach(snapshot finite manual)
+                    add_test(NAME qualpf.product.cpp96.reopen.${sample}.${snapshot}
+                        COMMAND "${CMAKE_COMMAND}" -E env --unset=QUALPF_CPP_PREPROCESSING_DIALOGS
+                        --unset=QUALPF_SEARCH_BACKEND QUALPF_PREPROCESSING_BACKEND=cpp
+                        $<TARGET_FILE:qualpf_product_probe>
+                        "${QUALPF_WORKFLOW_DATABASE}" "${finite96}-${snapshot}.qxp"
+                        "${PROJECT_SOURCE_DIR}/share/qualx/files" "${finite96}-reopen-${snapshot}" --reopen96)
+                    set_tests_properties(qualpf.product.cpp96.reopen.${sample}.${snapshot} PROPERTIES
+                        ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 90 LABELS "product_contract;project_reopen"
+                        FIXTURES_REQUIRED finite96_${sample})
+                endforeach()
+                foreach(backend cpp legacy)
+                    add_test(NAME qualpf.product.tolerance96.${sample}.${backend}
+                        COMMAND "${CMAKE_COMMAND}" -E env --unset=QUALPF_CPP_PREPROCESSING_DIALOGS
+                        QUALPF_SEARCH_BACKEND=${backend} QUALPF_PREPROCESSING_BACKEND=cpp
+                        $<TARGET_FILE:qualpf_product_probe>
+                        "${QUALPF_WORKFLOW_DATABASE}" "${finite96}-finite.qxp"
+                        "${PROJECT_SOURCE_DIR}/share/qualx/files"
+                        "${CMAKE_CURRENT_BINARY_DIR}/tolerance96-${sample}-${backend}" --tolerance96)
+                    set_tests_properties(qualpf.product.tolerance96.${sample}.${backend} PROPERTIES
+                        ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 180 LABELS "search_tolerance_regression"
+                        FIXTURES_REQUIRED finite96_${sample})
+                    add_test(NAME qualpf.product.manual96.${sample}.${backend}
+                        COMMAND "${CMAKE_COMMAND}" -E env --unset=QUALPF_CPP_PREPROCESSING_DIALOGS
+                        --unset=QUALPF_SEARCH_BACKEND QUALPF_PREPROCESSING_BACKEND=${backend}
+                        $<TARGET_FILE:qualpf_product_probe>
+                        "${QUALPF_WORKFLOW_DATABASE}" "${finite96}-finite.qxp"
+                        "${PROJECT_SOURCE_DIR}/share/qualx/files"
+                        "${CMAKE_CURRENT_BINARY_DIR}/manual96-${sample}-${backend}" --manualfix96)
+                    set_tests_properties(qualpf.product.manual96.${sample}.${backend} PROPERTIES
+                        ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 90 LABELS "manual_acceptance_regression"
+                        FIXTURES_REQUIRED finite96_${sample})
+                endforeach()
+            endif()
+            add_test(NAME qualpf.preprocessing.formats95.${sample} COMMAND qualpf_product_probe
+                "${QUALPF_WORKFLOW_DATABASE}" "${QUALPF_WORKFLOW_EXAMPLES}/${sample}.dat"
+                "${PROJECT_SOURCE_DIR}/share/qualx/files" "${CMAKE_CURRENT_BINARY_DIR}/formats95-${sample}" --formats95)
+            set_tests_properties(qualpf.preprocessing.formats95.${sample} PROPERTIES
+                ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 90)
+            add_test(NAME qualpf.preprocessing.product94.${sample} COMMAND qualpf_product_probe
+                "${QUALPF_WORKFLOW_DATABASE}" "${QUALPF_WORKFLOW_EXAMPLES}/${sample}.dat"
+                "${PROJECT_SOURCE_DIR}/share/qualx/files" "${CMAKE_CURRENT_BINARY_DIR}/product94-${sample}" --product94)
+            set_tests_properties(qualpf.preprocessing.product94.${sample} PROPERTIES
+                ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QUALPF_PREPROCESSING_BACKEND=legacy" TIMEOUT 90)
+            add_test(NAME qualpf.preprocessing.product93.${sample} COMMAND qualpf_product_probe
+                "${QUALPF_WORKFLOW_DATABASE}" "${QUALPF_WORKFLOW_EXAMPLES}/${sample}.dat"
+                "${PROJECT_SOURCE_DIR}/share/qualx/files" "${CMAKE_CURRENT_BINARY_DIR}/product93-${sample}" --product93)
+            set_tests_properties(qualpf.preprocessing.product93.${sample} PROPERTIES
+                ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QUALPF_PREPROCESSING_BACKEND=legacy" TIMEOUT 90)
+            add_test(NAME qualpf.preprocessing.cpp_dialogs.${sample} COMMAND qualpf_product_probe
+                "${QUALPF_WORKFLOW_DATABASE}" "${QUALPF_WORKFLOW_EXAMPLES}/${sample}.dat"
+                "${PROJECT_SOURCE_DIR}/share/qualx/files" "${CMAKE_CURRENT_BINARY_DIR}/cpp-preprocessing-${sample}" --preprocessing)
+            set_tests_properties(qualpf.preprocessing.cpp_dialogs.${sample} PROPERTIES
+                ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QUALPF_PREPROCESSING_BACKEND=qa;QUALPF_CPP_PREPROCESSING_DIALOGS=1" TIMEOUT 90)
+            add_test(NAME qualpf.preprocessing.workflow.${sample} COMMAND qualpf_product_probe
+                "${QUALPF_WORKFLOW_DATABASE}" "${QUALPF_WORKFLOW_EXAMPLES}/${sample}.dat"
+                "${PROJECT_SOURCE_DIR}/share/qualx/files" "${CMAKE_CURRENT_BINARY_DIR}/preprocessing-${sample}" --preprocessing)
+            set_tests_properties(qualpf.preprocessing.workflow.${sample} PROPERTIES
+                ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QUALPF_PREPROCESSING_BACKEND=legacy" TIMEOUT 90)
+            # Preserve the original runner/assertions as explicitly Legacy historical evidence.
+            # Correct atomic rejection is tested above; it is not a failed C++ product contract.
+            add_test(NAME qualpf.legacy_historical.${sample} COMMAND "${CMAKE_COMMAND}" -E env
+                --unset=QUALPF_CPP_PREPROCESSING_DIALOGS QUALPF_PREPROCESSING_BACKEND=legacy
+                $<TARGET_FILE:qualpf_product_probe>
+                "${QUALPF_WORKFLOW_DATABASE}" "${QUALPF_WORKFLOW_EXAMPLES}/${sample}.dat"
+                "${PROJECT_SOURCE_DIR}/share/qualx/files" "${CMAKE_CURRENT_BINARY_DIR}/${sample}")
+            set_tests_properties(qualpf.legacy_historical.${sample} PROPERTIES
+                # Exhaustive serial no-strongest evaluation of the real 88k-card database.
+                ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 900 LABELS "legacy_historical")
+        endforeach()
+    endif()
+    set(QUALPF_WORKFLOW_PROJECTS "" CACHE PATH "User-supplied QXP project directory for compatibility validation")
+    if(QUALPF_WORKFLOW_DATABASE AND QUALPF_WORKFLOW_PROJECTS)
+        foreach(sample example1 CPD2 MIXT_5)
+            add_test(NAME qualpf.product.project.${sample} COMMAND qualpf_product_probe
+                "${QUALPF_WORKFLOW_DATABASE}" "${QUALPF_WORKFLOW_PROJECTS}/${sample}.qxp"
+                "${PROJECT_SOURCE_DIR}/share/qualx/files" "${CMAKE_CURRENT_BINARY_DIR}/supplied-${sample}")
+            set_tests_properties(qualpf.product.project.${sample} PROPERTIES
+                ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 180)
+        endforeach()
+    endif()
+endif()
+
+if(QUALPF_BUILD_PRODUCT_TESTS)
+    include(integration/preprocessing_cutover.cmake)
+endif()
+
+option(QUALPF_BUILD_CONTRACT_TESTS "Build model/state/transport contract tests" OFF)
+option(QUALPF_BUILD_NUMERICS_TESTS "Build numerical foundation tests" OFF)
+option(QUALPF_BUILD_CLASSIC_SEARCH_TESTS "Build classic Search-Match compatibility tests" OFF)
+option(QUALPF_BUILD_SEARCH_INTEGRATION_TESTS "Build isolated application search integration tests" OFF)
+option(QUALPF_BUILD_PREPROCESSING_TESTS "Build S9 offline preprocessing differential tests" OFF)
+if(QUALPF_BUILD_NUMERICS_TESTS OR QUALPF_BUILD_PRODUCT_TESTS)
+    enable_testing()
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    add_executable(qualpf_numerical_replay compatibility/numerical_replay.cpp)
+    target_link_libraries(qualpf_numerical_replay PRIVATE qualpf_core)
+    set_target_properties(qualpf_numerical_replay PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_test(NAME qualpf.numerics.reference COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/numerical_reference.py"
+        --runner $<TARGET_FILE:qualpf_numerical_replay>
+        --manifest "${CMAKE_CURRENT_SOURCE_DIR}/data/numerical-fortran/manifest.json"
+        --report "${CMAKE_CURRENT_BINARY_DIR}/numerical-differential.json")
+endif()
+if(QUALPF_BUILD_PREPROCESSING_TESTS)
+    add_executable(qualpf_kalpha2_replay compatibility/kalpha2_replay.cpp)
+    target_link_libraries(qualpf_kalpha2_replay PRIVATE qualpf_core)
+    set_target_properties(qualpf_kalpha2_replay PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    add_test(NAME qualpf.kalpha2.reference COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/kalpha2_compare.py"
+        --runner $<TARGET_FILE:qualpf_kalpha2_replay>
+        --report "${CMAKE_CURRENT_BINARY_DIR}/kalpha2-differential.json")
+    enable_testing()
+    add_executable(qualpf_preprocessing_replay compatibility/preprocessing_replay.cpp)
+    target_link_libraries(qualpf_preprocessing_replay PRIVATE qualpf_core)
+    add_executable(qualpf_preprocessing_rounding compatibility/preprocessing_rounding.cpp)
+    target_compile_features(qualpf_preprocessing_rounding PRIVATE cxx_std_20)
+    set_target_properties(qualpf_preprocessing_rounding PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    if(MSVC)
+        target_compile_options(qualpf_preprocessing_rounding PRIVATE /fp:strict)
+    else()
+        target_compile_options(qualpf_preprocessing_rounding PRIVATE -fno-fast-math -ffp-contract=off)
+    endif()
+    set_target_properties(qualpf_preprocessing_replay PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    add_test(NAME qualpf.preprocessing.product_reference COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/preprocessing_product_reference.py"
+        --runner $<TARGET_FILE:qualpf_preprocessing_replay>
+        --report "${CMAKE_CURRENT_BINARY_DIR}/preprocessing-product-differential.json")
+    add_test(NAME qualpf.preprocessing.rounding COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/preprocessing_rounding_test.py"
+        --runner $<TARGET_FILE:qualpf_preprocessing_rounding>)
+    add_test(NAME qualpf.preprocessing.acceptance_gate COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/preprocessing_compare_test.py")
+    add_test(NAME qualpf.preprocessing.reference COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/preprocessing_source_snapshot.py"
+        --runner $<TARGET_FILE:qualpf_preprocessing_replay>
+        --manifest "${CMAKE_CURRENT_SOURCE_DIR}/data/preprocessing-fortran/manifest.json"
+        --report "${CMAKE_CURRENT_BINARY_DIR}/preprocessing-differential.json")
+    add_test(NAME qualpf.preprocessing.export.reference COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/preprocessing_source_snapshot.py"
+        --runner $<TARGET_FILE:qualpf_preprocessing_replay>
+        --manifest "${CMAKE_CURRENT_SOURCE_DIR}/data/preprocessing-export-fortran/manifest.json"
+        --report "${CMAKE_CURRENT_BINARY_DIR}/preprocessing-export-differential.json")
+endif()
+if(QUALPF_BUILD_CONTRACT_TESTS OR QUALPF_BUILD_NUMERICS_TESTS OR QUALPF_BUILD_CLASSIC_SEARCH_TESTS OR QUALPF_BUILD_SEARCH_INTEGRATION_TESTS)
+    find_package(GTest CONFIG REQUIRED)
+    enable_testing()
+endif()
+
+if(QUALPF_BUILD_CLASSIC_SEARCH_TESTS)
+    add_executable(qualpf_classic_tests
+        unit/classic_score_test.cpp
+        unit/classic_candidates_test.cpp
+        unit/classic_residual_test.cpp
+        compatibility/classic_regression_test.cpp
+        support/classic_fixture.h
+        support/classic_observation.h
+    )
+    target_include_directories(qualpf_classic_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/support")
+    target_link_libraries(qualpf_classic_tests PRIVATE qualpf_core GTest::gtest_main)
+    set_target_properties(qualpf_classic_tests PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_test(NAME qualpf.classic COMMAND qualpf_classic_tests)
+endif()
+if(QUALPF_BUILD_CLASSIC_SEARCH_TESTS OR QUALPF_BUILD_PRODUCT_TESTS)
+    add_executable(qualpf_classic_replay compatibility/classic_replay.cpp)
+    target_include_directories(qualpf_classic_replay PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/support")
+    target_link_libraries(qualpf_classic_replay PRIVATE qualpf_core)
+    set_target_properties(qualpf_classic_replay PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    add_test(NAME qualpf.classic.synthetic_replay COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/support/classic_reference.py"
+        --runner $<TARGET_FILE:qualpf_classic_replay>
+        --manifest "${CMAKE_CURRENT_SOURCE_DIR}/data/classic-synthetic/manifest.json" --synthetic)
+    set(QUALPF_CLASSIC_REFERENCE_MANIFEST "${CMAKE_CURRENT_SOURCE_DIR}/data/classic-reference-manifest.json"
+        CACHE FILEPATH "Reviewed external classic reference manifest")
+    add_test(NAME qualpf.classic.reference COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/support/classic_reference.py"
+        --runner $<TARGET_FILE:qualpf_classic_replay> --manifest "${QUALPF_CLASSIC_REFERENCE_MANIFEST}")
+    set_tests_properties(qualpf.classic.reference PROPERTIES SKIP_RETURN_CODE 77)
+    add_test(NAME qualpf.classic.reference_contract COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/classic_reference_test.py" $<TARGET_FILE:qualpf_classic_replay>)
+    add_test(NAME qualpf.classic.fortran_capture COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/support/classic_reference.py"
+        --runner $<TARGET_FILE:qualpf_classic_replay>
+        --manifest "${CMAKE_CURRENT_SOURCE_DIR}/data/classic-fortran/manifest.json")
+    add_test(NAME qualpf.classic.phase6_evidence COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/compatibility/phase6_reference_test.py" $<TARGET_FILE:qualpf_classic_replay>)
+endif()
+if(QUALPF_BUILD_SEARCH_INTEGRATION_TESTS)
+    add_executable(qualpf_search_integration_tests integration/classic_workflow_test.cpp)
+    target_include_directories(qualpf_search_integration_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/support")
+    target_link_libraries(qualpf_search_integration_tests PRIVATE qualpf_session qualpf_legacy_snapshot GTest::gtest_main)
+    set_target_properties(qualpf_search_integration_tests PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_test(NAME qualpf.search.integration COMMAND qualpf_search_integration_tests)
+endif()
+if(QUALPF_BUILD_CONTRACT_TESTS)
+    add_executable(qualpf_contract_tests
+        unit/core_contract_test.cpp
+        unit/session_contract_test.cpp
+        compatibility/snapshot_codec_test.cpp
+        compatibility/regression_contract_test.cpp
+        support/regression_case.h
+    )
+    target_include_directories(qualpf_contract_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/support")
+    target_link_libraries(qualpf_contract_tests PRIVATE
+        qualpf_core qualpf_session qualpf_legacy_snapshot GTest::gtest_main
+    )
+    set_target_properties(qualpf_contract_tests PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_test(NAME qualpf.contracts COMMAND qualpf_contract_tests)
+endif()
+
+if(QUALPF_BUILD_NUMERICS_TESTS)
+    if(QUALPF_BUILD_PREPROCESSING_TESTS)
+        add_executable(qualpf_preprocessing_tests unit/preprocessing_test.cpp unit/kalpha2_test.cpp)
+        target_link_libraries(qualpf_preprocessing_tests PRIVATE qualpf_core GTest::gtest_main)
+        set_target_properties(qualpf_preprocessing_tests PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+        add_test(NAME qualpf.preprocessing.contracts COMMAND qualpf_preprocessing_tests)
+    endif()
+    add_executable(qualpf_numerics_tests
+        unit/numerics_basic_test.cpp
+        unit/numerics_interpolation_test.cpp
+        unit/numerics_linear_algebra_test.cpp
+        compatibility/numerical_regression_test.cpp
+        support/numerical_regression.h
+    )
+    target_include_directories(qualpf_numerics_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/support")
+    target_link_libraries(qualpf_numerics_tests PRIVATE qualpf_core GTest::gtest_main)
+    set_target_properties(qualpf_numerics_tests PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    add_test(NAME qualpf.numerics COMMAND qualpf_numerics_tests)
+endif()

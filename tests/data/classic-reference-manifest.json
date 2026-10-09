@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "kind": "legacy_capture",
+  "legacy_tolerances_frozen": true,
+  "product_path_switched": true,
+  "groups": [
+    {
+      "id": "S01",
+      "status": "reviewed",
+      "cases": [
+        "S01-stored-top-and-deleted",
+        "S01-include-deleted",
+        "S01-variable-tolerance",
+        "S01-duplicate-d"
+      ],
+      "scope": "Decoded stored top, variable tolerances, deleted quality, source-order identity; real SQL matrix remains product tests"
+    },
+    {
+      "id": "S02",
+      "status": "reviewed",
+      "bundle": "classic-fortran/manifest.json",
+      "scope": "Range before narrowing, multiple reflections and strict windows"
+    },
+    {
+      "id": "S03",
+      "status": "reviewed",
+      "bundle": "classic-fortran/manifest.json",
+      "scope": "Mixed precision scaling, nint, integer phase counts, unassociated observed comparisons"
+    },
+    {
+      "id": "S04",
+      "status": "reviewed",
+      "cases": [
+        "S04-tied-top-two",
+        "S04-initial-strict-threshold",
+        "S04-rescore-inclusive-and-old-scale",
+        "S04-rescore-order",
+        "S04-zero-limit"
+      ],
+      "scope": "Initial/rescore thresholds, limited sorting, prior display scale; captured std::sort tie order is toolchain-specific, stable input ties are QualPF contract"
+    },
+    {
+      "id": "S05",
+      "status": "reviewed",
+      "cases": [
+        "S05-first-phase",
+        "S05-second-phase-original-noise",
+        "S05-conflicts-inclusive-window",
+        "S05-zero-original"
+      ],
+      "scope": "Legacy C++ residual oracle; two stages preserve original intensity; conflict and inclusive windows"
+    },
+    {
+      "id": "S06",
+      "status": "contract_with_legacy_evidence",
+      "reference": "classic-fortran/exceptions.json",
+      "scope": "Four undefined cases cannot provide valid numerical golden outputs; deterministic C++ score and product transaction tests replace UB"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "classic-fortran/original.txt",
+      "sha256": "487411f3581e2acdb64d3b41ed924392640ca4544079b94a9187d50aae7f2741"
+    },
+    {
+      "path": "classic-fortran/traced.txt",
+      "sha256": "ebfa7cfafce66171a6fffb16e1ad300aa75f925352ab44709ae6ecd76c3ba3cb"
+    },
+    {
+      "path": "classic-fortran/instrumentation.diff",
+      "sha256": "74b5d1b4a9eb38678f15abea51fc7d5d565be81ae05c3c46d27fdd7618004a74"
+    },
+    {
+      "path": "classic-fortran/exceptions.json",
+      "sha256": "ccb700dd3cfa738686c04048a21bf69ad2cbe2fe89b6b3294a5d0edfb3ddfa6b"
+    },
+    {
+      "path": "classic-fortran/provenance.json",
+      "sha256": "7b60c80a38d6e94fa22592bc77d847251dc42ae483abb9160589825fbc9bcf1e"
+    },
+    {
+      "path": "classic-fortran/captured-manifest.json",
+      "sha256": "f7084a5fd990e21f9200f59288f4ddaba319cf6310bfeeb94ee5e200afb4d29f"
+    },
+    {
+      "path": "classic-fortran/input-catalog.json",
+      "sha256": "87e09a0a5273dbe417d2a6d6ce874a4b5f1623eecf383c8acd56d1e78c24e0c9"
+    },
+    {
+      "path": "classic-fortran/manifest.json",
+      "sha256": "7760a76318bd19b7af00c84ee1fdd659d185f0b559778d0314eb40af618dc5ef"
+    },
+    {
+      "path": "classic-workflow-fortran/provenance.json",
+      "sha256": "e10d2f082a14e336978f36d293743b94e0132b81a4c2f199d9bd520c18a2a891"
+    },
+    {
+      "path": "classic-workflow-fortran/S01-stored-top-and-deleted.txt",
+      "sha256": "bc2a7763ac1cd69c0e7a0de3b2f6ff37f3d92e50dc13959ac7bc6e7ceae7aaf6"
+    },
+    {
+      "path": "classic-workflow-fortran/S01-include-deleted.txt",
+      "sha256": "05829a325bd17d533983a1c3139531ce6fc94f10f297bae3f7f9a263e8ff3b8c"
+    },
+    {
+      "path": "classic-workflow-fortran/S01-variable-tolerance.txt",
+      "sha256": "dd27b70ff974a51d97dc0ccccd82e39562345d6567b858ab3158a773741d070b"
+    },
+    {
+      "path": "classic-workflow-fortran/S01-duplicate-d.txt",
+      "sha256": "c5373b13d26be6e5c3f9c8f422ec7dc584a2aeb376e9bd51d3b2d023a0cf5f9b"
+    },
+    {
+      "path": "classic-workflow-fortran/S04-tied-top-two.txt",
+      "sha256": "9e35de46b99823e00cdccede8e4c10e6c22bbba456dc18d7d456b7eecdb50c9d"
+    },
+    {
+      "path": "classic-workflow-fortran/S04-initial-strict-threshold.txt",
+      "sha256": "307c696b87f88c56bbd6ec12c0222814216126e14d7cf51f05c014f6d50a5ae0"
+    },
+    {
+      "path": "classic-workflow-fortran/S04-rescore-inclusive-and-old-scale.txt",
+      "sha256": "71f7a49ef96e81ea1a47d1291a5a0b70109f82fe68ef8bc1769a70ae572df7f9"
+    },
+    {
+      "path": "classic-workflow-fortran/S04-rescore-order.txt",
+      "sha256": "a6ebd029e566490ea0d8d282ecc8b5e91ba52658ba7fd709e084593c9dc68cdf"
+    },
+    {
+      "path": "classic-workflow-fortran/S04-zero-limit.txt",
+      "sha256": "ecfd761f645eccf853378c85efb1b3f26ebcfb23703c714d569b1dd3f5fd16be"
+    },
+    {
+      "path": "classic-workflow-fortran/S05-first-phase.txt",
+      "sha256": "bb0f934e7f993ff52b1cabdc5552d8b7d7704ce524c809dc5137f28961add5f1"
+    },
+    {
+      "path": "classic-workflow-fortran/S05-second-phase-original-noise.txt",
+      "sha256": "97e2b5f405bd3786d5db3adf6ce3c4faf8b4da65ebbd858c0a961ce42ad6b084"
+    },
+    {
+      "path": "classic-workflow-fortran/S05-conflicts-inclusive-window.txt",
+      "sha256": "859337fc52ba0a94662e5881412863a4aae6fd6e6f859b2eb1b2f2cec430009d"
+    },
+    {
+      "path": "classic-workflow-fortran/S05-zero-original.txt",
+      "sha256": "f299b0853e412c39a70202eb5cbbb5c00319b40297088f9aeb22f21984dd242a"
+    },
+    {
+      "path": "classic-workflow-fortran/manifest.json",
+      "sha256": "196bdd4915eef79681240802fb7883adaacd05d8124394ea5a2c54c340519771"
+    },
+    {
+      "path": "classic-workflow-fortran/capture-script.py",
+      "sha256": "fd6040e450681cd703e0c4cf923bfea0447491f546c04f9035ac3eea73440a0a"
+    }
+  ],
+  "source_manifests": [
+    {
+      "path": "classic-fortran/manifest.json",
+      "sha256": "7760a76318bd19b7af00c84ee1fdd659d185f0b559778d0314eb40af618dc5ef"
+    },
+    {
+      "path": "classic-workflow-fortran/manifest.json",
+      "sha256": "196bdd4915eef79681240802fb7883adaacd05d8124394ea5a2c54c340519771"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "status": "approved-by-user",
+  "qualification_count": 2,
+  "scope": "Only case 67 line.1.relative and line.2.relative with exact recorded Legacy/C++ values and both compiler fingerprints; physical normalization below Legacy epsilon floor.",
+  "compiler_fingerprints": {
+    "GNU": {
+      "runner_sha256": "115440d80e08ab4b468289d8d66654411abfe765547b13c9ee0e1527b3b7ecc5"
+    },
+    "MSVC": {
+      "runner_sha256": "407ce233bb499f4267996bc82fe8c8824f3ee3e98221fe2d27e9c6b5df2e5103"
+    }
+  },
+  "evidence_sha256": {
+    "docs/refactoring/phase-17/prove_qualification.py": "82667d4fa8b5ab1fda4e94d5c341ce18212e9f58263e9dabd523c2093635a1f2",
+    "docs/refactoring/phase-17/qualification-proof.json": "a62ee74c5a1123462f9128522dce7be28ee6cb200bb29d8e596d2aaf1dcd88b0",
+    "docs/refactoring/phase-17/qualification-records.json": "df124c922e60fdaf78f09e2d7305fcaa8405caaf9c8210569ea295d47248c919",
+    "docs/refactoring/phase-17/qualification-review.md": "2842d3945808fb35351b9697aee5a9b2edd313f24c4747b5658a4edb084b9f93",
+    "docs/refactoring/phase-17/test-results/cpp-replay-transcripts.zip": "0d22e1669a9aa9d4fa016a5df0a8b07a96ffba0815fa1a37c02371f1dd9c3411",
+    "docs/refactoring/phase-17/test-results/unqualified-mingw-powder-differential.json": "c0a0c32a05e3e72b61ff6ccd382f7882894634656d15fdc5b68de5084b7f2d39",
+    "docs/refactoring/phase-17/test-results/unqualified-msvc-powder-differential.json": "04313a5c55618ceac58709646596d79fb3feee1cd18afa1e9ddda07e00ad11c4",
+    "src/core/crystallography/powder_intensity.cpp": "da6055402c7b493759d57cce6d11d9401ca457097f51381e52db8ec215d4495d",
+    "src/core/include/qualpf/crystallography/powder_intensity.h": "03d7530c6050238d67ce84b6847726552ff864e1ab7be30aefedaf03ee4316f2",
+    "tests/compatibility/powder_differential.py": "d3d39570116dd3d3397f60cccecddca1c2f2591b2041aed331913f4e2a763ccc",
+    "tests/compatibility/powder_qualification.py": "cd5401fb38bf71c5ea59d9db881c3ea651ed305e3146fe33b857eb2cf261d679",
+    "tests/compatibility/powder_replay.cpp": "5a8612819b4d346800a778503cfbd34a6b79ce74a4f55b8ac9444e5af864e74d",
+    "tests/data/overlap-reference-manifest.json": "5c18d6c7beb1629e8fef744b3d0f7bf23283d9c2ae5751469cc233d97d765400",
+    "tests/data/powder-intensity-reference-manifest.json": "564546290bd82422a32bc0b81050ffb0cdf90b1a4c3ac85a93612981f668fece",
+    "tests/data/powder-intensity-reference.zip": "dc6562533d456f0bd4e5b5cc649f451e7fbf4166465f99ed9b8615ae5028a514"
+  },
+  "numerical_equivalence_to_legacy": false,
+  "raw_failures_preserved": true,
+  "reference_changed": false,
+  "tolerance_changed": false,
+  "stale_or_new_or_changed_fields": "fail; no implicit extension of approval",
+  "authority": "Explicit user message in the current Codex conversation",
+  "user_approval": "\u6279\u51c6\u8fd9\u4e24\u9879",
+  "recorded_at_utc": "2026-09-26T09:29:42+00:00",
+  "qualification_records_sha256": "df124c922e60fdaf78f09e2d7305fcaa8405caaf9c8210569ea295d47248c919",
+  "historical_review_status": "The approved review, records and proposal retain their original pending labels byte-for-byte. This separate decision records the subsequent explicit user approval."
+}

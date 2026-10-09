@@ -1,0 +1,12 @@
+data_phase19
+# Controlled input, native outputs are the only oracle.
+_symmetry_space_group_name_H-M 'P 1'
+_chemical_name_systematic 'Phase 19 fixture'
+_chemical_name_mineral 'Native observation'
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+Si1 Si 0.123 0.234 0.345

@@ -1,0 +1,98 @@
+"""Explicit Phase 10 Legacy batch/residual capture; never invokes the C++ replay."""
+import argparse
+import copy
+import hashlib
+import importlib.util
+import json
+from pathlib import Path
+import platform
+import subprocess
+
+ROOT=Path(__file__).resolve().parents[2]
+def module(name,path):
+    spec=importlib.util.spec_from_file_location(name,path)
+    result=importlib.util.module_from_spec(spec);spec.loader.exec_module(result);return result
+wire=module('wire',ROOT/'tests/support/classic_reference.py')
+inputs=module('inputs',ROOT/'tests/compatibility/fortran_capture/make_inputs.py')
+metadata=module('metadata',ROOT/'tests/compatibility/numerical_reference.py')
+def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,data): p.write_text(json.dumps(data,indent=2,allow_nan=False)+'\n',encoding='utf-8')
+def samples():
+    rows=[]
+    def add(id,d): rows.append((id,copy.deepcopy(d)))
+    d=inputs.base(); d['operation']='initial'
+    for peak,spacing in zip(d['peaks'],[5,4,3]):
+        peak.update(d_spacing=spacing,delta_d=.01,fwhm=.1,integrated_intensity=peak['intensity']*.1)
+    prototype=copy.deepcopy(d['cards'][0])
+    def cards(tops):
+        d['cards']=[]
+        for i,top in enumerate(tops):
+            c=copy.deepcopy(prototype);c.update(card_id=str(i),stored_top=top,previous_scale=2+i);d['cards'].append(c)
+    d['parameters'].update(filter_strongest=True,include_deleted=False)
+    cards([[5,4,3,99],[5.00001,4,3],[5.02],[],[5,5,4],[5,4,3]])
+    d['cards'][-1]['quality']=' D '
+    add('S01-stored-top-and-deleted',d)
+    d['parameters']['include_deleted']=True;add('S01-include-deleted',d)
+    d['peaks'][0]['delta_d']=.5;cards([[5.4],[3.5],[4.005]]);add('S01-variable-tolerance',d)
+    d['peaks'][1]['d_spacing']=5;cards([[5,5,3]]);add('S01-duplicate-d',d)
+    d=inputs.base(); d['operation']='initial'
+    cards([[],[],[]]);d['parameters'].update(maximum_entries=2,minimum_score=.99)
+    add('S04-tied-top-two',d)
+    d['parameters'].update(maximum_entries=20,minimum_score=1);add('S04-initial-strict-threshold',d)
+    d['operation']='rescore';add('S04-rescore-inclusive-and-old-scale',d)
+    d['cards'][1]['reflections'][0]['two_theta']+=.125
+    d['parameters'].update(minimum_score=.6,maximum_entries=2);add('S04-rescore-order',d)
+    d['parameters']['maximum_entries']=0;add('S04-zero-limit',d)
+    d=inputs.base();d['operation']='residual';d['residual_scale']=5
+    for peak in d['peaks']: peak.update(d_spacing=100/(1+peak['two_theta']),delta_d=.01,fwhm=.1,integrated_intensity=peak['intensity']*.1)
+    add('S05-first-phase',d)
+    for peak in d['peaks']: peak['intensity']/=2
+    d['residual_scale']=4.5;add('S05-second-phase-original-noise',d)
+    d=inputs.base();d['operation']='residual';d['residual_scale']=1
+    inputs.peaks(d,[(10,100),(10.125,80),(20,200),(30,100)])
+    inputs.card(d,[(10.0625,40),(20.25,20),(30,100)])
+    add('S05-conflicts-inclusive-window',d)
+    d['peaks'][0]['original_intensity']=0;add('S05-zero-original',d)
+    return rows
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--runner',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
+    a=p.parse_args();a.runner=a.runner.resolve();a.output=a.output.resolve();a.output.mkdir(parents=True,exist_ok=False)
+    env=dict(source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+        **metadata.build_environment(a.runner),
+        platform=platform.platform(),real_kind='default REAL binary32; ABI c_double binary64',
+        thread_configuration='serial, one process per fixture; no OpenMP/MKL',
+        capture_procedure='tests/compatibility/classic_capture.py with qualpf_classic_capture',
+        review_evidence='PENDING source/output review')
+    rules=json.loads((ROOT/'tests/compatibility/fortran_capture/tolerances.json').read_text())['rules']
+    entries=[]
+    for id,data in samples():
+        encoded=wire.encode(data)
+        run=subprocess.run([str(a.runner)],input=encoded,text=True,capture_output=True,timeout=60,check=True)
+        observation=json.loads(run.stdout)
+        raw=a.output/(id+'.txt');raw.write_text(run.stdout,encoding='utf-8')
+        ip=a.output/(id+'-input.json');save(ip,data)
+        ep=a.output/(id+'-expected.json');save(ep,observation)
+        def descriptor(path):return dict(path=path.name,sha256=sha(path))
+        tolerances={}
+        for field in observation['fields']:
+            suffix=field.rsplit('.',1)[-1]
+            if data['operation']=='residual':
+                atol,rtol,unit=(1e-12,1e-12,'intensity/quality') if suffix in ('intensity','quality') else (0,0,'preserved metadata')
+            else:atol,rtol,unit=rules[suffix]
+            tolerances[field]=dict(absolute=atol,relative=rtol,unit=unit,approval_evidence='Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact')
+        entries.append(dict(id=id,operation=data['operation'],status='captured',
+            reference_origin='legacy_cpp_capture' if data['operation']=='residual' else 'fortran_capture',
+            legacy_tolerances_frozen=True,input=descriptor(ip),expected=descriptor(ep),raw=descriptor(raw),
+            environment=env,tolerances=tolerances))
+    source_names=['legacy/fortran/peaks_search/fom.f90','legacy/fortran/numerics_support/arrayutil.f90',
+        'src/application/search/searchutil.cpp','src/application/search/peakassoc.cpp',
+        'tests/compatibility/classic_legacy_state.f90','tests/compatibility/classic_legacy_oracle.h',
+        'tests/compatibility/classic_replay.cpp','tests/compatibility/classic_capture.py']
+    save(a.output/'provenance.json',dict(environment=env,runner_sha256=sha(a.runner),
+        source_sha256={name:sha(ROOT/name) for name in source_names},
+        legacy_workflow_commit='60435a0',
+        limits='Adapter extracts old batch threshold/filter/order and MainWindow subtraction; actual retained Fortran score and retained SearchUtil/associatePeaks. std::sort tied order is only a captured toolchain observation; portable stable ties remain a QualPF contract. No SQL candidate enumeration oracle.'))
+    save(a.output/'manifest.json',dict(schema_version=1,kind='legacy_capture',cases=entries,
+        evidence=[dict(path='provenance.json',sha256=sha(a.output/'provenance.json'))]+[c['raw'] for c in entries]))
+if __name__=='__main__':main()

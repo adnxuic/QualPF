@@ -1,0 +1,73 @@
+{
+  "error": null,
+  "fields": {
+    "total": [
+      0.8577312231063843
+    ],
+    "position": [
+      0.5000019073486328
+    ],
+    "intensity": [
+      1.0
+    ],
+    "scale": [
+      10.0
+    ],
+    "merged_intensities": [
+      10.0,
+      20.0,
+      0.0
+    ],
+    "scaled_intensities": [
+      100.0,
+      200.0,
+      0.0
+    ],
+    "position_difference_sum": [
+      0.2499990463256836
+    ],
+    "associated_sample_sum": [
+      300.0
+    ],
+    "associated_card_sum": [
+      300.0
+    ],
+    "total_sample_sum": [
+      400.0
+    ],
+    "total_card_sum": [
+      300.0
+    ],
+    "database_fraction": [
+      1.0
+    ],
+    "sample_fraction": [
+      0.6666666865348816
+    ],
+    "sqrt_database": [
+      1.0
+    ],
+    "sqrt_sample": [
+      0.7071067690849304
+    ]
+  },
+  "discrete": {
+    "disposition": [
+      "0"
+    ],
+    "counts": [
+      "2",
+      "2",
+      "0",
+      "1"
+    ],
+    "reflection_indices": [
+      "0",
+      "1"
+    ],
+    "experimental_indices": [
+      "0",
+      "1"
+    ]
+  }
+}

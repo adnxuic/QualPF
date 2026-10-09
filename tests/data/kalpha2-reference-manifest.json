@@ -1,0 +1,857 @@
+{
+  "schema_version": 1,
+  "status": "reviewed-before-cpp-implementation",
+  "source_commit": "dfb3a1432af771c01a1da2778131e3fe7af01858",
+  "runner_sha256": "61061f079056591a8edd7cc36665035a674868ef570195a2953d1668dd9946bb",
+  "compiler": "GNU Fortran 13.1.0, product -O0, REAL binary32; serial",
+  "source_hashes": {
+    "legacy/bridge/fortran/back_interop.f90": "fbeb274590cc0535fe5d761f0fcf682ab9e664889ebb6cbe1c4216f83b1d56fe",
+    "legacy/bridge/fortran/data_interop.f90": "cb250974a190ff49e7f6604220c275f0046ca976fee34ff5e88516584f7fea77",
+    "legacy/bridge/fortran/peak_interop.f90": "0d6359ac387f1ac41e74abd14c76e7ecf033fef535a4c4f46cae79a77296ab68",
+    "legacy/bridge/fortran/qualx_interop.f90": "eddbb54f25ad88b35d9beb330b74ac07c97f4f3307a0531dc3e88f220aa8e6e7",
+    "legacy/bridge/fortran/range_interop.f90": "a588bef3d1a79a530065963a9587403525aa66b076122402c50beaf1b9b62f42",
+    "legacy/bridge/fortran/smooth_interop.f90": "ed39ab0ab4e00594d82e692bc50355bbd1c9c79aa4525a9f30ecb1ef68aec946",
+    "legacy/fortran/bootstrap/moduli.f90": "2aeeede2caaaa2e019c546cdef269fbee719fb5f9946c2eebf927398af2b7cfa",
+    "legacy/fortran/bootstrap/progtype.F90": "ddcacb4c01da9908829bfcff5add63fc78698847a19cffa8d7c224c41971e1e7",
+    "legacy/fortran/bootstrap/prog_names.F90": "d6c3c1d6f11177dd7e6f2f19d6a109261871975a23afb56ca5176108440253fc",
+    "legacy/fortran/bootstrap/qualx.f90": "d008bd56a406feb981435455fc6cccdad02c1a4ea0ac493cbe302ee403323f49",
+    "legacy/fortran/bootstrap/variables.f90": "16a09cffc0000cb5b54d9db7195ea58ae66fb579af8487d87e1e53f97848e82e",
+    "legacy/fortran/crystallography/abscorr.f90": "bbe98ff4a335a1803920936f88acfb1a6d43a4c500d5d664b193fb8fbf22c730",
+    "legacy/fortran/crystallography/atombasic.f90": "bcc0e0d8d7b952a3bf9aee3e54be88167ff9a56b32908e1a4f0f2084d3ccab28",
+    "legacy/fortran/crystallography/atomsutil.F90": "4c2e9eb9b87d6d568de586c9a5d7397c9979dd99771064ae4fd03bd715ba0226",
+    "legacy/fortran/crystallography/cgeom.f90": "30904b6a33f1e41a607f24d8b4df446a4140c555e0dacfabf7b296448f40b3d5",
+    "legacy/fortran/crystallography/counts.f90": "fdbd2d3d9f00dc3b82dc9292c70815b5d162c20c2f3e5e9089474ebbbaef97f7",
+    "legacy/fortran/crystallography/cryutil.f90": "04880afe70ea94ccce3f2ab45ee7df8414575cdb322383fb987bddb1b6d46443",
+    "legacy/fortran/crystallography/elements.f90": "961ce26b85afd9e74bcb7e5502c298ec72b364647cafebfe44db5a4adb301569",
+    "legacy/fortran/crystallography/fract.f90": "c624d326d43ffe312d9c2f2fe90e03574ec29b61e756d5d42e3e9db693928984",
+    "legacy/fortran/crystallography/goptutil.F90": "abd81ed3b471f5b95dfc15438d0352c65dac422ceb27d30e67481fd11e9ba9d3",
+    "legacy/fortran/crystallography/kspecmod.f90": "a361d455f6d0b74535ba9d2990ad91cd82dda42764b416249a5fcb048c62b228",
+    "legacy/fortran/crystallography/nist_table.f90": "eaed0142962ebb40116486e134e0a8d9a468371d7e355a8619968a93b26654d3",
+    "legacy/fortran/crystallography/reflectionsutil.f90": "5887788fd70db00b00156017c4c20f6000e9afb373dfc4e6a30f2f66279f839a",
+    "legacy/fortran/crystallography/scatt_params.F90": "fd267c16d52a7ebe39284dbe6be50b66d3e7efc55d32323ef1f922a116e6fe8f",
+    "legacy/fortran/crystallography/spginfo.f90": "364120f4afd0abd3d18ebd383d19ed3bbd5bda748719cf7173a233bd157f0e30",
+    "legacy/fortran/crystallography/sphase.f90": "99b7b7aff3b944769d7e2289a540207beba5dea94c5535047d2345d5ba9cd960",
+    "legacy/fortran/crystallography/symm_table.f90": "efe2001aaa265dd81984d39ef331ab93a1fdac92f1ebb14816ffd84ae80e198f",
+    "legacy/fortran/crystallography/unit_cell.f90": "6485821c8d2262b37a367147886292e6a00fe9805a7cea0859f65296b3d14180",
+    "legacy/fortran/crystal_io/cif_form.f90": "c21b66ae69a6a91db5385a4c453e48c00f5a41545e221d41e1b8e0af71bfd3cc",
+    "legacy/fortran/crystal_io/exportqualx.F90": "d5ec5960d54a283c25cdd0f2581b1624a0fbc539d0ea53f6a8e332a4eb322d4e",
+    "legacy/fortran/crystal_io/gen_form.F90": "d46fd237669969a34d977bb916c72689ae90c4622d5773b0b6e5254a5723ed11",
+    "legacy/fortran/crystal_io/import_data_structure.f90": "10ef520c3d849af534298797ff7a7fe1f7ba1b60320fe962978218a324cb584b",
+    "legacy/fortran/mpi_pending/mpi_util.F90": "e7117a37d864c42b874bb904dcf9765c6510e5d829adb1f0fe57cb55a556e123",
+    "legacy/fortran/numerics_support/arrayutil.f90": "ba29cbbe4124699a166f13010139d10e7506d10f5e38fdd8d6c8f4e49de5f9b4",
+    "legacy/fortran/numerics_support/constants.f90": "44af22714fc754d156fd6464262b2b599f5ade2ac97fefdc0b1832e4b3e58b6c",
+    "legacy/fortran/numerics_support/error.F90": "f06a443d07ed980a3cb0f02860030ea5118aad6f7acc24f4f4ed7ca7c1aaa519",
+    "legacy/fortran/numerics_support/fileutil.F90": "117b807b846c2a039f5a59f8b5215934bd645e77d3af7176d1ce05dd16797714",
+    "legacy/fortran/numerics_support/genlsq.f90": "223e1a3a8714799e46c63addd74c89e1d10276cd54127504d815b87666c01150",
+    "legacy/fortran/numerics_support/lib_array.f90": "4b785e0fe13e372b0256cac59531a6f837dde6f00e1dbdc8a5670ba5e48cc7b0",
+    "legacy/fortran/numerics_support/lsqnew.f90": "960a4ffebfc5f1841ca8916eb57e91ba636b9be2ce81e2961888309011dd2218",
+    "legacy/fortran/numerics_support/marquardt.f90": "1befffc6302e036d11b70fd3e24e51a4d2253a7e840ee39cfa251bcb2be78886",
+    "legacy/fortran/numerics_support/math_util.F90": "a3b93fc3fadc590e8b9face54e9d88ba4ced9e07bb6107288026dd1061f69935",
+    "legacy/fortran/numerics_support/mmpsi.f": "339f386fc6a724a67e7abf10416fb420f417c392496ec89ed343eb6d9000d37d",
+    "legacy/fortran/numerics_support/nl2sol.f90": "e1fed44621d7695996cf03d1e1ea0bebfae5d606e8c355f5637e5c1bd9d080c3",
+    "legacy/fortran/numerics_support/recipes.f90": "dc0f38215df2502793d31d4e25c5648cf74b3e06f922e7cb72e00cc9b12bfce4",
+    "legacy/fortran/numerics_support/stat.f90": "0b89a90a91100804aa4e44be7784130f90b19e32f291ab3363fbeae0473580cf",
+    "legacy/fortran/numerics_support/strutil.f90": "af40eec5104f1c7abaa93c0b25d353dcab3f760a83e2fa3d0ab1fdbfa6c8a974",
+    "legacy/fortran/numerics_support/util.f": "c2ec044495f3140a58a3c66777f593908b612967158772223462c23e26fbc6c7",
+    "legacy/fortran/numerics_support/utiln.f90": "51c46d0c90c89981783240531536eb2a752b7ab15f40a1b1f75e36b198a3ff1d",
+    "legacy/fortran/pattern_io/data.f90": "21838bbcca80382536b6d69055de96034fbfa53ab63301eca0a68aaa82d92b2e",
+    "legacy/fortran/pattern_io/dataset.f90": "b064d14f20d747d240cd701578c3038c79000bb803d6a14af889592eb164d326",
+    "legacy/fortran/pattern_io/datautil.f90": "180fe598dea491851d80fda889116c24276a93377b9d4a4ce6407e4a3732af0d",
+    "legacy/fortran/pattern_io/filetype.f90": "f49fec7129edb312d93e21cf69c12fd34a2f42433e11efb8ff36243b0b89130a",
+    "legacy/fortran/pattern_io/indexing.f90": "e328a8b7f99480e440617ccd4f27a1460def4f18defb0246fad1307e525c3ac3",
+    "legacy/fortran/peaks_search/fom.f90": "e2d32e77c9b060c7905f94f060a2207537790c488fa63426a0a70ca88a28f6e8",
+    "legacy/fortran/peaks_search/peakutil.f90": "ed6357bc6155b61cdd12a59ce2abe4e428745b7946c54ef75885d411ed51d1b3",
+    "legacy/fortran/preprocessing/background.f90": "f71322b0b03e76e8b3a1768dd46a49d536b7bb5a8757d1456c9cf4db6ad53c6b",
+    "legacy/fortran/preprocessing/smooth.f90": "f6f9d5310ff512a889119e99c1ad48e6b08f00f4fcf3a6996eb24ef654a84741",
+    "legacy/fortran/preprocessing/strip_kalpha.f90": "6cb662c922804819a1318bac89adc089bf67099c79bc9aad323a35a47281c4ed",
+    "legacy/fortran/presentation_bridge/messages.f90": "3ac8a78fb7ac70041850420375360eed15df8f2cc8e5e58060d3d17c7316c173",
+    "legacy/fortran/presentation_bridge/plotstyle.f90": "9de6be560f67c239e0a22a59c661f8e79f2ed444337546615587b666fc572ac6",
+    "legacy/fortran/presentation_bridge/screen_new.f90": "f874c0fde592017dd592006bce49960be75ca1c2e700a7aa4995fec8d32c96d5",
+    "legacy/fortran/presentation_bridge/specif.f90": "7090cba0bbaf22da12834c59a14048bcfd27c850322408c9d8b25d2e19d955ff",
+    "legacy/fortran/presentation_bridge/vedi2005.f90": "4ad5f246a839e95ddab1232e7c457f3fc82ce2bfd799f3304dbb37a60152ecb8",
+    "legacy/fortran/presentation_bridge/winlist.f90": "12938b4b8a3f4829fe0f1d546b2b082b08b6efefa826f8df6ea4dee07ffd230c",
+    "legacy/fortran/profile_pdf_pending/asymfunc.f90": "74ff84b8502058100c75366daf49ade7329fc55e253b1861f6547f2214d24c4d",
+    "legacy/fortran/profile_pdf_pending/calcpdp.f90": "2a4d10f556c625fce2f91099ebad785d2269b38cfbfced0ee49be921a8ec0023",
+    "legacy/fortran/profile_pdf_pending/pdf.f90": "541e40a674a6d50603ebae71e06a030745364342f3c680ba8a3d7355fda4c8a6",
+    "legacy/fortran/profile_pdf_pending/pearsonfunc.f90": "911f1e67e76386081c36095e86df26726cfb940dc7d7df8aa721eef5105f041b",
+    "legacy/fortran/profile_pdf_pending/pfunction.f90": "cc1cc4b8e1d87c237c5c01bdea659a99d6b4b9258c9814d74bb0dac42098e6cb",
+    "legacy/fortran/profile_pdf_pending/psvoigtfunc.f90": "9e3ac079f962c711926642abd922b54401a758a7635d01c02462eafef2ff33c1",
+    "legacy/fortran/profile_pdf_pending/tchzfunc.f90": "feba3497fc5ba7baa2513e7cbe2d5d1d1f749640d7d18b69cbbe84391e4e2701",
+    "legacy/fortran/structure_formats_pending/abinit_form.f90": "679f91ea7a76378b707ae6cc4fa4bdee588b9028927ffe3056c927c074e7b22e",
+    "legacy/fortran/structure_formats_pending/crystal_form.f90": "63a19f21b3fe065b0a06d5326960166146d62efc5d0b56f24ec7ffe2f70eb548",
+    "legacy/fortran/structure_formats_pending/fra_form.f90": "55bb091b50a85b91f06e932cda3ec2ce6f5662c23150dd936b03c9c1d63dfd88",
+    "legacy/fortran/structure_formats_pending/gamess_form.f90": "bd643292586e9b81d89d666f4fc7d48452ed4d76eb551cc9f283974d58bf8c89",
+    "legacy/fortran/structure_formats_pending/mol2_form.f90": "f3a6b2dffd8df941b38f989c52d1ca1aabe17a552859a060f154ab72692d270a",
+    "legacy/fortran/structure_formats_pending/mop_form.f90": "a6df15ecf5853ef1b91c365fb8bd041d3a4d73f337e9bcf991c3fca6fb30394a",
+    "legacy/fortran/structure_formats_pending/nwchem_form.f90": "3109284306e1e72c384543104a51ee695881b46ec7dbed9999a321caa70b4450",
+    "legacy/fortran/structure_formats_pending/obmodule.f90": "2cbdcb1b9f4c78fbc3d833a33ceb48b0c139c3904260166443687cfd0a53f0df",
+    "legacy/fortran/structure_formats_pending/pdb_form.f90": "5a7439b5f795739e8145fa3e7202069b29b9397fc51a66b8048155803f9dc356",
+    "legacy/fortran/structure_formats_pending/povray_form.f90": "5995e625a8515dd3a9197939108ee793b945e0a1656861bf8fbd6162a2412bef",
+    "legacy/fortran/structure_formats_pending/qe_form.F90": "a94ecdc5a515b2a0993ced53137d6d10bbbbf26ea995a2fb9a51c92bee122a2f",
+    "legacy/fortran/structure_formats_pending/shelx_form.f90": "5ea53fc66a4cd50095ca997f885b51e76d25c67f0aa90056ce0471c976f05a61",
+    "legacy/fortran/structure_formats_pending/xyz_form.f90": "d9dacd58c212095e5948d8ec42553cdeaf44c4a5df1fca848e413021f3c48d9d",
+    "legacy/fortran/structure_formats_pending/zmt_form.f90": "be8da010aeace714cc3cb4416ba3aa0093ba6312a82c05788cc27c904dddc7a9",
+    "legacy/fortran/structure_support_pending/bond2014.f90": "19f75b9d5ede887209e66c98efb8a5340a39235a569c2586cbd9b9a01f1152fb",
+    "legacy/fortran/structure_support_pending/bondsutil.f90": "758433eb68768100df4c156ab65a1c632a3e4f891fb0e518027bd46488b61454",
+    "legacy/fortran/structure_support_pending/bump.f90": "a347135f0185e1dbe46c6531ce53558c269038d1e2f101e3f1b5133145a542f9",
+    "legacy/fortran/structure_support_pending/bvalence.f90": "6cbfee35c00cf887fc44fdf6c5069c600e1be3c1b64fb151e49b62932986557b",
+    "legacy/fortran/structure_support_pending/centroids.f90": "afda9c566409d6bfbebdcfed4f54811b088bda2765af99c084bc9d97b531d9d7",
+    "legacy/fortran/structure_support_pending/chem_files.f90": "547a45067d7b9c5627135685cda37df8f6c9522c83de8c211d044720639a0b9e",
+    "legacy/fortran/structure_support_pending/commands.f90": "b87e89a6ded707217daad1a9ce1bf0d0539eecf9ae34509cd2edeb669e7642d4",
+    "legacy/fortran/structure_support_pending/constraints.f90": "2de472c1fa0a55e1024e180fb6777950e86e9ab300f31a516eb9f7bb528c8936",
+    "legacy/fortran/structure_support_pending/contacts.F90": "d1f3ff549b4ac49de27eb39e6e413eba3080d62252d90952a7b2dc3d25ce8cd1",
+    "legacy/fortran/structure_support_pending/fragments.F90": "e5e92ea24741541da7a397eecb111e12d6d0eac30752b7588b6162729738d471",
+    "legacy/fortran/structure_support_pending/mapinfo.f90": "92724a4e12608a7337718198805bc2570185c1f7698562764af0ef0e222fce93",
+    "legacy/fortran/structure_support_pending/modeltype.f90": "4f0335ff3be664fa63fbc4203fa36686ff67fcebd2a34dd1213c0de966e7de2a",
+    "legacy/fortran/structure_support_pending/molgraph.f90": "bff789ccf2009dbc498c0bda0eaf3f6d4e3194499477b2eb36935173dc4c03cd",
+    "legacy/fortran/structure_support_pending/molpnew.f90": "8fdd0b1c91d58750b5df58e221b63ae027f0935bac2faca862af8c3b87679994",
+    "legacy/fortran/structure_support_pending/restraints.f90": "1fa19b3e297c8a674aed7fb91c02ad16ebb270bdc89c54afe3d95b845d7acd65",
+    "legacy/fortran/structure_support_pending/rigidb.f90": "2abe073deaa1abb839a843784fe57d5a9006127afef856fc88c642e56c7cb866",
+    "legacy/fortran/structure_support_pending/symmgrid.f90": "72f2ee8301bff07da2cbc0294c0c78f0300045a98fdc21e1e84ba6cabe89041a"
+  },
+  "capture_hashes": {
+    "kalpha2_capture.f90": "a73f2628a3ab0526e14af609ec94824cf02ab555899dcf91f87deba0cc9e1600",
+    "kalpha2_capture.py": "e71c5185beb07feaf306b88e1acc6f70c4be4040558e27a8f479ca88929a3fd8",
+    "kalpha2_capture_main.cpp": "6c1f92d6140f7ccd733b2c1b82762297a223b006abb8a0f028e4ca5f6457875f"
+  },
+  "tolerance": {
+    "absolute": 1e-05,
+    "relative": 1e-05,
+    "unit": "input intensity",
+    "basis": "Phase 9 binary32 intensity bound, frozen before C++ implementation. No nonfinite equivalence."
+  },
+  "cases": [
+    {
+      "id": "example1",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "example1.json": "49413037d1983bcc8e8fb2dcd596af412b27fc95137f25157e06c963533e36f1",
+        "example1.wire": "4276b29a03762bc602eafdfa55c3f002a7a37288ac5fc2ac4f9a4ed4398b6f11",
+        "example1.stdout.txt": "93276cf2469460f3994f13380ba6ff50470a31ea567ec53727329948dad1319a",
+        "example1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": false,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "CPD2",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "CPD2.json": "f572bdf0dcebf1b63d821ede380ef0121735d5a3c8838324ffddd9423fb17205",
+        "CPD2.wire": "8bf898764e21b271fd8c42211aa5ffe145f8973416308f4e81cb617057c75f9b",
+        "CPD2.stdout.txt": "aa90f4343980c41d4b12c4278c151c8b3e6e040be3410467db0b5c2b5f9be9e6",
+        "CPD2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": false,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "MIXT_5",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "MIXT_5.json": "0b154b5f3de2d7d9add29060ff1a6619445af61e561809dc1e7cada3aa24c412",
+        "MIXT_5.wire": "302443b185f2073f4c7b75fda6d033332eb27f5cac6474d7a5197f877d4e3c7a",
+        "MIXT_5.stdout.txt": "13d7e407a5eb792bbac638f689626ad76280e9dc13ceaf909e216f1a16b1fa49",
+        "MIXT_5.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": false,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "clean",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "clean.json": "4d8750bbcab1601c835f2bd1eb022abb860f025a88bd4f24f333513665d2bf74",
+        "clean.wire": "58ee03f877270e29acca9257b54b6a26a3f7c650cce2df3ada1fc79945b0f49e",
+        "clean.stdout.txt": "fe36fdebd30183b68becda606b7f108cf9b8eca6301e4f2270d4e93d02a7b9fd",
+        "clean.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": false,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "weak",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "weak.json": "319acb8e76a921d2f56535b874b19197b93537b8ac4b54882c0e213da8f327a8",
+        "weak.wire": "6955e0ebed0a74ee9d6b2c33b31b1ac2b18c131183e858610c1a9e2f6dcf1b4f",
+        "weak.stdout.txt": "de2aec528417f8652e4a896bcb819bc8567cf821e2a5985774fffb61c9c46f55",
+        "weak.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": false,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "overlap",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "overlap.json": "7b74fc26de6eefdda29c6cd11c50dd1b436f1a6e4688f1880e2091870c3d3f52",
+        "overlap.wire": "ac5589546d45982b288dd5d872cfcd32275de38faec0c375c0fad8bf0aff7222",
+        "overlap.stdout.txt": "04ea32dd37929895bf33f7327db7ff175a020379ef0088519dc5fa1bd571025f",
+        "overlap.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": false,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "boundaries",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "boundaries.json": "375a417a73f4f122f502df9cd28c1c769034b9742b414968842018df570134e1",
+        "boundaries.wire": "ff3e541a4b65c7a9802d62a55c7832ee366b707e283581a282a54dd275a4eba3",
+        "boundaries.stdout.txt": "d5dd3c60e1d2e1423ba4586fc5f6fb0330a4a242ceeaef2fcf68fbed951764fb",
+        "boundaries.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": false,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "high_angle",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "high_angle.json": "1508f9d6bf465f229bfd91e31365f382b6aba1d34fbd1951b3cf98999b507c75",
+        "high_angle.wire": "b8982dc45dec94e81d959dd09deef30540e35412c1534931694cfe49bc8a089f",
+        "high_angle.stdout.txt": "ca118ea1d074c5e374d158cecdad63c705852d79a757759d4161571491f97d82",
+        "high_angle.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": false,
+        "nonfinite_intensities": 391
+      },
+      "product_rejection": "kalpha2_angular_domain",
+      "classification": "historical_edge_product_contract"
+    },
+    {
+      "id": "low",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "low.json": "2103405e9fa2edef571aab9ecf915d57c04c4075a5a2884d9850b4da24867c24",
+        "low.wire": "c3263559b686da52e3cb7b32bab328f3561835743144101df7fa7ab8c30fb8f8",
+        "low.stdout.txt": "6f19ff5c8d14b66a918b48bf1b9f12f6d9b0035923860de7cc5571a548a5da19",
+        "low.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": false,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "zero",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "zero.json": "7e96c4beb43615ae0464ee678df13d8b91d2609fe72fbc40a14e86ee580c8a4b",
+        "zero.wire": "20282e7c69d95e1dc128609d21c0f6d6c6ce419593f07bb81d43fe8296dce405",
+        "zero.stdout.txt": "bac6309cedeb27ae247e4271fc5fde2dbf1196ddfcf4e371c2deff27edb48709",
+        "zero.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": false,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "negative",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "negative.json": "b0ecf794098b04e0ee5da41f0548c35c7a5f62873f1cd9302ffdfe7a3b6b48ab",
+        "negative.wire": "03ae44e336b1b7cb6b386bb284db593e3cf203909bb72d85e17f64ff38e50f7b",
+        "negative.stdout.txt": "6bcb8ca1438b41cfa0518007a5e51c0febc2ac17e28e9345fdf8c7bd815befea",
+        "negative.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": false,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "irregular",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "irregular.json": "39f96c8f18413109e4aa66f05a42481ae05009e738ad9358ff775b2f5d02fc7f",
+        "irregular.wire": "71780f978e1d78d8d0abd41b1afbdc225a429003bd97b22d4aa6160c813e8581",
+        "irregular.stdout.txt": "93b849b74b9485dbdd6aa5978ae712fafb713eb5c15f96ce51d8c4766d7f3315",
+        "irregular.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": false,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "descending",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "descending.json": "5561c1718b5711dc7346e5a98ea149198e60f8ef08967a049249c01b179b3fc3",
+        "descending.wire": "311e4978a2b856404354db941438c51714185a26d584b9f8ff793fff8f13f788",
+        "descending.stdout.txt": "d385bbf676fd4ed36eceadb141fc0625dae1bf174d87a25817503a3d6c5f295c",
+        "descending.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": false,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": "kalpha2_invalid_grid",
+      "classification": "historical_edge_product_contract"
+    },
+    {
+      "id": "duplicate",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "duplicate.json": "ec8a016fc6c3a2743c2964935491c316224c9409b5abf24519de6774bdace5ba",
+        "duplicate.wire": "d652cd5db631f8de7418b0a47fd29af520c6fc2eaa4e3ffedda8303fe752100a",
+        "duplicate.stdout.txt": "d2767dc551d8612cd444ed4a3284caad2caddc3b5c04f36c369f36ed5b450d22",
+        "duplicate.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": false,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": "kalpha2_invalid_grid",
+      "classification": "historical_edge_product_contract"
+    },
+    {
+      "id": "single",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "single.json": "b74d6ea0165d08a7b2e466f11252fff14c94622edc0319d3417a2f090b293b05",
+        "single.wire": "efbe3a33d45152b9aad54513402f0521e6631fb2f4b160925882116e412d1426",
+        "single.stdout.txt": "0eb691412b84e940d2a05e225b784886710b39f5f9f31310850c4b2c5c70e621",
+        "single.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": false,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": "kalpha2_invalid_grid",
+      "classification": "historical_edge_product_contract"
+    },
+    {
+      "id": "nonfinite",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "nonfinite.json": "9e35e3cc44f8421c8a0a405a719549c2e26c4c971667e8986121497d4c0470d9",
+        "nonfinite.wire": "b57508f4f272e086242a12d76f5bd51ef72f9c0999ef13636b6dc7fb3c3e7ed3",
+        "nonfinite.stdout.txt": "03a9a1f75f119ff3724bd461dbcd1bde05b44dfba57a129f4258402ab255bc88",
+        "nonfinite.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": false,
+        "nonfinite_intensities": 1
+      },
+      "product_rejection": "kalpha2_nonfinite_input",
+      "classification": "historical_edge_product_contract"
+    },
+    {
+      "id": "example1-action",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "example1-action.json": "f3c5e58ffaf6eb409ba45b8874958dbbac69d97f64b012c60f7332e8e7677261",
+        "example1-action.wire": "af7800150a7142008eb6fc47466fcbbb480ea10aecbb3f4e15ee72a3514cdfa9",
+        "example1-action.stdout.txt": "99ba5e468ae9752a4d6410ef2a7837f5c54acdc87b6db7581ff988af18cc420d",
+        "example1-action.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "example1-background",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "example1-background.json": "5b780e4c06385fd65aefa61c8b38acf30f34938e48d705f4d5986330f322a0a7",
+        "example1-background.wire": "fb3a478d1e3728ec5ce203af97cc466d674948b450219ff352cd37baed8c8cec",
+        "example1-background.stdout.txt": "3ade170c333b8b7a72a9d69923fd12020993297aba898e0679a9db1931e64e44",
+        "example1-background.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": true,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "example1-peaks",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "example1-peaks.json": "7614e5d5eff4ac1eb2b454169ffc8c81db5c13b03ea2ea9f414c6d7c61291c65",
+        "example1-peaks.wire": "75f2ed8ebbb1f0c98c93046fdd08e4bd56a2a4a5380a2b0a3c5778c5376dcb7e",
+        "example1-peaks.stdout.txt": "0a178ecae3bc31ba25e8a04a65b435b35b9161b4d44030827654d360856a28c9",
+        "example1-peaks.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 79,
+        "candidate_peaks": 226,
+        "background": true,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "CPD2-action",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "CPD2-action.json": "7093a50e4bc30bfcdf060c2152865e029e682c8951b09d27aa733305e6008638",
+        "CPD2-action.wire": "db08c04f6bcd44748b65e738e16ad93e575d2e4bfe4956c5d13aad9151b08298",
+        "CPD2-action.stdout.txt": "034df7c3e8c88e418528706b03badeb844ce359413a34c41c0977b43878fcc18",
+        "CPD2-action.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "CPD2-background",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "CPD2-background.json": "44d02d81e44dd6256c05f56943b549f708782a211041e4472332ffcebbab10b4",
+        "CPD2-background.wire": "70896aa07cfb59c15367bcaa460da81388808e15e307a02e0fa07a6082fc5906",
+        "CPD2-background.stdout.txt": "24d010fe2e579c58a9f8ebbc16f490f94e8e51a06453c7d9fad5a08f38aa20df",
+        "CPD2-background.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": true,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "CPD2-peaks",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "CPD2-peaks.json": "906deab038b24a932d27209db49e938f3f6ff566bce5443fc08ee617efb08cc9",
+        "CPD2-peaks.wire": "71a00a6d7f4c7938b45f730814012a957334ab693994900fc057e0e1a43d7616",
+        "CPD2-peaks.stdout.txt": "145dbae9598289627bb7ac40c37496be69c3c012bab235c17a8d136c5c10b20f",
+        "CPD2-peaks.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 46,
+        "candidate_peaks": 682,
+        "background": true,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "MIXT_5-action",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "MIXT_5-action.json": "0ff61a88f09013fa6a70f6c2909175b9c9167971860be17a35c3422db6bc3d79",
+        "MIXT_5-action.wire": "561c539444539290a4456c27a67bdb758cdc79bf758f7afd0fde6791d6e6fe68",
+        "MIXT_5-action.stdout.txt": "d3e9e27acaf117e58851cc81cee80aaa7f645c0b51658ecee1481a2845a729e6",
+        "MIXT_5-action.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "MIXT_5-background",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "MIXT_5-background.json": "ea70a45eb9a982504a5d6ce5ea2234c84edb767e44ce07d9639cf34380bf07d3",
+        "MIXT_5-background.wire": "eaf5bad084e8684754cd9f3086e8f891fe2054e7ea90d47eefe6c2f59ab02049",
+        "MIXT_5-background.stdout.txt": "2d6a321806855b377ab68667cbe62a14f1d6e16aa633ff147e23bfbaef4840d5",
+        "MIXT_5-background.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": true,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "MIXT_5-peaks",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "MIXT_5-peaks.json": "12f41f51c4e8a008c1e8fd2683b947957a8c81241532fe40bd4e83d2445238f2",
+        "MIXT_5-peaks.wire": "a300f546c3c3b6251d2fcb37d363b1f52b56e448af3bab8b3e8932f8999c9ad8",
+        "MIXT_5-peaks.stdout.txt": "8152bc738cdd89f0a4948ff82fbf988d61a68cdc5d020fb02d319c1dcf5077d6",
+        "MIXT_5-peaks.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 112,
+        "candidate_peaks": 244,
+        "background": true,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "clean-action",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "clean-action.json": "2c149eb13a5f6cb8d473a4c1b76c8edd619c961ee277c414f16a526a766c519f",
+        "clean-action.wire": "8d9c89785ea34d415554b2b21e3ba56ce6767071af7cef4f0e0a11923278e454",
+        "clean-action.stdout.txt": "009956bd21a73d211224a991e852307db4abee0383bc8e0e4ecb6327e33cfce1",
+        "clean-action.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "clean-background",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "clean-background.json": "2651bcc15e376e3e0c05435da25a5b80bbaad5f2bb2bf2478f37c35f32557a62",
+        "clean-background.wire": "065989426c37bc4aeb12e6d5ae4781863d22c812af5b87261a08cbbc6402dd89",
+        "clean-background.stdout.txt": "aba7cf338805d404dd52b3efe83b2b57438d3ac8494e77a5e750fa43ab1bfb65",
+        "clean-background.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": true,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "clean-peaks",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "clean-peaks.json": "1cdce044fa1378019481cb53e455f2168b634459ab6955d4593d9cfd2f21a11f",
+        "clean-peaks.wire": "8e980c43c1da64e205d3a1a9062e46261693d60ac4826f4eab7ab910b4311d41",
+        "clean-peaks.stdout.txt": "8b98690b55b6a45b867cdeceb8c0c2a1c5b5bc77dc3d5d13867a7f65cb8f1052",
+        "clean-peaks.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 2,
+        "candidate_peaks": 2,
+        "background": true,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "custom_cu",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "custom_cu.json": "bd7e9000583f2e0db2ba89b76601ae2daee6303745cda7f067ac30eabc1fcc71",
+        "custom_cu.wire": "7038bfc96df676ef8de6934359e1ba1c227c16d2cab40e923dcb12c4e31cc114",
+        "custom_cu.stdout.txt": "009956bd21a73d211224a991e852307db4abee0383bc8e0e4ecb6327e33cfce1",
+        "custom_cu.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": null,
+      "classification": "normal_reference"
+    },
+    {
+      "id": "mo",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "mo.json": "e801c35062d2ad3ca2153830c34154336a4741f07a3bf49790243e43f7d33648",
+        "mo.wire": "effe28f100b3b7610c61e14ec44742eb2105c7154e6d1254a58aa1276637fd3d",
+        "mo.stdout.txt": "009956bd21a73d211224a991e852307db4abee0383bc8e0e4ecb6327e33cfce1",
+        "mo.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": "unsupported_kalpha2_radiation",
+      "classification": "historical_edge_product_contract"
+    },
+    {
+      "id": "neutron",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "neutron.json": "363c6b7792445bd1c1dd44ba5f4c103e2aabe39b49433404f835b2aa562b8ca9",
+        "neutron.wire": "770c0d1be14f2ea44fed09455e0734098db68f38d5a4d9f1f558b1972497bda1",
+        "neutron.stdout.txt": "009956bd21a73d211224a991e852307db4abee0383bc8e0e4ecb6327e33cfce1",
+        "neutron.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": "unsupported_kalpha2_radiation",
+      "classification": "historical_edge_product_contract"
+    },
+    {
+      "id": "electron",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "electron.json": "b13f76b51b9d84ea636947153799f3030e17bac8bba80ce2ce5a2ee03c173c43",
+        "electron.wire": "b82a95a6b2c6fffa152d944f35c6986ac3efc24674f642b1ff47ae3b95f2d8ba",
+        "electron.stdout.txt": "009956bd21a73d211224a991e852307db4abee0383bc8e0e4ecb6327e33cfce1",
+        "electron.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": "unsupported_kalpha2_radiation",
+      "classification": "historical_edge_product_contract"
+    },
+    {
+      "id": "unknown_radiation",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "unknown_radiation.json": "1713e5f8f3b17bca1ac69e5a8ff3ab8ef765642eb2d6db274bfcf96555ec8e17",
+        "unknown_radiation.wire": "af24b724e0396ec6e801214475fd8bd62cbb0d9a3dd57bbe3fd5c076d4bc167d",
+        "unknown_radiation.stdout.txt": "009956bd21a73d211224a991e852307db4abee0383bc8e0e4ecb6327e33cfce1",
+        "unknown_radiation.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": "unsupported_kalpha2_radiation",
+      "classification": "historical_edge_product_contract"
+    },
+    {
+      "id": "repeat",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "repeat.json": "4285f5b4d6269459e5f1e75a245eb0b787a96de969c4a5a73a4e201c6d002c8a",
+        "repeat.wire": "b323a71105d6c333cc195935b148ae91f123028042ff511187c012b3c4efc1e6",
+        "repeat.stdout.txt": "a34f00c9a8c8ccfd5b485fb6c9e2454328567cda408cce529c209539bc358e63",
+        "repeat.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": "kalpha2_already_subtracted",
+      "classification": "historical_edge_product_contract"
+    },
+    {
+      "id": "already_flagged",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "already_flagged.json": "1be64cf0a80bee4918b2325caa5562a98eb13d90b03a51bd518fd363d537827a",
+        "already_flagged.wire": "0b9b1be253352024a29b80aac11a5c02f16dd79c83cf4e42b7e8cdb0534c019e",
+        "already_flagged.stdout.txt": "f720ea3ffc948a058bc1e2a8c7eb6eb115eb08300309b2424d6ddc07b8d176bd",
+        "already_flagged.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": "kalpha2_already_subtracted",
+      "classification": "historical_edge_product_contract"
+    },
+    {
+      "id": "unknown_history",
+      "returncode": 0,
+      "completed": true,
+      "artifacts": {
+        "unknown_history.json": "55839c597baa20941deee718fc011e31ef091921d9d467b2832923d7c0b06b47",
+        "unknown_history.wire": "2fd7594da9e930ecbf87aeaa91055efff17cbf423e687370ed2672688ae21b5a",
+        "unknown_history.stdout.txt": "009956bd21a73d211224a991e852307db4abee0383bc8e0e4ecb6327e33cfce1",
+        "unknown_history.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "native_observation": {
+        "selected_peaks": 0,
+        "candidate_peaks": 0,
+        "background": false,
+        "kalpha2_subtracted": true,
+        "nonfinite_intensities": 0
+      },
+      "product_rejection": "kalpha2_state_unknown",
+      "classification": "historical_edge_product_contract"
+    }
+  ],
+  "review": {
+    "peak_dependency": "Native reconstruction changes peak/background state but not stripped intensity: exact full-array comparisons for 4 spectra x 3 action variants. No peak search is required inside the C++ stripping kernel; downstream derived state is invalidated.",
+    "radiation": "Captured identical output for Cu custom 1.54056, Mo .71073, neutron, electron, unknown rad. Native ignores these metadata; product explicitly restricts fixed Cu model.",
+    "repeated": "Native applies subtraction again despite existing flag; C++ rejects repeated and unknown history.",
+    "negative": "Negative outputs observed for all three measured patterns; preserve finite negatives, no clipping.",
+    "boundary": "High-angle case has 391 NaN intensities; preserve transcript as historical evidence. Product rejects invalid inverse-sine domain. Single/duplicate/descending are unsupported irrespective of finite native transcript.",
+    "harness": "First run without native GUI sinks crashed at no-window presentation callback. Retained separately; corrected capture wraps presentation only, unchanged numerical modules.",
+    "parameters": "Fixed istog=3 weights [-.152766460,-.268687600,-.110173100], levers [1.002353500,1.002453600,1.002578830]. No configurable wavelength or ratio inside native kernel; nominal Cu doublet 2:1 is a product precondition, not a replacement coefficient formula.",
+    "arithmetic": "Subtract global minimum, scan ascending source bins, skip negative current bins, distribute three signed corrections linearly to bracketing half-angle bins using mutated intensity. First unavailable upper bracket exits the whole scan; add minimum back. Native last bin is excluded as an upper interpolation bracket."
+  },
+  "archive": "kalpha2-reference.zip",
+  "archive_sha256": "9559a201a342f9dfadac3866afdcbc48d9cee0dad3509de2d835516beaba468d"
+}

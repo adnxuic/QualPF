@@ -1,0 +1,97 @@
+{
+  "version": 2,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "qualpf-development",
+      "hidden": true,
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RELEASE",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "QUALPF_BUILD_PRODUCT_TESTS": "ON",
+        "QUALPF_BUILD_PREPROCESSING_TESTS": "ON"
+      }
+    },
+    {
+      "name": "windows-gnu",
+      "inherits": "qualpf-development",
+      "binaryDir": "${sourceDir}/build/windows-gnu",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++"
+      }
+    },
+    {
+      "name": "windows-msvc",
+      "inherits": "qualpf-development",
+      "binaryDir": "${sourceDir}/build/windows-msvc",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "cl"
+      }
+    },
+    {
+      "name": "linux-gnu",
+      "inherits": "qualpf-development",
+      "binaryDir": "${sourceDir}/build/linux-gnu",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "windows-gnu",
+      "configurePreset": "windows-gnu"
+    },
+    {
+      "name": "windows-msvc",
+      "configurePreset": "windows-msvc"
+    },
+    {
+      "name": "linux-gnu",
+      "configurePreset": "linux-gnu"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "windows-gnu",
+      "configurePreset": "windows-gnu",
+      "filter": {
+        "include": {
+          "label": "normal"
+        }
+      },
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "windows-msvc",
+      "configurePreset": "windows-msvc",
+      "filter": {
+        "include": {
+          "label": "normal"
+        }
+      },
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "linux-gnu",
+      "configurePreset": "linux-gnu",
+      "filter": {
+        "include": {
+          "label": "normal"
+        }
+      },
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}

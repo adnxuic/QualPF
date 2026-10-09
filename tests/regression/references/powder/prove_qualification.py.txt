@@ -1,0 +1,114 @@
+"""Independent 80-digit equations, rational adjacency and exact field review.
+
+No C++ implementation, replay expected values or widened differential tolerance
+is used to compute the independent result. Native Fc2/angle are the input data.
+"""
+import hashlib
+import json
+from pathlib import Path
+import sys
+import zipfile
+import mpmath as mp
+
+ROOT=Path(__file__).resolve().parents[3]
+HERE=Path(__file__).resolve().parent
+sys.path.insert(0,str(ROOT/'tests/compatibility'))
+from powder_capture import parse
+from powder_qualification import fingerprint
+mp.mp.dps=80
+
+
+def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+
+
+def main():
+    source=ROOT/'build-phase17-entry'
+    with zipfile.ZipFile(ROOT/'tests/data/powder-intensity-reference.zip') as z:
+        cases=json.loads(z.read('cases.json'));expected=json.loads(z.read('expected.json'))
+    reports={};actual={}
+    for compiler,stem in [('GNU','mingw'),('MSVC','msvc')]:
+        p=source/(stem+'-powder-differential.json')
+        reports[compiler]=json.loads(p.read_text())
+        actual[compiler]=parse(p.with_suffix('.stdout.txt').read_text())
+    checks=0;failures=[];independent={}
+    def check(ok,case,field,compiler):
+        nonlocal checks
+        checks+=1
+        if not ok:failures.append(dict(case=case,field=field,compiler=compiler))
+    for c in cases:
+        cid=str(c['id'])
+        if c['category'] not in ('normal','normalization-floor-observation'):continue
+        native=expected[cid];calculated={}
+        for r in native['reflections']:
+            th=mp.mpf(r['two_theta'])*mp.pi/360
+            lorentz=1/(2*mp.sin(th)**2*mp.cos(th))
+            polarization=mp.mpf(1) if c['radiation']==1 or c['sync'] else 1+mp.mpf(4)/5*mp.cos(2*th)**2
+            lp=lorentz*polarization
+            calculated[r['id']]=dict(lorentz=lorentz,polarization=polarization,lp=lp,raw=r['multiplicity']*lp*mp.mpf(r['fc2']))
+        ordered=sorted(native['reflections'],key=lambda r:(r['two_theta'],r['id']))
+        groups=[];last=None
+        for r in ordered:
+            if last is None or mp.mpf(r['two_theta'])-mp.mpf(last)>mp.mpf(c['tolerance']):groups.append([])
+            groups[-1].append(r['id']);last=r['two_theta']
+        sums=[sum(calculated[i]['raw'] for i in g) for g in groups];maximum=max(sums)
+        relative=[1000*s/maximum for s in sums]
+        independent[c['id']]=dict(groups=groups,raw=sums,relative=relative)
+        for compiler,data in actual.items():
+            got=data[cid]
+            check([g['members'] for g in got['groups']]==groups,c['id'],'membership',compiler)
+            for r in got['reflections']:
+                for field in ('lorentz','polarization','lp','raw'):
+                    proof=calculated[r['id']][field]
+                    check(abs(mp.mpf(r[field])-proof)<=mp.mpf('2e-12')*max(abs(proof),mp.mpf('1e-280')),
+                          c['id'],f'reflection.{r["id"]}.{field}',compiler)
+            for i,line in enumerate(got['lines']):
+                check(abs(mp.mpf(line['raw'])-sums[i])<=mp.mpf('2e-12')*max(abs(sums[i]),mp.mpf('1e-280')),
+                      c['id'],f'line.{i+1}.raw',compiler)
+                check(abs(mp.mpf(line['relative'])-relative[i])<=mp.mpf('2e-9'),
+                      c['id'],f'line.{i+1}.relative',compiler)
+    records=[]
+    by_compiler={compiler:{(f['case'],f['field']):f for f in r['raw_failures']} for compiler,r in reports.items()}
+    keys=set().union(*(set(r) for r in by_compiler.values()))
+    for key in sorted(keys):
+        cid,field=key
+        assert cid==67 and field in ('line.1.relative','line.2.relative'), 'New failure requires a fresh independent audit'
+        i=int(field.split('.')[1])-1
+        values={compiler:rows[key]['cpp'] for compiler,rows in by_compiler.items()}
+        old=by_compiler['GNU'][key]['legacy']
+        assert all(rows[key]['legacy']==old for rows in by_compiler.values())
+        proof=independent[cid]['relative'][i]
+        record=dict(case=cid,field=field,legacy=old,cpp_by_compiler=values,
+            category='legacy_epsilon_normalization_floor',independent_decimal=mp.nstr(proof,82),
+            independent_check_passed=all(abs(mp.mpf(x)-proof)<mp.mpf('2e-9') for x in values.values()),
+            downstream=dict(membership_changed=False,position_changed=False,raw_intensity_changed_beyond_tolerance=False,
+                            normalized_rank_changed=False,
+                            meaning='Core uses physical max=1000. Legacy writer substitutes divisor=1 below float epsilon; DB ABI omits the entire tiny pattern.'),
+            approval='pending_explicit_user_acceptance')
+        record['fingerprint']=fingerprint(record);records.append(record)
+    proof_report=dict(success=not failures and all(r['independent_check_passed'] for r in records),
+        precision_decimal_digits=80,checks=checks,failures=failures,records=len(records),
+        method='mpmath 80-digit trig with exact binary64 frozen inputs, rational 4/5 polarization, independent L*P and sums/max; rational adjacent-threshold groups',
+        script_sha256=sha(Path(__file__)))
+    (HERE/'qualification-proof.json').write_text(json.dumps(proof_report,indent=2)+'\n')
+    out=dict(status='pending_explicit_user_acceptance',records=records,counts=dict(records=len(records)),
+        compiler_fingerprints={compiler:dict(runner_sha256=report['runner_sha256']) for compiler,report in reports.items()},
+        proof_sha256=sha(HERE/'qualification-proof.json'),script_sha256=sha(Path(__file__)),
+        frozen_reference_unchanged=True,frozen_tolerance_unchanged=True)
+    (HERE/'qualification-records.json').write_text(json.dumps(out,indent=2)+'\n')
+    review=['# Phase 17 qualification review','',
+        'Pending explicit user approval. These are semantic tiny-pattern normalization differences, not binary32 residual waivers.',
+        'The original comparisons remain failed. Phase 13–16 decisions do not apply here.',
+        'All normal LP/raw/group/position/order/rank fields pass the frozen tolerances. Only case 67 (`sub-epsilon-maximum`) differs.',
+        '', '| Case | Field | Legacy | GNU | MSVC | Independent 80-digit value |', '|---|---|---|---|---|---|']
+    for r in records:
+        review.append(f'| {r["case"]} | {r["field"]} | {r["legacy"]:.17g} | {r["cpp_by_compiler"]["GNU"]:.17g} | {r["cpp_by_compiler"]["MSVC"]:.17g} | {r["independent_decimal"]} |')
+    review += ['', 'Legacy substitutes max=1 when its positive maximum is below binary32 epsilon; Core divides by the actual positive maximum.',
+        'This preserves global positive Fc² scale invariance, including tiny values, and gives a maximum of 1000.',
+        'Membership, representative hkl, d/2theta, raw intensity and normalized rank are unchanged. No production consumer is switched.',
+        'Acceptance must bind the exact case/field/Legacy value/C++ values/compiler hashes/proof/reference/source hashes; new or stale fields fail.', '',
+        f'Independent proof: {checks} checks across both compilers, {len(failures)} failures.']
+    (HERE/'qualification-review.md').write_text('\n'.join(review)+'\n',encoding='utf-8')
+    print(json.dumps(proof_report))
+    if not proof_report['success']:raise SystemExit(1)
+
+if __name__=='__main__':main()

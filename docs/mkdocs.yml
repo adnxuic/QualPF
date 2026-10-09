@@ -1,7 +1,7 @@
-site_name: QualX Documentation
+site_name: QualPF Documentation
 site_description: Qualitative X-ray Powder Diffraction Analysis Software
 site_author: IC-CNR Bari
-docs_dir: docs
+docs_dir: user
 site_dir: site
 use_directory_urls: false
 

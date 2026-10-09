@@ -1,13 +1,14 @@
-# QualX
+# QualPF
 
-**Qualitative phase analysis software for X-ray powder diffraction patterns**, developed at the [Institute of Crystallography (IC-CNR), Bari](https://www.ic.cnr.it/).
+QualPF is a modified project derived from [QualX3](https://github.com/ccorrado71/qualx3), originally developed by IC-CNR.
 
-QualX helps identify the crystalline phases present in a powder diffraction pattern by comparing it against large reference databases (PDF-2, COD) and crystallographic data imported from CIF files.
+**Qualitative phase analysis software for X-ray powder diffraction patterns**, based on QualX3 originally developed at the [Institute of Crystallography (IC-CNR), Bari](https://www.ic.cnr.it/).
+
+QualPF helps identify the crystalline phases present in a powder diffraction pattern by comparing it against large reference databases (PDF-2, COD) and crystallographic data imported from CIF files.
 
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](LICENSE)
-![C++17](https://img.shields.io/badge/C%2B%2B-17-00599C)
+![C++20](https://img.shields.io/badge/C%2B%2B-20-00599C)
 ![Qt6](https://img.shields.io/badge/Qt-6-41CD52)
-![Fortran](https://img.shields.io/badge/Fortran-modern-734F96)
 
 ---
 
@@ -35,7 +36,16 @@ QualX helps identify the crystalline phases present in a powder diffraction patt
 
 ## About
 
-QualX is a Qt6/C++ desktop application, with a Fortran computational core, for **qualitative phase analysis (phase identification)** of powder X-ray diffraction data. It lets researchers search a diffraction pattern against crystallographic reference databases to identify which known phases are present in a sample.
+QualPF is a pure C++20/Qt 6 application for qualitative phase identification
+from powder X-ray diffraction. Core and Application are Qt-free; one Application
+Workspace owns canonical state. CLI/tests use the synchronous SearchEngine, and
+GUI searches use that same engine in a dedicated background worker with cooperative
+cancellation and atomic owner-thread publication.
+
+Product and normal tests require no Fortran compiler/runtime or historical runner.
+See [current architecture](docs/architecture/README.md),
+[building and testing](docs/development/building.md) and
+[migration history/recovery](docs/migration-history.md). PFSM has not started.
 
 The application can work with:
 - **PDF-2** (Powder Diffraction File) reference data,
@@ -47,9 +57,9 @@ The application can work with:
 - Qualitative phase identification against large crystallographic databases
 - Built-in database creation/import tools (from PDF-2 or CIF files)
 - Search engine based on top d-value indexing for fast pattern matching
-- Cross-platform: Linux, Windows, macOS
+- Supported platforms: Windows and Linux
 - GUI workflow plus a scriptable command-line interface for database creation
-- Fortran computational core for crystallographic calculations, interfaced with C++ via `iso_c_binding`
+- Qt-independent C++ numerical kernels with qualified compatibility contracts
 
 ## Reference databases
 
@@ -62,15 +72,17 @@ QualX databases are composed of four files sharing a common base name:
 | `.sq.infostat`   | Statistical tables                         |
 | `.sq.search`     | Search index (top d-values)                |
 
-A reference database built from the [COD](https://www.crystallography.net/cod/) inorganic subset is included under `DB/cod/`. It is large (the bundled `cod_inorg.sq*` files total roughly **1 GB**), so cloning the repository may take a while and require a stable connection.
+Reference databases are installed separately from the source tree. See the
+installation instructions below for [COD](https://www.crystallography.net/cod/)
+databases and their runtime location.
 
 You can also build your own database from PDF-2 data or a folder of CIF files — see [Command-line database creation](#command-line-database-creation).
 
 ### Installing a reference database
 
-> ⚠️ **Important: Install a reference database before using QualX**
+> ⚠️ **Important: Install a reference database before using QualPF**
 >
-> QualX requires a crystallographic reference database to perform search & match analysis. Without a database installed, the software will not be able to identify phases.
+> QualPF requires a crystallographic reference database to perform search & match analysis. Without a database installed, the software will not be able to identify phases.
 >
 > Two COD-based databases are available for download:
 > - one dedicated to inorganic phases
@@ -78,73 +90,91 @@ You can also build your own database from PDF-2 data or a folder of CIF files �
 >
 > 📥 Download them here: <https://www.ba.ic.cnr.it/content/old/qualx3/Databases/>
 
-QualX looks for databases in a dedicated `QualXDB` folder inside your home directory (`~/QualXDB` on Linux/macOS, `C:\Users\<username>\QualXDB` on Windows). At every launch, QualX scans this folder recursively for `.sq` files and registers any database it finds automatically.
+QualPF looks for databases in a dedicated `QualXDB` folder inside your home directory (`~/QualXDB` on Linux, `C:\Users\<username>\QualXDB` on Windows). At every launch, QualPF scans this folder recursively for `.sq` files and registers any database it finds automatically.
 
 To install a database:
 
 1. Create the `QualXDB` folder in your home directory (if it doesn't already exist).
 2. Download one of the zip archives from the link above and extract it directly into `QualXDB`.
-3. Launch QualX — the database is detected and registered automatically.
+3. Launch QualPF — the database is detected and registered automatically.
 
-You can also add a database stored elsewhere via **Search → Manage Databases → Add existing**. See the [Database Installation](docs/docs/database-installation.md) documentation page for full details.
+You can also add a database stored elsewhere via **Search → Manage Databases → Add existing**. See the [Database Installation](docs/user/database-installation.md) documentation page for full details.
 
 ## Requirements
 
 - CMake ≥ 3.20
-- A C++17 compiler (GCC, Clang, or MSVC)
-- A Fortran compiler: `gfortran`, `ifort`, or `ifx`
+- A C++20 compiler (GCC, Clang, or MSVC)
 - Qt6 (components: `Widgets`, `Sql`, `PrintSupport`, `Network`)
+- Eigen 3.4 and Boost headers
 - SQLite (used via Qt SQL driver)
 
+Supported operating systems are Windows and Linux. The current release acceptance
+matrix is:
+
+| Release configuration | C++ toolchain | Qt |
+| --- | --- | --- |
+| Windows 11 x64, MinGW | GCC 13.1 | 6.8.3 |
+| Windows 11 x64, MSVC | MSVC 19.40.33811 | 6.8.3 |
+| Ubuntu 26.04 x64 | GCC 15.2 | 6.10.2 |
+
+The compiler examples above describe the C++20 requirement. Clang has not been
+validated for the current release. macOS is outside the supported platform scope.
+
 ## Installation
+
+The product name is **QualPF** and its command is `qualpf` (`qualpf.exe` on Windows).
+Use a new installation directory for the renamed product. The first normal startup copies
+missing preferences from the previous application settings into the new user store,
+retaining the old store and any existing new values. Databases and `QualXDB` do not move.
+Public QualPF downloads are not configured; build locally using the instructions below.
+
 
 ### Linux (quick install)
 
 An automatic installation script is provided for Debian-based and RedHat-based distributions:
 
 ```bash
-./install.sh [fortran_compiler] [qt_prefix]
+./install.sh [qt_prefix]
 ```
 
 Examples:
 
 ```bash
-./install.sh                  # uses gfortran, auto-detects Qt
-./install.sh gfortran /home/user/Qt/6.5.0/gcc_64
+./install.sh                  # auto-detects Qt
+./install.sh /home/user/Qt/6.5.0/gcc_64
 ```
 
-The script checks dependencies, configures the project with CMake, builds it, and installs it to `/opt/qualx-<version>` (requires `sudo` for the install step).
+The script checks dependencies, configures the project with CMake, builds it, and installs it to `/opt/qualpf-<version>` (requires `sudo` for the install step).
 
 ### Manual build
 
 ```bash
 cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/6.x.y/gcc_64 \
       -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_Fortran_COMPILER=gfortran \
-      -S . -B build
+      -S . -B build/linux-gnu
 
-cmake --build build -j$(nproc)
-sudo cmake --install build
+cmake --build build/linux-gnu -j$(nproc)
+sudo cmake --install build/linux-gnu
 ```
 
-Adjust `CMAKE_PREFIX_PATH` to point to your Qt6 installation, and `CMAKE_Fortran_COMPILER` to `gfortran`, `ifort`, or `ifx` as needed. Platform-specific packaging resources (icons, installer scripts) are available under `deploy/linux`, `deploy/Windows`, and `deploy/macOS`.
+Adjust `CMAKE_PREFIX_PATH` to point to your Qt6 installation. A Fortran compiler is no longer a build requirement. Platform-specific packaging resources (icons, installer scripts) are available under `deploy/linux` and `deploy/Windows`.
 
 ## Usage
 
 ### Graphical interface
 
-Launch the installed executable (`qualx`) to open the GUI, load a diffraction pattern, select a reference database, and run a qualitative phase search.
+Launch the installed executable (`qualpf`) to open the GUI, load a diffraction pattern, select a reference database, and run a qualitative phase search.
 
 ### Command-line database creation
 
-QualX can also build reference databases without launching the GUI:
+QualPF can also build reference databases without launching the GUI:
 
 ```bash
 # From a PDF-2 file:
-qualx --createdb --pdf2 /path/to/pdf2.dat --dbout /path/to/output
+qualpf --createdb --pdf2 /path/to/pdf2.dat --dbout /path/to/output
 
 # From a folder of CIF files:
-qualx --createdb --cifdir /path/to/cifs [--recursive] --dbout /path/to/output
+qualpf --createdb --cifdir /path/to/cifs [--recursive] --dbout /path/to/output
 ```
 
 ### Command-line search
@@ -152,42 +182,65 @@ qualx --createdb --cifdir /path/to/cifs [--recursive] --dbout /path/to/output
 A qualitative phase search can also be run from the command line, against the currently configured reference database(s):
 
 ```bash
-qualx --search /path/to/data_file
+qualpf --search /path/to/data_file
 ```
 
 Add `--nogui` to run entirely without graphics (e.g. over SSH or in scripts):
 
 ```bash
-qualx --search /path/to/data_file --nogui
+qualpf --search /path/to/data_file --nogui
 ```
 
 Optional composition filters can be combined with `--search`:
 
 ```bash
-qualx --search /path/to/data_file --nogui --composition "Al AND Si" [--exact | --contains-any]
+qualpf --search /path/to/data_file --nogui --composition "Al AND Si" [--exact | --contains-any]
 ```
 
 ## Documentation
 
-A user manual is available under `docs/` (built with [MkDocs](https://www.mkdocs.org/)):
+A user manual is available under `docs/user/` (built with [MkDocs](https://www.mkdocs.org/)):
 
 ```bash
 pip install -r docs/requirements.txt
-mkdocs build -f docs/mkdocs.yml
-bash docs/make_pdf.sh   # optional: generates docs/qualx_manual.pdf
+mkdocs build --strict -f docs/mkdocs.yml
+bash docs/make_pdf.sh   # optional: generates docs/qualpf_manual.pdf
 ```
 
 ## Repository structure
 
+```text
+apps/qualpf/            GUI/CLI entry points and executable assembly
+src/core/               Qt-free numerical/domain kernels and memory parsers
+src/application/        Qt-free canonical state, engine, transactions and ports
+src/infrastructure/     SQL, file/codecs/settings and resource providers
+src/gui/                Qt Widgets, views, intents and background scheduling
+cmake/                  build policy, templates and Windows/Linux packaging
+scripts/                platform build/install/package helpers
+tests/                  unit, integration, product and numerical regression
+tests/data/             unchanged independent numerical/CIF datasets
+tests/regression/references/  algorithm-organized frozen resources/provenance
+tests/reference/        current reference identity manifest
+tests/support/snapshot/ test-only binary32 transport consumers
+tools/                  current context, architecture, validation and table tools
+third_party/            required third-party source
+share/qualx/            consumed runtime data with original names/attribution
+deploy/                 current Windows/Linux packaging resources
+docs/architecture/      ownership/dependencies and accepted decisions
+docs/numerical/         scientific policy and reference instructions
+docs/development/       build/test/contribution and repository guides
+docs/user/              user manual with unchanged page URLs
+docs/migration-history.md  archive and recovery entry
+.agent/                 Agent rules, task navigation and one mutable handoff
+build/<configuration>/  ignored local caches, binaries and test logs
+releases/               ignored local package outputs
 ```
-src/           C++ and Fortran sources
-src/CMakeLists.txt   list of all sources (PROJECT_SOURCES and FORTRAN_SOURCES)
-share/qualx/   runtime data files (syminfo.lib, AtomProperties.xen, ...)
-DB/            bundled SQLite reference databases (e.g. DB/cod/cod_inorg)
-deploy/        platform-specific packaging resources (Linux, Windows, macOS)
-docs/          user manual sources (MkDocs)
-configured/    files generated by CMake (config.h with version info)
-```
+
+[Directory responsibilities](docs/development/repository-layout.md) and
+[build/contribution instructions](docs/development/building.md) describe shared
+presets and machine-local SDK configuration. The
+[directory migration report](docs/development/repository-consolidation/batches.md)
+records this maintenance separately from Milestone F and Phase36E.
 
 ## Citing QualX
 
@@ -207,15 +260,18 @@ If you use QualX in your research, please cite one of the following works:
 
 ## License
 
-QualX is distributed under the **GNU Lesser General Public License v3.0 (LGPL-3.0)**. See [LICENSE](LICENSE) for the full text.
+QualPF is distributed under the **GNU Lesser General Public License v3.0 (LGPL-3.0)**. See [LICENSE](LICENSE) for the full text.
 
 ## Authors and acknowledgments
 
-Developed and maintained at the **Institute of Crystallography, CNR (IC-CNR), Bari**, Italy.
+Originally developed and maintained at the **Institute of Crystallography, CNR (IC-CNR), Bari**, Italy.
 
 ## Contributing
 
 Bug reports, feature requests, and merge requests are welcome. Please open an issue describing the problem or proposal before submitting larger changes.
+
+Write current project documentation and README files in English. Preserve the
+original bytes and language of frozen evidence and archived snapshots.
 
 ## Support
 

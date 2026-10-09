@@ -1,0 +1,108 @@
+{
+  "archive": "cpp-replay-evidence.zip",
+  "archive_sha256": "3e4169ae5629dd4860ce542233c72ecc7e6dd8ea70cbbb1bfbdc5d651e694827",
+  "files": {
+    "fort.70": {
+      "sha256": "57ae72c55805215f262f8052804d49cfcbce6b29486ef74038e3dfe04c451f41",
+      "bytes": 9108
+    },
+    "initial-mingw-differential.actual.json": {
+      "sha256": "43607d19855fe64e3d73d9eaf0ac62f17724071a93a2b21023e5634e34d5f52c",
+      "bytes": 5510835
+    },
+    "initial-mingw-differential.input.txt": {
+      "sha256": "092403f436a6c824314d549f10613409d20f40ec51e3e4ae0d4897dcf1a5ca2e",
+      "bytes": 1116650
+    },
+    "initial-mingw-differential.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "initial-mingw-differential.stdout.txt": {
+      "sha256": "e4bf5b8adaecab24c42d98c5031d3bfcc1d72da4c51245ef989013cd0ebd914a",
+      "bytes": 1127958
+    },
+    "initial-msvc-differential.actual.json": {
+      "sha256": "a768214b0206f4c20d841aea70575342e9fd54f9a3d5317dae385e8ad3bb5cc4",
+      "bytes": 5505109
+    },
+    "initial-msvc-differential.input.txt": {
+      "sha256": "092403f436a6c824314d549f10613409d20f40ec51e3e4ae0d4897dcf1a5ca2e",
+      "bytes": 1116650
+    },
+    "initial-msvc-differential.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "initial-msvc-differential.stdout.txt": {
+      "sha256": "6a640e77992e170a67a850c04f94b6623296c07ded9baa885426067de5bf90df",
+      "bytes": 1121559
+    },
+    "mingw-differential.actual.json": {
+      "sha256": "03a5b7ef0c38a47641cf2d8176df88a7892028942dcdaac958f21e3eadbe8451",
+      "bytes": 5510836
+    },
+    "mingw-differential.input.txt": {
+      "sha256": "092403f436a6c824314d549f10613409d20f40ec51e3e4ae0d4897dcf1a5ca2e",
+      "bytes": 1116650
+    },
+    "mingw-differential.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "mingw-differential.stdout.txt": {
+      "sha256": "de40ce8ce5053ba6370d5f8ab155ef24b93e143aa6a5f526131ba18b0957ac9d",
+      "bytes": 1127959
+    },
+    "mingw-properties.input.txt": {
+      "sha256": "3fc612c8a9fdb9b5e224a01a9b746462514ca241c94d0da954a38ec8a7167077",
+      "bytes": 21754
+    },
+    "mingw-properties.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "mingw-properties.stdout.txt": {
+      "sha256": "5521582d48c4da71e1ef8bd948e2ba739b75e2ed1c628d7ee20affe00298c88a",
+      "bytes": 13125
+    },
+    "msvc-differential.actual.json": {
+      "sha256": "a768214b0206f4c20d841aea70575342e9fd54f9a3d5317dae385e8ad3bb5cc4",
+      "bytes": 5505109
+    },
+    "msvc-differential.input.txt": {
+      "sha256": "092403f436a6c824314d549f10613409d20f40ec51e3e4ae0d4897dcf1a5ca2e",
+      "bytes": 1116650
+    },
+    "msvc-differential.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "msvc-differential.stdout.txt": {
+      "sha256": "6a640e77992e170a67a850c04f94b6623296c07ded9baa885426067de5bf90df",
+      "bytes": 1121559
+    },
+    "msvc-properties.input.txt": {
+      "sha256": "3fc612c8a9fdb9b5e224a01a9b746462514ca241c94d0da954a38ec8a7167077",
+      "bytes": 21754
+    },
+    "msvc-properties.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "msvc-properties.stdout.txt": {
+      "sha256": "5521582d48c4da71e1ef8bd948e2ba739b75e2ed1c628d7ee20affe00298c88a",
+      "bytes": 13125
+    },
+    "native-replay.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "native-replay.stdout.txt": {
+      "sha256": "7c68291cc2c10a695fb8c673d04ac026770e0e2c9c70b85f53fdd19f5084636b",
+      "bytes": 3656017
+    }
+  },
+  "contents": "Full C++ replay/property inputs, raw stdout/stderr, parsed actual and fresh native replay. Initial failed implementation attempts retained separately by filename.",
+  "golden_source": false
+}

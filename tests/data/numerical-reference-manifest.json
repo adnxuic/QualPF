@@ -1,0 +1,290 @@
+{
+  "schema_version": 1,
+  "cpp_arithmetic": "explicit_float64",
+  "comparison": "absolute + relative * abs(reference); reject nonfinite; discrete indices/rank/error exact",
+  "legacy_tolerances_frozen": true,
+  "cases": [
+    {
+      "id": "N01",
+      "name": "scalar_and_reductions",
+      "status": "closed",
+      "legacy_sources": [
+        "legacy/fortran/numerics_support/math_util.F90",
+        "legacy/fortran/numerics_support/constants.f90"
+      ],
+      "scenarios": [
+        "finite classification; cancellation sum [1e16,1,-1e16]; hypot [3e200,4e200]; overflow"
+      ],
+      "proposed_tolerances": {
+        "value": {
+          "absolute": 1e-06,
+          "relative": 1e-05,
+          "unit": "per-kernel units"
+        }
+      },
+      "classification": "legacy_numerical_equivalence_and_qualpf_contract",
+      "reference_required": true,
+      "reference_manifest": "numerical-fortran/manifest.json",
+      "reference_cases": [
+        "N01-reductions"
+      ],
+      "contract": "Compensated cancellation sums, finite-input rejection, overflow errors and safe large norms are deliberate C++ contracts; legacy source-order SUM is not their oracle.",
+      "validation_entrypoints": [
+        "qualpf.numerics.reference",
+        "qualpf.numerics"
+      ]
+    },
+    {
+      "id": "N02",
+      "name": "array_and_location",
+      "status": "closed",
+      "legacy_sources": [
+        "legacy/fortran/numerics_support/arrayutil.f90",
+        "legacy/fortran/numerics_support/recipes.f90",
+        "legacy/fortran/numerics_support/lib_array.f90"
+      ],
+      "scenarios": [
+        "clocate nearest [0,2,5]: endpoints, midpoint ties and outside; indexx duplicates; locate ascending/descending endpoints; linspace 0/1/2/N"
+      ],
+      "proposed_tolerances": {
+        "grid": {
+          "absolute": 1e-12,
+          "relative": 1e-10,
+          "unit": "input coordinate"
+        }
+      },
+      "classification": "legacy_numerical_equivalence_and_qualpf_contract",
+      "reference_required": true,
+      "reference_manifest": "numerical-fortran/manifest.json",
+      "reference_cases": [
+        "N02-location"
+      ],
+      "contract": "Stable duplicate permutation, checked descending/ascending location and linspace endpoints are C++ contracts; nearest clocate decisions use real Fortran captures.",
+      "validation_entrypoints": [
+        "qualpf.numerics.reference",
+        "qualpf.numerics"
+      ]
+    },
+    {
+      "id": "N03",
+      "name": "numeric_conversion",
+      "status": "closed",
+      "legacy_sources": [
+        "legacy/fortran/crystallography/counts.f90",
+        "legacy/fortran/pattern_io/dataset.f90"
+      ],
+      "scenarios": [
+        "lambda=1.54056; angles 0.001,20,60,120,179,180; invalid Bragg domain; half integers and int32 endpoints; float narrowing"
+      ],
+      "proposed_tolerances": {
+        "two_theta": {
+          "absolute": 0.0001,
+          "relative": 0,
+          "unit": "degree"
+        },
+        "d_spacing": {
+          "absolute": 1e-05,
+          "relative": 0,
+          "unit": "angstrom"
+        }
+      },
+      "classification": "legacy_numerical_equivalence_and_qualpf_contract",
+      "reference_required": true,
+      "reference_manifest": "numerical-fortran/manifest.json",
+      "reference_cases": [
+        "N03-bragg-d",
+        "N03-bragg-angle"
+      ],
+      "contract": "Invalid Bragg domains and explicit unit typing are C++ contracts; valid conversions use default-REAL Fortran references.",
+      "validation_entrypoints": [
+        "qualpf.numerics.reference",
+        "qualpf.numerics"
+      ]
+    },
+    {
+      "id": "N04",
+      "name": "statistics",
+      "status": "closed",
+      "legacy_sources": [
+        "legacy/fortran/numerics_support/stat.f90",
+        "legacy/fortran/numerics_support/genlsq.f90"
+      ],
+      "scenarios": [
+        "avevar [1,2,3,4]; stat_type large offset (DP); constant data; sample n=0/1; nonfinite data"
+      ],
+      "proposed_tolerances": {
+        "mean": {
+          "absolute": 1e-06,
+          "relative": 1e-05,
+          "unit": "sample units"
+        },
+        "variance": {
+          "absolute": 1e-06,
+          "relative": 1e-05,
+          "unit": "sample units squared"
+        }
+      },
+      "classification": "legacy_numerical_equivalence_and_qualpf_contract",
+      "reference_required": true,
+      "reference_manifest": "numerical-fortran/manifest.json",
+      "reference_cases": [
+        "N04-sample",
+        "N04-constant",
+        "N04-offset-dp"
+      ],
+      "contract": "Sample variance and offset DP streaming variance use references; empty/singleton error and population policy are C++ contracts.",
+      "validation_entrypoints": [
+        "qualpf.numerics.reference",
+        "qualpf.numerics"
+      ]
+    },
+    {
+      "id": "N05",
+      "name": "integration",
+      "status": "closed",
+      "legacy_sources": [
+        "legacy/fortran/numerics_support/math_util.F90",
+        "legacy/fortran/numerics_support/lib_array.f90"
+      ],
+      "scenarios": [
+        "irregular grid x=[0,1,3], y=[1,3,7]; subranges; singleton y=5 with explicit old policy; empty/invalid grid"
+      ],
+      "proposed_tolerances": {
+        "integral": {
+          "absolute": 1e-06,
+          "relative": 1e-05,
+          "unit": "x units times y units; singleton legacy exception documented"
+        }
+      },
+      "classification": "legacy_numerical_equivalence_and_qualpf_contract",
+      "reference_required": true,
+      "reference_manifest": "numerical-fortran/manifest.json",
+      "reference_cases": [
+        "N05-trapezoid",
+        "N05-singleton"
+      ],
+      "contract": "Irregular and singleton legacy integration use references; empty input and shape checking are C++ contracts.",
+      "validation_entrypoints": [
+        "qualpf.numerics.reference",
+        "qualpf.numerics"
+      ]
+    },
+    {
+      "id": "N06",
+      "name": "interpolation",
+      "status": "closed",
+      "legacy_sources": [
+        "legacy/fortran/numerics_support/recipes.f90",
+        "legacy/fortran/numerics_support/lib_array.f90"
+      ],
+      "scenarios": [
+        "linear x=[0,1,3] y=[1,3,7]; natural vs clamped zero-slope [0,1]; cubic x^3 on irregular knots with endpoint slopes; knots and extrapolation"
+      ],
+      "proposed_tolerances": {
+        "value": {
+          "absolute": 1e-06,
+          "relative": 1e-05,
+          "unit": "ordinate units"
+        }
+      },
+      "classification": "legacy_numerical_equivalence_and_qualpf_contract",
+      "reference_required": true,
+      "reference_manifest": "numerical-fortran/manifest.json",
+      "reference_cases": [
+        "N06-natural",
+        "N06-clamped",
+        "N06-cubic"
+      ],
+      "contract": "Natural/clamped/cubic and extrapolation use Fortran references; reject/clamp policies and malformed knots are C++ contracts.",
+      "validation_entrypoints": [
+        "qualpf.numerics.reference",
+        "qualpf.numerics"
+      ]
+    },
+    {
+      "id": "N07",
+      "name": "linear_algebra",
+      "status": "closed",
+      "legacy_sources": [
+        "legacy/fortran/numerics_support/recipes.f90",
+        "legacy/fortran/numerics_support/genlsq.f90",
+        "legacy/fortran/numerics_support/math_util.F90"
+      ],
+      "scenarios": [
+        "pivoting A=[[0,2],[1,3]], b=[4,7]; tall/wide reconstruction; singular/zero/ill-conditioned; scale 1e-200,1,1e200 for C++ and valid ranges per legacy kind"
+      ],
+      "proposed_tolerances": {
+        "solution": {
+          "absolute": 1e-12,
+          "relative": 1e-10,
+          "unit": "rhs/matrix units; DP-only target"
+        },
+        "reconstruction": {
+          "absolute": 1e-12,
+          "relative": 1e-10,
+          "unit": "matrix units; DP-only target"
+        }
+      },
+      "classification": "legacy_numerical_equivalence_and_qualpf_contract",
+      "reference_required": true,
+      "reference_manifest": "numerical-fortran/manifest.json",
+      "reference_cases": [
+        "N07-pivot-lu"
+      ],
+      "contract": "Pivoted legacy REAL LU uses an exactly representable matrix; DP accuracy, singular/rank policy, extreme scale and SVD reconstruction identities are C++ contracts, not equality of nonunique singular vectors.",
+      "validation_entrypoints": [
+        "qualpf.numerics.reference",
+        "qualpf.numerics"
+      ]
+    },
+    {
+      "id": "N08",
+      "name": "least_squares_and_polynomial",
+      "status": "closed",
+      "legacy_sources": [
+        "legacy/fortran/numerics_support/genlsq.f90",
+        "legacy/fortran/numerics_support/recipes.f90",
+        "legacy/fortran/numerics_support/stat.f90"
+      ],
+      "scenarios": [
+        "noisy line analytic projection; sigma weighting; scaled quadratic; repeated x; old 1e-5 SVD cutoff; collect mu and residual/chi-square distinctly; optional ata/bb/ainv remain legacy"
+      ],
+      "proposed_tolerances": {
+        "coefficient": {
+          "absolute": 1e-06,
+          "relative": 1e-05,
+          "unit": "normalized-basis coefficient"
+        },
+        "center": {
+          "absolute": 1e-06,
+          "relative": 1e-05,
+          "unit": "x units"
+        },
+        "scale": {
+          "absolute": 1e-06,
+          "relative": 1e-05,
+          "unit": "x units"
+        },
+        "residual_norm": {
+          "absolute": 1e-06,
+          "relative": 1e-05,
+          "unit": "y units"
+        }
+      },
+      "classification": "legacy_numerical_equivalence_and_qualpf_contract",
+      "reference_required": true,
+      "reference_manifest": "numerical-fortran/manifest.json",
+      "reference_cases": [
+        "N08-least-squares",
+        "N08-polynomial"
+      ],
+      "contract": "Noisy DP least squares and normalized REAL polynomial use references; weighting/rank/error policies and repeated-x handling are C++ contracts; optional legacy ata/bb/ainv are outside the new API.",
+      "validation_entrypoints": [
+        "qualpf.numerics.reference",
+        "qualpf.numerics"
+      ]
+    }
+  ],
+  "purpose": "Phase 10 closed kernel references plus explicit QualPF contracts",
+  "planning_source_commit": "b6f2612fca30b222bdebcd9a8108a6961b2fee19"
+}

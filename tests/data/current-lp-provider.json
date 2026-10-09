@@ -1,0 +1,22 @@
+{
+  "schema": "qualpf.current_lp_provider.v1",
+  "scope": "36D-WINDOWS-LP-FORMED-ANGLE-CONTRACT",
+  "expected_from_CPP": false,
+  "new_tolerance": false,
+  "decision": {
+    "path": "docs/refactoring/phase-36/formed-angle-contract/decision.json",
+    "sha256": "1402551825cc742cd1dc36df59c48bcfeea65fce4a16307e72f2be7246830274"
+  },
+  "current_providers": {
+    "src/core/crystallography/powder_intensity.cpp": "acdbda45acec5155d4e456741b46c297fc644c2e58dcaa981f0b9d1126c3bc5e"
+  },
+  "historical_sha256": "da6055402c7b493759d57cce6d11d9401ca457097f51381e52db8ec215d4495d",
+  "value_successor": {
+    "path": "tests/data/lp-successor-fields.json",
+    "sha256": "9d04ac5e742ead75c240a104cef4ec6e1ba72343ea629906070ab80f2658a3e4"
+  },
+  "normal_scalar_reference": {
+    "path": "tests/data/lp-formed-angle-reference.txt",
+    "sha256": "237effc96d0ec877c115e3b1345f1b6dc88c1d9b60727631e5c4255beb3cdf6a"
+  }
+}

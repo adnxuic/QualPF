@@ -1,0 +1,72 @@
+from reference_paths import reference_path, provenance_path
+"""Keep every old assertion on its sealed view and falsify the new successor."""
+import math,struct,unittest
+from copy import deepcopy
+from unittest.mock import patch
+import current_transcendental_reference as current
+import current_cell_reference_test as cell_tests
+import current_lp_reference_test as lp_tests
+import current_phase_reference_test as phase_tests
+import current_qualified_reference_test as original
+for module in (cell_tests,lp_tests,phase_tests,original):module.current=current
+
+class CurrentTranscendentalReferenceContract(cell_tests.CurrentCellReferenceContract):
+    def test_current_raw_key_projection_is_exact_and_preserves_original_report(self):
+        _,records=current.verify_transcendental_successor()
+        old,_=current.original_cell_output('scattering','GNU')
+        selected=[next(r for r in records if r['compiler']=='GNU' and r['domain']=='scattering' and
+                      '.values.' in r['field'] and old['cases'][r['field'].split('.')[2]]['mode']==mode)
+                  for mode in ('SCAT','ANOM')]
+        raw=dict(raw_failures=[dict(case=current.transcendental_qualification_key(r,old)[0],
+            field=field,legacy=0.,cpp=float(r['expected_value']))
+            for r,field in zip(selected,('amplitude','fdoubleprime'))])
+        untouched=deepcopy(raw)
+        projected,_=current.restore_transcendental_failures(raw,'scattering','GNU',[])
+        self.assertEqual(raw,untouched)
+        for r,f in zip(selected,projected['raw_failures']):self.assertEqual(current.bits(f['cpp']),r['old_bits'])
+        for i in range(2):
+            wrong=deepcopy(raw);wrong['raw_failures'][i]['cpp']=math.nextafter(wrong['raw_failures'][i]['cpp'],math.inf)
+            with self.assertRaises(ValueError):current.restore_transcendental_failures(wrong,'scattering','GNU',[])
+
+    def test_transcendental_provider_reference_decision_and_archives_are_bound(self):
+        s,_=current.verify_transcendental_successor()
+        paths=[reference_path(current.ROOT/p) for p in s['current_providers']]
+        paths.extend(reference_path(current.ROOT/s[k]['path']) for k in ('decision','proposal','value_successor','primitive_reference'))
+        paths.extend(reference_path(current.ROOT/b['path']) for b in s['historical_sources'].values())
+        ordinary=current.sha_file
+        for path in paths:
+            with self.subTest(path=str(path)),patch.object(current,'sha_file',side_effect=lambda p:'0'*64 if p==path else ordinary(p)):
+                with self.assertRaises(ValueError):current.verify_bundle('card')
+
+    def test_new_projection_preserves_raw_and_refuses_each_nonzero_ULP(self):
+        _,records=current.verify_transcendental_successor()
+        _,cells=current.verify_cell_successor()
+        for domain in ('card','scattering'):
+            for compiler in ('GNU','MSVC'):
+                old,_=current.original_cell_output(domain,compiler);before=deepcopy(old)
+                for r in cells:
+                    if (r['domain'],r['compiler'])!=(domain,compiler):continue
+                    parent,key=current.point(before,r['field']);v=struct.unpack('>d',bytes.fromhex(r['expected_bits']))[0]
+                    parent[key]=format(v,'.17g') if isinstance(parent[key],str) else v
+                selected=[r for r in records if (r['domain'],r['compiler'])==(domain,compiler)]
+                actual=deepcopy(before)
+                for r in selected:
+                    parent,key=current.point(actual,r['field']);parent[key]=r['expected_value']
+                untouched=deepcopy(actual)
+                projected,mapped=current.project_transcendental_output(actual,domain,compiler)
+                self.assertEqual(actual,untouched);self.assertEqual(projected,before)
+                self.assertEqual(len(mapped),len(selected))
+                for r in selected:
+                    wrong=deepcopy(actual);parent,key=current.point(wrong,r['field'])
+                    v=math.nextafter(float(parent[key]),math.inf)
+                    parent[key]=str(v) if isinstance(parent[key],str) else v
+                    with self.assertRaises(ValueError):current.project_transcendental_output(wrong,domain,compiler)
+                wrong=deepcopy(actual)
+                if domain=='card':wrong['0']['composition']['cell_mass']=math.nextafter(wrong['0']['composition']['cell_mass'],math.inf)
+                else:
+                    row=next(r for r in wrong['cases'].values() if r['mode']=='SCAT')
+                    row['values'][2]='0.05'
+                projected,_=current.project_transcendental_output(wrong,domain,compiler)
+                with self.assertRaises(ValueError):current.project_cell_output(projected,domain,compiler,old)
+
+if __name__=='__main__':unittest.main()

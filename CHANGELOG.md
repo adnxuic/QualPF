@@ -4,6 +4,9 @@ All notable changes to qualx are documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- Supported platforms are Windows and Linux; macOS application, packaging and deployment support has been removed.
+
 ## [1.0.5] - 2026-08-24
 
 ### Added

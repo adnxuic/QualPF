@@ -1,0 +1,121 @@
+from reference_paths import reference_path
+"""Replay immutable pre-C++ Fortran observations and deterministic error contracts."""
+import argparse
+import hashlib
+import json
+import math
+from pathlib import Path
+import subprocess
+import sys
+import zipfile
+
+sys.dont_write_bytecode = True
+from crystallography_capture import parse
+
+ROOT = Path(__file__).resolve().parents[2]
+ARCHIVE_SHA256 = '683484dd82084b0f99efa68aac6d4b04be54125139541db922d4596437c780ed'
+MANIFEST_CANONICAL_SHA256 = 'a1e9d8a239184021659274df3dda4cc552ef802f4fbdb3babe8d492f3c506498'
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--runner', required=True)
+    ap.add_argument('--output', required=True)
+    ap.add_argument('--errors', required=True)
+    args = ap.parse_args()
+    manifest_path = reference_path(ROOT/'tests/data/crystallography-foundation-reference-manifest.json')
+    manifest = json.loads(manifest_path.read_text())
+    # Protect tolerances/provenance as well as the archive, independent of Git
+    # checkout line endings on Windows versus other C++ development hosts.
+    canonical = json.dumps(manifest,sort_keys=True,separators=(',',':')).encode()
+    assert hashlib.sha256(canonical).hexdigest() == MANIFEST_CANONICAL_SHA256
+    archive = reference_path(ROOT/'tests/data'/manifest['archive'])
+    assert hashlib.sha256(archive.read_bytes()).hexdigest() == manifest['archive_sha256'] == ARCHIVE_SHA256
+    assert manifest['status'] == 'reviewed-before-cpp-implementation'
+    normal, errors = [], []
+    with zipfile.ZipFile(archive) as z:
+        captured_manifest = json.loads(z.read('manifest.json'))
+        assert captured_manifest['cases'] == manifest['cases']
+        for case in manifest['cases']:
+            name = case['id']
+            for filename, digest in case['files'].items():
+                assert hashlib.sha256(z.read(filename)).hexdigest() == digest, filename
+            input_case = json.loads(z.read(name+'.input.json'))
+            for key in ('id','cell','hkl','wavelength','category','expected_error'):
+                assert input_case[key] == case[key]
+            run = subprocess.run([args.runner], input=z.read(name+'.wire').decode(), capture_output=True, text=True, timeout=30)
+            row = {'id':name,'passed':False,'returncode':run.returncode}
+            if run.returncode != 0:
+                row['stderr'] = run.stderr
+                (errors if case['expected_error'] else normal).append(row)
+                continue
+            actual = json.loads(run.stdout)
+            if case['expected_error']:
+                row.update(expected_error=case['expected_error'],actual_error=actual['error'],
+                           historical_nonfinite_fields=case['nonfinite_fields'],
+                           passed=actual['error'] == case['expected_error'] and 'fields' not in actual)
+                errors.append(row)
+                continue
+            expected = json.loads(z.read(name+'.expected.json'))
+            assert expected == parse(z.read(name+'.stdout.txt').decode().replace('\r\n','\n'))
+            row['actual_error'] = actual['error']
+            row['failures'] = []
+            row['legacy_discrepancies'] = []
+            row['category'] = case['category']
+            row['max_fraction_of_tolerance'] = 0.0
+            tol = manifest['tolerances'][case['category']]
+            if actual['error'] is None:
+                assert actual['fields'].keys() == expected.keys()
+                for field, values in expected.items():
+                    assert len(actual['fields'][field]) == len(values)
+                    for i, (want, got) in enumerate(zip(values,actual['fields'][field])):
+                        scale, atol, rtol = 1.0, 0.0, tol['relative']
+                        if field in ('metric','reciprocal_metric'):
+                            lengths = case['cell'][:3] if field == 'metric' else expected['reciprocal'][:3]
+                            scale = lengths[i//3]*lengths[i%3]
+                            atol = tol['normalized_metric_absolute']
+                        elif field in ('reciprocal','back') and i >= 3:
+                            atol = tol['cosine_absolute']
+                        elif field in ('reflection_two_theta','counts_two_theta'):
+                            atol, rtol = tol['two_theta_absolute'], tol['two_theta_relative']
+                        delta = abs(got/scale-want/scale)
+                        limit = atol+rtol*abs(want/scale)
+                        fraction = delta/limit
+                        if math.isfinite(fraction): row['max_fraction_of_tolerance'] = max(row['max_fraction_of_tolerance'],fraction)
+                        if not math.isfinite(got) or delta > limit:
+                            mismatch = {'field':field,'index':i,'expected':want,'actual':got,'normalized_error':delta,'limit':limit}
+                            # These exact fields have an independent analytic zero:
+                            # a,b lie in a plane perpendicular to c when alpha=beta=90.
+                            # Their reciprocal c* is likewise perpendicular to a*,b*.
+                            # Preserve the FAILED original tolerance check. Do not
+                            # loosen it or emulate float32 pi in the double core.
+                            orthogonal_zero = case['cell'][3:5] == [90,90] and (
+                                (name.startswith('near_zero_angle-') and field == 'back' and i in (3,4)) or
+                                (name.startswith('near_pi_angle-') and (
+                                    (field == 'reciprocal' and i in (3,4)) or
+                                    (field == 'reciprocal_metric' and i in (2,5,6,7)))))
+                            if orthogonal_zero and math.isfinite(got) and abs(got/scale) <= 2e-12:
+                                mismatch.update(resolution='independent_analytic_orthogonality',
+                                                analytic_expected=0.0,analytic_absolute_limit=2e-12,
+                                                frozen_tolerance_passed=False)
+                                row['legacy_discrepancies'].append(mismatch)
+                            else:
+                                row['failures'].append(mismatch)
+                row['passed'] = not row['failures']
+            row['frozen_tolerance_passed'] = row['passed'] and not row['legacy_discrepancies']
+            normal.append(row)
+    for path,rows,kind in [(args.output,normal,'normal_differential'),(args.errors,errors,'deterministic_errors')]:
+        report = {'kind':kind,'archive_sha256':ARCHIVE_SHA256,'runner_sha256':hashlib.sha256(Path(args.runner).read_bytes()).hexdigest(),
+                  'passed':all(r['passed'] for r in rows),'total':len(rows),'failed':sum(not r['passed'] for r in rows),'skipped':0,'cases':rows}
+        if kind == 'normal_differential':
+            report['ordinary_normal'] = {'total':sum(r.get('category') == 'normal' for r in rows),
+                'frozen_tolerance_passed':sum(r.get('category') == 'normal' and r.get('frozen_tolerance_passed',False) for r in rows)}
+            report['limiting'] = {'total':sum(r.get('category') == 'limiting' for r in rows),
+                'frozen_tolerance_passed':sum(r.get('category') == 'limiting' and r.get('frozen_tolerance_passed',False) for r in rows),
+                'analytically_resolved_legacy_discrepancies':sum(bool(r.get('legacy_discrepancies')) for r in rows)}
+            report['qualification'] = 'Passing means normal frozen comparisons plus independent analytic validation of explicitly recorded limiting-cell Legacy zero-geometry defects. It does not mean all limiting fields match the frozen tolerance.'
+        Path(path).write_text(json.dumps(report,indent=2,allow_nan=False)+'\n')
+    failed = [r for r in normal+errors if not r['passed']]
+    print(json.dumps({'normal':len(normal),'errors':len(errors),'failures':failed},indent=2))
+    return bool(failed)
+
+if __name__ == '__main__': raise SystemExit(main())

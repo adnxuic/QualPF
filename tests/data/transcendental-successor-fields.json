@@ -1,0 +1,921 @@
+{
+  "schema": "qualpf.transcendental_exact_successor_fields.v1",
+  "scope": "36D-ATTENUATION-SCATTERING-RNE-PREREQUISITE",
+  "expected_from_new_CPP": false,
+  "new_tolerance": false,
+  "records": [
+    {
+      "compiler": "GNU",
+      "domain": "card",
+      "field": "card.157.mac.39.mac",
+      "old_bits": "405e1dac5e7c760f",
+      "expected_bits": "405e1dac5e7c7610",
+      "expected_value": 120.46364557413494,
+      "previous_value": 120.46364557413493
+    },
+    {
+      "compiler": "GNU",
+      "domain": "card",
+      "field": "card.312.mac.194.mac",
+      "old_bits": "405e1dac5e7c760f",
+      "expected_bits": "405e1dac5e7c7610",
+      "expected_value": 120.46364557413494,
+      "previous_value": 120.46364557413493
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.6315.values.3",
+      "old_bits": "4050bcdf025a4405",
+      "expected_bits": "4050bcdf025a4406",
+      "expected_value": "66.951111400747408",
+      "previous_value": "66.951111400747394"
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.7324.values.4",
+      "old_bits": "3fbf8d645ede21c2",
+      "expected_bits": "3fbf8d645ede21c4",
+      "expected_value": "0.12325122181039833",
+      "previous_value": "0.1232512218103983"
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8048.reflections.1.fc",
+      "old_bits": "404e0a5845320b32",
+      "expected_bits": "404e0a5845320b33",
+      "expected_value": 60.080818795619415,
+      "previous_value": 60.08081879561941
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8049.reflections.1.fc",
+      "old_bits": "404e0a5845320b32",
+      "expected_bits": "404e0a5845320b33",
+      "expected_value": 60.080818795619415,
+      "previous_value": 60.08081879561941
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8051.reflections.1.fc",
+      "old_bits": "403bb2678204c10e",
+      "expected_bits": "403bb2678204c10f",
+      "expected_value": 27.696891904984167,
+      "previous_value": 27.696891904984163
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8053.reflections.5.fc",
+      "old_bits": "40583f98797d1fd5",
+      "expected_bits": "40583f98797d1fd4",
+      "expected_value": 96.99368130892918,
+      "previous_value": 96.9936813089292
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8054.reflections.5.fc",
+      "old_bits": "40583f98797d1fd5",
+      "expected_bits": "40583f98797d1fd4",
+      "expected_value": 96.99368130892918,
+      "previous_value": 96.9936813089292
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8056.reflections.1.fc",
+      "old_bits": "403d730d79fca5fe",
+      "expected_bits": "403d730d79fca5ff",
+      "expected_value": 29.449424385244125,
+      "previous_value": 29.44942438524412
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8058.reflections.4.fc",
+      "old_bits": "405fa9d42dd3712c",
+      "expected_bits": "405fa9d42dd3712b",
+      "expected_value": 126.65357537888183,
+      "previous_value": 126.65357537888184
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8059.reflections.4.fc",
+      "old_bits": "405fa9d42dd3712c",
+      "expected_bits": "405fa9d42dd3712b",
+      "expected_value": 126.65357537888183,
+      "previous_value": 126.65357537888184
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8063.reflections.5.fc",
+      "old_bits": "404a0a03ed20240b",
+      "expected_bits": "404a0a03ed20240a",
+      "expected_value": 52.078244820302714,
+      "previous_value": 52.07824482030272
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8064.reflections.5.fc",
+      "old_bits": "404a0a03ed20240b",
+      "expected_bits": "404a0a03ed20240a",
+      "expected_value": 52.078244820302714,
+      "previous_value": 52.07824482030272
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8067.reflections.6.fc",
+      "old_bits": "401dd9e15d89818a",
+      "expected_bits": "401dd9e15d89818b",
+      "expected_value": 7.462773763196661,
+      "previous_value": 7.46277376319666
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8068.reflections.2.fc",
+      "old_bits": "40463b8ab964ca31",
+      "expected_bits": "40463b8ab964ca32",
+      "expected_value": 44.46517102643374,
+      "previous_value": 44.46517102643373
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8068.reflections.4.fc",
+      "old_bits": "401a6fcabda73d99",
+      "expected_bits": "401a6fcabda73d9a",
+      "expected_value": 6.609171832401808,
+      "previous_value": 6.609171832401807
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8070.reflections.4.fc",
+      "old_bits": "3fe0eeb4e4c5f9cb",
+      "expected_bits": "3fe0eeb4e4c5f9ca",
+      "expected_value": 0.5291389911870337,
+      "previous_value": 0.5291389911870338
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8070.reflections.6.fc",
+      "old_bits": "3ff5951e202a23ef",
+      "expected_bits": "3ff5951e202a23ee",
+      "expected_value": 1.3489056831770045,
+      "previous_value": 1.3489056831770048
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8071.reflections.3.fc",
+      "old_bits": "4028f01bdac8cb72",
+      "expected_bits": "4028f01bdac8cb73",
+      "expected_value": 12.468962513934207,
+      "previous_value": 12.468962513934205
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8073.reflections.2.fc",
+      "old_bits": "4031b799afb3e7a2",
+      "expected_bits": "4031b799afb3e7a1",
+      "expected_value": 17.71718881742675,
+      "previous_value": 17.717188817426752
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8073.reflections.4.fc",
+      "old_bits": "4003a10d85a13a60",
+      "expected_bits": "4003a10d85a13a5f",
+      "expected_value": 2.4536390724017987,
+      "previous_value": 2.453639072401799
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8073.reflections.5.fc",
+      "old_bits": "402af70709e95297",
+      "expected_bits": "402af70709e95298",
+      "expected_value": 13.48247557614495,
+      "previous_value": 13.482475576144948
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8073.reflections.6.fc",
+      "old_bits": "402058e1758f27d1",
+      "expected_bits": "402058e1758f27d2",
+      "expected_value": 8.17359511730675,
+      "previous_value": 8.173595117306748
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8073.reflections.7.fc",
+      "old_bits": "3fbe50f8752fe5b5",
+      "expected_bits": "3fbe50f8752fe5b4",
+      "expected_value": 0.11842301236165192,
+      "previous_value": 0.11842301236165194
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8074.reflections.2.fc",
+      "old_bits": "4031b799afb3e7a2",
+      "expected_bits": "4031b799afb3e7a1",
+      "expected_value": 17.71718881742675,
+      "previous_value": 17.717188817426752
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8074.reflections.4.fc",
+      "old_bits": "4003a10d85a13a60",
+      "expected_bits": "4003a10d85a13a5f",
+      "expected_value": 2.4536390724017987,
+      "previous_value": 2.453639072401799
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8074.reflections.5.fc",
+      "old_bits": "402af70709e95297",
+      "expected_bits": "402af70709e95298",
+      "expected_value": 13.48247557614495,
+      "previous_value": 13.482475576144948
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8074.reflections.6.fc",
+      "old_bits": "402058e1758f27d1",
+      "expected_bits": "402058e1758f27d2",
+      "expected_value": 8.17359511730675,
+      "previous_value": 8.173595117306748
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8074.reflections.7.fc",
+      "old_bits": "3fbe50f8752fe5b5",
+      "expected_bits": "3fbe50f8752fe5b4",
+      "expected_value": 0.11842301236165192,
+      "previous_value": 0.11842301236165194
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8075.reflections.3.fc",
+      "old_bits": "3ffa5db5f8a98f83",
+      "expected_bits": "3ffa5db5f8a98f84",
+      "expected_value": 1.6478786195156951,
+      "previous_value": 1.647878619515695
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8080.reflections.4.fc",
+      "old_bits": "4016282983e4daad",
+      "expected_bits": "4016282983e4daac",
+      "expected_value": 5.539220867961074,
+      "previous_value": 5.539220867961075
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8081.reflections.0.fc",
+      "old_bits": "40215b0ec1575328",
+      "expected_bits": "40215b0ec1575327",
+      "expected_value": 8.677846948537605,
+      "previous_value": 8.677846948537606
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8081.reflections.3.fc",
+      "old_bits": "4021d7357c1b64d2",
+      "expected_bits": "4021d7357c1b64d3",
+      "expected_value": 8.920329931587196,
+      "previous_value": 8.920329931587194
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8082.reflections.3.fc",
+      "old_bits": "4021d79e2f7252f6",
+      "expected_bits": "4021d79e2f7252f5",
+      "expected_value": 8.921128733354161,
+      "previous_value": 8.921128733354163
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8083.reflections.0.fc",
+      "old_bits": "40375c539234f43c",
+      "expected_bits": "40375c539234f43d",
+      "expected_value": 23.36065019409965,
+      "previous_value": 23.360650194099648
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8084.reflections.3.fc",
+      "old_bits": "4037c99ca579dbc2",
+      "expected_bits": "4037c99ca579dbc3",
+      "expected_value": 23.787546484232518,
+      "previous_value": 23.787546484232514
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8112.reflections.1.fc",
+      "old_bits": "402ffd02893c861f",
+      "expected_bits": "402ffd02893c861e",
+      "expected_value": 15.994159973753138,
+      "previous_value": 15.99415997375314
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8112.reflections.2.fc",
+      "old_bits": "402ffd02893c861f",
+      "expected_bits": "402ffd02893c861e",
+      "expected_value": 15.994159973753138,
+      "previous_value": 15.99415997375314
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8112.reflections.4.fc",
+      "old_bits": "4025b898cf208616",
+      "expected_bits": "4025b898cf208615",
+      "expected_value": 10.860540840835748,
+      "previous_value": 10.86054084083575
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8117.reflections.3.fc",
+      "old_bits": "40221c6451954d2e",
+      "expected_bits": "40221c6451954d2f",
+      "expected_value": 9.05545287082222,
+      "previous_value": 9.055452870822219
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8120.reflections.1.fc",
+      "old_bits": "402ff5dd00e12a6f",
+      "expected_bits": "402ff5dd00e12a6e",
+      "expected_value": 15.980201747404148,
+      "previous_value": 15.98020174740415
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8120.reflections.2.fc",
+      "old_bits": "402ff5dd00e12a6f",
+      "expected_bits": "402ff5dd00e12a6e",
+      "expected_value": 15.980201747404148,
+      "previous_value": 15.98020174740415
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8125.reflections.1.fc",
+      "old_bits": "40110f7be50bfef7",
+      "expected_bits": "40110f7be50bfef8",
+      "expected_value": 4.265121058327843,
+      "previous_value": 4.265121058327842
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8125.reflections.2.fc",
+      "old_bits": "40110f7be50bfef7",
+      "expected_bits": "40110f7be50bfef8",
+      "expected_value": 4.265121058327843,
+      "previous_value": 4.265121058327842
+    },
+    {
+      "compiler": "GNU",
+      "domain": "scattering",
+      "field": "scattering.cases.8135.reflections.4.fc",
+      "old_bits": "401d8f9c5340918d",
+      "expected_bits": "401d8f9c5340918e",
+      "expected_value": 7.390244770828202,
+      "previous_value": 7.390244770828201
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.75.values.3",
+      "old_bits": "40007a0328252772",
+      "expected_bits": "40007a0328252773",
+      "expected_value": "2.0595763336504489",
+      "previous_value": "2.0595763336504485"
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.604.values.3",
+      "old_bits": "402702e9795cbb8f",
+      "expected_bits": "402702e9795cbb8e",
+      "expected_value": "11.50568751580229",
+      "previous_value": "11.505687515802292"
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.1204.values.3",
+      "old_bits": "403ac91a407d283f",
+      "expected_bits": "403ac91a407d283e",
+      "expected_value": "26.785556822353321",
+      "previous_value": "26.785556822353325"
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.1276.values.3",
+      "old_bits": "403cc941252cc4e6",
+      "expected_bits": "403cc941252cc4e5",
+      "expected_value": "28.786150287084542",
+      "previous_value": "28.786150287084546"
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.1854.values.3",
+      "old_bits": "402d41139dbd962c",
+      "expected_bits": "402d41139dbd962b",
+      "expected_value": "14.627102784531493",
+      "previous_value": "14.627102784531495"
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.3244.values.3",
+      "old_bits": "401908b67e6dd054",
+      "expected_bits": "401908b67e6dd052",
+      "expected_value": "6.2585086588406558",
+      "previous_value": "6.2585086588406575"
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.5092.values.3",
+      "old_bits": "40396a6743477192",
+      "expected_bits": "40396a6743477191",
+      "expected_value": "25.415638165418901",
+      "previous_value": "25.415638165418905"
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.5188.values.3",
+      "old_bits": "403ac91a407d283f",
+      "expected_bits": "403ac91a407d283e",
+      "expected_value": "26.785556822353321",
+      "previous_value": "26.785556822353325"
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.5476.values.3",
+      "old_bits": "403cc941252cc4e6",
+      "expected_bits": "403cc941252cc4e5",
+      "expected_value": "28.786150287084542",
+      "previous_value": "28.786150287084546"
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.5500.values.3",
+      "old_bits": "403cc941252cc4e6",
+      "expected_bits": "403cc941252cc4e5",
+      "expected_value": "28.786150287084542",
+      "previous_value": "28.786150287084546"
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.5524.values.3",
+      "old_bits": "403cc941252cc4e6",
+      "expected_bits": "403cc941252cc4e5",
+      "expected_value": "28.786150287084542",
+      "previous_value": "28.786150287084546"
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8048.reflections.1.fc",
+      "old_bits": "404e0a5845320b32",
+      "expected_bits": "404e0a5845320b33",
+      "expected_value": 60.080818795619415,
+      "previous_value": 60.08081879561941
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8049.reflections.1.fc",
+      "old_bits": "404e0a5845320b32",
+      "expected_bits": "404e0a5845320b33",
+      "expected_value": 60.080818795619415,
+      "previous_value": 60.08081879561941
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8051.reflections.1.fc",
+      "old_bits": "403bb2678204c10e",
+      "expected_bits": "403bb2678204c10f",
+      "expected_value": 27.696891904984167,
+      "previous_value": 27.696891904984163
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8053.reflections.5.fc",
+      "old_bits": "40583f98797d1fd5",
+      "expected_bits": "40583f98797d1fd4",
+      "expected_value": 96.99368130892918,
+      "previous_value": 96.9936813089292
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8054.reflections.5.fc",
+      "old_bits": "40583f98797d1fd5",
+      "expected_bits": "40583f98797d1fd4",
+      "expected_value": 96.99368130892918,
+      "previous_value": 96.9936813089292
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8056.reflections.1.fc",
+      "old_bits": "403d730d79fca5fe",
+      "expected_bits": "403d730d79fca5ff",
+      "expected_value": 29.449424385244125,
+      "previous_value": 29.44942438524412
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8058.reflections.4.fc",
+      "old_bits": "405fa9d42dd3712c",
+      "expected_bits": "405fa9d42dd3712b",
+      "expected_value": 126.65357537888183,
+      "previous_value": 126.65357537888184
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8059.reflections.4.fc",
+      "old_bits": "405fa9d42dd3712c",
+      "expected_bits": "405fa9d42dd3712b",
+      "expected_value": 126.65357537888183,
+      "previous_value": 126.65357537888184
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8063.reflections.5.fc",
+      "old_bits": "404a0a03ed20240b",
+      "expected_bits": "404a0a03ed20240a",
+      "expected_value": 52.078244820302714,
+      "previous_value": 52.07824482030272
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8064.reflections.5.fc",
+      "old_bits": "404a0a03ed20240b",
+      "expected_bits": "404a0a03ed20240a",
+      "expected_value": 52.078244820302714,
+      "previous_value": 52.07824482030272
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8067.reflections.6.fc",
+      "old_bits": "401dd9e15d89818a",
+      "expected_bits": "401dd9e15d89818b",
+      "expected_value": 7.462773763196661,
+      "previous_value": 7.46277376319666
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8068.reflections.2.fc",
+      "old_bits": "40463b8ab964ca31",
+      "expected_bits": "40463b8ab964ca32",
+      "expected_value": 44.46517102643374,
+      "previous_value": 44.46517102643373
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8068.reflections.4.fc",
+      "old_bits": "401a6fcabda73d99",
+      "expected_bits": "401a6fcabda73d9a",
+      "expected_value": 6.609171832401808,
+      "previous_value": 6.609171832401807
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8070.reflections.4.fc",
+      "old_bits": "3fe0eeb4e4c5f9cb",
+      "expected_bits": "3fe0eeb4e4c5f9ca",
+      "expected_value": 0.5291389911870337,
+      "previous_value": 0.5291389911870338
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8070.reflections.6.fc",
+      "old_bits": "3ff5951e202a23ef",
+      "expected_bits": "3ff5951e202a23ee",
+      "expected_value": 1.3489056831770045,
+      "previous_value": 1.3489056831770048
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8071.reflections.3.fc",
+      "old_bits": "4028f01bdac8cb72",
+      "expected_bits": "4028f01bdac8cb73",
+      "expected_value": 12.468962513934207,
+      "previous_value": 12.468962513934205
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8073.reflections.2.fc",
+      "old_bits": "4031b799afb3e7a2",
+      "expected_bits": "4031b799afb3e7a1",
+      "expected_value": 17.71718881742675,
+      "previous_value": 17.717188817426752
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8073.reflections.4.fc",
+      "old_bits": "4003a10d85a13a60",
+      "expected_bits": "4003a10d85a13a5f",
+      "expected_value": 2.4536390724017987,
+      "previous_value": 2.453639072401799
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8073.reflections.5.fc",
+      "old_bits": "402af70709e95297",
+      "expected_bits": "402af70709e95298",
+      "expected_value": 13.48247557614495,
+      "previous_value": 13.482475576144948
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8073.reflections.6.fc",
+      "old_bits": "402058e1758f27d1",
+      "expected_bits": "402058e1758f27d2",
+      "expected_value": 8.17359511730675,
+      "previous_value": 8.173595117306748
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8073.reflections.7.fc",
+      "old_bits": "3fbe50f8752fe5b5",
+      "expected_bits": "3fbe50f8752fe5b4",
+      "expected_value": 0.11842301236165192,
+      "previous_value": 0.11842301236165194
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8074.reflections.2.fc",
+      "old_bits": "4031b799afb3e7a2",
+      "expected_bits": "4031b799afb3e7a1",
+      "expected_value": 17.71718881742675,
+      "previous_value": 17.717188817426752
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8074.reflections.4.fc",
+      "old_bits": "4003a10d85a13a60",
+      "expected_bits": "4003a10d85a13a5f",
+      "expected_value": 2.4536390724017987,
+      "previous_value": 2.453639072401799
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8074.reflections.5.fc",
+      "old_bits": "402af70709e95297",
+      "expected_bits": "402af70709e95298",
+      "expected_value": 13.48247557614495,
+      "previous_value": 13.482475576144948
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8074.reflections.6.fc",
+      "old_bits": "402058e1758f27d1",
+      "expected_bits": "402058e1758f27d2",
+      "expected_value": 8.17359511730675,
+      "previous_value": 8.173595117306748
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8074.reflections.7.fc",
+      "old_bits": "3fbe50f8752fe5b5",
+      "expected_bits": "3fbe50f8752fe5b4",
+      "expected_value": 0.11842301236165192,
+      "previous_value": 0.11842301236165194
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8075.reflections.3.fc",
+      "old_bits": "3ffa5db5f8a98f83",
+      "expected_bits": "3ffa5db5f8a98f84",
+      "expected_value": 1.6478786195156951,
+      "previous_value": 1.647878619515695
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8080.reflections.4.fc",
+      "old_bits": "4016282983e4daad",
+      "expected_bits": "4016282983e4daac",
+      "expected_value": 5.539220867961074,
+      "previous_value": 5.539220867961075
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8081.reflections.0.fc",
+      "old_bits": "40215b0ec1575328",
+      "expected_bits": "40215b0ec1575327",
+      "expected_value": 8.677846948537605,
+      "previous_value": 8.677846948537606
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8081.reflections.3.fc",
+      "old_bits": "4021d7357c1b64d2",
+      "expected_bits": "4021d7357c1b64d3",
+      "expected_value": 8.920329931587196,
+      "previous_value": 8.920329931587194
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8082.reflections.3.fc",
+      "old_bits": "4021d79e2f7252f6",
+      "expected_bits": "4021d79e2f7252f5",
+      "expected_value": 8.921128733354161,
+      "previous_value": 8.921128733354163
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8083.reflections.0.fc",
+      "old_bits": "40375c539234f43c",
+      "expected_bits": "40375c539234f43d",
+      "expected_value": 23.36065019409965,
+      "previous_value": 23.360650194099648
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8084.reflections.3.fc",
+      "old_bits": "4037c99ca579dbc2",
+      "expected_bits": "4037c99ca579dbc3",
+      "expected_value": 23.787546484232518,
+      "previous_value": 23.787546484232514
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8112.reflections.1.fc",
+      "old_bits": "402ffd02893c861f",
+      "expected_bits": "402ffd02893c861e",
+      "expected_value": 15.994159973753138,
+      "previous_value": 15.99415997375314
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8112.reflections.2.fc",
+      "old_bits": "402ffd02893c861f",
+      "expected_bits": "402ffd02893c861e",
+      "expected_value": 15.994159973753138,
+      "previous_value": 15.99415997375314
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8112.reflections.4.fc",
+      "old_bits": "4025b898cf208616",
+      "expected_bits": "4025b898cf208615",
+      "expected_value": 10.860540840835748,
+      "previous_value": 10.86054084083575
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8117.reflections.3.fc",
+      "old_bits": "40221c6451954d2e",
+      "expected_bits": "40221c6451954d2f",
+      "expected_value": 9.05545287082222,
+      "previous_value": 9.055452870822219
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8120.reflections.1.fc",
+      "old_bits": "402ff5dd00e12a6f",
+      "expected_bits": "402ff5dd00e12a6e",
+      "expected_value": 15.980201747404148,
+      "previous_value": 15.98020174740415
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8120.reflections.2.fc",
+      "old_bits": "402ff5dd00e12a6f",
+      "expected_bits": "402ff5dd00e12a6e",
+      "expected_value": 15.980201747404148,
+      "previous_value": 15.98020174740415
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8125.reflections.1.fc",
+      "old_bits": "40110f7be50bfef7",
+      "expected_bits": "40110f7be50bfef8",
+      "expected_value": 4.265121058327843,
+      "previous_value": 4.265121058327842
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8125.reflections.2.fc",
+      "old_bits": "40110f7be50bfef7",
+      "expected_bits": "40110f7be50bfef8",
+      "expected_value": 4.265121058327843,
+      "previous_value": 4.265121058327842
+    },
+    {
+      "compiler": "MSVC",
+      "domain": "scattering",
+      "field": "scattering.cases.8135.reflections.4.fc",
+      "old_bits": "401d8f9c5340918d",
+      "expected_bits": "401d8f9c5340918e",
+      "expected_value": 7.390244770828202,
+      "previous_value": 7.390244770828201
+    }
+  ],
+  "counts": {
+    "GNU_card": 2,
+    "GNU_scattering": 44,
+    "MSVC_card": 0,
+    "MSVC_scattering": 53
+  },
+  "runner_sha256": "734c8f4c6a4911c235c09f3cc7ac7a9bb7bfdcae46ff153905c1a4eb01a95a70",
+  "independent_proof": {
+    "path": ".evidence/raw/phase36d-transcendentals/batch-001/independent-reference002.json",
+    "sha256": "a63cacfe5c67b7ded3ccc130e0013d93f1d45418c56d641169feb3e06eac55c3"
+  },
+  "reference_sha256": "e89fb3756b16c2e586eb21f42b001acc04f475e7e0b952232108e8990fe3ba56",
+  "previous_Cell_provider": {
+    "path": "tests/data/current-cell-provider.json",
+    "sha256": "8c068faa000fdbdd40d55ea7e072d49fcf34db20bdb5fdfcd3ef5661b91c3451"
+  },
+  "previous_SCAT_environment": {
+    "path": "tests/data/cell-scattering-environments.json",
+    "sha256": "8cf7fe777b06ac2999e37f3593d58d38cdcecbb087bdadfedf4d6077effc2cf7"
+  },
+  "primitive_expected_source": "Certified Decimal/Fraction analytic arithmetic, separate mpmath crosscheck",
+  "projection": "Only certified changed output slots to pre-migration accepted values; old complete value/error assertions retained"
+}

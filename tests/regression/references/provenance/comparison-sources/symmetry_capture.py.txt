@@ -1,0 +1,105 @@
+"""Capture real Legacy observations; never executes the new C++ registry."""
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+
+ROOT = Path(__file__).resolve().parents[2]
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def queries():
+    resource = (ROOT/'share/qualx/files/syminfo.lib').read_text()
+    entries = []
+    for line in resource.splitlines():
+        if line.startswith('symbol '):
+            kind = line.split()[1]
+            if kind not in ('Hall','xHM','old'): continue
+            for name in re.findall("'([^']*)'", line):
+                if not name.strip(): continue
+                mode = 'H' if kind == 'Hall' else 'M'
+                for variant in (name.strip(), name.replace(' ','').lower()):
+                    entries.extend([(mode,variant),('B',variant)])
+                if kind == 'xHM':
+                    short = name.replace(' 1','').strip()
+                    for variant in (short,short.split(':')[0],name.replace(' ','_')):
+                        entries.append(('M',variant))
+    table = (ROOT/'legacy/fortran/crystallography/symm_table.f90').read_text()
+    for row in re.findall(r'sg_info_type\(\s*\d+,([^\n]+)',table):
+        strings = re.findall("'([^']*)'",row)
+        choice,hm1,hm2,hall = strings
+        for name in [hm1.split('=')[0].strip(),hm1.split('=')[-1].strip(),hm2.strip()]:
+            entries.append(('M',name))
+            if choice.strip(): entries.append(('M',name+':'+choice.strip()))
+    for name in ('','?','0','231','1','P','garbage','P 1:invalid','P 21/c:no',
+                 'P 1 trailing junk','P 1'+('x'*50),'P 1\t','F d d d S',
+                 'F d d d Z','F d d d {origin @ -1 @ d d d}', 'P 2(1)/c',
+                 'P ~2_1/c', 'P 21/c (origin at inversion)', 'R -3 m:H','R -3 m:R'):
+        for mode in ('M','H','B'): entries.append((mode,name))
+    entries += [('N',f'{n} {s}') for n,s in ((0,1),(-1,1),(231,1),(1,0),(1,-1),(1,2),(230,99))]
+    return list(dict.fromkeys(entries))
+
+def parse(raw, inputs):
+    lines=raw.splitlines()
+    assert lines.pop(0)=='SYMMETRY14'
+    groups=[]; defaults={}; lookups=[]; pos=0
+    while pos<len(lines):
+        fields=lines[pos].split(); pos+=1
+        if fields[0]=='DEFAULT': defaults[fields[1]]=int(fields[2])
+        elif fields[0]=='GROUP':
+            keys=('id','number','setting_index','standard_id','operation_count','primitive_count','centering_count','centrosymmetry','reported_setting_index')
+            group=dict(zip(keys,map(int,fields[1:])))
+            for key in ('xhm','hall','choice','old1','old2','schoenflies','to_setting','to_standard'):
+                group[key]=lines[pos].strip(); pos+=1
+            group['operations']=[]
+            for index in range(group['operation_count']):
+                op=lines[pos].split(); pos+=1
+                assert op[0]=='OP' and int(op[1])==index+1
+                group['operations'].append(dict(rotation=list(map(int,op[2:11])),translation=list(map(float,op[11:14]))))
+            groups.append(group)
+        elif fields[0]=='LOOKUP':
+            index=int(fields[1])-1
+            lookups.append(dict(mode=inputs[index][0],identifier=inputs[index][1],id=int(fields[2])))
+        else: raise ValueError(fields)
+    assert len(groups)==551 and {g['number'] for g in groups}==set(range(1,231))
+    assert len(lookups)==len(inputs)
+    return dict(groups=groups,defaults=defaults,lookups=lookups)
+
+def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--runner',required=True,type=Path)
+    parser.add_argument('--output',required=True,type=Path)
+    args=parser.parse_args()
+    args.output.mkdir(parents=True,exist_ok=False)
+    inputs=queries()
+    wire=str(ROOT/'share/qualx/files/syminfo.lib')+'\n'+''.join(m+' '+s+'\n' for m,s in inputs)
+    env=os.environ.copy()
+    env['PATH']=str(ROOT/'build-phase7/qt/Tools/mingw1310_64/bin')+os.pathsep+str(ROOT/'build-phase7/qt/6.8.3/mingw_64/bin')+os.pathsep+env['PATH']
+    result=subprocess.run([str(args.runner.resolve())],input=wire.encode(),capture_output=True,env=env,cwd=args.output,timeout=120)
+    (args.output/'input.txt').write_bytes(wire.encode())
+    (args.output/'stdout.txt').write_bytes(result.stdout)
+    (args.output/'stderr.txt').write_bytes(result.stderr)
+    if result.returncode: raise RuntimeError(f'Native capture failed: {result.returncode}')
+    expected=parse(result.stdout.decode(),inputs)
+    (args.output/'expected.json').write_text(json.dumps(expected,indent=2)+'\n',encoding='utf-8')
+    sources=[p for p in (ROOT/'legacy').rglob('*') if p.suffix.lower() in ('.f','.f90')]
+    capture_sources=[Path(__file__),ROOT/'tests/compatibility/symmetry_capture.f90',ROOT/'tests/compatibility/symmetry_capture_main.cpp',ROOT/'tests/CMakeLists.txt']
+    (args.output/'capture-source').mkdir()
+    for p in capture_sources: (args.output/'capture-source'/p.name).write_bytes(p.read_bytes())
+    manifest=dict(schema_version=1,kind='legacy_symmetry_capture',status='captured',
+        source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+        compiler=subprocess.check_output([str(ROOT/'build-phase7/qt/Tools/mingw1310_64/bin/gfortran.exe'),'--version'],text=True).splitlines()[0],
+        flags='Retained product Fortran -O0; default REAL binary32; serial; existing product objects',
+        startup='spg_set_symmetry_file + load_spg_database only; no chemical/native workspace initializer',
+        runner_sha256=sha(args.runner),fortran_sources={p.relative_to(ROOT).as_posix():sha(p) for p in sources},
+        resources={p:sha(ROOT/p) for p in ('share/qualx/files/syminfo.lib','legacy/fortran/crystallography/symm_table.f90')},
+        files={p.relative_to(args.output).as_posix():sha(p) for p in args.output.rglob('*') if p.is_file()},
+        counts=dict(groups=230,settings=len(expected['groups']),operations=sum(g['operation_count'] for g in expected['groups']),lookups=len(inputs)))
+    (args.output/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8')
+    print(manifest['counts'])
+
+if __name__=='__main__': main()

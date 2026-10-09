@@ -1,0 +1,47 @@
+"""All prior protocol assertions plus exact LP successor falsification."""
+import json,math,struct,unittest,zipfile
+from copy import deepcopy
+from unittest.mock import patch
+import current_lp_reference as current
+import current_phase_reference_test as phase_tests
+import current_qualified_reference_test as original
+from powder_capture import parse
+phase_tests.current=current
+original.current=current
+
+class CurrentLPReferenceContract(phase_tests.CurrentPhaseReferenceContract):
+    def test_LP_provider_archive_decision_and_independent_reference_are_bound(self):
+        successor,_=current.verify_lp_successor()
+        paths=[current.ROOT/current.LP_SOURCE,current.LP_ARCHIVE,
+            current.ROOT/successor['decision']['path'],
+            current.ROOT/successor['value_successor']['path'],
+            current.ROOT/successor['normal_scalar_reference']['path']]
+        original_sha=current.sha_file
+        for path in paths:
+            with self.subTest(path=str(path)),patch.object(current,'sha_file',
+                side_effect=lambda p:'0'*64 if p==path else original_sha(p)):
+                with self.assertRaises(ValueError):current.verify_bundle('powder')
+
+    def test_exact_LP_projection_retains_raw_and_rejects_one_ULP_and_unowned_changes(self):
+        _,fields=current.verify_lp_successor()
+        for compiler,prefix in [('GNU','mingw'),('MSVC','msvc')]:
+            archive=current.ROOT/'docs/refactoring/phase-17/test-results/cpp-replay-transcripts.zip'
+            with zipfile.ZipFile(archive) as z:
+                old=parse(z.read(prefix+'-powder-differential.stdout.txt').decode())
+            actual=deepcopy(old)
+            for record in fields:
+                if record['compiler']==compiler:
+                    parent,key=current.point(actual,record['field'])
+                    parent[key]=struct.unpack('>d',bytes.fromhex(record['expected_bits']))[0]
+            preserved=deepcopy(actual)
+            projected,mapped=current.project_powder_output(actual,compiler,old)
+            self.assertEqual(projected,old);self.assertEqual(actual,preserved)
+            self.assertEqual(len(mapped),10 if compiler=='GNU' else 2315)
+            wrong=deepcopy(actual);parent,key=current.point(wrong,mapped[0])
+            parent[key]=math.nextafter(parent[key],math.inf)
+            with self.assertRaises(ValueError):current.project_powder_output(wrong,compiler,old)
+            wrong=deepcopy(actual);r=wrong['0']['reflections'][0]
+            r['d']=math.nextafter(r['d'],math.inf)
+            with self.assertRaises(ValueError):current.project_powder_output(wrong,compiler,old)
+
+if __name__=='__main__':unittest.main()

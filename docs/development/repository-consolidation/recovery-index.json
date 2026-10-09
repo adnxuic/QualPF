@@ -1,0 +1,382 @@
+{
+  "entry_commit": "8fdf0a71d7eef8b6801e5336720c19b3c936e18f",
+  "protection_tag": "phase37e-entry-20261009",
+  "external_root": "D:/QualPF-evidence-backup/20261004",
+  "git_bundle": "qualpf-history-cdb20666-20261007.bundle",
+  "git_bundle_sha256": "130b03c7fe7f8eb9a57e7cf72d9269233ad0bbc18370d66649cb326f3c701396",
+  "external_entry_map": "ENTRY-DISPOSITION-20261007.jsonl",
+  "external_build_map": "BUILD-DISPOSITION-20261007.json",
+  "catalog_count": 165,
+  "real_payloads_verified": 1329,
+  "real_payload_bytes": 13099964616,
+  "worktree_objects": "1329 LFS pointers; actual ZIP payloads on external root verified against pointer and catalog hashes",
+  "restoration_samples": [
+    {
+      "kind": "raw_FAIL",
+      "bytes": 1146,
+      "path": ".evidence/raw/phase31c-ai-observed/actual-gnu-001/cases/injected-allocation-failure/comparison.json",
+      "sha256": "082d323d2b5c5e95ad33a6f94d1c83b6d88f967e6d368c147d17a94388817a3e",
+      "catalog": "D:\\QualPF-evidence-backup\\20261004\\evidence\\catalogs\\phase-history-cleanup-entry-20261007.json",
+      "object": "evidence/objects/7906603800f322bd6240dcbd2cb725cd253e8be21411e1551c8e55cd10d81c68.zip",
+      "object_sha256": "7906603800f322bd6240dcbd2cb725cd253e8be21411e1551c8e55cd10d81c68",
+      "status": "FRESH_RESTORE_PASS"
+    },
+    {
+      "kind": "repository_hygiene",
+      "bytes": 5817,
+      "path": "docs/refactoring/phase-36/post-f-hygiene/closure-report.md",
+      "sha256": "71aad8d3246e931c074e5107929223b5c3dd40d1c2d8bbbb8cbfcfeb3f83202f",
+      "catalog": "D:\\QualPF-evidence-backup\\20261004\\evidence\\catalogs\\phase-history-cleanup-entry-20261007.json",
+      "object": "evidence/objects/9c25a91cc1fd42b68ed8cb3be6992f551f5c8e6c2fd62d3bb1e1222630d862ad.zip",
+      "object_sha256": "9c25a91cc1fd42b68ed8cb3be6992f551f5c8e6c2fd62d3bb1e1222630d862ad",
+      "status": "FRESH_RESTORE_PASS"
+    },
+    {
+      "kind": "numerical_reference",
+      "bytes": 1890913,
+      "path": "tests/data/scattering-reference.zip",
+      "sha256": "0f8f888d047c79697ac35b9c752bd01facc17850739b567ac71fbda03653fe5e",
+      "catalog": "D:\\QualPF-evidence-backup\\20261004\\evidence\\catalogs\\phase-history-cleanup-entry-20261007.json",
+      "object": "evidence/objects/f35b2dd11c110b7f7fe2d1984568c710d3b3216d15b03bb09061519bd14536aa.zip",
+      "object_sha256": "f35b2dd11c110b7f7fe2d1984568c710d3b3216d15b03bb09061519bd14536aa",
+      "status": "FRESH_RESTORE_PASS"
+    },
+    {
+      "kind": "numerical_decision",
+      "bytes": 8190,
+      "path": ".evidence/raw/phase26a1-acceptance/authorization-001/user-approval.md",
+      "sha256": "a4189ada9a8edee42d25d802075706b6f8ab9546b4f1604869e4d7239e36ae9d",
+      "catalog": "D:\\QualPF-evidence-backup\\20261004\\evidence\\catalogs\\phase26a1-acceptance001.json",
+      "object": "evidence/objects/fd0dfb8788831d3391e057e1bbf3f739480ca8408befae828e644a987277ff19.zip",
+      "object_sha256": "fd0dfb8788831d3391e057e1bbf3f739480ca8408befae828e644a987277ff19",
+      "status": "FRESH_RESTORE_PASS"
+    },
+    {
+      "kind": "migration_record",
+      "bytes": 7398,
+      "path": "docs/refactoring/phase-31/complete-fortran-migration/zero-fortran-gate.json",
+      "sha256": "1c7274fe1034f5298f261e9fe146dd533392fb4150ed5663d3f34d7a27344633",
+      "catalog": "D:\\QualPF-evidence-backup\\20261004\\evidence\\catalogs\\phase31a-verification.json",
+      "object": "evidence/objects/f41f4780c300c429a3469991505ab167c267bdf14a7dc51e0fd082cd931a1bb6.zip",
+      "object_sha256": "f41f4780c300c429a3469991505ab167c267bdf14a7dc51e0fd082cd931a1bb6",
+      "status": "FRESH_RESTORE_PASS"
+    },
+    {
+      "kind": "milestone_F",
+      "bytes": 12621,
+      "path": "docs/refactoring/phase-36/current-release-acceptance/independent-review.md",
+      "sha256": "c2c339400787a51396f21c643828b91cdba3f2ee1eb92efe8779120911ed3284",
+      "catalog": "D:\\QualPF-evidence-backup\\20261004\\evidence\\catalogs\\phase36d-current-release001.json",
+      "object": "evidence/objects/90ff6bf1926894a8d3523a97f4cc20998a3ffec68d40ce7252d1e5ba430d425d.zip",
+      "object_sha256": "90ff6bf1926894a8d3523a97f4cc20998a3ffec68d40ce7252d1e5ba430d425d",
+      "status": "FRESH_RESTORE_PASS"
+    }
+  ],
+  "numerical_reference_manifest": {
+    "path": "tests/reference/manifest.json",
+    "archive": "phase37e-entry-20261009:tests/reference/manifest.json",
+    "count": 169
+  },
+  "milestone_F": {
+    "implementation_commit": "f386bfa4b56899b808fb806d822fea30d70555d7",
+    "receipt": "docs/refactoring/phase-36/current-release-acceptance/independent-review.md"
+  },
+  "architecture": {
+    "implementation_commit": "2610439f883dba06b609d1c2393c522bda257cfa",
+    "receipt": "docs/architecture/phase-37/receipt.json",
+    "acceptance": "CPP_ARCHITECTURE_REFACTOR_COMPLETE"
+  },
+  "limitations": [
+    "Local history and external D backup only; no remote availability claimed",
+    "Original provenance and toolchain metadata remain in containing catalogs/member manifests and Git snapshots"
+  ],
+  "current_reference_snapshot": "phase37e-regression-resources-20261009",
+  "previously_ignored_references": [
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/cod-2300112.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/cod-2300112.cif",
+      "bytes": 8040,
+      "sha256": "bf25e35b06c55d9f35dc51f8afc992b4654844f433c5192327beacf3bffb038b",
+      "archive": "D:\\QualPF-evidence-backup\\20261004\\evidence\\objects\\03ec11f9d8aa7cc0a09c2765e1f8578a90da991a72c32e19901370bdb47ab692.zip",
+      "member": ".evidence/raw/phase25b/after-dynamic-002-observations/observations/cif-input/2300112.cif",
+      "object_sha256": "03ec11f9d8aa7cc0a09c2765e1f8578a90da991a72c32e19901370bdb47ab692"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-CoO.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/repository-CoO.cif",
+      "bytes": 4299,
+      "sha256": "2b4850c8553e623344052cc6f91e4b04044fc1353632e9127c55a68a215a0443",
+      "archive": "D:\\QualPF-evidence-backup\\20261004\\evidence\\objects\\0932c905b80e7a4eff3022a199a1d0b3dccb75b03381d7dbec8f151c7764a0b2.zip",
+      "member": ".evidence/raw/phase24b/entry-002-prior-product/compatibility/CLI-inputs/1900008.cif",
+      "object_sha256": "0932c905b80e7a4eff3022a199a1d0b3dccb75b03381d7dbec8f151c7764a0b2"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/duplicate-tag.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/duplicate-tag.cif",
+      "bytes": 453,
+      "sha256": "78c9dcbb89fa722c5cdfb2c626ae7736da894996be1679dc8bc97a9faa0c7ba3",
+      "archive": "D:\\QualPF-evidence-backup\\20261004\\evidence\\objects\\0932c905b80e7a4eff3022a199a1d0b3dccb75b03381d7dbec8f151c7764a0b2.zip",
+      "member": ".evidence/raw/phase24b/entry-002-prior-product/compatibility/CLI-inputs/99.cif",
+      "object_sha256": "0932c905b80e7a4eff3022a199a1d0b3dccb75b03381d7dbec8f151c7764a0b2"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/cod-4343150.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/cod-4343150.cif",
+      "bytes": 13697,
+      "sha256": "5e58cacb9b858f84f751357ff80fe3c8d3aa1b843c93928287a2d8998aaae802",
+      "archive": "D:\\QualPF-evidence-backup\\20261004\\evidence\\objects\\795529f08cf59b372f7e847d769a2b0b30322d7b7b051acc855288138fd5f1a1.zip",
+      "member": ".evidence/raw/phase25a/fixtures-001/cases/structural-COD-4343150.cif",
+      "object_sha256": "795529f08cf59b372f7e847d769a2b0b30322d7b7b051acc855288138fd5f1a1"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/conflicting-hall-HM.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/conflicting-hall-HM.cif",
+      "bytes": 466,
+      "sha256": "f164b59d19e046a3fe1e102f06e89c68519e9e677390102115f7a9f48c74f6a2",
+      "archive": "D:\\QualPF-evidence-backup\\20261004\\evidence\\objects\\b5c39fe53999ec875dd302cbcf091ef6b28483550b47b7c40c7b0cf25b7d7353.zip",
+      "member": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/conflicting-hall-HM.cif",
+      "object_sha256": "b5c39fe53999ec875dd302cbcf091ef6b28483550b47b7c40c7b0cf25b7d7353"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/missing-cell.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/missing-cell.cif",
+      "bytes": 323,
+      "sha256": "4ec4d1db7ede95d2fe2b44e505ae4578df487e23f67a1590259a666881e8a1cb",
+      "archive": "D:\\QualPF-evidence-backup\\20261004\\evidence\\objects\\b5c39fe53999ec875dd302cbcf091ef6b28483550b47b7c40c7b0cf25b7d7353.zip",
+      "member": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/missing-cell.cif",
+      "object_sha256": "b5c39fe53999ec875dd302cbcf091ef6b28483550b47b7c40c7b0cf25b7d7353"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/number-HM-conflict.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/number-HM-conflict.cif",
+      "bytes": 461,
+      "sha256": "b33547f17264a461fadac016d7f4141eec57b53e714bb51023fe66f6ab961734",
+      "archive": "D:\\QualPF-evidence-backup\\20261004\\evidence\\objects\\b5c39fe53999ec875dd302cbcf091ef6b28483550b47b7c40c7b0cf25b7d7353.zip",
+      "member": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/number-HM-conflict.cif",
+      "object_sha256": "b5c39fe53999ec875dd302cbcf091ef6b28483550b47b7c40c7b0cf25b7d7353"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-KYbSe2.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/repository-KYbSe2.cif",
+      "bytes": 2870,
+      "sha256": "0aac9dd1b92f1f38d2275408a0ef594bf5579ef96f30958f83a8849d27d135e7",
+      "archive": "D:\\QualPF-evidence-backup\\20261004\\evidence\\objects\\b5c39fe53999ec875dd302cbcf091ef6b28483550b47b7c40c7b0cf25b7d7353.zip",
+      "member": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-KYbSe2.cif",
+      "object_sha256": "b5c39fe53999ec875dd302cbcf091ef6b28483550b47b7c40c7b0cf25b7d7353"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-YInO3.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/repository-YInO3.cif",
+      "bytes": 2395,
+      "sha256": "da6eda6f6d2d081057b5d48c64bde6be40ebf7ad228512c083dfba8395f71e93",
+      "archive": "D:\\QualPF-evidence-backup\\20261004\\evidence\\objects\\b5c39fe53999ec875dd302cbcf091ef6b28483550b47b7c40c7b0cf25b7d7353.zip",
+      "member": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-YInO3.cif",
+      "object_sha256": "b5c39fe53999ec875dd302cbcf091ef6b28483550b47b7c40c7b0cf25b7d7353"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/adp-malformed.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/adp-malformed.cif",
+      "bytes": 465,
+      "sha256": "38435ab0de883034977b65b014564244d685587fbc7b8185bf10abfdd6f0a207",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/anisotropic-invalid.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/anisotropic-invalid.cif",
+      "bytes": 620,
+      "sha256": "dcfe8c0195f38016dc4f4d1d04f063b766b847ee7610bfcbcf558943ed45a557",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/anisotropic-malformed.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/anisotropic-malformed.cif",
+      "bytes": 617,
+      "sha256": "8bcdb4a8ee4a0c6b8200cfa28f054cb935527fceb98369f0787e9f1a58540a76",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/bad-coordinate.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/bad-coordinate.cif",
+      "bytes": 439,
+      "sha256": "3da44c25b621b0e1d0ae5ce01195dd189f73c66edf8ef1dcc97ac37fc13ad735",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/invalid-cell.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/invalid-cell.cif",
+      "bytes": 436,
+      "sha256": "d1d109e93eb5aafb97aa3733e5322c4305420b866b65080a3aa628a390655005",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/metadata-second-block.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/metadata-second-block.cif",
+      "bytes": 866,
+      "sha256": "f3ea8b97244fd09c8994d53841ccb518506e39c80a94e8aa2c0502df305152f8",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/missing-symmetry.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/missing-symmetry.cif",
+      "bytes": 399,
+      "sha256": "cd14e727b304b7c6512ee65b3021b51a6f5fb4db5828d32e9913e3c2fe18afa6",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/missing-type-and-label.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/missing-type-and-label.cif",
+      "bytes": 389,
+      "sha256": "c449b70a1f872cb4bd1822b0eeda79f348644b611a63544bb1f1c96623c5ca7b",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/multiple-blocks.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/multiple-blocks.cif",
+      "bytes": 871,
+      "sha256": "02c6f84f50466690b9fe1558aec62a194eb9ad2cd4b1436c8793bca09e6f40e4",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/occupancy--0dot1.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/occupancy--0dot1.cif",
+      "bytes": 462,
+      "sha256": "ae227389b1450fd49005490b5d177e27c11a18a073d2b2aab84700f930bae500",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/occupancy-1dot1.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/occupancy-1dot1.cif",
+      "bytes": 461,
+      "sha256": "3444bc7215d8ac8514bcd27f590a2c8def80fead509cd3e0867540c557e94d43",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/occupancy-invalid.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/occupancy-invalid.cif",
+      "bytes": 465,
+      "sha256": "292fe4d3b51ab7da8d9445ae918392c0244017f966ebf274702bc698adfc9de6",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/operators-malformed.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/operators-malformed.cif",
+      "bytes": 486,
+      "sha256": "bf75f88705ebc1bc57cac0aaff4e55ffc78b3dc6dd315e7a0740a97052024477",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/operators-unknown.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/operators-unknown.cif",
+      "bytes": 487,
+      "sha256": "aa0405d9baa6cb655fc65121b75b97e5c7369de1f018c5e006c4a3b405f4399c",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-Sr3Fe2O4F4.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/repository-Sr3Fe2O4F4.cif",
+      "bytes": 5315,
+      "sha256": "e8c8b89a62b879a15c591d43fd8e5260b9b21a559fc205f2d35a660183966ae3",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-YBC2.78O.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/repository-YBC2.78O.cif",
+      "bytes": 2679,
+      "sha256": "1efc18e93353e40fb525d068012b343fb0f439beab5a9a104e8c0aa3a651d8d8",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-YBCO6.98.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/repository-YBCO6.98.cif",
+      "bytes": 2627,
+      "sha256": "7efd473b9c742b4b8636393bb596ff91edfd299933994a4ce85bb3b1fec51215",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/short-row.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/short-row.cif",
+      "bytes": 430,
+      "sha256": "4b10fd052c2a93b4335c548bff39db583ed011067008d0d98e1405e53578b4fe",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/unclosed-quote.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/unclosed-quote.cif",
+      "bytes": 429,
+      "sha256": "f671352d2bbf203552406b131f67b5038456b3312a2872fb75d61eb458fe37ee",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/unknown-symmetry.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/unknown-symmetry.cif",
+      "bytes": 446,
+      "sha256": "02d8e47083c77ada69449837ba60b4719f8ac651928f3b225f0379031410f511",
+      "archive": "UNCHANGED_ACTIVE_REFERENCE_RETAINED_AND_TRACKED_IN_E2",
+      "reason": "Listed by the sealed 169-input manifest; prior ignored copy is retained as an exact current regression asset"
+    }
+  ],
+  "git_original_byte_recovery": {
+    "retired_files_checked": 2089,
+    "original_byte_recovery_counts": {
+      "LF_TO_CRLF": 26,
+      "IDENTITY": 2062,
+      "CRLF_LINES": 1
+    },
+    "exceptions": [],
+    "receipt_original_sha256": "3fefae80aa2a2ac1ffc1fc966d00696000b4f4c1d528ac464898ffdda513cd12",
+    "originals_changed": false,
+    "not_a_new_golden": true
+  },
+  "git_raw_restoration_observation": [
+    {
+      "path": "docs/architecture/phase-37/plan.md",
+      "git_blob_sha256": "5860f29b1f2774dc700e941a7929d698661edbf079ab9b6e18207a0d3050abb9",
+      "original_worktree_sha256": "5860f29b1f2774dc700e941a7929d698661edbf079ab9b6e18207a0d3050abb9",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/architecture/phase-37/receipt.json",
+      "git_blob_sha256": "c7109b095218166f4118b9045b06b7852190601303afb5e3079d398f7e613407",
+      "original_worktree_sha256": "3fefae80aa2a2ac1ffc1fc966d00696000b4f4c1d528ac464898ffdda513cd12",
+      "byte_identical": false
+    },
+    {
+      "path": "docs/refactoring/phase-36/current-release-acceptance/independent-review.md",
+      "git_blob_sha256": "2628823f39af3fa7afaed830bf1f3d1a1af8b91a58f3141b4d97e4e2061ec9bc",
+      "original_worktree_sha256": "c2c339400787a51396f21c643828b91cdba3f2ee1eb92efe8779120911ed3284",
+      "byte_identical": false
+    },
+    {
+      "path": "tools/evidence/store.py",
+      "git_blob_sha256": "8971882809b13287a197181d1e3aff2cf4854ece789eecd239886351d7b7da65",
+      "original_worktree_sha256": "8971882809b13287a197181d1e3aff2cf4854ece789eecd239886351d7b7da65",
+      "byte_identical": true
+    }
+  ],
+  "git_recovery_rule": "Read protected Git blob, verify git_blob_sha256, apply only recorded IDENTITY/LF_TO_CRLF/CRLF_LINES, then verify original sha256/bytes; never infer EOL or alter an expected hash",
+  "current_reference_tag_restore": {
+    "count": 169,
+    "status": "FRESH_TAG_RESTORE_PASS",
+    "original_expected_values_changed": false,
+    "all_original_hashes_match": true
+  }
+}

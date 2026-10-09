@@ -1,0 +1,197 @@
+"""Current numerical regression, separate from immutable historical runner gates."""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import re
+import subprocess
+import sys
+import tempfile
+import zipfile
+
+ROOT = Path(__file__).resolve().parents[2]
+POLICY = ROOT / 'docs/refactoring/phase-34/current-math-reference/batch.json'
+PHASE = {'card': 18, 'powder': 17, 'scattering': 16}
+PROVIDER_AUTHORITY_SHA = 'e3e90747dfbb8d49d49130ed08bd8b363b757c14b3dcf13c12d9ee7a38b82018'
+GENERATOR_ARCHIVE_AUTHORITY = ROOT / 'docs/refactoring/phase-36/native-provider-exit/successor-inventory.json'
+GENERATOR_ARCHIVE_AUTHORITY_SHA = '61cae01793d7696d32e2a7c1e4fe0bfb8fdb3b5e3ed6ac57e1419a741e12fc1c'
+HISTORICAL_GENERATORS = {
+    'tools/crystallography/generate_chemistry.py':
+        'archive/legacy/native-provider/tools/crystallography/generate_chemistry.py.txt',
+    'tools/crystallography/generate_scattering.py':
+        'archive/legacy/native-provider/tools/crystallography/generate_scattering.py.txt',
+}
+
+
+def require(condition, reason):
+    if not condition:
+        raise ValueError(reason)
+
+
+def read(path):
+    return json.loads(path.read_bytes())
+
+
+def sha_file(path):
+    with path.open('rb') as stream:
+        digest = hashlib.sha256()
+        for block in iter(lambda: stream.read(1024 * 1024), b''):
+            digest.update(block)
+        return digest.hexdigest()
+
+
+def verify_bundle(domain):
+    policy = read(POLICY)
+    execution = {f'tests/compatibility/{name}_{part}.py'
+                 for name in PHASE for part in ('differential', 'capture', 'qualification')}
+    require(set(policy['execution_hashes']) == execution, 'execution closure incomplete')
+    for name, digest in policy['execution_hashes'].items():
+        require(sha_file(ROOT / name) == digest, 'comparison/parser execution changed: ' + name)
+    authority = ROOT / policy['historical_provider_authority']['path']
+    require(sha_file(authority) == PROVIDER_AUTHORITY_SHA, 'provider authority changed')
+    original_providers = read(authority)['inputs']
+    required_providers = {p: h for p, h in original_providers.items()
+                          if p.startswith(('src/core/crystallography/',
+                                           'src/core/include/qualpf/crystallography/',
+                                           'src/core/include/qualpf/domain/')) and not p.endswith('.md')}
+    require(policy['provider_hashes'] == required_providers, 'provider closure incomplete')
+    for name, digest in policy['provider_hashes'].items():
+        require(original_providers.get(name) == digest and
+                sha_file(ROOT / name) == digest, 'current numerical provider changed: ' + name)
+    options = []
+    pattern = r'set_source_files_properties\((.*?)\s+PROPERTIES COMPILE_OPTIONS "([^"]*)"\)'
+    for match in re.finditer(pattern, (ROOT / 'src/core/CMakeLists.txt').read_text(), re.S):
+        sources = [s for s in match[1].split() if s.startswith('crystallography/')]
+        if sources:
+            options.append(dict(sources=sources, options=match[2]))
+    require(options == policy['math_compile_options'], 'numerical compile policy changed')
+    prefix = ROOT / f'docs/refactoring/phase-{PHASE[domain]}'
+    binding = policy['original_decisions'][domain]
+    require(sha_file(ROOT / binding['path']) == binding['sha256'], 'original decision changed')
+    decision = read(prefix / 'acceptance-decision.json')
+    records = read(prefix / 'qualification-records.json')
+    proof = read(prefix / 'qualification-proof.json')
+    require(decision['status'] == 'approved-by-user' and
+            decision['numerical_equivalence_to_legacy'] is False, 'original authority missing')
+    require(decision['qualification_count'] == len(records['records']), 'original scope changed')
+    require(proof['success'] is True and proof['failures'] == [] and
+            proof['precision_decimal_digits'] == 80, 'independent proof failed')
+    require(decision['compiler_fingerprints'] == records['compiler_fingerprints'],
+            'original compiler authority changed')
+    # These source/registration identities belong to the historical gate. Current
+    # ownership and numerical inputs are verified above and below, respectively.
+    historical = []
+    for name, digest in decision['evidence_sha256'].items():
+        if name in HISTORICAL_GENERATORS:
+            #36B retired the Native resource inputs and retained exact original
+            # generator bytes. Bind the historical script to that archive and
+            # the current resource reader to its separately accepted identity.
+            require(sha_file(GENERATOR_ARCHIVE_AUTHORITY) == GENERATOR_ARCHIVE_AUTHORITY_SHA,
+                    'generator archive transition authority changed')
+            transition = read(GENERATOR_ARCHIVE_AUTHORITY)['AI_decision']
+            require(transition['status'] == 'AI_APPROVED' and
+                    'AI_APPROVED_ARCHIVE_TRANSITION' in transition['classification'],
+                    'generator archive transition not accepted')
+            readers = {row['path']: row['sha256'] for row in transition['source_fingerprints']}
+            archived = HISTORICAL_GENERATORS[name]
+            require(sha_file(ROOT / archived) == digest, 'historical generator changed: ' + name)
+            require(name in readers and sha_file(ROOT / name) == readers[name],
+                    'accepted current resource reader changed: ' + name)
+            historical.append(dict(path=name, original_sha256=digest, archived_path=archived))
+        elif name in policy['historical_registration_paths'] or name.startswith('legacy/fortran/'):
+            historical.append(dict(path=name, original_sha256=digest))
+        else:
+            require(sha_file(ROOT / name) == digest, 'proof/reference/test evidence changed: ' + name)
+    return records['records'], historical
+
+
+def validate_numeric_scope(failures, records, compiler):
+    require(compiler in ('GNU', 'MSVC'), 'unsupported compiler authority')
+    expected = {}
+    for record in records:
+        fields = {k: record[k] for k in ('case', 'field', 'legacy', 'cpp_by_compiler')}
+        fingerprint = hashlib.sha256(json.dumps(fields, sort_keys=True).encode()).hexdigest()
+        key = (record['case'], record['field'])
+        require(key not in expected and record['independent_check_passed'] and
+                fingerprint == record['fingerprint'], 'duplicate/unproved/changed qualification')
+        expected[key] = record
+    actual = {(f['case'], f['field']): f for f in failures}
+    require(len(actual) == len(failures) and actual.keys() == expected.keys(),
+            'new, duplicate or missing numerical difference')
+    for key, failure in actual.items():
+        record = expected[key]
+        fields = dict(case=record['case'], field=record['field'], legacy=failure['legacy'],
+                      cpp_by_compiler=dict(record['cpp_by_compiler'], **{compiler: failure['cpp']}))
+        fingerprint = hashlib.sha256(json.dumps(fields, sort_keys=True).encode()).hexdigest()
+        require(fingerprint == record['fingerprint'], 'changed numerical value or representation')
+
+
+def exact_json(left, right):
+    return json.dumps(left, sort_keys=True, allow_nan=False) == json.dumps(
+        right, sort_keys=True, allow_nan=False)
+
+
+def verify_original_cpp_output(domain, compiler, raw, output):
+    prefix = 'mingw' if compiler == 'GNU' else 'msvc'
+    if domain == 'scattering':
+        original = read(ROOT / f'docs/refactoring/phase-16/test-results/approved-{prefix}-differential.json')
+        require(exact_json(raw['observations'], original['observations']) and
+                exact_json(raw['raw_failures'], original['raw_failures']),
+                'accepted scattering output changed')
+    elif domain == 'powder':
+        from powder_capture import parse
+        archive = ROOT / 'docs/refactoring/phase-17/test-results/cpp-replay-transcripts.zip'
+        with zipfile.ZipFile(archive) as source:
+            original = source.read(f'{prefix}-powder-differential.stdout.txt').decode()
+        current = output.with_suffix('.stdout.txt').read_text()
+        require(exact_json(parse(current), parse(original)), 'accepted complete powder output changed')
+        require([s.split() for s in current.splitlines() if s.startswith('ERROR ')] ==
+                [s.split() for s in original.splitlines() if s.startswith('ERROR ')],
+                'accepted powder error contract changed')
+    else:
+        archive = ROOT / 'docs/refactoring/phase-18/cpp-replay-evidence.zip'
+        with zipfile.ZipFile(archive) as source:
+            original = json.loads(source.read(f'{prefix}-differential.actual.json'))
+        require(exact_json(read(output.with_suffix('.actual.json')), original),
+                'accepted complete card output changed')
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--domain', choices=PHASE, required=True)
+    parser.add_argument('--runner', type=Path, required=True)
+    parser.add_argument('--compiler', choices=('GNU', 'MSVC'), required=True)
+    parser.add_argument('--output', type=Path, required=True)
+    args = parser.parse_args()
+    records, historical = verify_bundle(args.domain)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    run_dir = Path(tempfile.mkdtemp(prefix=args.output.stem + '-', dir=args.output.parent))
+    raw_path = run_dir / 'historical-gate.json'
+    runner_before = sha_file(args.runner)
+    command = [sys.executable, str(ROOT / f'tests/compatibility/{args.domain}_differential.py'),
+               '--runner', str(args.runner), '--compiler', args.compiler, '--output', str(raw_path)]
+    result = subprocess.run(command, capture_output=True, text=True, timeout=300)
+    raw_path.with_suffix('.driver.stdout').write_text(result.stdout)
+    raw_path.with_suffix('.driver.stderr').write_text(result.stderr)
+    require(result.returncode in (0, 1) and raw_path.exists() and 'Traceback' not in result.stderr,
+            'original comparator did not complete')
+    raw = read(raw_path)
+    require(raw['runner_sha256'] == runner_before == sha_file(args.runner), 'tested runner changed')
+    validate_numeric_scope(raw['raw_failures'], records, args.compiler)
+    verify_original_cpp_output(args.domain, args.compiler, raw, raw_path)
+    report = dict(status='PASS_CURRENT_NUMERICAL_REFERENCE', domain=args.domain,
+                  compiler=args.compiler, current_runner_sha256=runner_before,
+                  historical_comparator_exit_code=result.returncode,
+                  historical_comparator_report=str(raw_path),
+                  historical_comparator_report_sha256=sha_file(raw_path),
+                  historical_source_identities=historical,
+                  historical_failures_preserved=True,
+                  approved_named_differences=len(records), new_numerical_differences=0,
+                  new_qualifications=0, original_CPP_output_verified=True,
+                  provider_policy_sha256=sha_file(POLICY), native_execution_dependency=False)
+    args.output.write_text(json.dumps(report, indent=2) + '\n')
+    print(json.dumps(report))
+
+
+if __name__ == '__main__':
+    main()

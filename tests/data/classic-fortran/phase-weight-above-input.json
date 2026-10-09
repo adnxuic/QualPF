@@ -1,0 +1,199 @@
+{
+  "operation": "score",
+  "range": [
+    0,
+    60
+  ],
+  "pattern": [
+    [
+      0,
+      0
+    ],
+    [
+      10,
+      100
+    ],
+    [
+      20,
+      200
+    ],
+    [
+      30,
+      100
+    ],
+    [
+      40,
+      0
+    ],
+    [
+      50,
+      0
+    ],
+    [
+      60,
+      0
+    ]
+  ],
+  "parameters": {
+    "delta": 0.25,
+    "weight_position": 0.5,
+    "weight_intensity": 0.5,
+    "weight_phases": 0.5000000000000001,
+    "minimum_score": 0.6,
+    "maximum_entries": 20,
+    "include_deleted": true,
+    "filter_strongest": false,
+    "strongest_count": 3
+  },
+  "cards": [
+    {
+      "database_id": "controlled-input",
+      "card_id": "A",
+      "quality": "",
+      "reflections": [
+        {
+          "id": 1,
+          "two_theta": 10,
+          "intensity": 10
+        },
+        {
+          "id": 2,
+          "two_theta": 20,
+          "intensity": 20
+        }
+      ]
+    }
+  ],
+  "peaks": [
+    {
+      "id": 1,
+      "two_theta": 10,
+      "intensity": 100,
+      "original_intensity": 100,
+      "d_spacing": null,
+      "delta_d": null,
+      "fwhm": null,
+      "integrated_intensity": null
+    },
+    {
+      "id": 2,
+      "two_theta": 11,
+      "intensity": 101,
+      "original_intensity": 101,
+      "d_spacing": null,
+      "delta_d": null,
+      "fwhm": null,
+      "integrated_intensity": null
+    },
+    {
+      "id": 3,
+      "two_theta": 12,
+      "intensity": 102,
+      "original_intensity": 102,
+      "d_spacing": null,
+      "delta_d": null,
+      "fwhm": null,
+      "integrated_intensity": null
+    },
+    {
+      "id": 4,
+      "two_theta": 13,
+      "intensity": 103,
+      "original_intensity": 103,
+      "d_spacing": null,
+      "delta_d": null,
+      "fwhm": null,
+      "integrated_intensity": null
+    },
+    {
+      "id": 5,
+      "two_theta": 14,
+      "intensity": 104,
+      "original_intensity": 104,
+      "d_spacing": null,
+      "delta_d": null,
+      "fwhm": null,
+      "integrated_intensity": null
+    },
+    {
+      "id": 6,
+      "two_theta": 15,
+      "intensity": 105,
+      "original_intensity": 105,
+      "d_spacing": null,
+      "delta_d": null,
+      "fwhm": null,
+      "integrated_intensity": null
+    },
+    {
+      "id": 7,
+      "two_theta": 16,
+      "intensity": 106,
+      "original_intensity": 106,
+      "d_spacing": null,
+      "delta_d": null,
+      "fwhm": null,
+      "integrated_intensity": null
+    },
+    {
+      "id": 8,
+      "two_theta": 17,
+      "intensity": 107,
+      "original_intensity": 107,
+      "d_spacing": null,
+      "delta_d": null,
+      "fwhm": null,
+      "integrated_intensity": null
+    },
+    {
+      "id": 9,
+      "two_theta": 18,
+      "intensity": 108,
+      "original_intensity": 108,
+      "d_spacing": null,
+      "delta_d": null,
+      "fwhm": null,
+      "integrated_intensity": null
+    },
+    {
+      "id": 10,
+      "two_theta": 19,
+      "intensity": 109,
+      "original_intensity": 109,
+      "d_spacing": null,
+      "delta_d": null,
+      "fwhm": null,
+      "integrated_intensity": null
+    },
+    {
+      "id": 11,
+      "two_theta": 20,
+      "intensity": 110,
+      "original_intensity": 110,
+      "d_spacing": null,
+      "delta_d": null,
+      "fwhm": null,
+      "integrated_intensity": null
+    },
+    {
+      "id": 12,
+      "two_theta": 21,
+      "intensity": 111,
+      "original_intensity": 111,
+      "d_spacing": null,
+      "delta_d": null,
+      "fwhm": null,
+      "integrated_intensity": null
+    },
+    {
+      "id": 13,
+      "two_theta": 22,
+      "intensity": 112,
+      "original_intensity": 112,
+      "d_spacing": null,
+      "delta_d": null,
+      "fwhm": null,
+      "integrated_intensity": null
+    }
+  ]
+}

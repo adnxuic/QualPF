@@ -1,0 +1,17 @@
+{
+  "version": "s9-before-first-differential-1",
+  "signal": [0.00001, 0.00001],
+  "background": [0.00001, 0.00001],
+  "coefficients": [0.00001, 0.00001],
+  "origin": [0, 0],
+  "points": [0, 0],
+  "two_theta": [0.0001, 0],
+  "d": [0.00001, 0.000001],
+  "delta_d": [0.00001, 0.000001],
+  "intensity": [0.00001, 0.00001],
+  "area": [0.00001, 0.00001],
+  "fwhm": [0.00001, 0.00001],
+  "search_range": [0.00001, 0.00001],
+  "automatic_tolerance": [0.00001, 0.00001],
+  "threshold": [0, 0]
+}

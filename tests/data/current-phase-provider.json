@@ -1,0 +1,24 @@
+{
+  "schema": "qualpf.current_phase_provider.v1",
+  "scope": "36D-PHASE-SINCOS-CONTRACT-P1",
+  "decision": {
+    "path": "docs/refactoring/phase-36/phase-sincos-contract/decision.json",
+    "sha256": "0f59b469d55394d39e7f4609a72abad7845e3fb1d233343ae6fc3ca843bcfa03"
+  },
+  "current_providers": {
+    "src/core/crystallography/structure_factor.cpp": "fb5901154d9a023cfc2bcd3a35dc09f66f84c259fea4dc6c198c7190addb5646",
+    "src/core/crystallography/phase_sincos.cpp": "503f0fb1b912c79cc964461c20af6e34640b01a2b980ff06d0ee412f0548eac3",
+    "src/core/crystallography/phase_sincos.h": "e5e44de697702a5224974694bcff8b2276623c0c6c66a69ce3b1fefdee97880d",
+    "tests/data/phase-sincos-reference.txt": "a17ea8b2c566ad5a094b058a5dabfbe1f38a353dffce3147886d824d535db921"
+  },
+  "historical_provider": "src/core/crystallography/structure_factor.cpp",
+  "historical_sha256": "e6b346510b03ef5c3aa696bac581ca8283617b54b42e3a698787433c11b0a762",
+  "numeric_contract": "Mathematical binary64 RNE phase sin/cos; existing complex/Fc2 operation order",
+  "historical_qualifications_not_extended": true,
+  "complete_reference_assertions_retained": true,
+  "new_tolerance": false,
+  "phase_value_successor": {
+    "path": "tests/data/phase-successor-fields.json",
+    "sha256": "416889c03cceddda2512f04e5e980c78091bb417529da9525f793935e2fa0ebf"
+  }
+}

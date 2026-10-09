@@ -1,0 +1,36 @@
+#pragma once
+#include "qualpf/application/search_engine.h"
+#include "qualpf/io/pattern_reader.h"
+#include "qualpf/application/preferences.h"
+namespace qualpf::application {
+struct SearchSettingsSnapshot {
+    SearchParameters parameters;
+    MetadataObject persistedOptions;
+};
+class SearchSettingsProvider {
+  public:
+    virtual ~SearchSettingsProvider() = default;
+    virtual PreferencePayload option(ProductHandle, const std::string &, const PreferencePayload &fallback) const = 0;
+    virtual Result<SearchSettingsSnapshot> load(ProductHandle) const = 0;
+};
+class PatternSourceReader {
+  public:
+    virtual ~PatternSourceReader() = default;
+    virtual Result<Pattern> read(const std::string &utf8Identity) const = 0;
+    virtual Result<io::PatternRead> readDetailed(const std::string &identity) const {
+        auto loaded=read(identity);
+        if (!loaded) return Result<io::PatternRead>{loaded.error()};
+        return Result<io::PatternRead>{io::PatternRead{std::move(loaded).value(), false, 0}};
+    }
+};
+class ProjectSourceReader {
+public:
+    virtual ~ProjectSourceReader() = default;
+    virtual Result<ProductState> read(const std::string &, SearchBackend, const MetadataObject &defaults) const = 0;
+};
+Status openProjectInput(ProductSearchSession &, const ProjectSourceReader &, const std::string &, const MetadataObject &defaults);
+// Read into an owned value, then apply the canonical open transaction. Neither
+// the provider nor the parser receives the live Session.
+Status openPatternInput(ProductSearchSession &, const PatternSourceReader &, const std::string &);
+Result<SearchInput> matchingInput(ProductHandle, const SearchSettingsSnapshot &);
+} // namespace qualpf::application

@@ -1,0 +1,597 @@
+{
+  "schema": "qualpf.milestone_a.independent_acceptance.v1",
+  "review_date": "2026-10-09",
+  "candidate_commit": "e6883edab2fb26d8f22866c0585b910322027c12",
+  "phase37e_final_closure_commit": "e6883edab2fb26d8f22866c0585b910322027c12",
+  "phase37e_implementation_commit": "85052dffeaf1f30dbd7698da466be43b3f3159cb",
+  "original_fresh_build_test_checkpoint": "d2915b0bd32b3644b00bc343440dd24548571bd6",
+  "phase37a_d_accepted_implementation": "2610439f883dba06b609d1c2393c522bda257cfa",
+  "review": "docs/architecture/milestone-a/independent-review.md",
+  "matrix": "docs/architecture/milestone-a/acceptance-matrix.md",
+  "record_commit_resolution": "git log -1 -- docs/architecture/milestone-a/gate.json",
+  "record_commit_scope": "Documentation/current-context only; not a revised implementation or milestone approval",
+  "independence": {
+    "actual_source_and_target_review": true,
+    "raw_log_junit_compile_artifact_checks": true,
+    "controlled_actual_product_observations": true,
+    "production_modified": false,
+    "expected_values_or_tolerances_modified": false,
+    "historical_authority_modified": false,
+    "earlier_report_pass_labels_not_sufficient": true
+  },
+  "mandatory_criteria": [
+    {
+      "id": "A01",
+      "criterion": "Core dependency and Qt independence",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A02",
+      "criterion": "Complete Application dependency and Qt independence",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A03",
+      "criterion": "Canonical state ownership and derived views",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A04",
+      "criterion": "Snapshot/revision/commit/preprocessing contracts",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A05",
+      "criterion": "Database and IO responsibility separation",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A06",
+      "criterion": "SQLite execution-thread ownership and write exclusion",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A07",
+      "criterion": "Shared engine/scoring/ranking/residual contracts",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A08",
+      "criterion": "Background GUI search and zero search event pumps",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A09",
+      "criterion": "Busy/cancellation/stale/owner-thread atomic publication",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A10",
+      "criterion": "GUI/dialog/actions/closing/drain lifetime",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A11",
+      "criterion": "Structured error boundaries do not return empty success",
+      "mandatory": true,
+      "result": "FAIL",
+      "finding": "A-01"
+    },
+    {
+      "id": "A12",
+      "criterion": "169 reference byte identities and approved numerical policy",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A13",
+      "criterion": "Current normal numerical/product regression coverage",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A14",
+      "criterion": "GUI/CLI/import/export product boundary behavior",
+      "mandatory": true,
+      "result": "FAIL",
+      "finding": "A-01"
+    },
+    {
+      "id": "A15",
+      "criterion": "Windows GCC 13.1 Qt 6.8.3 supported clean build/tests",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A16",
+      "criterion": "Windows MSVC 19.40 Qt 6.8.3 supported clean build/tests",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A17",
+      "criterion": "Ubuntu 26.04 GCC 15.2 Qt 6.10.2 supported clean build/tests",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A18",
+      "criterion": "Clean repository/checkout independent of migration facilities",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A19",
+      "criterion": "Actual final source package exclusions",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A20",
+      "criterion": "Historical index and actual local recovery",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A21",
+      "criterion": "Milestone F preservation",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A22",
+      "criterion": "PFSM architecture boundary/no unauthorized start",
+      "mandatory": true,
+      "result": "PASS"
+    }
+  ],
+  "mandatory_summary": {
+    "total": 22,
+    "PASS": 20,
+    "FAIL": 2,
+    "NOT_VERIFIED": 0,
+    "distinct_blockers": 1
+  },
+  "blockers": [
+    {
+      "id": "A-01",
+      "category": "ACTUAL_ERROR_BOUNDARY_AND_PRODUCT_BLOCKER",
+      "criteria": [
+        "A11",
+        "A14"
+      ],
+      "owner": "CLI composition / SynchronousSearchService boundary",
+      "source": "apps/qualpf/main.cpp",
+      "source_lines": [
+        321,
+        332,
+        360
+      ],
+      "contract": "ADR A37-5: no empty success on failure/cancellation/stale",
+      "actual": "Failed SQLite metadata browse prints Found 0 card(s), stderr empty, exit 0",
+      "expected": "Non-success CLI exit and inspectable search error, no numerical publication",
+      "inherited_from_entry_185e4e36": true,
+      "approved_exception_found": false,
+      "numerical_algorithm_regression": false,
+      "reproduction": {
+        "candidate": "e6883edab2fb26d8f22866c0585b910322027c12",
+        "status": "FAIL",
+        "criterion": "errors_are_not_successful_empty_searches",
+        "owner": "Composition CLI (apps/qualpf/main.cpp) / GUI-boundary SynchronousSearchService",
+        "product_sha256": "630182276457eb648298d75254b335285d31f431371410ba2258c3306cb672ff",
+        "records": [
+          {
+            "case": "create-control",
+            "command": [
+              "E:\\CPlusProject\\QualPF\\build\\phase37e\\clean-checkout\\build\\windows-gnu-001\\src\\qualpf.exe",
+              "--nogui",
+              "--settings-dir",
+              "E:\\CPlusProject\\QualPF\\build\\milestone-a\\cli-error-002\\valid\\settings",
+              "--createdb",
+              "--cifdir",
+              "E:\\CPlusProject\\QualPF\\build\\milestone-a\\cli-error-002\\valid\\cif",
+              "--dbout",
+              "E:\\CPlusProject\\QualPF\\build\\milestone-a\\cli-error-002\\valid\\database\\cards"
+            ],
+            "exit_code": 0,
+            "stdout": "Scanning CIF folder: E:\\CPlusProject\\QualPF\\build\\milestone-a\\cli-error-002\\valid\\cif\r\n\r  [0 ok / 0 skip / 0 err] E:/CPlusProject/QualPF/build/milestone-a/cli-error-002/valid/cif/cod-2300112.cif\r  [1 ok / 0 skip / 0 err] E:/CPlusProject/QualPF/build/milestone-a/cli-error-002/valid/cif/cod-2300112.cif\r\nDone: 1 ok, 0 errors.\r\n",
+            "stderr": "",
+            "stdout_sha256": "97d7b726a2cf9f3589e0eac18319552f85397a25efa330681f7da70019f91894",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "case": "valid-browse",
+            "command": [
+              "E:\\CPlusProject\\QualPF\\build\\phase37e\\clean-checkout\\build\\windows-gnu-001\\src\\qualpf.exe",
+              "--nogui",
+              "--search",
+              "--composition",
+              "Zn",
+              "--settings-dir",
+              "E:\\CPlusProject\\QualPF\\build\\milestone-a\\cli-error-002\\valid\\settings"
+            ],
+            "exit_code": 0,
+            "stdout": "Searching database...\r\n\r  100%\rFound 1 card(s):\r\n  [0] zinc_oxide                               | O Zn                                               | P 63 m c\r\n",
+            "stderr": "",
+            "stdout_sha256": "970c1a0038f6be6e328a31697701a628d7664d9fdf85539335692d7cacdf0b50",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "case": "broken-sql-browse",
+            "command": [
+              "E:\\CPlusProject\\QualPF\\build\\phase37e\\clean-checkout\\build\\windows-gnu-001\\src\\qualpf.exe",
+              "--nogui",
+              "--search",
+              "--composition",
+              "Zn",
+              "--settings-dir",
+              "E:\\CPlusProject\\QualPF\\build\\milestone-a\\cli-error-002\\broken\\settings"
+            ],
+            "exit_code": 0,
+            "stdout": "Searching database...\r\n\rFound 0 card(s):\r\n",
+            "stderr": "",
+            "stdout_sha256": "b6aa3b8c730f4b94c2be2aadc83b99e685b67f69516fd65f19367f719a075b42",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "case": "valid-empty-browse",
+            "command": [
+              "E:\\CPlusProject\\QualPF\\build\\phase37e\\clean-checkout\\build\\windows-gnu-001\\src\\qualpf.exe",
+              "--nogui",
+              "--search",
+              "--composition",
+              "Xe",
+              "--settings-dir",
+              "E:\\CPlusProject\\QualPF\\build\\milestone-a\\cli-error-002\\valid\\settings"
+            ],
+            "exit_code": 0,
+            "stdout": "Searching database...\r\n\rFound 0 card(s):\r\n",
+            "stderr": "",
+            "stdout_sha256": "b6aa3b8c730f4b94c2be2aadc83b99e685b67f69516fd65f19367f719a075b42",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ]
+      },
+      "setup": {
+        "environment": {
+          "QT_QPA_PLATFORM": "offscreen",
+          "qt_bin": "E:/QualPF-SDK/Qt/6.8.3/mingw_64/bin",
+          "toolchain_bin": "E:/QualPF-SDK/Qt/Tools/mingw1310_64/bin"
+        },
+        "valid_control_input": "tests/data/cif/cod-2300112.cif",
+        "valid_control_input_sha256": "bf25e35b06c55d9f35dc51f8afc992b4654844f433c5192327beacf3bffb038b",
+        "settings_location": "<isolated-settings>/IC/qualpf.ini",
+        "settings_text_template": "[databases]\ncount=1\n0\\inUse=true\n0\\name=cod_inorg\n0\\path=<database-base>\ndefaultDir=<database-directory>\n[maintenance]\nsettingsMigrationV1=true\n",
+        "broken_database_extensions": [
+          ".sq",
+          ".sq.info",
+          ".sq.infostat",
+          ".sq.search"
+        ],
+        "all_broken_roles_sql": "CREATE TABLE placeholder(value INTEGER)",
+        "main_role_extra_sql": [
+          "CREATE TABLE infodb(ncard INTEGER, type TEXT)",
+          "INSERT INTO infodb VALUES(0, 'cod_inorg')"
+        ],
+        "read_only_schema_control": "no such table: chemical",
+        "broken_database_sha256": {
+          ".sq": "69b0902fd9783d8c27436982d1994df5393876b8422938f7a1594396b755bf91",
+          ".sq.info": "711660162a526520ba0eaf221109350a25aad17f4411130d6f955966a8db4b47",
+          ".sq.infostat": "711660162a526520ba0eaf221109350a25aad17f4411130d6f955966a8db4b47",
+          ".sq.search": "711660162a526520ba0eaf221109350a25aad17f4411130d6f955966a8db4b47"
+        },
+        "settings_isolated_from_user_registry": true
+      },
+      "initial_probe_observation": {
+        "path": "build/milestone-a/cli-error-repro.log",
+        "sha256": "239cb5bce7d18d04825847d8b6d17623b5a3243ff2acd4f9f735b58a9e1f0de9",
+        "meaning": "No-filter browse legitimately returned zero; initial one-card positive-control assumption failed. Preserved; reported finding uses explicit Zn and passing control."
+      },
+      "bounded_correction_recommendation": "Handle error/cancellation after metadata query before successful CLI output; reconcile inherited exit contract and add real failed-SQL/valid-empty controls in a separate correction batch; independently recheck supported configurations.",
+      "corrected_by_this_review": false
+    }
+  ],
+  "evidence": {
+    "existing_versioned_raw_index": "docs/development/repository-consolidation/validation-index.json",
+    "existing_index_sha256": "68817cd0c58293518182fd9ecb5cc9e5a24ece85622bf763611751ab0ecee994",
+    "independent_reused_evidence_recheck": {
+      "candidate": "e6883edab2fb26d8f22866c0585b910322027c12",
+      "status": "PASS",
+      "compressed_logs_verified": 73,
+      "bound_build_inputs": 1775,
+      "post_checkpoint_bound_delta": [
+        "cmake/packaging/CPack.cmake"
+      ],
+      "reference_authority": "phase37e-entry-20261009:tests/reference/manifest.json",
+      "references": 169,
+      "platforms": {
+        "windows-gnu": {
+          "compiler": [
+            "GNU",
+            "13.1.0"
+          ],
+          "qt_directory": "E:/QualPF-SDK/Qt/6.8.3/mingw_64/lib/cmake/Qt6",
+          "tests": 80,
+          "original_checkpoint": "d2915b0bd32b3644b00bc343440dd24548571bd6",
+          "acceptance_validation": "REUSED_UNCHANGED_DEPENDENCIES",
+          "compile_units": 302,
+          "pure_units": 70,
+          "artifacts_rehashed": 69,
+          "commands_sha256": "a0f2d848885e4cfe9c735e93c878f904a299995cc374b3b99073348b231ecfc3",
+          "fresh_start": {
+            "id": "windows-gnu",
+            "build": "E:\\CPlusProject\\QualPF\\build\\phase37e\\clean-checkout\\build\\windows-gnu-001",
+            "cache_existed_before": false,
+            "objects_existed_before": false,
+            "utc": "2026-10-09T03:11:55.0618889+00:00"
+          },
+          "junit_sha256": "ac9c2d7d4f6ec362193a236a3e7e4c8c3afe934da29c6b9e648d9a55d4c73e69",
+          "normal_list_sha256": "57ad79ff4b8a405b8ed72f268421216dc7d0670406a516bcb9aed719889ae10b"
+        },
+        "windows-msvc": {
+          "compiler": [
+            "MSVC",
+            "19.40.33811.0"
+          ],
+          "qt_directory": "E:/QualPF-SDK/Qt/6.8.3/msvc2022_64/lib/cmake/Qt6",
+          "tests": 80,
+          "original_checkpoint": "d2915b0bd32b3644b00bc343440dd24548571bd6",
+          "acceptance_validation": "REUSED_UNCHANGED_DEPENDENCIES",
+          "compile_units": 299,
+          "pure_units": 70,
+          "artifacts_rehashed": 69,
+          "commands_sha256": "2b9c075405180f760b809b0b6fa28911e8fda47ccd742d2ab5be28ba0b8e0981",
+          "fresh_start": {
+            "id": "windows-msvc",
+            "build": "E:\\CPlusProject\\QualPF\\build\\phase37e\\clean-checkout\\build\\windows-msvc-001",
+            "cache_existed_before": false,
+            "objects_existed_before": false,
+            "utc": "2026-10-09T03:11:59.6227737+00:00"
+          },
+          "junit_sha256": "a9838e20e921ac312fef15a4e4d5a488f35cf75311af3d514f0695dd83468ab1",
+          "normal_list_sha256": "15537fff7bace7a2895ca7ce903b4d5cc3fd97cc6505e737ef2e40eb263bab47"
+        },
+        "linux-gnu": {
+          "compiler": [
+            "GNU",
+            "15.2.0"
+          ],
+          "qt_directory": "/usr/lib/x86_64-linux-gnu/cmake/Qt6",
+          "tests": 80,
+          "original_checkpoint": "d2915b0bd32b3644b00bc343440dd24548571bd6",
+          "acceptance_validation": "REUSED_UNCHANGED_DEPENDENCIES",
+          "compile_units": 301,
+          "pure_units": 70,
+          "artifacts_rehashed": 70,
+          "commands_sha256": "22fd325f04ce905401a37c840c495bc25805abcde119b7fd83f43d03db531261",
+          "fresh_start": {
+            "id": "linux-gnu",
+            "build": "/build",
+            "cache_existed_before": false,
+            "objects_existed_before": false,
+            "utc": "2026-10-09T03:14:51.623913+00:00"
+          },
+          "junit_sha256": "850c40f481da5d31e0a0b5170c515d529b64cda813c8019503b75619a5703592",
+          "normal_list_sha256": "67490549b10d9369883729de15f9de19ec888e794ba9321ce9324fca0b50653b"
+        }
+      },
+      "msvc_objects_archives_rehashed": 317,
+      "msvc_original_symbol_lines": 1510321,
+      "production_changed_by_this_acceptance": false
+    },
+    "linux_actual_inputs_and_environment_recheck": {
+      "status": "PASS",
+      "actual_build_root": "/var/tmp/qualpf-layout-sdk-20261008/workspace-phase37e/build/linux-gnu-001",
+      "artifacts_rehashed": 70,
+      "source_inputs_rehashed": 1775,
+      "commands_sha256": "22fd325f04ce905401a37c840c495bc25805abcde119b7fd83f43d03db531261",
+      "os_release": "PRETTY_NAME=\"Ubuntu 26.04.1 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"26.04\"\nVERSION=\"26.04.1 LTS (Resolute Raccoon)\"\nVERSION_CODENAME=resolute\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=resolute\nLOGO=ubuntu-logo\n",
+      "compiler_version_output": "g++ (Ubuntu 15.2.0-16ubuntu1) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "qt_version_file": "/var/tmp/qualpf-layout-sdk-20261008/usr/lib/x86_64-linux-gnu/cmake/Qt6Core/Qt6CoreConfigVersionImpl.cmake",
+      "qt_version": "6.10.2"
+    },
+    "fresh_existing_workflows": {
+      "validation_mode": "FRESH_VALIDATION",
+      "platform": "Windows GCC 13.1 / Qt 6.8.3",
+      "source_dependencies_match_final_candidate": true,
+      "build_directory": "build/phase37e/clean-checkout/build/windows-gnu-001",
+      "command": "ctest --test-dir build/phase37e/clean-checkout/build/windows-gnu-001 -L normal -R ^qualpf\\.(application\\.|gui\\.|database\\.|project\\.|plot\\.sink\\.controls|preprocessing\\.(current_probe_state|product_reference|reference|rounding)|classic\\.(reference|synthetic_replay)|settings\\.migration|product\\.startup|pattern\\.lifecycle|cif\\.product\\.lifecycle) --verbose --output-junit build/milestone-a/workflows.xml",
+      "environment": {
+        "QT_QPA_PLATFORM": "offscreen",
+        "MKL_NUM_THREADS": "1"
+      },
+      "tests": 26,
+      "failed": 0,
+      "skipped": 0,
+      "identities": [
+        "qualpf.project.codec",
+        "qualpf.product.startup",
+        "qualpf.pattern.lifecycle",
+        "qualpf.preprocessing.product_reference",
+        "qualpf.preprocessing.rounding",
+        "qualpf.preprocessing.reference",
+        "qualpf.classic.synthetic_replay",
+        "qualpf.classic.reference",
+        "qualpf.classic.reference_contract",
+        "qualpf.gui.workspace_context",
+        "qualpf.gui.window_lifecycle",
+        "qualpf.gui.window_queued_close",
+        "qualpf.gui.window_child_close",
+        "qualpf.database.threaded_reader",
+        "qualpf.application.search_coordinator",
+        "qualpf.application.preprocessing_evaluation",
+        "qualpf.database.candidate_reader",
+        "qualpf.application.search_engine",
+        "qualpf.application.product_session",
+        "qualpf.application.product_values",
+        "qualpf.project.boundaries",
+        "qualpf.settings.migration",
+        "qualpf.cif.product.lifecycle",
+        "qualpf.preprocessing.current_probe_state",
+        "qualpf.plot.sink.controls",
+        "qualpf.gui.search_tasks"
+      ],
+      "junit_sha256": "7896aeea196b13260d608d58c6919eb21d48b1b8d08d665ba2a95042f941aba8",
+      "raw_output_sha256": "a46bae24855ba4c35e8905a3efadab2ea3656a0e854d103e48824efca1f17f61",
+      "raw_output": "build/milestone-a/workflows.log"
+    },
+    "qtfree_application_clients": {
+      "original_build_validation": "REUSED_UNCHANGED_DEPENDENCIES",
+      "client_execution_validation": "FRESH_VALIDATION",
+      "complete_application_not_mock_subset": true,
+      "results": {
+        "windows-gnu": {
+          "result": "PASS",
+          "stdout": "PASS: complete Application consumed by a Qt-free C++20 client\n",
+          "sha256": "dc6ea8cb3f287c4d7057557fe1a672027ade5e3acb02ce4ee4e17f67aecebb5d"
+        },
+        "windows-msvc": {
+          "result": "PASS",
+          "stdout": "PASS: complete Application consumed by a Qt-free C++20 client\n",
+          "sha256": "dc6ea8cb3f287c4d7057557fe1a672027ade5e3acb02ce4ee4e17f67aecebb5d"
+        },
+        "linux-gnu": {
+          "result": "PASS",
+          "stdout": "PASS: complete Application consumed by a Qt-free C++20 client\n",
+          "sha256": "dc6ea8cb3f287c4d7057557fe1a672027ade5e3acb02ce4ee4e17f67aecebb5d"
+        }
+      }
+    },
+    "final_source_package": {
+      "status": "PASS",
+      "candidate": "e6883edab2fb26d8f22866c0585b910322027c12",
+      "files": 1935,
+      "references": 169,
+      "sha256": "c0e43ee07fb851d678fa66bd90e43c8aadb45c6502292c36625ecddd216ab680",
+      "bytes": 37137914,
+      "package": "build\\milestone-a\\source-package\\qualpf-1.0.5-Source.tar.gz",
+      "controls_present_in_checkout": [
+        ".git",
+        "tools/validation/__pycache__/acceptance-exclusion.pyc",
+        "build/source-check/CMakeCache.txt"
+      ],
+      "forbidden_packaged_inputs": [],
+      "validation_mode": "FRESH_VALIDATION"
+    },
+    "historical_recovery": {
+      "status": "PASS",
+      "samples": [
+        {
+          "kind": "raw_FAIL",
+          "path": ".evidence/raw/phase31c-ai-observed/actual-gnu-001/cases/injected-allocation-failure/comparison.json",
+          "bytes": 1146,
+          "sha256": "082d323d2b5c5e95ad33a6f94d1c83b6d88f967e6d368c147d17a94388817a3e",
+          "object": "evidence/objects/7906603800f322bd6240dcbd2cb725cd253e8be21411e1551c8e55cd10d81c68.zip",
+          "object_sha256": "7906603800f322bd6240dcbd2cb725cd253e8be21411e1551c8e55cd10d81c68",
+          "catalog_sha256": "06118368984e49f14e83529c7c7b8aeec4ccfff74761bf872ffdd36391986fa1",
+          "status": "PASS"
+        },
+        {
+          "kind": "repository_hygiene",
+          "path": "docs/refactoring/phase-36/post-f-hygiene/closure-report.md",
+          "bytes": 5817,
+          "sha256": "71aad8d3246e931c074e5107929223b5c3dd40d1c2d8bbbb8cbfcfeb3f83202f",
+          "object": "evidence/objects/9c25a91cc1fd42b68ed8cb3be6992f551f5c8e6c2fd62d3bb1e1222630d862ad.zip",
+          "object_sha256": "9c25a91cc1fd42b68ed8cb3be6992f551f5c8e6c2fd62d3bb1e1222630d862ad",
+          "catalog_sha256": "06118368984e49f14e83529c7c7b8aeec4ccfff74761bf872ffdd36391986fa1",
+          "status": "PASS"
+        },
+        {
+          "kind": "numerical_reference",
+          "path": "tests/data/scattering-reference.zip",
+          "bytes": 1890913,
+          "sha256": "0f8f888d047c79697ac35b9c752bd01facc17850739b567ac71fbda03653fe5e",
+          "object": "evidence/objects/f35b2dd11c110b7f7fe2d1984568c710d3b3216d15b03bb09061519bd14536aa.zip",
+          "object_sha256": "f35b2dd11c110b7f7fe2d1984568c710d3b3216d15b03bb09061519bd14536aa",
+          "catalog_sha256": "06118368984e49f14e83529c7c7b8aeec4ccfff74761bf872ffdd36391986fa1",
+          "status": "PASS"
+        },
+        {
+          "kind": "numerical_decision",
+          "path": ".evidence/raw/phase26a1-acceptance/authorization-001/user-approval.md",
+          "bytes": 8190,
+          "sha256": "a4189ada9a8edee42d25d802075706b6f8ab9546b4f1604869e4d7239e36ae9d",
+          "object": "evidence/objects/fd0dfb8788831d3391e057e1bbf3f739480ca8408befae828e644a987277ff19.zip",
+          "object_sha256": "fd0dfb8788831d3391e057e1bbf3f739480ca8408befae828e644a987277ff19",
+          "catalog_sha256": "76885ef7e29d12f32bdc839625d877fdfbd659d72f2209cc6cf4d7635285131a",
+          "status": "PASS"
+        },
+        {
+          "kind": "migration_record",
+          "path": "docs/refactoring/phase-31/complete-fortran-migration/zero-fortran-gate.json",
+          "bytes": 7398,
+          "sha256": "1c7274fe1034f5298f261e9fe146dd533392fb4150ed5663d3f34d7a27344633",
+          "object": "evidence/objects/f41f4780c300c429a3469991505ab167c267bdf14a7dc51e0fd082cd931a1bb6.zip",
+          "object_sha256": "f41f4780c300c429a3469991505ab167c267bdf14a7dc51e0fd082cd931a1bb6",
+          "catalog_sha256": "900537ccc20e15089aec0ef19396069ce08eeafa2410c03e92b3b3f842cafb87",
+          "status": "PASS"
+        },
+        {
+          "kind": "milestone_F",
+          "path": "docs/refactoring/phase-36/current-release-acceptance/independent-review.md",
+          "bytes": 12621,
+          "sha256": "c2c339400787a51396f21c643828b91cdba3f2ee1eb92efe8779120911ed3284",
+          "object": "evidence/objects/90ff6bf1926894a8d3523a97f4cc20998a3ffec68d40ce7252d1e5ba430d425d.zip",
+          "object_sha256": "90ff6bf1926894a8d3523a97f4cc20998a3ffec68d40ce7252d1e5ba430d425d",
+          "catalog_sha256": "fb45aa93275ed21269cb4719fef89aa1746248f4a5b69210b5525a87bf9ae8de",
+          "status": "PASS"
+        }
+      ],
+      "original_git_receipts": [
+        {
+          "path": "docs/architecture/phase-37/receipt.json",
+          "sha256": "3fefae80aa2a2ac1ffc1fc966d00696000b4f4c1d528ac464898ffdda513cd12",
+          "bytes": 288142,
+          "status": "PASS"
+        },
+        {
+          "path": "docs/architecture/phase-37/gate.json",
+          "sha256": "44c0881fc1542410a5679a1fad45ac23b77b64109cb72ee76b506ad8d847b736",
+          "bytes": 3455,
+          "status": "PASS"
+        },
+        {
+          "path": "docs/refactoring/phase-36/current-release-acceptance/independent-review.md",
+          "sha256": "c2c339400787a51396f21c643828b91cdba3f2ee1eb92efe8779120911ed3284",
+          "bytes": 12621,
+          "status": "PASS"
+        }
+      ],
+      "availability": "LOCAL_ONLY_NO_REMOTE_RECOVERY_GUARANTEE",
+      "protected_entry": "8fdf0a71d7eef8b6801e5336720c19b3c936e18f",
+      "protected_references": "084347cd95011cf3eb4371ec85a9838cc0e856eb",
+      "validation_mode": "FRESH_VALIDATION"
+    },
+    "current_fitness": {
+      "result": "PASS",
+      "negative_controls": true,
+      "command": "python -B tools/architecture/check_boundaries.py --self-test --output build/milestone-a/boundaries.json",
+      "raw_result_sha256": "08fb0793e091296e42bcc820b0cb62b304c191760dc61fe11476881f2ffb6739"
+    }
+  },
+  "optional_observations": {
+    "hosted_github_ci": "NOT_VERIFIED",
+    "clang": "NOT_VERIFIED",
+    "macos": "NOT_VERIFIED",
+    "remote_offsite_archive_recovery": "NOT_VERIFIED",
+    "new_complete_installer_provider_matrix": "NOT_VERIFIED"
+  },
+  "archive_risk": "Local protected Git refs/bundle and D:/QualPF-evidence-backup/20261004 actual objects; no verified remote/offsite availability. Local restore PASS; no claimed disaster recovery guarantee.",
+  "milestone_F": "MILESTONE_F_PRESERVED",
+  "milestone_A_accepted": false,
+  "milestone_A_final_acceptance": "PENDING",
+  "outcome": "ACCEPTANCE_BLOCKED",
+  "PFSM_started": false,
+  "PFSM_final_handoff": "WITHHELD_PENDING_CORRECTION_AND_INDEPENDENT_ACCEPTANCE",
+  "next_action": "STOP"
+}

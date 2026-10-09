@@ -1,0 +1,15 @@
+{
+  "defect_id": "36C-LEGACY-RELWITHDEBINFO-ALIAS",
+  "classification": "DEFERRED_EXISTING_DEFECT",
+  "discovered_phase": "36C",
+  "owner": "Phase37 build-policy cleanup after F",
+  "severity": "low; requested optimized profile instead selects existing DEBUG",
+  "reproduction": "Configure with -DCMAKE_BUILD_TYPE=RelWithDebInfo; original shared flag module selects DEBUG",
+  "source_anchors": [
+    "archive/legacy/toolchain/SetFortranFlags.cmake.txt:21",
+    "CMakeLists.txt:9"
+  ],
+  "blocks_current_phase": false,
+  "suggested_fix": "Review explicit standard build-profile contracts after F. Preserve current source-backed alias during migration, without new C++ optimization/domain behavior.",
+  "evidence": ".evidence/raw/phase36c-toolchain-exit/batch-001/independent-review.md"
+}

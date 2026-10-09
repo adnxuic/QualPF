@@ -1,0 +1,208 @@
+from reference_paths import reference_path, provenance_path
+"""Strict comparison against sealed native observations; no rewritten golden."""
+import argparse
+import hashlib
+import json
+import math
+from pathlib import Path
+import struct
+import subprocess
+import sys
+import zipfile
+from card_capture import environment
+from card_qualification import apply
+
+ROOT=Path(__file__).resolve().parents[2]
+ARCHIVE=reference_path(ROOT/'tests/data/theoretical-card-reference.zip')
+
+def protocol(cases,expected):
+    out=[]
+    def row(x):out.append(' '.join(map(str,x)))
+    for c in cases:
+        e=expected[str(c['id'])]
+        row([c['id'],c['group'],c['setting'],len(c['sites']),c['wavelength'],len(e['slots']),len(e['groups'])])
+        row(c['cell'])
+        for s in c['sites']:row([s['species'],*s['xyz'],s['occupancy']])
+        for r in e['slots']:row([r['id'],*r['hkl'],r['multiplicity'],r['d'],r['two_theta'],r['fc2'],r['lp'],r['raw']])
+        for g in e['groups']:row([g['representative'],g['count'],*g['members']])
+    return '\n'.join(out)+'\n'
+
+def parse(stdout):
+    results={};c=None;seen=set()
+    def values(p):
+        v=list(map(float,p))
+        if not all(math.isfinite(x) for x in v):raise ValueError('Nonfinite successful C++ output')
+        return v
+    for line in stdout.splitlines():
+        p=line.split()
+        if not p:continue
+        if p[0]!='CASE' and (c is None or c['complete']):raise ValueError('Record outside active case')
+        if p[0] in ('COMPOSITION','FORMULA','ABSORPTION','RIR','SELECT'):
+            if p[0] in seen:raise ValueError('Duplicate scalar outcome')
+            seen.add(p[0])
+        if p[0]=='CASE':
+            if c is not None and not c['complete']:raise ValueError('Missing END')
+            if p[1] in results:raise ValueError('Duplicate C++ case')
+            c=dict(entries={},sites={},mac={},decisions={},card=[],errors={},complete=False);results[p[1]]=c;seen=set()
+        elif p[0]=='ERROR':
+            if p[1] not in ('composition','density','site','absorption','rir','lines','selection'):raise ValueError('Unknown error stage')
+            if p[1] in c['errors']:raise ValueError('Duplicate stage error')
+            c['errors'][p[1]]=dict(field=p[2],reason=p[3])
+        elif p[0]=='COMPOSITION':c['composition']=dict(z=int(p[1]),**dict(zip(('cell_mass','formula_mass','volume','density'),values(p[2:]))))
+        elif p[0]=='FORMULA':c['formula']=line.partition(' ')[2].strip()
+        elif p[0]=='ENTRY':
+            if p[1] in c['entries']:raise ValueError('Duplicate species')
+            c['entries'][p[1]]=dict(z=int(p[2]),label=p[3],**dict(zip(('cell_amount','formula_amount','mass','cell_mass'),values(p[4:]))))
+        elif p[0]=='SITE':
+            if p[1] in c['sites']:raise ValueError('Duplicate site')
+            c['sites'][p[1]]=dict(zip(('occupancy','multiplicity','amount'),values(p[2:])))
+        elif p[0]=='ABSORPTION':c['absorption']=dict(zip(('energy','mixture_mac','mu'),values(p[1:])))
+        elif p[0]=='MAC':
+            if p[1] in c['mac']:raise ValueError('Duplicate attenuation entry')
+            c['mac'][p[1]]=dict(zip(('energy_low','mac_low','energy_high','mac_high','log_fraction','mac','weighted_mac'),values(p[2:])))
+        elif p[0]=='RIR':c['rir']=dict(zip(('maximum','denominator','rho_volume_ratio','intensity_ratio','rir'),values(p[1:])))
+        elif p[0]=='SELECT':c['selection']=dict(input_count=int(p[1]),prefilter_count=int(p[2]),retained_count=int(p[3]),**dict(zip(('all_maximum','prefilter_maximum','threshold'),values(p[4:]))))
+        elif p[0]=='DECISION':
+            if p[1] in c['decisions']:raise ValueError('Duplicate slot identity')
+            c['decisions'][p[1]]=dict(slot=int(p[2]),representative=int(p[3]),raw=values(p[4:5])[0],
+                is_representative=int(p[5]),within_cap=int(p[6]),meets_threshold=int(p[7]),retained=int(p[8]))
+        elif p[0]=='CARD':
+            c['card'].append(dict(id=int(p[1]),slot=int(p[2]),raw=values(p[3:4])[0],relative=values(p[4:5])[0],
+                physical_relative=values(p[5:6])[0],count=int(p[6]),members=list(map(int,p[7:]))))
+        elif p[0]=='END':c['complete']=True
+        else:raise ValueError('Unknown C++ protocol record '+p[0])
+    for c in results.values():
+        if not c['complete']:raise ValueError('Incomplete C++ case')
+        for stage in ('composition','absorption','rir','selection'):
+            if stage in c and stage in c['errors']:raise ValueError('Conflicting success/error outcomes')
+        if 'composition' not in c and 'composition' not in c['errors']:raise ValueError('Missing composition outcome')
+        if 'selection' not in c and not any(s in c['errors'] for s in ('lines','selection')):raise ValueError('Missing selection outcome')
+        if 'selection' in c:
+            s=c['selection']
+            if len(c['decisions'])!=s['input_count'] or len(c['card'])!=s['retained_count']:raise ValueError('Incomplete selection output')
+            ids=[r['id'] for r in c['card']]
+            if len(ids)!=len(set(ids)):raise ValueError('Duplicate card row')
+            if any(r['count']!=len(r['members']) or len(set(r['members']))!=r['count'] for r in c['card']):raise ValueError('Invalid card membership')
+    return results
+
+def compare(cases,expected,actual,tolerances):
+    checks=0;failures=[];error_checks=[];case_results=[]
+    def check(c,field,want,got,tolerance=None):
+        nonlocal checks
+        checks+=1
+        if tolerance is None:ok=want==got
+        else:ok=isinstance(got,(float,int)) and math.isfinite(got) and abs(got-want)<=tolerance['absolute']+tolerance['relative']*abs(want)
+        if not ok:failures.append(dict(case=c['id'],name=c['name'],field=field,legacy=want,cpp=got,tolerance=tolerance))
+    def err(c,g,stage,reason):
+        observed=g['errors'].get(stage)
+        check(c,'error.'+stage,reason,None if observed is None else observed['reason'])
+        error_checks.append(dict(case=c['id'],name=c['name'],stage=stage,expected_reason=reason,observed=observed))
+    for c in cases:
+        e=expected[str(c['id'])];g=actual[str(c['id'])];start=len(failures)
+        p=e['physics'];ct=tolerances['composition'];at=tolerances['absorption_rir'];it=tolerances['intensity']
+        bad_occ=any(not math.isfinite(s['occupancy']) or s['occupancy']<0 or s['occupancy']>1 for s in c['sites'])
+        if not c['sites']:err(c,g,'composition','empty_structure')
+        elif bad_occ:err(c,g,'composition','invalid_occupancy')
+        elif p['cell_mass']<=0:err(c,g,'composition','invalid_composition')
+        else:
+            comp=g.get('composition',{})
+            check(c,'composition.z',p['z'],comp.get('z'))
+            for k in ('cell_mass','formula_mass','volume','density'):check(c,'composition.'+k,p[k],comp.get(k),ct)
+            check(c,'formula.display',e['formula'],g.get('formula'))
+            check(c,'composition.species_ids',[x['id'] for x in e['species']],list(map(int,g['entries'])))
+            for s in e['species']:
+                a=g['entries'].get(str(s['id']),{})
+                for k in ('z','label'):check(c,f'species.{s["id"]}.{k}',s[k],a.get(k))
+                for k in ('cell_amount','formula_amount','mass','cell_mass'):check(c,f'species.{s["id"]}.{k}',s[k],a.get(k),ct)
+            for s in e['sites']:
+                a=g['sites'].get(str(s['id']),{})
+                check(c,f'site.{s["id"]}.multiplicity',round(s['multiplicity']),a.get('multiplicity'))
+                for k in ('occupancy','amount'):check(c,f'site.{s["id"]}.{k}',s[k],a.get(k),ct)
+            unsupported=any(s['z']>92 and s['cell_mass']>0 for s in e['species'])
+            lookup_error=any(s['lookup_error'] and s['cell_mass']>0 for s in e['species'])
+            if unsupported:err(c,g,'absorption','unsupported_absorption_data')
+            elif lookup_error:err(c,g,'absorption','attenuation_out_of_range')
+            else:
+                a=g.get('absorption',{})
+                for k in ('energy','mixture_mac','mu'):check(c,'absorption.'+k,p[k],a.get(k),at)
+                for s in e['species']:
+                    if s['cell_mass']==0:continue
+                    m=g['mac'].get(str(s['id']),{});b=e['lookups'][str(s['id'])]
+                    for k in ('mac','weighted_mac'):check(c,f'absorption.{s["id"]}.{k}',s[k],m.get(k),at)
+                    for k in ('energy_low','mac_low','energy_high','mac_high','log_fraction'):
+                        check(c,f'absorption.{s["id"]}.{k}',b[k],m.get(k),at)
+        invalid_lines=not e['slots'] or any(not math.isfinite(r['raw']) or r['raw']<0 for r in e['slots'])
+        maximum=e['selection']['all_maximum']
+        if not e['slots']:err(c,g,'lines','empty_line_set')
+        elif invalid_lines:err(c,g,'lines','invalid_raw_intensity')
+        elif maximum==0:err(c,g,'lines','all_zero_normalization')
+        else:
+            if 'composition' in g:
+                r=g.get('rir',{})
+                check(c,'rir.maximum',maximum,r.get('maximum'),it)
+                # This intermediate is independently derived from frozen REAL
+                # operands with the original two binary32 multiplies, not C++.
+                f32=lambda x:struct.unpack('f',struct.pack('f',x))[0]
+                denominator=f32(f32(p['volume']*p['volume'])*p['density'])
+                check(c,'rir.denominator',denominator,r.get('denominator'),at)
+                for k in ('rho_volume_ratio','intensity_ratio','rir'):check(c,'rir.'+k,p[k],r.get(k),at)
+            s=e['selection']
+            if s['retained_count']==0:err(c,g,'selection','empty_card_after_filtering')
+            else:
+                a=g.get('selection',{})
+                for k in ('input_count','prefilter_count','retained_count'):check(c,'selection.'+k,s[k],a.get(k))
+                for k in ('all_maximum','prefilter_maximum','threshold'):check(c,'selection.'+k,s[k],a.get(k),it)
+                native_ids={x['slot'] for x in e['card']}
+                group_by_member={i:grp for grp in e['groups'] for i in grp['members']}
+                for slot in e['slots']:
+                    sid=slot['id'];a=g['decisions'].get(str(sid),{});grp=group_by_member[sid]
+                    for k,want in [('slot',sid),('representative',grp['representative']),('within_cap',sid<=500),
+                                   ('is_representative',sid==grp['representative']),
+                                   ('meets_threshold',slot['raw']>=s['threshold']),('retained',sid in native_ids)]:
+                        check(c,f'slot.{sid}.{k}',want,a.get(k))
+                    check(c,f'slot.{sid}.raw',slot['raw'],a.get('raw'),it)
+                # Legacy's indexx has unstable permutations inside exact ties.
+                # Compare the ordered tie blocks and every row/member identity.
+                def blocks(rows,key):
+                    out=[]
+                    for row in rows:
+                        if not out or row['raw']!=out[-1][0]:out.append([row['raw'],[]])
+                        out[-1][1].append(row[key])
+                    return [sorted(ids) for raw,ids in out]
+                check(c,'selection.ranked_tie_blocks',blocks(e['card'],'slot'),blocks(g['card'],'id'))
+                rows={r['id']:r for r in g['card']}
+                for r in e['card']:
+                    sid=r['slot'];a=rows.get(sid,{})
+                    for k in ('raw','relative'):check(c,f'card.{sid}.{k}',r[k],a.get(k),it)
+                    check(c,f'card.{sid}.members',group_by_member[sid]['members'],a.get('members'))
+        case_results.append(dict(case=c['id'],name=c['name'],category=c['category'],raw_failures=len(failures)-start))
+    return dict(checks=checks,raw_failures=failures,error_checks=error_checks,cases=case_results)
+
+def main():
+    ap=argparse.ArgumentParser();ap.add_argument('--runner',type=Path,required=True)
+    ap.add_argument('--compiler',required=True);ap.add_argument('--output',type=Path,required=True);a=ap.parse_args()
+    archive_hash=hashlib.sha256(ARCHIVE.read_bytes()).hexdigest()
+    seal=json.loads((reference_path(ROOT/'docs/refactoring/phase-18/oracle-seal.json')).read_text())
+    if archive_hash!=seal['archive_sha256']:raise ValueError('Frozen oracle archive changed')
+    with zipfile.ZipFile(ARCHIVE) as z:
+        cases=json.loads(z.read('cases.json'));expected=json.loads(z.read('expected.json'));manifest=json.loads(z.read('manifest.json'))
+    inp=protocol(cases,expected)
+    p=subprocess.run([str(a.runner.resolve())],input=inp,text=True,capture_output=True,env=environment(),timeout=120)
+    a.output.parent.mkdir(parents=True,exist_ok=True)
+    a.output.with_suffix('.input.txt').write_text(inp);a.output.with_suffix('.stdout.txt').write_text(p.stdout)
+    a.output.with_suffix('.stderr.txt').write_text(p.stderr)
+    if p.returncode:raise RuntimeError('C++ replay failed: '+str(p.returncode)+' '+p.stderr[-1000:])
+    actual=parse(p.stdout)
+    if set(actual)!=set(expected):raise ValueError('Missing or extra C++ cases')
+    result=compare(cases,expected,actual,manifest['tolerances'])
+    runner_hash=hashlib.sha256(a.runner.read_bytes()).hexdigest()
+    accepted,unresolved,gate=apply(ROOT,runner_hash,a.compiler,result['raw_failures'])
+    result.update(compiler=a.compiler,runner_sha256=runner_hash,
+        archive_sha256=archive_hash,qualified=len(accepted),qualification_gate=gate,
+        unresolved=len(unresolved),success=not unresolved)
+    a.output.write_text(json.dumps(result,indent=2)+'\n')
+    a.output.with_suffix('.actual.json').write_text(json.dumps(actual,indent=2)+'\n')
+    print(json.dumps({k:v for k,v in result.items() if k not in ('raw_failures','error_checks','cases')}))
+    raise SystemExit(0 if result['success'] else 1)
+
+if __name__=='__main__':main()

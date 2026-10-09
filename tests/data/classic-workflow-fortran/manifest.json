@@ -1,0 +1,1833 @@
+{
+  "schema_version": 1,
+  "kind": "legacy_capture",
+  "cases": [
+    {
+      "id": "S01-stored-top-and-deleted",
+      "operation": "initial",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "S01-stored-top-and-deleted-input.json",
+        "sha256": "ef33b4bbee0c003864cacf12c735f72a76d5cde58e4e13d5f58fecd1ad1b011e"
+      },
+      "expected": {
+        "path": "S01-stored-top-and-deleted-expected.json",
+        "sha256": "3a33517945cd5c4024aa444a3b46317385edb47af12caa8fe194ac59059d649d"
+      },
+      "raw": {
+        "path": "S01-stored-top-and-deleted.txt",
+        "sha256": "bc2a7763ac1cd69c0e7a0de3b2f6ff37f3d92e50dc13959ac7bc6e7ceae7aaf6"
+      },
+      "environment": {
+        "source_commit": "870e63f5e8334fc9567e576de636476649c7396b",
+        "compiler": "GNU C++ / Fortran 13.1.0; Qt 6.8.3",
+        "flags": "product CMake Release C++; Fortran -O0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL binary32; ABI c_double binary64",
+        "thread_configuration": "serial, one process per fixture; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/classic_capture.py with qualpf_classic_capture",
+        "review_evidence": "Phase 10 source/raw-output review: retained Fortran score; old SearchUtil/associatePeaks plus isolated workflow adapters; no C++ score generated expected values."
+      },
+      "tolerances": {
+        "evaluated.0.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.3.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.3.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.3.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.3.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.2.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.2.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.2.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.2.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.3.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.3.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.3.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.3.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        }
+      }
+    },
+    {
+      "id": "S01-include-deleted",
+      "operation": "initial",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "S01-include-deleted-input.json",
+        "sha256": "1510d484275a81bfdc0f60facd8221edba898990415b74d37984f223c2970638"
+      },
+      "expected": {
+        "path": "S01-include-deleted-expected.json",
+        "sha256": "d896884bb2b7c0591db0d801c0958b223d2578dcce06f1c2ec37229739ee3a11"
+      },
+      "raw": {
+        "path": "S01-include-deleted.txt",
+        "sha256": "05829a325bd17d533983a1c3139531ce6fc94f10f297bae3f7f9a263e8ff3b8c"
+      },
+      "environment": {
+        "source_commit": "870e63f5e8334fc9567e576de636476649c7396b",
+        "compiler": "GNU C++ / Fortran 13.1.0; Qt 6.8.3",
+        "flags": "product CMake Release C++; Fortran -O0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL binary32; ABI c_double binary64",
+        "thread_configuration": "serial, one process per fixture; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/classic_capture.py with qualpf_classic_capture",
+        "review_evidence": "Phase 10 source/raw-output review: retained Fortran score; old SearchUtil/associatePeaks plus isolated workflow adapters; no C++ score generated expected values."
+      },
+      "tolerances": {
+        "evaluated.0.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.3.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.3.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.3.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.3.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.4.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.4.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.4.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.4.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.2.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.2.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.2.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.2.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.3.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.3.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.3.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.3.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.4.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.4.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.4.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.4.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        }
+      }
+    },
+    {
+      "id": "S01-variable-tolerance",
+      "operation": "initial",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "S01-variable-tolerance-input.json",
+        "sha256": "45a669c0ce3365eef4530bcd9c316d85a727ff7bf01a5805f143845dad63a5c1"
+      },
+      "expected": {
+        "path": "S01-variable-tolerance-expected.json",
+        "sha256": "56830c6bda08c49e510d430876ac1f709e1d11297df775af9c47d5ecb89a7442"
+      },
+      "raw": {
+        "path": "S01-variable-tolerance.txt",
+        "sha256": "dd27b70ff974a51d97dc0ccccd82e39562345d6567b858ab3158a773741d070b"
+      },
+      "environment": {
+        "source_commit": "870e63f5e8334fc9567e576de636476649c7396b",
+        "compiler": "GNU C++ / Fortran 13.1.0; Qt 6.8.3",
+        "flags": "product CMake Release C++; Fortran -O0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL binary32; ABI c_double binary64",
+        "thread_configuration": "serial, one process per fixture; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/classic_capture.py with qualpf_classic_capture",
+        "review_evidence": "Phase 10 source/raw-output review: retained Fortran score; old SearchUtil/associatePeaks plus isolated workflow adapters; no C++ score generated expected values."
+      },
+      "tolerances": {
+        "evaluated.0.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        }
+      }
+    },
+    {
+      "id": "S01-duplicate-d",
+      "operation": "initial",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "S01-duplicate-d-input.json",
+        "sha256": "b2d1f1da9daba1ecfa793caf8e8cac0a92261e6f8b29735d3ea00b32b484d579"
+      },
+      "expected": {
+        "path": "S01-duplicate-d-expected.json",
+        "sha256": "ead5ab5421b9922d26ccca8859ae23ea9e8ccbcd8adfad82f8c8dc41feb7c52c"
+      },
+      "raw": {
+        "path": "S01-duplicate-d.txt",
+        "sha256": "c5373b13d26be6e5c3f9c8f422ec7dc584a2aeb376e9bd51d3b2d023a0cf5f9b"
+      },
+      "environment": {
+        "source_commit": "870e63f5e8334fc9567e576de636476649c7396b",
+        "compiler": "GNU C++ / Fortran 13.1.0; Qt 6.8.3",
+        "flags": "product CMake Release C++; Fortran -O0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL binary32; ABI c_double binary64",
+        "thread_configuration": "serial, one process per fixture; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/classic_capture.py with qualpf_classic_capture",
+        "review_evidence": "Phase 10 source/raw-output review: retained Fortran score; old SearchUtil/associatePeaks plus isolated workflow adapters; no C++ score generated expected values."
+      },
+      "tolerances": {
+        "evaluated.0.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        }
+      }
+    },
+    {
+      "id": "S04-tied-top-two",
+      "operation": "initial",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "S04-tied-top-two-input.json",
+        "sha256": "40374f2d8903bb8464a5e8869dadc8f2805ac28839547c8ca25e116ede6bf0a5"
+      },
+      "expected": {
+        "path": "S04-tied-top-two-expected.json",
+        "sha256": "93595ae85dfc41cb11f4d44574a4b2199175dc77c8a6ad9c39df96c75bc71fc2"
+      },
+      "raw": {
+        "path": "S04-tied-top-two.txt",
+        "sha256": "9e35de46b99823e00cdccede8e4c10e6c22bbba456dc18d7d456b7eecdb50c9d"
+      },
+      "environment": {
+        "source_commit": "870e63f5e8334fc9567e576de636476649c7396b",
+        "compiler": "GNU C++ / Fortran 13.1.0; Qt 6.8.3",
+        "flags": "product CMake Release C++; Fortran -O0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL binary32; ABI c_double binary64",
+        "thread_configuration": "serial, one process per fixture; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/classic_capture.py with qualpf_classic_capture",
+        "review_evidence": "Phase 10 source/raw-output review: retained Fortran score; old SearchUtil/associatePeaks plus isolated workflow adapters; no C++ score generated expected values."
+      },
+      "tolerances": {
+        "evaluated.0.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        }
+      }
+    },
+    {
+      "id": "S04-initial-strict-threshold",
+      "operation": "initial",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "S04-initial-strict-threshold-input.json",
+        "sha256": "52a2aa5e5c75030633ca639d7d5421d33d0b7a65ed5c70aa039d444655489116"
+      },
+      "expected": {
+        "path": "S04-initial-strict-threshold-expected.json",
+        "sha256": "dfb1cb7b482f983f1bebde1aea3c83f496f7e1405966c59a5f3111a9439f3670"
+      },
+      "raw": {
+        "path": "S04-initial-strict-threshold.txt",
+        "sha256": "307c696b87f88c56bbd6ec12c0222814216126e14d7cf51f05c014f6d50a5ae0"
+      },
+      "environment": {
+        "source_commit": "870e63f5e8334fc9567e576de636476649c7396b",
+        "compiler": "GNU C++ / Fortran 13.1.0; Qt 6.8.3",
+        "flags": "product CMake Release C++; Fortran -O0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL binary32; ABI c_double binary64",
+        "thread_configuration": "serial, one process per fixture; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/classic_capture.py with qualpf_classic_capture",
+        "review_evidence": "Phase 10 source/raw-output review: retained Fortran score; old SearchUtil/associatePeaks plus isolated workflow adapters; no C++ score generated expected values."
+      },
+      "tolerances": {
+        "evaluated.0.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        }
+      }
+    },
+    {
+      "id": "S04-rescore-inclusive-and-old-scale",
+      "operation": "rescore",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "S04-rescore-inclusive-and-old-scale-input.json",
+        "sha256": "fe7d067447d038ebcd2301aa9e467583f4cadb60f18fdfa31e84ea87e5942200"
+      },
+      "expected": {
+        "path": "S04-rescore-inclusive-and-old-scale-expected.json",
+        "sha256": "2dd1ec3519551f19229bfa0abb99113dd21228d7c87da5969283ec745df6175c"
+      },
+      "raw": {
+        "path": "S04-rescore-inclusive-and-old-scale.txt",
+        "sha256": "71f7a49ef96e81ea1a47d1291a5a0b70109f82fe68ef8bc1769a70ae572df7f9"
+      },
+      "environment": {
+        "source_commit": "870e63f5e8334fc9567e576de636476649c7396b",
+        "compiler": "GNU C++ / Fortran 13.1.0; Qt 6.8.3",
+        "flags": "product CMake Release C++; Fortran -O0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL binary32; ABI c_double binary64",
+        "thread_configuration": "serial, one process per fixture; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/classic_capture.py with qualpf_classic_capture",
+        "review_evidence": "Phase 10 source/raw-output review: retained Fortran score; old SearchUtil/associatePeaks plus isolated workflow adapters; no C++ score generated expected values."
+      },
+      "tolerances": {
+        "evaluated.0.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.2.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.2.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.2.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.2.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        }
+      }
+    },
+    {
+      "id": "S04-rescore-order",
+      "operation": "rescore",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "S04-rescore-order-input.json",
+        "sha256": "124845d9e345f78fccd92ac5ace458f697f59abcf4cf605eac9c784cbdc0cdf7"
+      },
+      "expected": {
+        "path": "S04-rescore-order-expected.json",
+        "sha256": "0ecfa50bade45193b2095ff09ecbb2bfa382bceebb76af90037e1b2ef4015961"
+      },
+      "raw": {
+        "path": "S04-rescore-order.txt",
+        "sha256": "a6ebd029e566490ea0d8d282ecc8b5e91ba52658ba7fd709e084593c9dc68cdf"
+      },
+      "environment": {
+        "source_commit": "870e63f5e8334fc9567e576de636476649c7396b",
+        "compiler": "GNU C++ / Fortran 13.1.0; Qt 6.8.3",
+        "flags": "product CMake Release C++; Fortran -O0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL binary32; ABI c_double binary64",
+        "thread_configuration": "serial, one process per fixture; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/classic_capture.py with qualpf_classic_capture",
+        "review_evidence": "Phase 10 source/raw-output review: retained Fortran score; old SearchUtil/associatePeaks plus isolated workflow adapters; no C++ score generated expected values."
+      },
+      "tolerances": {
+        "evaluated.0.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.0.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "retained.1.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        }
+      }
+    },
+    {
+      "id": "S04-zero-limit",
+      "operation": "rescore",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "S04-zero-limit-input.json",
+        "sha256": "21db0b0f3b1a5ee7e4e0995d7c186bb73561a6f235d6bf78f81b7d2b6258b489"
+      },
+      "expected": {
+        "path": "S04-zero-limit-expected.json",
+        "sha256": "47c6ce7f0ca0165be1516ab69439980b2512e65c230ce67cf8d5c541efd7516d"
+      },
+      "raw": {
+        "path": "S04-zero-limit.txt",
+        "sha256": "ecfd761f645eccf853378c85efb1b3f26ebcfb23703c714d569b1dd3f5fd16be"
+      },
+      "environment": {
+        "source_commit": "870e63f5e8334fc9567e576de636476649c7396b",
+        "compiler": "GNU C++ / Fortran 13.1.0; Qt 6.8.3",
+        "flags": "product CMake Release C++; Fortran -O0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL binary32; ABI c_double binary64",
+        "thread_configuration": "serial, one process per fixture; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/classic_capture.py with qualpf_classic_capture",
+        "review_evidence": "Phase 10 source/raw-output review: retained Fortran score; old SearchUtil/associatePeaks plus isolated workflow adapters; no C++ score generated expected values."
+      },
+      "tolerances": {
+        "evaluated.0.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.0.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.1.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "evaluated.2.total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        }
+      }
+    },
+    {
+      "id": "S05-first-phase",
+      "operation": "residual",
+      "status": "reviewed",
+      "reference_origin": "legacy_cpp_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "S05-first-phase-input.json",
+        "sha256": "12004c4056f2e75b7e56a930e99b126dbe723effc1e09a41047082d9d8c57e08"
+      },
+      "expected": {
+        "path": "S05-first-phase-expected.json",
+        "sha256": "0706db9ca1c8c8dd7ffaffbcc059fc4ed6dc9a47d6758dae1f08bcd2566f28cf"
+      },
+      "raw": {
+        "path": "S05-first-phase.txt",
+        "sha256": "bb0f934e7f993ff52b1cabdc5552d8b7d7704ce524c809dc5137f28961add5f1"
+      },
+      "environment": {
+        "source_commit": "870e63f5e8334fc9567e576de636476649c7396b",
+        "compiler": "GNU C++ / Fortran 13.1.0; Qt 6.8.3",
+        "flags": "product CMake Release C++; Fortran -O0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL binary32; ABI c_double binary64",
+        "thread_configuration": "serial, one process per fixture; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/classic_capture.py with qualpf_classic_capture",
+        "review_evidence": "Phase 10 source/raw-output review: retained Fortran score; old SearchUtil/associatePeaks plus isolated workflow adapters; no C++ score generated expected values."
+      },
+      "tolerances": {
+        "peak.1.d_spacing": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.1.delta_d": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.1.fwhm": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.1.integrated_intensity": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.1.intensity": {
+          "absolute": 1e-12,
+          "relative": 1e-12,
+          "unit": "intensity/quality",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.1.original_intensity": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.1.two_theta": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.2.d_spacing": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.2.delta_d": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.2.fwhm": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.2.integrated_intensity": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.2.intensity": {
+          "absolute": 1e-12,
+          "relative": 1e-12,
+          "unit": "intensity/quality",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.2.original_intensity": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.2.two_theta": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.3.d_spacing": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.3.delta_d": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.3.fwhm": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.3.integrated_intensity": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.3.intensity": {
+          "absolute": 1e-12,
+          "relative": 1e-12,
+          "unit": "intensity/quality",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.3.original_intensity": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.3.two_theta": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "quality": {
+          "absolute": 1e-12,
+          "relative": 1e-12,
+          "unit": "intensity/quality",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        }
+      }
+    },
+    {
+      "id": "S05-second-phase-original-noise",
+      "operation": "residual",
+      "status": "reviewed",
+      "reference_origin": "legacy_cpp_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "S05-second-phase-original-noise-input.json",
+        "sha256": "0907d75f5d77ef3e3d87639850deb5a3493fe06a15a2c33621f680c6a64c80d5"
+      },
+      "expected": {
+        "path": "S05-second-phase-original-noise-expected.json",
+        "sha256": "9b2f0d2d7280db16f9e199df3ffd74ba9dcfc24e82a7f08ad2e029010127284d"
+      },
+      "raw": {
+        "path": "S05-second-phase-original-noise.txt",
+        "sha256": "97e2b5f405bd3786d5db3adf6ce3c4faf8b4da65ebbd858c0a961ce42ad6b084"
+      },
+      "environment": {
+        "source_commit": "870e63f5e8334fc9567e576de636476649c7396b",
+        "compiler": "GNU C++ / Fortran 13.1.0; Qt 6.8.3",
+        "flags": "product CMake Release C++; Fortran -O0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL binary32; ABI c_double binary64",
+        "thread_configuration": "serial, one process per fixture; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/classic_capture.py with qualpf_classic_capture",
+        "review_evidence": "Phase 10 source/raw-output review: retained Fortran score; old SearchUtil/associatePeaks plus isolated workflow adapters; no C++ score generated expected values."
+      },
+      "tolerances": {
+        "quality": {
+          "absolute": 1e-12,
+          "relative": 1e-12,
+          "unit": "intensity/quality",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        }
+      }
+    },
+    {
+      "id": "S05-conflicts-inclusive-window",
+      "operation": "residual",
+      "status": "reviewed",
+      "reference_origin": "legacy_cpp_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "S05-conflicts-inclusive-window-input.json",
+        "sha256": "c08858c744c2b26ed23915326d6aaab239d2a19ae81d0bfe8805c79cf702ae51"
+      },
+      "expected": {
+        "path": "S05-conflicts-inclusive-window-expected.json",
+        "sha256": "b38ce9fd13dfdc69e278263eb18fab934d5861058b36ca0c1683f789d295088b"
+      },
+      "raw": {
+        "path": "S05-conflicts-inclusive-window.txt",
+        "sha256": "859337fc52ba0a94662e5881412863a4aae6fd6e6f859b2eb1b2f2cec430009d"
+      },
+      "environment": {
+        "source_commit": "870e63f5e8334fc9567e576de636476649c7396b",
+        "compiler": "GNU C++ / Fortran 13.1.0; Qt 6.8.3",
+        "flags": "product CMake Release C++; Fortran -O0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL binary32; ABI c_double binary64",
+        "thread_configuration": "serial, one process per fixture; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/classic_capture.py with qualpf_classic_capture",
+        "review_evidence": "Phase 10 source/raw-output review: retained Fortran score; old SearchUtil/associatePeaks plus isolated workflow adapters; no C++ score generated expected values."
+      },
+      "tolerances": {
+        "peak.1.intensity": {
+          "absolute": 1e-12,
+          "relative": 1e-12,
+          "unit": "intensity/quality",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.1.original_intensity": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.1.two_theta": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.2.intensity": {
+          "absolute": 1e-12,
+          "relative": 1e-12,
+          "unit": "intensity/quality",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.2.original_intensity": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.2.two_theta": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.3.intensity": {
+          "absolute": 1e-12,
+          "relative": 1e-12,
+          "unit": "intensity/quality",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.3.original_intensity": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.3.two_theta": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "quality": {
+          "absolute": 1e-12,
+          "relative": 1e-12,
+          "unit": "intensity/quality",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        }
+      }
+    },
+    {
+      "id": "S05-zero-original",
+      "operation": "residual",
+      "status": "reviewed",
+      "reference_origin": "legacy_cpp_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "S05-zero-original-input.json",
+        "sha256": "b94565497c875e3ef7a8ddc9f8fd3ab6ec55315f29608c98015986f1d450968d"
+      },
+      "expected": {
+        "path": "S05-zero-original-expected.json",
+        "sha256": "40de99e09cc161523bfa5f0b581745683eb1675d766ebb4d1d78f142644ae79d"
+      },
+      "raw": {
+        "path": "S05-zero-original.txt",
+        "sha256": "f299b0853e412c39a70202eb5cbbb5c00319b40297088f9aeb22f21984dd242a"
+      },
+      "environment": {
+        "source_commit": "870e63f5e8334fc9567e576de636476649c7396b",
+        "compiler": "GNU C++ / Fortran 13.1.0; Qt 6.8.3",
+        "flags": "product CMake Release C++; Fortran -O0",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL binary32; ABI c_double binary64",
+        "thread_configuration": "serial, one process per fixture; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/classic_capture.py with qualpf_classic_capture",
+        "review_evidence": "Phase 10 source/raw-output review: retained Fortran score; old SearchUtil/associatePeaks plus isolated workflow adapters; no C++ score generated expected values."
+      },
+      "tolerances": {
+        "peak.1.intensity": {
+          "absolute": 1e-12,
+          "relative": 1e-12,
+          "unit": "intensity/quality",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.1.original_intensity": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.1.two_theta": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.2.intensity": {
+          "absolute": 1e-12,
+          "relative": 1e-12,
+          "unit": "intensity/quality",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.2.original_intensity": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.2.two_theta": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.3.intensity": {
+          "absolute": 1e-12,
+          "relative": 1e-12,
+          "unit": "intensity/quality",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.3.original_intensity": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "peak.3.two_theta": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "preserved metadata",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        },
+        "quality": {
+          "absolute": 1e-12,
+          "relative": 1e-12,
+          "unit": "intensity/quality",
+          "approval_evidence": "Phase 6 frozen FOM bounds; Phase 5 residual float64 1e-12; unchanged metadata exact"
+        }
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "path": "provenance.json",
+      "sha256": "e10d2f082a14e336978f36d293743b94e0132b81a4c2f199d9bd520c18a2a891"
+    },
+    {
+      "path": "S01-stored-top-and-deleted.txt",
+      "sha256": "bc2a7763ac1cd69c0e7a0de3b2f6ff37f3d92e50dc13959ac7bc6e7ceae7aaf6"
+    },
+    {
+      "path": "S01-include-deleted.txt",
+      "sha256": "05829a325bd17d533983a1c3139531ce6fc94f10f297bae3f7f9a263e8ff3b8c"
+    },
+    {
+      "path": "S01-variable-tolerance.txt",
+      "sha256": "dd27b70ff974a51d97dc0ccccd82e39562345d6567b858ab3158a773741d070b"
+    },
+    {
+      "path": "S01-duplicate-d.txt",
+      "sha256": "c5373b13d26be6e5c3f9c8f422ec7dc584a2aeb376e9bd51d3b2d023a0cf5f9b"
+    },
+    {
+      "path": "S04-tied-top-two.txt",
+      "sha256": "9e35de46b99823e00cdccede8e4c10e6c22bbba456dc18d7d456b7eecdb50c9d"
+    },
+    {
+      "path": "S04-initial-strict-threshold.txt",
+      "sha256": "307c696b87f88c56bbd6ec12c0222814216126e14d7cf51f05c014f6d50a5ae0"
+    },
+    {
+      "path": "S04-rescore-inclusive-and-old-scale.txt",
+      "sha256": "71f7a49ef96e81ea1a47d1291a5a0b70109f82fe68ef8bc1769a70ae572df7f9"
+    },
+    {
+      "path": "S04-rescore-order.txt",
+      "sha256": "a6ebd029e566490ea0d8d282ecc8b5e91ba52658ba7fd709e084593c9dc68cdf"
+    },
+    {
+      "path": "S04-zero-limit.txt",
+      "sha256": "ecfd761f645eccf853378c85efb1b3f26ebcfb23703c714d569b1dd3f5fd16be"
+    },
+    {
+      "path": "S05-first-phase.txt",
+      "sha256": "bb0f934e7f993ff52b1cabdc5552d8b7d7704ce524c809dc5137f28961add5f1"
+    },
+    {
+      "path": "S05-second-phase-original-noise.txt",
+      "sha256": "97e2b5f405bd3786d5db3adf6ce3c4faf8b4da65ebbd858c0a961ce42ad6b084"
+    },
+    {
+      "path": "S05-conflicts-inclusive-window.txt",
+      "sha256": "859337fc52ba0a94662e5881412863a4aae6fd6e6f859b2eb1b2f2cec430009d"
+    },
+    {
+      "path": "S05-zero-original.txt",
+      "sha256": "f299b0853e412c39a70202eb5cbbb5c00319b40297088f9aeb22f21984dd242a"
+    },
+    {
+      "path": "capture-script.py",
+      "sha256": "fd6040e450681cd703e0c4cf923bfea0447491f546c04f9035ac3eea73440a0a"
+    }
+  ]
+}

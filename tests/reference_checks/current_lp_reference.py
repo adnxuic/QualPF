@@ -1,0 +1,130 @@
+from reference_paths import reference_path, provenance_path
+"""Exact LP successor; sealed V1/V2 authorities and raw outputs stay intact."""
+import argparse,json,struct,subprocess,sys,tempfile,zipfile
+from copy import deepcopy
+from unittest.mock import patch
+import current_phase_reference as phase
+from current_phase_reference import *
+from powder_capture import parse as parse_powder
+
+LP_SUCCESSOR=reference_path(ROOT/'tests/data/current-lp-provider.json')
+LP_SOURCE='src/core/crystallography/powder_intensity.cpp'
+LP_ARCHIVE=reference_path(ROOT/'archive/legacy/phase36d-test-reference/powder_intensity.cpp.txt')
+LP_PROPOSAL='091a1baf70b89232075c82c5d053b468edae04a499926517b4812ca528d4a1a6'
+
+def verify_lp_successor():
+    successor=read(LP_SUCCESSOR)
+    require(successor['schema']=='qualpf.current_lp_provider.v1' and
+            successor['scope']=='36D-WINDOWS-LP-FORMED-ANGLE-CONTRACT' and
+            successor['expected_from_CPP'] is False and successor['new_tolerance'] is False,
+            'LP successor scope changed')
+    decision=successor['decision'];path=reference_path(ROOT/decision['path'])
+    require(sha_file(path)==decision['sha256'],'LP decision changed')
+    authority=read(path)
+    require(authority['status']=='AI_APPROVED_WITH_BOUNDED_CONTRACT' and
+            authority['classification']=='AI_APPROVED_NUMERICAL_CORRECTION' and
+            authority['proposal_SHA256']==LP_PROPOSAL and authority['human_approved'] is False and
+            authority['confidence']=='EVIDENCE_STRONG','bounded LP authority missing')
+    require(successor['current_providers'].keys()=={LP_SOURCE},'LP provider closure incomplete')
+    require(sha_file(reference_path(ROOT/LP_SOURCE))==successor['current_providers'][LP_SOURCE],
+            'approved LP source changed')
+    require(sha_file(LP_ARCHIVE)==successor['historical_sha256'] and
+            successor['historical_sha256']==read(POLICY)['provider_hashes'].get(LP_SOURCE),
+            'sealed original LP source changed')
+    for binding in (successor['value_successor'],successor['normal_scalar_reference']):
+        require(sha_file(reference_path(ROOT/binding['path']))==binding['sha256'],'LP independent reference changed')
+    fields=read(reference_path(ROOT/successor['value_successor']['path']))
+    require(fields['schema']=='qualpf.lp_exact_successor_fields.v1' and
+            fields['scope']==successor['scope'] and fields['expected_from_CPP'] is False and
+            fields['new_tolerance'] is False and len(fields['records'])==2325,
+            'LP field authority incomplete')
+    keys={(r['compiler'],r['field']) for r in fields['records']}
+    require(len(keys)==2325 and all(r['domain']=='powder' and r['compiler'] in ('GNU','MSVC')
+            for r in fields['records']),'LP field authority duplicate or foreign')
+    return successor,fields['records']
+
+def verify_bundle(domain):
+    verify_lp_successor()
+    # Delegate unchanged assertions against the sealed historical LP source.
+    # The current source was separately verified above; no hash of live source
+    # is falsified and no historical metadata or file is rewritten.
+    def sealed_historical_sha(path):
+        return sha_file(LP_ARCHIVE if Path(path)==reference_path(ROOT/LP_SOURCE) else path)
+    with patch.object(phase,'sha_file',side_effect=sealed_historical_sha), \
+         patch.object(phase,'read',side_effect=read):
+        return phase.verify_bundle(domain)
+
+def point(tree,path):
+    keys=path.split('.')[1:]
+    require(keys and all(keys),'invalid LP field path')
+    for key in keys[:-1]:tree=tree[int(key)] if isinstance(tree,list) else tree[key]
+    key=int(keys[-1]) if isinstance(tree,list) else keys[-1]
+    return tree,key
+
+def project_powder_output(actual,compiler,original):
+    _,fields=verify_lp_successor();projected=deepcopy(actual);mapped=[]
+    for record in fields:
+        if record['compiler']!=compiler:continue
+        target,key=point(projected,record['field']);old,old_key=point(original,record['field'])
+        require(struct.pack('>d',target[key]).hex()==record['expected_bits'] and
+                struct.pack('>d',old[old_key]).hex()==record['old_bits'],
+                'LP value differs from exact independent successor: '+record['field'])
+        target[key]=old[old_key];mapped.append(record['field'])
+    require(exact_json(projected,original),'unapproved complete Powder output changed')
+    return projected,mapped
+
+def verify_complete_powder(compiler,raw_path):
+    prefix='mingw' if compiler=='GNU' else 'msvc'
+    archive=reference_path(ROOT/'docs/refactoring/phase-17/test-results/cpp-replay-transcripts.zip')
+    with zipfile.ZipFile(archive) as z:old=z.read(prefix+'-powder-differential.stdout.txt').decode()
+    text=raw_path.with_suffix('.stdout.txt').read_text()
+    _,mapped=project_powder_output(parse_powder(text),compiler,parse_powder(old))
+    require([s.split() for s in text.splitlines() if s.startswith('ERROR ')]==
+            [s.split() for s in old.splitlines() if s.startswith('ERROR ')],
+            'accepted Powder error contract changed')
+    return mapped
+
+def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--domain',choices=PHASE,required=True)
+    parser.add_argument('--runner',type=Path,required=True)
+    parser.add_argument('--compiler',choices=('GNU','MSVC'),required=True)
+    parser.add_argument('--output',type=Path,required=True)
+    args=parser.parse_args();records,historical=verify_bundle(args.domain)
+    args.output.parent.mkdir(parents=True,exist_ok=True)
+    area=Path(tempfile.mkdtemp(prefix=args.output.stem+'-lp-',dir=args.output.parent))
+    raw_path=area/'historical-gate.json';runner=sha_file(args.runner)
+    command=[sys.executable,str(reference_path(ROOT/f'tests/reference_checks/{args.domain}_differential.py')),
+             '--runner',str(args.runner),'--compiler',args.compiler,'--output',str(raw_path)]
+    result=subprocess.run(command,capture_output=True,text=True,timeout=300)
+    raw_path.with_suffix('.driver.stdout').write_text(result.stdout)
+    raw_path.with_suffix('.driver.stderr').write_text(result.stderr)
+    require(result.returncode in (0,1) and raw_path.exists() and 'Traceback' not in result.stderr,
+            'original comparator did not complete')
+    raw=read(raw_path);require(raw['runner_sha256']==runner==sha_file(args.runner),'tested runner changed')
+    reasons=[];mapped=[];projected=raw
+    try:projected,mapped=restore_superseded_field_for_original_checks(raw,args.domain,args.compiler,records)
+    except ValueError as failure:reasons.append(str(failure))
+    try:validate_numeric_scope(projected['raw_failures'],records,args.compiler)
+    except ValueError as failure:reasons.append(str(failure))
+    try:
+        if args.domain=='powder':lp_mapped=verify_complete_powder(args.compiler,raw_path)
+        else:
+            lp_mapped=[]
+            verify_original_cpp_output(args.domain,args.compiler,projected,raw_path)
+    except (ValueError,KeyError,IndexError,TypeError) as failure:
+        lp_mapped=[];reasons.append(str(failure))
+    report=dict(status='FAIL_UNACCEPTED_CURRENT_REFERENCE' if reasons else 'PASS_CURRENT_NUMERICAL_REFERENCE',
+        domain=args.domain,compiler=args.compiler,validation='FRESH_VALIDATION',
+        current_runner_sha256=runner,historical_comparator_report=str(raw_path),
+        historical_comparator_exit_code=result.returncode,historical_comparator_report_sha256=sha_file(raw_path),
+        historical_source_identities=historical,historical_failures_preserved=True,
+        approved_original_named_differences=len(records),independently_proved_phase_successor_fields=mapped,
+        independently_proved_LP_successor_fields=len(lp_mapped),original_CPP_output_verified=not reasons,
+        complete_original_value_assertions_retained=True,old_human_approval_not_extended=True,
+        unaccepted_complete_output_reasons=reasons,new_tolerance=False,native_execution_dependency=False,
+        current_LP_provider_sha256=sha_file(LP_SUCCESSOR))
+    args.output.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))
+    raise SystemExit(1 if reasons else 0)
+
+if __name__=='__main__':main()

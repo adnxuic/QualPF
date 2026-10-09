@@ -1,0 +1,25 @@
+{
+  "revision": "s6-capture-tolerances-1",
+  "frozen_before_first_differential_run": true,
+  "scope": "GNU Fortran 13.2 default REAL=binary32, strict serial FOM capture; not a product acceptance approval",
+  "comparison": "abs(actual-reference) <= absolute + relative*abs(reference)",
+  "rules": {
+    "total": [0.0000005, 0.000002, "dimensionless"],
+    "position": [0.0000005, 0.000002, "dimensionless"],
+    "intensity": [0.0000005, 0.000002, "dimensionless"],
+    "scale": [0.0000001, 0.000002, "dimensionless"],
+    "merged_intensities": [0.000001, 0.000002, "input intensity"],
+    "scaled_intensities": [0.000001, 0.000002, "input intensity"],
+    "position_difference_sum": [0.0000001, 0.000002, "degree"],
+    "associated_sample_sum": [0.000001, 0.000002, "input intensity"],
+    "associated_card_sum": [0.000001, 0.000002, "input intensity"],
+    "total_sample_sum": [0.000001, 0.000002, "input intensity"],
+    "total_card_sum": [0.000001, 0.000002, "input intensity"],
+    "database_fraction": [0.0000005, 0.000002, "dimensionless"],
+    "sample_fraction": [0.0000005, 0.000002, "dimensionless"],
+    "sqrt_database": [0.0000005, 0.000002, "dimensionless"],
+    "sqrt_sample": [0.0000005, 0.000002, "dimensionless"]
+  },
+  "discrete": "Exact field sets, lengths, IDs, association indices, counts, disposition, candidate set/order and threshold decisions; no fuzzy ties",
+  "rationale": "A small binary32 rounding allowance for this bounded serial corpus, stricter than S1 proposed FOM targets. It does not cover arbitrary scale/size, undefined results, optimized reduction orders or other compilers. Failure requires investigation, never automatic tolerance expansion."
+}

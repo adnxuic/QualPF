@@ -1,0 +1,41 @@
+from reference_paths import reference_path
+"""Feed native-corpus structures into independent end-to-end Core properties."""
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import subprocess
+import zipfile
+ROOT=Path(__file__).resolve().parents[2]
+
+def main():
+    ap=argparse.ArgumentParser();ap.add_argument('--runner',type=Path,required=True)
+    ap.add_argument('--output',type=Path,required=True);a=ap.parse_args()
+    manifest=json.loads((reference_path(ROOT/'tests/data/powder-intensity-reference-manifest.json')).read_text())
+    archive=reference_path(ROOT/'tests/data'/manifest['archive'])
+    assert hashlib.sha256(archive.read_bytes()).hexdigest()==manifest['archive_sha256']
+    with zipfile.ZipFile(archive) as z: cases=json.loads(z.read('cases.json'))
+    rows=[]
+    def row(values): rows.append(' '.join(map(str,values)))
+    for c in cases:
+        if c['mode']!='STRUCT': continue
+        row([c['id'],c['group'],c['setting'],c['radiation'],c['sync'],c['anomalous'],len(c['sites']),
+             c['wavelength'],c['low'],c['high'],*c['cell']])
+        for s in c['sites']:
+            # Frozen isotropic/aniso selector belongs to upstream Fc math.
+            # Core sites retain the specified physical ADP here.
+            row([s['species'],*s['xyz'],s['occupancy'],s['adp'],*s['tensor']])
+    a.output.parent.mkdir(parents=True,exist_ok=True)
+    inp=a.output.with_suffix('.input.txt');inp.write_text('\n'.join(rows)+'\n')
+    env=os.environ.copy()
+    p=subprocess.run([str(a.runner.resolve()),str(a.output.resolve()),str(inp.resolve()),
+        str(reference_path(ROOT/'tests/data/lp-formed-angle-reference.txt'))],env=env,capture_output=True,text=True,timeout=1800)
+    a.output.with_suffix('.stdout.txt').write_text(p.stdout);a.output.with_suffix('.stderr.txt').write_text(p.stderr)
+    print(p.stdout,p.stderr)
+    if a.output.exists():
+        report=json.loads(a.output.read_text());report['runner_sha256']=hashlib.sha256(a.runner.read_bytes()).hexdigest()
+        a.output.write_text(json.dumps(report,indent=2)+'\n')
+        a.output.with_name(a.output.stem+'-errors.json').write_text(json.dumps(report['errors'],indent=2)+'\n')
+    raise SystemExit(p.returncode)
+if __name__=='__main__': main()

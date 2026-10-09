@@ -1,0 +1,25 @@
+{
+  "environment": {
+    "source_commit": "870e63f5e8334fc9567e576de636476649c7396b",
+    "compiler": "GNU C++ / Fortran 13.1.0; Qt 6.8.3",
+    "flags": "product CMake Release C++; Fortran -O0",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "real_kind": "default REAL binary32; ABI c_double binary64",
+    "thread_configuration": "serial, one process per fixture; no OpenMP/MKL",
+    "capture_procedure": "tests/compatibility/classic_capture.py with qualpf_classic_capture",
+    "review_evidence": "PENDING source/output review"
+  },
+  "runner_sha256": "a521a423e94606a610a52a1cec477a690bde59d1540e0f709b3539f550bbe56f",
+  "source_sha256": {
+    "legacy/fortran/peaks_search/fom.f90": "e2d32e77c9b060c7905f94f060a2207537790c488fa63426a0a70ca88a28f6e8",
+    "legacy/fortran/numerics_support/arrayutil.f90": "ba29cbbe4124699a166f13010139d10e7506d10f5e38fdd8d6c8f4e49de5f9b4",
+    "src/application/search/searchutil.cpp": "11689f7664a027b5b18bd6afc5794b1993ac92dff9e499e09527eb9112c7d1d3",
+    "src/application/search/peakassoc.cpp": "0d7168e0243159425c634b3628d954a71bc9094e923a691f6588fc832b546a78",
+    "tests/compatibility/classic_legacy_state.f90": "de8c049f2caad2bd3c56a701e05e7b74ee33f4da20977eb32e33144e828663d7",
+    "tests/compatibility/classic_legacy_oracle.h": "1f7045f0ac6742707637384575579101557a4d23220f6a3be2e12907054f9452",
+    "tests/compatibility/classic_replay.cpp": "ba5eaba60a7722cc04e2fbd085b4ff376d948470ca567fba7ee4c7bf8d03fa38",
+    "tests/compatibility/classic_capture.py": "fd6040e450681cd703e0c4cf923bfea0447491f546c04f9035ac3eea73440a0a"
+  },
+  "legacy_workflow_commit": "60435a0",
+  "limits": "Adapter extracts old batch threshold/filter/order and MainWindow subtraction; actual retained Fortran score and retained SearchUtil/associatePeaks. std::sort tied order is only a captured toolchain observation; portable stable ties remain a QualPF contract. No SQL candidate enumeration oracle."
+}

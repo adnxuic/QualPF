@@ -1,0 +1,596 @@
+{
+  "checks": 121200,
+  "counts": {
+    "normal": 66,
+    "all-zero-observation": 1,
+    "normalization-floor-observation": 1,
+    "invalid-observation": 7,
+    "empty-observation": 1
+  },
+  "raw_failures": [
+    {
+      "case": 67,
+      "field": "line.1.relative",
+      "legacy": 5.5425610829752493e-17,
+      "cpp": 341.46507817532273
+    },
+    {
+      "case": 67,
+      "field": "line.2.relative",
+      "legacy": 1.6231709573590899e-16,
+      "cpp": 1000.0
+    }
+  ],
+  "raw_failure_count": 2,
+  "observations": [
+    {
+      "case": 66,
+      "category": "all-zero-observation",
+      "legacy": {
+        "radiation": 0,
+        "sync": 0,
+        "count": 2,
+        "wavelength": 1.2345678806304932,
+        "tolerance": 4.999999873689376e-05,
+        "reflections": [
+          {
+            "id": 1,
+            "hkl": [
+              1,
+              0,
+              0
+            ],
+            "multiplicity": 2,
+            "d": 7.08253812789917,
+            "two_theta": 10.0,
+            "fc2": 0.0,
+            "lorentz": 66.07447052001953,
+            "polarization": 1.7758769989013672,
+            "lp": 117.34012603759766,
+            "raw": 0.0,
+            "fc": 0.0
+          },
+          {
+            "id": 2,
+            "hkl": [
+              2,
+              0,
+              0
+            ],
+            "multiplicity": 2,
+            "d": 3.554795742034912,
+            "two_theta": 20.0,
+            "fc2": 0.0,
+            "lorentz": 16.837512969970703,
+            "polarization": 1.7064177989959717,
+            "lp": 28.73183250427246,
+            "raw": 0.0,
+            "fc": 0.0
+          }
+        ],
+        "groups": [
+          {
+            "id": 1,
+            "representative": 1,
+            "count": 1,
+            "members": [
+              1
+            ]
+          },
+          {
+            "id": 2,
+            "representative": 2,
+            "count": 1,
+            "members": [
+              2
+            ]
+          }
+        ],
+        "lines": [
+          {
+            "id": 1,
+            "representative": 1,
+            "d": 7.08253812789917,
+            "two_theta": 10.0,
+            "raw": 0.0,
+            "relative": 0.0
+          },
+          {
+            "id": 2,
+            "representative": 2,
+            "d": 3.554795742034912,
+            "two_theta": 20.0,
+            "raw": 0.0,
+            "relative": 0.0
+          }
+        ],
+        "rank": [
+          2,
+          1
+        ]
+      },
+      "cpp": {
+        "field": "powder.lines",
+        "reason": "all_zero_normalization"
+      }
+    },
+    {
+      "case": 68,
+      "category": "invalid-observation",
+      "legacy": {
+        "radiation": 0,
+        "sync": 0,
+        "count": 1,
+        "wavelength": 1.2345678806304932,
+        "tolerance": 4.999999873689376e-05,
+        "reflections": [
+          {
+            "id": 1,
+            "hkl": [
+              1,
+              0,
+              0
+            ],
+            "multiplicity": 2,
+            "d": Infinity,
+            "two_theta": 0.0,
+            "fc2": 1.0,
+            "lorentz": Infinity,
+            "polarization": 1.7999999523162842,
+            "lp": Infinity,
+            "raw": Infinity,
+            "fc": 1.0
+          }
+        ],
+        "groups": [
+          {
+            "id": 1,
+            "representative": 1,
+            "count": 1,
+            "members": [
+              1
+            ]
+          }
+        ],
+        "lines": [
+          {
+            "id": 1,
+            "representative": 1,
+            "d": Infinity,
+            "two_theta": 0.0,
+            "raw": Infinity,
+            "relative": NaN
+          }
+        ],
+        "rank": [
+          1
+        ]
+      },
+      "cpp": {
+        "field": "powder.reflection.d",
+        "reason": "invalid_d_spacing"
+      }
+    },
+    {
+      "case": 69,
+      "category": "invalid-observation",
+      "legacy": {
+        "radiation": 0,
+        "sync": 0,
+        "count": 1,
+        "wavelength": 1.2345678806304932,
+        "tolerance": 4.999999873689376e-05,
+        "reflections": [
+          {
+            "id": 1,
+            "hkl": [
+              1,
+              0,
+              0
+            ],
+            "multiplicity": 2,
+            "d": 0.6172839403152466,
+            "two_theta": 180.0,
+            "fc2": 1.0,
+            "lorentz": -3068978.0,
+            "polarization": 1.7999999523162842,
+            "lp": -5524160.5,
+            "raw": -11048321.0,
+            "fc": 1.0
+          }
+        ],
+        "groups": [
+          {
+            "id": 1,
+            "representative": 1,
+            "count": 1,
+            "members": [
+              1
+            ]
+          }
+        ],
+        "lines": [
+          {
+            "id": 1,
+            "representative": 1,
+            "d": 0.6172839403152466,
+            "two_theta": 180.0,
+            "raw": -11048321.0,
+            "relative": 1000.0
+          }
+        ],
+        "rank": [
+          1
+        ]
+      },
+      "cpp": {
+        "field": "powder.reflection.two_theta",
+        "reason": "lp_singularity"
+      }
+    },
+    {
+      "case": 70,
+      "category": "invalid-observation",
+      "legacy": {
+        "radiation": 0,
+        "sync": 0,
+        "count": 1,
+        "wavelength": 1.2345678806304932,
+        "tolerance": 4.999999873689376e-05,
+        "reflections": [
+          {
+            "id": 1,
+            "hkl": [
+              1,
+              0,
+              0
+            ],
+            "multiplicity": 2,
+            "d": 2.3850016593933105,
+            "two_theta": 30.0,
+            "fc2": NaN,
+            "lorentz": 7.727405071258545,
+            "polarization": 1.600000023841858,
+            "lp": 12.363846778869629,
+            "raw": NaN,
+            "fc": NaN
+          }
+        ],
+        "groups": [
+          {
+            "id": 1,
+            "representative": 1,
+            "count": 1,
+            "members": [
+              1
+            ]
+          }
+        ],
+        "lines": [
+          {
+            "id": 1,
+            "representative": 1,
+            "d": 2.3850016593933105,
+            "two_theta": 30.0,
+            "raw": NaN,
+            "relative": NaN
+          }
+        ],
+        "rank": [
+          1
+        ]
+      },
+      "cpp": {
+        "field": "powder.reflection.fc_squared",
+        "reason": "invalid_fc_squared"
+      }
+    },
+    {
+      "case": 71,
+      "category": "invalid-observation",
+      "legacy": {
+        "radiation": 0,
+        "sync": 0,
+        "count": 1,
+        "wavelength": 1.2345678806304932,
+        "tolerance": 4.999999873689376e-05,
+        "reflections": [
+          {
+            "id": 1,
+            "hkl": [
+              1,
+              0,
+              0
+            ],
+            "multiplicity": 0,
+            "d": 2.3850016593933105,
+            "two_theta": 30.0,
+            "fc2": 1.0,
+            "lorentz": 7.727405071258545,
+            "polarization": 1.600000023841858,
+            "lp": 12.363846778869629,
+            "raw": 0.0,
+            "fc": 1.0
+          }
+        ],
+        "groups": [
+          {
+            "id": 1,
+            "representative": 1,
+            "count": 1,
+            "members": [
+              1
+            ]
+          }
+        ],
+        "lines": [
+          {
+            "id": 1,
+            "representative": 1,
+            "d": 2.3850016593933105,
+            "two_theta": 30.0,
+            "raw": 0.0,
+            "relative": 0.0
+          }
+        ],
+        "rank": [
+          1
+        ]
+      },
+      "cpp": {
+        "field": "powder.reflection.multiplicity",
+        "reason": "invalid_multiplicity"
+      }
+    },
+    {
+      "case": 72,
+      "category": "invalid-observation",
+      "legacy": {
+        "radiation": 99,
+        "sync": 0,
+        "count": 1,
+        "wavelength": 1.2345678806304932,
+        "tolerance": 4.999999873689376e-05,
+        "reflections": [
+          {
+            "id": 1,
+            "hkl": [
+              1,
+              0,
+              0
+            ],
+            "multiplicity": 2,
+            "d": 2.3850016593933105,
+            "two_theta": 30.0,
+            "fc2": 1.0,
+            "lorentz": 7.727405071258545,
+            "polarization": 1.600000023841858,
+            "lp": 12.363846778869629,
+            "raw": 24.727693557739258,
+            "fc": 1.0
+          }
+        ],
+        "groups": [
+          {
+            "id": 1,
+            "representative": 1,
+            "count": 1,
+            "members": [
+              1
+            ]
+          }
+        ],
+        "lines": [
+          {
+            "id": 1,
+            "representative": 1,
+            "d": 2.3850016593933105,
+            "two_theta": 30.0,
+            "raw": 24.727693557739258,
+            "relative": 1000.0
+          }
+        ],
+        "rank": [
+          1
+        ]
+      },
+      "cpp": {
+        "field": "radiation.kind",
+        "reason": "unsupported_radiation"
+      }
+    },
+    {
+      "case": 73,
+      "category": "invalid-observation",
+      "legacy": {
+        "radiation": 0,
+        "sync": 0,
+        "count": 1,
+        "wavelength": 1.2345678806304932,
+        "tolerance": 4.999999873689376e-05,
+        "reflections": [
+          {
+            "id": 1,
+            "hkl": [
+              1,
+              0,
+              0
+            ],
+            "multiplicity": 2,
+            "d": NaN,
+            "two_theta": NaN,
+            "fc2": 1.0,
+            "lorentz": NaN,
+            "polarization": NaN,
+            "lp": NaN,
+            "raw": NaN,
+            "fc": 1.0
+          }
+        ],
+        "groups": [
+          {
+            "id": 1,
+            "representative": 1,
+            "count": 1,
+            "members": [
+              1
+            ]
+          }
+        ],
+        "lines": [
+          {
+            "id": 1,
+            "representative": 1,
+            "d": NaN,
+            "two_theta": NaN,
+            "raw": NaN,
+            "relative": NaN
+          }
+        ],
+        "rank": [
+          1
+        ]
+      },
+      "cpp": {
+        "field": "powder.reflection.d",
+        "reason": "invalid_d_spacing"
+      }
+    },
+    {
+      "case": 74,
+      "category": "invalid-observation",
+      "legacy": {
+        "radiation": 0,
+        "sync": 0,
+        "count": 2,
+        "wavelength": 1.2345678806304932,
+        "tolerance": -1.0,
+        "reflections": [
+          {
+            "id": 1,
+            "hkl": [
+              1,
+              0,
+              0
+            ],
+            "multiplicity": 2,
+            "d": 3.554795742034912,
+            "two_theta": 20.0,
+            "fc2": 1.0,
+            "lorentz": 16.837512969970703,
+            "polarization": 1.7064177989959717,
+            "lp": 28.73183250427246,
+            "raw": 57.46366500854492,
+            "fc": 1.0
+          },
+          {
+            "id": 2,
+            "hkl": [
+              2,
+              0,
+              0
+            ],
+            "multiplicity": 2,
+            "d": 3.5547945499420166,
+            "two_theta": 20.000009536743164,
+            "fc2": 4.0,
+            "lorentz": 16.837499618530273,
+            "polarization": 1.7064177989959717,
+            "lp": 28.7318115234375,
+            "raw": 229.8544921875,
+            "fc": 2.0
+          }
+        ],
+        "groups": [
+          {
+            "id": 1,
+            "representative": 1,
+            "count": 1,
+            "members": [
+              1
+            ]
+          },
+          {
+            "id": 2,
+            "representative": 2,
+            "count": 1,
+            "members": [
+              2
+            ]
+          }
+        ],
+        "lines": [
+          {
+            "id": 1,
+            "representative": 1,
+            "d": 3.554795742034912,
+            "two_theta": 20.0,
+            "raw": 57.46366500854492,
+            "relative": 250.00018310546875
+          },
+          {
+            "id": 2,
+            "representative": 2,
+            "d": 3.5547945499420166,
+            "two_theta": 20.000009536743164,
+            "raw": 229.8544921875,
+            "relative": 1000.0
+          }
+        ],
+        "rank": [
+          2,
+          1
+        ]
+      },
+      "cpp": {
+        "field": "powder.overlap.tolerance",
+        "reason": "invalid_overlap_configuration"
+      }
+    },
+    {
+      "case": 75,
+      "category": "empty-observation",
+      "legacy": {
+        "radiation": 0,
+        "sync": 0,
+        "count": 0,
+        "wavelength": 1.2345678806304932,
+        "tolerance": 4.999999873689376e-05,
+        "reflections": [],
+        "groups": [],
+        "lines": [],
+        "rank": []
+      },
+      "cpp": {
+        "field": "powder.reflections",
+        "reason": "empty_reflection_set"
+      }
+    }
+  ],
+  "compiler": "MSVC",
+  "runner_sha256": "407ce233bb499f4267996bc82fe8c8824f3ee3e98221fe2d27e9c6b5df2e5103",
+  "archive_sha256": "dc6562533d456f0bd4e5b5cc649f451e7fbf4166465f99ed9b8615ae5028a514",
+  "qualified_count": 0,
+  "unresolved": [
+    {
+      "case": 67,
+      "field": "line.1.relative",
+      "legacy": 5.5425610829752493e-17,
+      "cpp": 341.46507817532273
+    },
+    {
+      "case": 67,
+      "field": "line.2.relative",
+      "legacy": 1.6231709573590899e-16,
+      "cpp": 1000.0
+    }
+  ],
+  "unresolved_count": 2,
+  "qualification_approval": {
+    "valid": false,
+    "errors": [
+      "approval_unavailable:[Errno 2] No such file or directory: 'E:\\\\CPlusProject\\\\QualPF\\\\docs\\\\refactoring\\\\phase-17\\\\acceptance-decision.json'"
+    ]
+  },
+  "success": false
+}

@@ -1,0 +1,31 @@
+{
+  "defect_id": "36D-EXPLAINED-CIF-WINDOWS-ANGLE-DIFFERENCE",
+  "classification": "DEFERRED_EXISTING_CPP_RUNTIME_NUMERICAL_DIFFERENCE",
+  "predecessor": {
+    "path": "docs/refactoring/deferred-defects/phase36c-existing-CIF-platform-differences.json",
+    "sha256": "3a43185523a3a2116e2ee329f1e4764e1410bea6dbfc40883b80aa059a63cb0f"
+  },
+  "owner": "Dedicated C++ numerical reproducibility scope; Phase37 unless independent36D requires an explicit replacement",
+  "source_and_product_behavior_changed": false,
+  "blocks_read_only_observation_batch": false,
+  "raw_differences": 432,
+  "raw_FAIL_status": "RETAINED_NOT_NUMERICALLY_APPROVED",
+  "exact_cause": "Existing GUI object calls MSVCRT asin on GNU and UCRT asin on MSVC; intermediate arguments/constants/final rounding reconstruct every original bit",
+  "proof": {
+    "path": ".evidence/raw/phase36d-angle-observation/batch-001/proof.json",
+    "sha256": "f7784adfa1480b32de38749519d5a1b391da42834fa1fff2dbb54bddbfd64a8f"
+  },
+  "runtime_provider": {
+    "path": ".evidence/raw/phase36d-angle-observation/batch-001/runtime-cause.json",
+    "sha256": "5f663196ac376b083bbbc22f43154226f34465be68295c790bdeb9be2525e888"
+  },
+  "review": {
+    "path": ".evidence/raw/phase36d-angle-observation/batch-001/independent-review.md",
+    "sha256": "fbbe4c135279ce1870b362cfc8ba069ba16c714d59f85e168f97e206cd865b35"
+  },
+  "known_downstream": "Theta enters Search scoring/residual and presentation. All other fields in these three original reports exact, not a universal harmlessness claim",
+  "supported_domain_expanded": false,
+  "new_tolerance": false,
+  "new_numerical_approval": false,
+  "whole_F": "NOT_REACHED"
+}

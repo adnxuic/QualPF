@@ -1,0 +1,55 @@
+{
+  "source": "D:\\QualX\\QualXDB\\cod_inorg\\cod_inorg.sq.info",
+  "sha256": "e26dbf16769dd3aff864ff59707dec50d9bce5377a729f655293e9c26e357fe3",
+  "provenance": "Real COD structures consumed by repository Phase 7 and 12 workflows; lattice parameters extracted read-only. No tracked structure CIF exists. Offline replay needs only these six lattice values, not the external database.",
+  "records": [
+    {
+      "id": "9013103",
+      "spacegroup_context_only": "F d -3 m :1",
+      "cell": [
+        5.436999797821045,
+        5.436999797821045,
+        5.436999797821045,
+        90.0,
+        90.0,
+        90.0
+      ]
+    },
+    {
+      "id": "1538052",
+      "spacegroup_context_only": "F -4 3 m",
+      "cell": [
+        5.435999870300293,
+        5.435999870300293,
+        5.435999870300293,
+        90.0,
+        90.0,
+        90.0
+      ]
+    },
+    {
+      "id": "4343150",
+      "spacegroup_context_only": "F m -3 m",
+      "cell": [
+        5.4251298904418945,
+        5.4251298904418945,
+        5.4251298904418945,
+        90.0,
+        90.0,
+        90.0
+      ]
+    },
+    {
+      "id": "1536389",
+      "spacegroup_context_only": "P 1",
+      "cell": [
+        4.915999889373779,
+        4.916999816894531,
+        5.4070000648498535,
+        90.0,
+        90.0,
+        120.0
+      ]
+    }
+  ]
+}

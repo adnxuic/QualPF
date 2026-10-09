@@ -1,0 +1,77 @@
+"""Explicit Legacy observation. Never creates C++ expected values or overwrites evidence."""
+import argparse
+import hashlib
+import json
+import math
+from pathlib import Path
+import subprocess
+import zipfile
+from preprocessing_capture import measured
+
+ROOT = Path(__file__).resolve().parents[2]
+def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+
+def cases():
+    def signal(start=5, stop=100, step=.02, peaks=((30,100,.12),(60,70,.2)), base=3):
+        return [[start+i*step, base+sum(a*math.exp(-.5*((start+i*step-c)/w)**2) for c,a,w in peaks)]
+                for i in range(round((stop-start)/step)+1)]
+    clean=signal()
+    signals={name:measured(name) for name in ('example1','CPD2','MIXT_5')}
+    signals.update(clean=clean, weak=signal(peaks=((30,.002,.12),),base=100),
+        overlap=signal(peaks=((30,100,.12),(30.2,70,.14))),
+        boundaries=signal(start=.02,stop=170,step=.05,peaks=((.12,20,.03),(169.8,100,.08))),
+        high_angle=signal(start=171,stop=179.98,step=.02,peaks=((175,10,.1),)),
+        low=signal(base=0,peaks=((30,1e-20,.12),)), zero=signal(base=0,peaks=()),
+        negative=signal(base=-10), irregular=[[x+.003*math.sin(i),y] for i,(x,y) in enumerate(clean)],
+        descending=list(reversed(clean)),duplicate=[[10,2],[10,3],[10,4]],
+        single=[[10,3]], nonfinite=[[10,1],[11,float('nan')],[12,2]])
+    for name,data in signals.items():
+        yield dict(id=name,pattern=data,mode=0)
+    for name in ('example1','CPD2','MIXT_5','clean'):
+        for suffix,seed,back in (('action',0,0),('background',0,1),('peaks',1,1)):
+            yield dict(id=name+'-'+suffix,pattern=signals[name],mode=1,seeded=seed,background=back)
+    for name,changes in (
+        ('custom_cu',dict(wave=1.54056)),('mo',dict(wave=.71073)),
+        ('neutron',dict(rad=1)),('electron',dict(rad=2)),('unknown_radiation',dict(rad=-1)),
+        ('repeat',dict(repeats=2)),('already_flagged',dict(flag=1)),('unknown_history',dict(flag=-1))):
+        yield dict(id=name,pattern=clean,mode=1,**changes)
+
+def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--runner',type=Path,required=True)
+    parser.add_argument('--output',type=Path,required=True)
+    args=parser.parse_args()
+    args.output.mkdir(parents=True,exist_ok=False)
+    manifest={'schema_version':1,'status':'captured','source_commit':subprocess.check_output(
+        ['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(), 'runner_sha256':sha(args.runner),
+        'compiler':'GNU Fortran 13.1.0, product -O0, REAL binary32; serial',
+        'source_hashes':{p.relative_to(ROOT).as_posix():sha(p) for p in (ROOT/'legacy').rglob('*')
+                         if p.suffix.lower() in ('.f','.f90')},
+        'capture_hashes':{p.name:sha(p) for p in Path(__file__).parent.glob('kalpha2_capture*')},
+        'tolerance':{'absolute':1e-5,'relative':1e-5,'unit':'input intensity',
+          'basis':'Phase 9 binary32 intensity bound, frozen before C++ implementation. No nonfinite equivalence.'},
+        'cases':[]}
+    for case in cases():
+        for k,v in dict(repeats=1,rad=0,wave=1.54059307,seeded=0,background=0,flag=0).items():
+            case.setdefault(k,v)
+        ident=case['id']
+        p=args.output/(ident+'.json');p.write_text(json.dumps(case,indent=2)+'\n')
+        wire=' '.join(map(str,[len(case['pattern']),case['mode'],case['repeats'],case['rad'],case['wave'],
+                              case['seeded'],case['background'],case['flag']]))+'\n'
+        wire+=''.join(f'{x:.17g} {y:.17g}\n' for x,y in case['pattern'])
+        (args.output/(ident+'.wire')).write_text(wire)
+        try:
+            result=subprocess.run([str(args.runner.resolve())],input=wire,text=True,capture_output=True,
+                                  cwd=args.output,timeout=30)
+            out,err,code=result.stdout,result.stderr,result.returncode
+        except subprocess.TimeoutExpired as e:
+            out,err,code=str(e.stdout or ''),str(e.stderr or '')+'\nTIMEOUT',124
+        (args.output/(ident+'.stdout.txt')).write_text(out)
+        (args.output/(ident+'.stderr.txt')).write_text(err)
+        item={'id':ident,'returncode':code,'completed':'AFTER12' in out,
+              'artifacts':{ident+s:sha(args.output/(ident+s)) for s in ('.json','.wire','.stdout.txt','.stderr.txt')}}
+        manifest['cases'].append(item)
+        print(ident,code,item['completed'],flush=True)
+    (args.output/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+
+if __name__=='__main__': main()

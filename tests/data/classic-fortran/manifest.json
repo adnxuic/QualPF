@@ -1,0 +1,3083 @@
+{
+  "schema_version": 1,
+  "kind": "legacy_capture",
+  "scope": "isolated FOM only; product switch blocked",
+  "cases": [
+    {
+      "id": "perfect",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "perfect-input.json",
+        "sha256": "05337c4ea0f6ed12b8a382ef42a466c39798c8fac7dfbc77563b69794539dc74"
+      },
+      "expected": {
+        "path": "perfect-expected.json",
+        "sha256": "ddcb1a96809acd1f15395b7af8432b833731389df5486f5061c2f433da80bff3"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "single-associated",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "single-associated-input.json",
+        "sha256": "45a44e6da6fa04f363fc6bfe1bfffb4aa45086080cc93351bef9acfe3d47edc1"
+      },
+      "expected": {
+        "path": "single-associated-expected.json",
+        "sha256": "a97189e69bc484abbcac40706572a10989c10ee913c856599eacfa6dc5b38257"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "intensity-mismatch",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "intensity-mismatch-input.json",
+        "sha256": "0de2b77302ee4a86119dd91690f3de92a5a5aa503f9b0a561bef135dfc5e32c4"
+      },
+      "expected": {
+        "path": "intensity-mismatch-expected.json",
+        "sha256": "6cdf1b7b973397248ebbcb6b537187ca879d8f2f158c1c2921ed4c30935a59be"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "merged-reflections",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "merged-reflections-input.json",
+        "sha256": "598512941a048ff4175c324386659133983fd2cf3d264709103e7843ed9b407d"
+      },
+      "expected": {
+        "path": "merged-reflections-expected.json",
+        "sha256": "c36ca54035cb5fc2ad7e2ba2865cfe605f68514586b9cbf85bb8e4528e06fe74"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "offsets",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "offsets-input.json",
+        "sha256": "ac05b7b23f24d1825c94f41a9897c728ba62fdbce8bfd1e6a62351f1cca0009f"
+      },
+      "expected": {
+        "path": "offsets-expected.json",
+        "sha256": "1c22b1437abd690fc7a781e7db9e01983e8bf57101e862f9f506eda8adef7f71"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "observed-below",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "observed-below-input.json",
+        "sha256": "3e1abe8b812c2120d60faa19e87944705e3f5f07dd613a816ea5ea67307b65c5"
+      },
+      "expected": {
+        "path": "observed-below-expected.json",
+        "sha256": "4bfc6be5d39f4d00f1d506dac11e8bd81f9b930475a3d9e18bc50f57ae04b264"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "observed-equal",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "observed-equal-input.json",
+        "sha256": "217dc045865ef6ad9fd41669a7ab1a02aa2e8ea2b073fff9115e1ba60a7fc059"
+      },
+      "expected": {
+        "path": "observed-equal-expected.json",
+        "sha256": "4bfc6be5d39f4d00f1d506dac11e8bd81f9b930475a3d9e18bc50f57ae04b264"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "observed-above",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "observed-above-input.json",
+        "sha256": "916697cc5e317747ec4f2ce4910f0dbbb8e2965cd179c5aace1a92d9f9c789f8"
+      },
+      "expected": {
+        "path": "observed-above-expected.json",
+        "sha256": "676614a4daa4cb60aab46f5375b6d5aad17b8a4bd876b074dac7fd4fd492d6e9"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "observed-nearest-tie",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "observed-nearest-tie-input.json",
+        "sha256": "a415c42bf7a79751537f57eaaebce3f677ba05c43755df1d9c6237a6bf4c50f1"
+      },
+      "expected": {
+        "path": "observed-nearest-tie-expected.json",
+        "sha256": "4bfc6be5d39f4d00f1d506dac11e8bd81f9b930475a3d9e18bc50f57ae04b264"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "delta-inside",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "delta-inside-input.json",
+        "sha256": "5fce9cb0ba43819141868ac5521153a802a00f28212ea22ce70dedd5ddb53a30"
+      },
+      "expected": {
+        "path": "delta-inside-expected.json",
+        "sha256": "fc4ed56d2bb22ce4a44b9107123d5a1f66f45ccb32910eec4e127bd5e92a2275"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "delta-equal",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "delta-equal-input.json",
+        "sha256": "1ae5de3488904badd84460e090b7d36100595ac31f9a88255ab414f3b94cd555"
+      },
+      "expected": {
+        "path": "delta-equal-expected.json",
+        "sha256": "39808e00ea872a6242f9c3cbf69be1114f247dee1ed59c59962a4b2413a986fc"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "delta-outside",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "delta-outside-input.json",
+        "sha256": "e33e7ba4935b50a0d2d190119f1055b2560864dfede1e3b684e90055570007ae"
+      },
+      "expected": {
+        "path": "delta-outside-expected.json",
+        "sha256": "39808e00ea872a6242f9c3cbf69be1114f247dee1ed59c59962a4b2413a986fc"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "range-before-narrowing",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "range-before-narrowing-input.json",
+        "sha256": "bb982a0a8a0578464ee87ddf8b2a1e152126a3471151bb1af00eb57404a43d41"
+      },
+      "expected": {
+        "path": "range-before-narrowing-expected.json",
+        "sha256": "2c9365208670fc855b0668edcd4947cc745b22e4d83a7a0ee5aa18530bc0dae7"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "nearest-tie",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "nearest-tie-input.json",
+        "sha256": "d084c2af7f5a577d802a535fefc797061f9d44a98fb8b06529c81d85ba65649e"
+      },
+      "expected": {
+        "path": "nearest-tie-expected.json",
+        "sha256": "5cf9f274e88dd6e020191acf7426b8c619472bb4c73dafb1e332882b271f198c"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "duplicate-first-endpoint",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "duplicate-first-endpoint-input.json",
+        "sha256": "34b40248a0b86bfa81c2a3f912187a799b2a7efcb4bf7c8a4cf35d72da889700"
+      },
+      "expected": {
+        "path": "duplicate-first-endpoint-expected.json",
+        "sha256": "eb827c7446019019abaf50678769c06900f1602e6c8da6ba19102cd6dfd9478a"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "duplicate-last-endpoint",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "duplicate-last-endpoint-input.json",
+        "sha256": "b3e8dcefe857c71f860a1fa95aafbc67b133d249907d4ee2763475d080855100"
+      },
+      "expected": {
+        "path": "duplicate-last-endpoint-expected.json",
+        "sha256": "ed1d5748966fcfe618975edae8af86d6649bd9466c94254f8529b2a30f23f637"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "float-collapsed-coordinate",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "float-collapsed-coordinate-input.json",
+        "sha256": "9759b5a175bd066407184dd01e9516050e9e18f8e742c3d29b6a331bdbfe2c89"
+      },
+      "expected": {
+        "path": "float-collapsed-coordinate-expected.json",
+        "sha256": "eb827c7446019019abaf50678769c06900f1602e6c8da6ba19102cd6dfd9478a"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "phase-weight-below",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "phase-weight-below-input.json",
+        "sha256": "6564ff0f6990c958e98e5ea83d888cb7aebc834b765330d4d76844f1dc1b584c"
+      },
+      "expected": {
+        "path": "phase-weight-below-expected.json",
+        "sha256": "5eae31b81382ce50603684f4d7a5a03cc0a7452019b7a49e87868bfe6c695758"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "phase-weight-half",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "phase-weight-half-input.json",
+        "sha256": "3a612dd7cbed555d79adefc5495f0ffd6721fed39bf9467cf641d6f7a9e3c0c0"
+      },
+      "expected": {
+        "path": "phase-weight-half-expected.json",
+        "sha256": "5eae31b81382ce50603684f4d7a5a03cc0a7452019b7a49e87868bfe6c695758"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "phase-weight-above",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "phase-weight-above-input.json",
+        "sha256": "341a96175cdd0c15bcba0985f7e22fdad76f30e161a0a0c7fa12593d7a67f14e"
+      },
+      "expected": {
+        "path": "phase-weight-above-expected.json",
+        "sha256": "5eae31b81382ce50603684f4d7a5a03cc0a7452019b7a49e87868bfe6c695758"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "phase-weight-one",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "phase-weight-one-input.json",
+        "sha256": "968c2a3611ec73033ed926172a05b1fe44a16aab12c5c50eb580c77f614ad712"
+      },
+      "expected": {
+        "path": "phase-weight-one-expected.json",
+        "sha256": "6d37b921dafb1e2470f70af57b7ef29cf219fa6b08a6a64203c1eef0fd9155bb"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "pattern-example1",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "pattern-example1-input.json",
+        "sha256": "a263dd1e214abd7daad1c03ed0ed2d6ab669675f9dbbbfa9fac0cf845620a2d0"
+      },
+      "expected": {
+        "path": "pattern-example1-expected.json",
+        "sha256": "c6202bea7deb01e50fae38e2b98c4990ff2bdb052397db415b7fed45932f5a44"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "pattern-CPD2",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "pattern-CPD2-input.json",
+        "sha256": "7fcfb475d8c228fd3696075edc1c5f0f78e5f92864f789481424362812535dca"
+      },
+      "expected": {
+        "path": "pattern-CPD2-expected.json",
+        "sha256": "5273f7a1a88797330ef4df8d64e2fb53ca3796db259e07d15ce524142881e1a9"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "pattern-MIXT_5",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "pattern-MIXT_5-input.json",
+        "sha256": "fd8ecb7f89621b67895f6dd46e53ee5bb157411e7947b669f37bfd3a73cb5d28"
+      },
+      "expected": {
+        "path": "pattern-MIXT_5-expected.json",
+        "sha256": "b5b14ba4931537eb7f9f532edc534887a18138e9a29f811c8d319315d3070758"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "perfect-after-large",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "perfect-after-large-input.json",
+        "sha256": "05337c4ea0f6ed12b8a382ef42a466c39798c8fac7dfbc77563b69794539dc74"
+      },
+      "expected": {
+        "path": "perfect-after-large-expected.json",
+        "sha256": "ddcb1a96809acd1f15395b7af8432b833731389df5486f5061c2f433da80bff3"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    },
+    {
+      "id": "perfect-after-undefined",
+      "operation": "score",
+      "status": "reviewed",
+      "reference_origin": "fortran_capture",
+      "legacy_tolerances_frozen": true,
+      "input": {
+        "path": "perfect-after-undefined-input.json",
+        "sha256": "05337c4ea0f6ed12b8a382ef42a466c39798c8fac7dfbc77563b69794539dc74"
+      },
+      "expected": {
+        "path": "perfect-after-undefined-expected.json",
+        "sha256": "ddcb1a96809acd1f15395b7af8432b833731389df5486f5061c2f433da80bff3"
+      },
+      "environment": {
+        "source_commit": "9bf3ef58b2810fbfbda75195711205960f3c0b41",
+        "compiler": "GNU Fortran (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 13.2.0",
+        "flags": "-O0 -fno-fast-math -ffp-contract=off -fcheck=all -fbacktrace",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "real_kind": "default REAL kind=4 storage=32; c_double storage=64",
+        "thread_configuration": "serial, one process, ordered repeated calls; no OpenMP/MKL",
+        "capture_procedure": "tests/compatibility/fortran_capture/capture.py; see provenance.json and instrumentation.diff",
+        "review_evidence": "docs/refactoring/phase-6/reference-review.md; Codex source/capture review, not product approval"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "intensity": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scale": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "merged_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "scaled_intensities": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "position_difference_sum": {
+          "absolute": 1e-07,
+          "relative": 2e-06,
+          "unit": "degree",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "associated_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_sample_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "total_card_sum": {
+          "absolute": 1e-06,
+          "relative": 2e-06,
+          "unit": "input intensity",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "database_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sample_fraction": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_database": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        },
+        "sqrt_sample": {
+          "absolute": 5e-07,
+          "relative": 2e-06,
+          "unit": "dimensionless",
+          "approval_evidence": "s6-capture-tolerances-1; tolerances.json"
+        }
+      }
+    }
+  ],
+  "tolerance_policy": {
+    "path": "tolerances.json",
+    "sha256": "ea9f2a53892064ef1b38f4953647cc6ccb572a9d7b71f24ec95a9d9c71425a67"
+  },
+  "evidence": [
+    {
+      "path": "original.txt",
+      "sha256": "487411f3581e2acdb64d3b41ed924392640ca4544079b94a9187d50aae7f2741"
+    },
+    {
+      "path": "traced.txt",
+      "sha256": "ebfa7cfafce66171a6fffb16e1ad300aa75f925352ab44709ae6ecd76c3ba3cb"
+    },
+    {
+      "path": "instrumentation.diff",
+      "sha256": "74b5d1b4a9eb38678f15abea51fc7d5d565be81ae05c3c46d27fdd7618004a74"
+    },
+    {
+      "path": "exceptions.json",
+      "sha256": "ccb700dd3cfa738686c04048a21bf69ad2cbe2fe89b6b3294a5d0edfb3ddfa6b"
+    },
+    {
+      "path": "provenance.json",
+      "sha256": "7b60c80a38d6e94fa22592bc77d847251dc42ae483abb9160589825fbc9bcf1e"
+    },
+    {
+      "path": "captured-manifest.json",
+      "sha256": "f7084a5fd990e21f9200f59288f4ddaba319cf6310bfeeb94ee5e200afb4d29f"
+    },
+    {
+      "path": "input-catalog.json",
+      "sha256": "87e09a0a5273dbe417d2a6d6ce874a4b5f1623eecf383c8acd56d1e78c24e0c9"
+    }
+  ]
+}

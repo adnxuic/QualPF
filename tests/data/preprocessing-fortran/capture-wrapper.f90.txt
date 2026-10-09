@@ -1,0 +1,93 @@
+! Test-only oracle. All calculations call the unchanged production Fortran modules.
+subroutine phase9_capture() bind(C)
+  use ssmoothing
+  use background
+  use peak_util
+  use counts
+  use pointmod
+  use filereading, only: write_column
+  use peak_mod, only: pkind
+  implicit none
+  interface
+    function oracle_auto_delta() bind(C,name="delta2thetaPeaks") result(value)
+      use iso_c_binding, only: c_double
+      real(c_double) :: value
+    end function
+  end interface
+  integer :: op,n,i,method,w,degree,deriv,ncoef,np
+  real :: wave,delta,origin,auto_delta
+  real, allocatable :: x(:),y(:),z(:),coef(:)
+  type(point_type), allocatable :: points(:)
+  type(peak_type), allocatable :: peaks(:),allpeaks(:)
+  type(back_condition_type) :: bc
+  type(peaks_condition_type) :: pc
+  read(*,*) op,n,wave,delta
+  allocate(x(n),y(n),z(n))
+  do i=1,n
+    read(*,*) x(i),y(i)
+  enddo
+  select case(op)
+  case(0)
+    read(*,*) method,w,degree,deriv
+    if(method == 1) then
+      z=averagesmooth(y,w)
+    else
+      z=savgol_smooth(y,w,w,deriv,degree)
+    endif
+    write(*,*) n
+    do i=1,n
+      write(*,'(es25.17e3)') z(i)
+    enddo
+  case(1)
+    read(*,*) bc%btype,i,bc%ncoef,bc%niterf,bc%nwinf,bc%minf,bc%maxf
+    bc%auto = i /= 0
+    allocate(coef(36))
+    call compute_background(x,y,z,points,coef,origin,bc,wave)
+    ! Only meaningful coefficients are exported; unused intent(out) slots are undefined.
+    ncoef=0
+    if (bc%btype <= 2) ncoef=bc%ncoef
+    write(*,*) n,size(points),ncoef
+    write(*,'(es25.17e3)') origin
+    do i=1,n
+      write(*,'(es25.17e3)') z(i)
+    enddo
+    do i=1,size(points)
+      write(*,'(2(es25.17e3,1x))') points(i)%x,points(i)%y
+    enddo
+    do i=1,ncoef
+      write(*,'(es25.17e3)') coef(i)
+    enddo
+  case(3)
+    read(*,*) method
+    z=.2
+    call peak_set(peaks,npk=n,x=x,y=y,fwhm=z,wave=wave)
+    select case(method)
+    case(0)
+      call write_column(jfile=6,xcol1=peaks%getx(),metad='#2theta values')
+    case(1)
+      call write_column(jfile=6,xcol1=peaks%getd(),metad='#d values')
+    case(2)
+      call peak_print(peaks,kpr=6)
+    end select
+  case(2)
+    read(*,*) pc%amp,pc%slope,pc%srange,pc%smcond,pc%maxpk,pc%minpk,i
+    pc%autos=i /= 0
+    if (pc%srange < 0) pc%srange=init_peak_range(x,y,wave)
+    call peak_create(x,y,peaks,pc,wave,allpeaks)
+    np=numpeaks(peaks)
+    ! Call the actual ABI: expression reassociation in a wrapper is not an oracle.
+    if(allocated(pkind)) deallocate(pkind)
+    if(allocated(peaks)) pkind=peaks
+    auto_delta=real(oracle_auto_delta())
+    write(*,*) np,numpeaks(allpeaks),pc%smcond
+    write(*,'(3(es25.17e3,1x))') pc%srange,pc%amp,auto_delta
+    do i=1,np
+      write(*,'(6(es25.17e3,1x))') peaks(i)%getx(),peaks(i)%getd(),peaks(i)%gety(), &
+        peaks(i)%fwhm,peaks(i)%yint,deltadval(peaks(i)%getd(),delta,wave)
+    enddo
+    do i=1,numpeaks(allpeaks)
+      write(*,'(5(es25.17e3,1x))') allpeaks(i)%getx(),allpeaks(i)%getd(),allpeaks(i)%gety(), &
+        allpeaks(i)%fwhm,allpeaks(i)%yint
+    enddo
+  end select
+end subroutine

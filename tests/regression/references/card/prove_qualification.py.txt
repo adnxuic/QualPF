@@ -1,0 +1,221 @@
+"""Independent rational orbits and 80-digit mass/attenuation/RIR evidence.
+
+Expected values come from frozen inputs, the pre-C++ Phase 14 rational oracle,
+and original XEN/NIST source decimals. No C++ generated table is imported.
+This writes a proposal, never an approval or a replacement native reference.
+"""
+import hashlib
+import json
+import math
+from fractions import Fraction as F
+from pathlib import Path
+import re
+import struct
+import sys
+import zipfile
+import mpmath as mp
+
+ROOT = Path(__file__).resolve().parents[3]
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT / 'tests/compatibility'))
+from card_qualification import fingerprint
+mp.mp.dps = 80
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def decimal(x):
+    return mp.mpf(str(x))
+
+
+def source_tables():
+    rows = [s.split() for s in (ROOT / 'share/qualx/files/AtomProperties.xen').read_text().splitlines()[2:]
+            if s.strip() and not s.startswith('#')]
+    masses = {rows[i][0].capitalize(): (i // 9 + 1, int(rows[i][1]), decimal(rows[i][2]))
+              for i in range(0, len(rows), 9)}
+    text = (ROOT / 'legacy/fortran/crystallography/nist_table.f90').read_text()
+    text = text.split('   subroutine load_nist_table(zval)')[1]
+    tables = {}
+    for z, block in re.findall(r'case\((\d+)\)(.*?)(?=\n\s*case|end select)', text, re.S):
+        arr = re.sub(r'!.*', '', block.split('nist_tab(:) = [')[1].split(']')[0])
+        v = [decimal(x) for x in re.findall(r'[-+]?\d*\.?\d+(?:[Ee][-+]?\d+)?', arr)]
+        tables[int(z)] = list(zip(v[::4], v[3::4]))
+    assert len(masses) == 299 and len(tables) == 92
+    return masses, tables
+
+
+def attenuation(points, wave):
+    energy = decimal('1e7') * decimal('6.62607015e-34') * decimal('2.998e8') / decimal('1.602176634e-19') / decimal(wave)
+    i = next(i for i in range(len(points) - 1) if points[i][0] <= energy <= points[i + 1][0])
+    (lo, ml), (hi, mh) = points[i:i + 2]
+    fraction = mp.log(energy / lo) / mp.log(hi / lo)
+    mac = mp.exp(mp.log(ml) + fraction * mp.log(mh / ml))
+    return dict(energy=energy, energy_low=lo, energy_high=hi, mac_low=ml, mac_high=mh,
+                log_fraction=fraction, mac=mac)
+
+
+def orbit(site, group):
+    xyz = [F(str(x)) for x in site['xyz']]
+    return sorted({tuple((sum(F(op['rotation'][i * 3 + j]) * xyz[j] for j in range(3)) +
+                         F(op['translation_twelfths'][i], 12)) % 1 for i in range(3))
+                   for op in group['operations']})
+
+
+def metric(cell):
+    a, b, c, alpha, beta, gamma = map(decimal, cell)
+    ca, cb, cg = [mp.cos(t * mp.pi / 180) for t in (alpha, beta, gamma)]
+    volume = a * b * c * mp.sqrt(1 + 2 * ca * cb * cg - ca * ca - cb * cb - cg * cg)
+    return volume, ((a*a, a*b*cg, a*c*cb), (a*b*cg, b*b, b*c*ca), (a*c*cb, b*c*ca, c*c))
+
+
+def printable(value):
+    return value if isinstance(value, str) else mp.nstr(value, 82)
+
+
+def main():
+    masses, tables = source_tables()
+    with zipfile.ZipFile(ROOT / 'tests/data/theoretical-card-reference.zip') as z:
+        cases = {c['id']: c for c in json.loads(z.read('cases.json'))}
+        native = json.loads(z.read('expected.json'))
+    with zipfile.ZipFile(ROOT / 'tests/data/symmetry-reference.zip') as z:
+        groups = {(g['number'], g['setting_index']): g for g in json.loads(z.read('exact-table.json'))}
+    reports = {compiler: json.loads((HERE / 'test-results' / name).read_text()) for compiler, name in
+               [('GNU', 'mingw-differential.json'), ('MSVC', 'msvc-differential.json')]}
+    observed = {compiler: {(r['case'], r['field']): r for r in report['raw_failures']}
+                for compiler, report in reports.items()}
+    keys = set(observed['GNU'])
+    assert keys == set(observed['MSVC']) and len(keys) == 109, 'Changed failures require fresh review'
+    independent, witnesses = {}, {}
+    proximity_fields = {'composition.z', 'composition.cell_mass', 'composition.density',
+        'species.14.cell_amount', 'species.14.cell_mass', 'site.1.multiplicity', 'site.1.amount',
+        'absorption.mu', 'absorption.14.weighted_mac', 'rir.denominator', 'rir.rho_volume_ratio', 'rir.rir'}
+    for cid in (33, 57, 58, 59, 60):
+        c = cases[cid]
+        assert len(c['sites']) == 1 and c['sites'][0]['species'] == 'Si'
+        site = c['sites'][0]
+        points = orbit(site, groups[c['group'], c['setting']])
+        count = len(points)
+        assert count == (24 if cid == 33 else 192)
+        amount = count * decimal(site['occupancy'])
+        zval = int(mp.floor(amount + mp.mpf('.5')))
+        assert abs(zval - amount) <= mp.mpf('.1')
+        mass = amount * masses['Si'][2]
+        volume, matrix = metric(c['cell'])
+        density = decimal('1.660543780') * mass / volume
+        mac = attenuation(tables[14], c['wavelength'])['mac']
+        denominator = volume * volume * density
+        rhov = decimal('259079.140625') / denominator
+        # Original unsuffixed REAL calibration, converted independently to f32.
+        corundum = mp.mpf(struct.unpack('f', struct.pack('f', 340862.156))[0])
+        maximum = mp.mpf(native[str(cid)]['selection']['all_maximum'])
+        values = [zval, mass, density, amount, mass, count, amount, density*mac, mass*mac,
+                  denominator, rhov, rhov*maximum/corundum]
+        names = ['composition.z', 'composition.cell_mass', 'composition.density',
+            'species.14.cell_amount', 'species.14.cell_mass', 'site.1.multiplicity', 'site.1.amount',
+            'absorption.mu', 'absorption.14.weighted_mac', 'rir.denominator', 'rir.rho_volume_ratio', 'rir.rir']
+        independent.update({(cid, name): value for name, value in zip(names, values)})
+        closest = None
+        for i, p in enumerate(points):
+            for q in points[i+1:]:
+                # A minimum-image witness suffices to show two distinct images
+                # inside 0.3 A; no nearest-lattice solver is needed for this claim.
+                delta = [x-y for x,y in zip(p,q)]
+                delta = [x - math.floor(x + F(1,2)) for x in delta]
+                d = [mp.mpf(x.numerator)/x.denominator for x in delta]
+                distance = mp.sqrt(sum(d[j]*matrix[j][k]*d[k] for j in range(3) for k in range(3)))
+                if closest is None or distance < closest[0]: closest = (distance, p, q)
+        assert 0 < closest[0] < mp.mpf('.3')
+        witnesses[str(cid)] = dict(exact_distinct_images=count,
+            native_count=native[str(cid)]['sites'][0]['multiplicity'],
+            coordinates=[[str(x) for x in p] for p in points],
+            distinct_close_pair=[[str(x) for x in p] for p in closest[1:]],
+            distance_angstrom=printable(closest[0]), amount=printable(amount), volume=printable(volume))
+    # Exact rational mixed-site witness. Both lists represent 1.6 Zn + .4 Ge.
+    # Native first-site assignment gives counts {Zn:2} forward, {Zn:1,Ge:1}
+    # reversed. Canonical representative/identity ordering chooses Zn first.
+    assert native['92']['physics']['z'] == 2 and native['93']['physics']['z'] == 1
+    assert sorted(json.dumps(s, sort_keys=True) for s in cases[92]['sites']) == sorted(json.dumps(s, sort_keys=True) for s in cases[93]['sites'])
+    mass = decimal('1.6')*masses['Zn'][2] + decimal('.4')*masses['Ge'][2]
+    independent.update({(93, 'composition.z'): 2, (93, 'composition.formula_mass'): mass/2,
+        (93, 'formula.display'): 'Ge0.2 Zn0.8', (93, 'species.30.formula_amount'): decimal('.8'),
+        (93, 'species.32.formula_amount'): decimal('.2')})
+    witnesses['93'] = dict(cell_amounts={'Zn': '8/5', 'Ge': '2/5'},
+        forward_native_assigned_counts={'Zn':2}, reverse_native_assigned_counts={'Zn':1,'Ge':1},
+        canonical_assigned_counts={'Zn':2}, formula_amounts={'Zn':'4/5','Ge':'1/5'},
+        physical_mass_density_absorption_rir_changed=False)
+    records, failures = [], []
+    counts = dict(exact_symmetry_vs_legacy_proximity=0, canonical_formula_unit_order=0,
+                  binary32_log_interpolation=0)
+    for key in sorted(keys):
+        cid, field = key
+        c = cases[cid]
+        if cid in (33,57,58,59,60):
+            assert field in proximity_fields
+            category = 'exact_symmetry_vs_legacy_proximity'
+        elif cid == 93:
+            assert key in independent
+            category = 'canonical_formula_unit_order'
+        else:
+            assert re.fullmatch(r'absorption\.\d+\.log_fraction', field) and c['name'].startswith('registry-') and len(c['sites']) == 1
+            sid, z, _ = masses[c['sites'][0]['species']]
+            assert sid == int(field.split('.')[1])
+            a = attenuation(tables[z], c['wavelength'])
+            independent[key] = a['log_fraction']
+            witnesses[str(cid)] = {k:printable(v) for k,v in a.items()}
+            category = 'binary32_log_interpolation'
+        counts[category] += 1
+        want = independent[key]
+        values = {compiler: rows[key]['cpp'] for compiler,rows in observed.items()}
+        old = observed['GNU'][key]['legacy']
+        assert old == observed['MSVC'][key]['legacy']
+        # Independent proof bound is MUCH tighter than the frozen Legacy bound;
+        # it is not substituted into the differential acceptance comparison.
+        errors = {compiler: (None if isinstance(want,str) else printable(abs(mp.mpf(x)-want))) for compiler,x in values.items()}
+        exact = isinstance(want,str) or field == 'composition.z' or field.endswith('.multiplicity')
+        ok = all(x == want if exact else abs(mp.mpf(x)-want) <= mp.mpf('2e-11')*max(abs(want),mp.mpf('1e-280')) for x in values.values())
+        if not ok: failures.append(dict(case=cid,field=field,errors=errors))
+        record = dict(case=cid,name=c['name'],field=field,category=category,legacy=old,
+            cpp_by_compiler=values,independent_decimal=printable(want),absolute_error_by_compiler=errors,
+            independent_check_passed=ok,tolerance=observed['GNU'][key]['tolerance'],
+            approval='pending_explicit_user_acceptance')
+        record['fingerprint'] = fingerprint(record)
+        records.append(record)
+    assert list(counts.values()) == [60,5,44]
+    sources = ['tests/data/theoretical-card-reference.zip','tests/data/symmetry-reference.zip',
+        'share/qualx/files/AtomProperties.xen','legacy/fortran/crystallography/nist_table.f90',
+        'legacy/fortran/crystal_io/exportqualx.F90']
+    proof = dict(success=not failures,precision_decimal_digits=80,checks=2*len(records),failures=failures,
+        independent_bound='relative 2e-11, strings and discrete decisions exact',records=len(records),counts=counts,
+        method='Exact rational source symmetry orbits; source-decimal masses, metric volume, NIST logarithms and actual Legacy RIR constants at 80 digits. Native raw maximum is an input, not a derived expected.',
+        witnesses=witnesses,script_sha256=sha(Path(__file__)),source_sha256={p:sha(ROOT/p) for p in sources})
+    (HERE/'qualification-proof.json').write_text(json.dumps(proof,indent=2)+'\n')
+    out = dict(status='pending_explicit_user_acceptance',records=records,counts=counts,
+        compiler_fingerprints={k:dict(runner_sha256=v['runner_sha256']) for k,v in reports.items()},
+        proof_sha256=sha(HERE/'qualification-proof.json'),script_sha256=sha(Path(__file__)),
+        frozen_reference_unchanged=True,frozen_tolerance_unchanged=True)
+    (HERE/'qualification-records.json').write_text(json.dumps(out,indent=2)+'\n')
+    review = ['# Phase 18 qualification review','',
+        'Pending explicit user approval of the exact 109 case/field records below. Raw comparisons remain failed; no earlier approval applies.',
+        '', '## Meaning and consequences', '',
+        '* 60 fields (cases 33, 57–60): the frozen Phase 16 exact-image convention retains 24/192 distinct images; Legacy 0.3 A proximity merging counts 12/96. Cell mass, density, linear absorption double and RIR halves (within ordinary floating error). Z doubles; normalized formula stays the same. This is a semantic difference, not a rounding waiver. These are synthetic fixtures.',
+        '* 5 fields (case 93): deterministic mixed-site ordering chooses Z=2 for both permutations. Legacy chooses Z=1 for the reversed input. Formula mass and numeric formula amounts halve and the display becomes `Ge0.2 Zn0.8`; cell mass, density, absorption and RIR are unchanged.',
+        '* 44 fields: binary32 logarithmic interpolation weights differ from the 80-digit source-decimal calculation. The final MAC, absorption and RIR already pass the frozen tolerances. These records cover neutral/ionic labels of the affected elements individually.',
+        '* All 12 actual full-export observations (six real structures, anomalous off/on), line threshold/cap/identity/ranking comparisons and remaining fields pass without qualification. Equal-intensity native order remains recorded; Core uses the frozen deterministic angular-slot tie break.',
+        '', '## Exact scope', '',
+        '| Case / name | Field | Legacy | GNU | MSVC | Independent value (rounded here) | Type |',
+        '|---|---|---|---|---|---|---|']
+    for r in records:
+        value = independent[r['case'],r['field']]
+        shown = value if isinstance(value,str) else mp.nstr(value,18)
+        review.append(f'| {r["case"]} / {r["name"]} | {r["field"]} | {r["legacy"]} | {r["cpp_by_compiler"]["GNU"]} | {r["cpp_by_compiler"]["MSVC"]} | {shown} | {r["category"]} |')
+    review += ['', 'The JSON proof retains 80-digit values, exact orbit coordinates, close-pair witnesses and per-compiler errors. This table is a display only.',
+        'Approval must bind the exact records, proof, source/reference bytes, comparison code and compiler executables. Missing approval, stale evidence and new fields fail closed.',
+        f'Independent proof: {2*len(records)} checks, {len(failures)} failures. Zero production consumers switch.']
+    (HERE/'qualification-review.md').write_text('\n'.join(review)+'\n',encoding='utf-8')
+    print(json.dumps({k:v for k,v in proof.items() if k not in ('witnesses','source_sha256')}))
+    if failures: raise SystemExit(1)
+
+
+if __name__ == '__main__': main()

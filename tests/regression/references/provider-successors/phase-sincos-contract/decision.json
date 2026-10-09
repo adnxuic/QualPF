@@ -1,0 +1,158 @@
+{
+  "proposal": {
+    "scope_id": "36D-PHASE-SINCOS-CONTRACT-P1",
+    "baseline": "0697bc884d6eaac5310611fc9b9545a4b34c1d9a",
+    "risk": "D",
+    "status": "BOUNDED_INDEPENDENT_REVIEW_PENDING",
+    "objective": "Deterministic mathematical binary64 RNE sin/cos of the existing formed structure-factor phase, with exact caller operation order retained",
+    "alternatives": [
+      {
+        "option": "A",
+        "action": "Retain host libm",
+        "assessment": "Rejected recommendation: current Windows CRT/compiler dispatch varies; actual old primitive differences are independently proved"
+      },
+      {
+        "option": "B",
+        "action": "Adopt the reviewed exact integer/rational certifier as one private Core phase owner",
+        "assessment": "Recommended: exact primitive and caller composite proof; no phase reduction or upstream algorithm change"
+      },
+      {
+        "option": "C",
+        "action": "Global libm/runtime/FMA replacement",
+        "assessment": "Deferred: unrelated algorithms and state exceed this causal scope"
+      },
+      {
+        "option": "D",
+        "action": "Increase numerical tolerance",
+        "assessment": "Forbidden: neither explains nor fixes deterministic differences"
+      }
+    ],
+    "recommended_option": "B",
+    "recommendation_rationale": "163 actual unique arguments agree with two independent mathematical methods; each compiler has638 complete reflection frames and2521 exact reconstructed contributions, reductions and Fc2 values. Existing650 input errors and complete output shapes remain.",
+    "proposed_classification": "AI_APPROVED_NUMERICAL_CORRECTION",
+    "native_and_historical_authority": [
+      "Immutable Phase16 original observations, 329 named human qualifications and original runner/provider bindings; no historical rewrite or broad qualification"
+    ],
+    "current_CPP_observation": {
+      "path": ".evidence/raw/phase36d-phase-sincos-contract/batch-001/caller-proof001.json",
+      "sha256": "09d890b29e7b132a413268dea56a43e34fc5df67ae51c1d25979c95e60bcb6f7"
+    },
+    "independent_proof": [
+      {
+        "path": ".evidence/raw/phase36d-windows-clean-environment/batch-001/phase-sincos-reference001.json",
+        "sha256": "f4eb7713ed4b58f5f19f7b62c3345f71e1089c741e7c994141bfa1fc2eadec09"
+      },
+      {
+        "path": ".evidence/raw/phase36d-windows-clean-environment/batch-001/phase-sincos-termination003.md",
+        "sha256": "383691a14c4f6837435ff2ae7a63c2be378f84a4e18c150f00b81e4916dd38ab"
+      },
+      {
+        "path": ".evidence/raw/phase36d-windows-clean-environment/batch-001/independent-review.md",
+        "sha256": "25744b6386c0421832978e18920a8eb77ebe2e5b5036a091368d5cbc2951965d"
+      },
+      {
+        "path": ".evidence/raw/phase36d-phase-sincos-contract/batch-001/caller-proof001.json",
+        "sha256": "09d890b29e7b132a413268dea56a43e34fc5df67ae51c1d25979c95e60bcb6f7"
+      }
+    ],
+    "evidence_completeness": "EVIDENCE_STRONG_FOR_PHASE_PRIMITIVE_AND_PRODUCTION_RESULT_MAPPING; not full Scattering/Card/Powder acceptance",
+    "source_fingerprints": {
+      "src/core/crystallography/structure_factor.cpp": "e6b346510b03ef5c3aa696bac581ca8283617b54b42e3a698787433c11b0a762",
+      "tests/compatibility/scattering_replay.cpp": "3e1c0f23a236f01f10c646371036c1fa56bae200d1abe479325064697b1b1686",
+      ".evidence/raw/phase36d-windows-clean-environment/batch-001/phase-sincos-prototype003.cpp": "37b6a99fa881fba3c5979aa1e96a3732523293ee42f192f780af9407628d2673",
+      "tests/data/scattering-reference.zip": "0f8f888d047c79697ac35b9c752bd01facc17850739b567ac71fbda03653fe5e"
+    },
+    "runner_and_evidence_fingerprints": [
+      {
+        "path": ".evidence/raw/phase36d-phase-sincos-contract/batch-001/guest-trial001.py",
+        "sha256": "662f09d8f8bca63e5214ad46f2aa7ec30f8252410d87ddac8aed63006a35036f"
+      },
+      {
+        "path": ".evidence/raw/phase36d-phase-sincos-contract/batch-001/caller-proof001.py",
+        "sha256": "9d9e85cd5ad8343a43ec98fe06a4c8289ea677e703751b4ab78472581c8151ce"
+      },
+      {
+        "path": ".evidence/raw/phase36d-phase-sincos-contract/batch-001/080-phase-sincos-actual-caller-trial.json",
+        "sha256": "c7364404ce522bfa69e48121df793dad2375c3c41fa31fd65a68478512750ab6"
+      },
+      {
+        "path": ".evidence/raw/phase36d-phase-sincos-contract/batch-001/phase-trial001.zip",
+        "sha256": "4d87e519e39052688587f1053766a43ea8fb91d14729dbea5470f904bc092a5b"
+      }
+    ],
+    "numerical_state_dependencies": {
+      "input": "Three int32 Hkl and immutable wrapped fractional coordinates; reduced cycles give|phase|<=binary64 pi",
+      "unchanged": [
+        "phase formation order",
+        "site sort/expansion",
+        "scattering amplitude",
+        "occupancy/absence skip",
+        "displacement exponent/clamp/exp",
+        "complex multiply and Neumaier reduction",
+        "Fc2 norm",
+        "preexisting domain and numerical error guards"
+      ],
+      "output": "Existing StructureFactor private complex amplitude and Fc2; no state/persistence/ABI change",
+      "direct_consumers": [
+        "Hkl and Reflection overloads",
+        "structure_factors",
+        "PowderStructureFactors::calculate",
+        "structure_profile_phase"
+      ]
+    },
+    "resource_policy": {
+      "proposal": "Follow existing non-noexcept C++ allocation failure behavior; exact helper and const caller have no shared state or partial publication. No arbitrary precision/iteration semantic cap.",
+      "fast_path": "320-bit integer certifier with source-proved native iteration/shift bounds",
+      "fallback": "Exact rational shrinking enclosures with cpp_int index and divisors; qualitative mathematical termination independently reviewed",
+      "exclusions": [
+        "No quantitative worst-case latency or physical memory-capacity guarantee",
+        "No claim that physical resources are unbounded"
+      ]
+    },
+    "known_differences": {
+      "complete_raw_differences": {
+        "path": ".evidence/raw/phase36d-phase-sincos-contract/batch-001/caller-proof001.json",
+        "sha256": "09d890b29e7b132a413268dea56a43e34fc5df67ae51c1d25979c95e60bcb6f7"
+      },
+      "GNU_changed_fields": 51,
+      "MSVC_changed_fields": 26,
+      "primitive_differences": "252 GNU and40 MSVC contribution sites; sine/cosine cause established exactly",
+      "test_display": "Unchanged replay std::abs/arg derive fc/rounded phase from the amplitude; no rounded phase changes. Test-only magnitude libm accuracy remains outside the production StructureFactor result contract and is preserved as raw diagnostic, not waived."
+    },
+    "regression_impact": {
+      "required_if_implemented": [
+        "actual GNU/MSVC rebuilt Core and product targets",
+        "normal exact phase reference in four rounding modes including forced fallback and signed zero",
+        "scattering property/domain/error suite",
+        "Powder and profile direct consumer properties",
+        "current reference tests with explicit successor authority and original failures retained"
+      ],
+      "no_new_tolerance": true,
+      "expected_values_from_production_CPP": false
+    },
+    "excluded_scope": [
+      "UnitCell volume/density",
+      "scattering amplitude libm exp",
+      "Powder LP",
+      "unrelated GUI/Session/lifecycle",
+      "global CRT/FMA/env policy",
+      "new schema/domain",
+      "Phase37/PFSM"
+    ],
+    "final_gate": "Production implementation and current consumer conformance required; this proposal does not declare current reference suites or Milestone F passed"
+  },
+  "proposal_SHA256": "45e2ee366c8fe056e88a6e1620d09f0a7df41e305fdf023ad9f8162beb1a3886",
+  "status": "AI_APPROVED_WITH_BOUNDED_CONTRACT",
+  "classification": "AI_APPROVED_NUMERICAL_CORRECTION",
+  "selected_option": "B",
+  "human_approved": false,
+  "confidence": "EVIDENCE_STRONG",
+  "independent_review": {
+    "path": ".evidence/raw/phase36d-phase-sincos-contract/batch-001/independent-review.md",
+    "sha256": "349c4a3b2e746fb394afd2dc7c2f98a5c2598c37cf0a41df72d0378d336e63af"
+  },
+  "approval_scope": "Private Core exact phase primitive, existing StructureFactor complex/Fc2 mapping; no upstream/display/full-suite waiver",
+  "final_gate": "REQUIRED: current production objects, exact primitive and caller/direct-consumer conformance; all current numerical acceptance blockers retained until independently closed",
+  "historical_records_unchanged": true,
+  "Milestone_F": "NOT_REACHED"
+}

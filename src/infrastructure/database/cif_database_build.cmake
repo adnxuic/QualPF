@@ -1,0 +1,6 @@
+add_library(qualpf_cif_build STATIC "${CMAKE_CURRENT_LIST_DIR}/cif_database_build.cpp")
+add_library(qualpf::cif_build ALIAS qualpf_cif_build)
+target_include_directories(qualpf_cif_build PUBLIC "${CMAKE_CURRENT_LIST_DIR}" PRIVATE "${PROJECT_SOURCE_DIR}/src")
+target_link_libraries(qualpf_cif_build PUBLIC qualpf::cif_card qualpf_cif_database)
+target_compile_features(qualpf_cif_build PUBLIC cxx_std_20)
+set_target_properties(qualpf_cif_build PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)

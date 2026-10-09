@@ -1,0 +1,126 @@
+"""Freeze native reflection observations before any C++ implementation exists."""
+import argparse
+import hashlib
+import itertools
+import json
+import math
+import os
+from pathlib import Path
+import subprocess
+import zipfile
+
+ROOT = Path(__file__).resolve().parents[2]
+
+def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+def write(p,x): p.write_text(json.dumps(x,indent=2)+'\n',encoding='utf-8')
+
+def compatible_cell(group):
+    # Reynolds average of an arbitrary SPD direct metric; test INPUT only.
+    seed=[[16,1.3,0.7],[1.3,25,2.1],[0.7,2.1,36]]
+    ops=group['operations']
+    metric=[[sum(sum(o['rotation'][3*a+i]*seed[a][b]*o['rotation'][3*b+j]
+                        for a in range(3) for b in range(3)) for o in ops)/len(ops)
+             for j in range(3)] for i in range(3)]
+    lengths=[math.sqrt(metric[i][i]) for i in range(3)]
+    return lengths+[math.degrees(math.acos(metric[i][j]/lengths[i]/lengths[j]))
+                    for i,j in ((1,2),(0,2),(0,1))]
+
+def cases():
+    with zipfile.ZipFile(ROOT/'tests/data/symmetry-reference.zip') as z:
+        groups=json.loads(z.read('exact-table.json'))
+    probes=list(itertools.product(range(-2,3),repeat=3))
+    probes += [(120,0,0),(0,-120,0),(0,0,120),(99,-97,89),(-119,3,0)]
+    result=[]
+    for group in groups:
+        result.append(dict(name=f"setting-{group['id']}",group_id=group['id'],
+            number=group['number'],setting=group['setting_index'],cell=compatible_cell(group),
+            wavelength=.01,probes=probes,enumerations=[dict(mode=0,low=2.13,high=0)]))
+    real=json.loads((ROOT/'tests/data/crystallography-real-cells.json').read_text())
+    for record in real['records']:
+        name=record['spacegroup_context_only'].replace(' ','')
+        group=next(g for g in groups if g['xhm'].replace(' ','')==name)
+        result.append(dict(name='COD-'+record['id'],group_id=group['id'],number=group['number'],
+            setting=group['setting_index'],cell=record['cell'],wavelength=1.5406,
+            probes=[(1,0,0),(1,1,1),(2,0,0),(2,2,0),(3,1,1)],
+            enumerations=[dict(mode=1,low=10,high=80),dict(mode=1,low=2,high=150),
+                          dict(mode=0,low=1.5,high=0),dict(mode=0,low=8,high=0)]))
+    result.append(dict(name='exact-cubic-boundaries',group_id=0,number=1,setting=1,
+        cell=[4,4,4,90,90,90],wavelength=2,probes=[(1,0,0),(2,0,0),(0,0,0)],
+        enumerations=[dict(mode=0,low=2,high=0),dict(mode=0,low=4,high=0),
+                      dict(mode=1,low=60,high=60),dict(mode=1,low=30,high=60)]))
+    for i,c in enumerate(result): c['id']=i
+    return result
+
+def parse(raw, inputs):
+    lines=iter(raw.splitlines())
+    assert next(lines)=='REFLECTION15'
+    output=[]
+    for c in inputs:
+        fields=next(lines).split(); assert fields[0]=='CASE' and int(fields[1])==c['id']
+        item=dict(id=c['id'],group_id=int(fields[2]),nsym=int(fields[3]),icent=int(fields[4]),
+                  jsys=int(fields[5]),lattice=int(fields[6]),probes=[],enumerations=[])
+        for _ in c['probes']:
+            p=next(lines).split(); assert p[0]=='PROBE'
+            images=[]
+            for _ in range(int(fields[7])):
+                row=next(lines).split(); assert row[0]=='IMAGE'
+                images.append(list(map(int,row[2:])))
+            orbit=sorted(set(tuple(h) for h in images))
+            powder=sorted(set(orbit+[tuple(-x for x in h) for h in orbit]))
+            item['probes'].append(dict(hkl=list(map(int,p[2:5])),absent=int(p[5]),
+                canonical=list(map(int,p[6:9])),multiplicity=int(p[9]),d=float(p[10]),
+                two_theta=float(p[11]),images=images,orbit=orbit,powder_orbit=powder))
+        for _ in c['enumerations']:
+            e=next(lines).split(); assert e[0]=='ENUM'
+            refs=[]
+            for _ in range(int(e[2])):
+                r=next(lines).split(); assert r[0]=='REF'
+                refs.append(dict(hkl=list(map(int,r[2:5])),multiplicity=int(r[5]),
+                                 d=float(r[6]),two_theta=float(r[7])))
+            item['enumerations'].append(refs)
+        output.append(item)
+    assert next(lines,None) is None
+    return output
+
+def main():
+    p=argparse.ArgumentParser()
+    p.add_argument('--runner',required=True,type=Path)
+    p.add_argument('--output',required=True,type=Path)
+    a=p.parse_args(); a.output.mkdir(parents=True,exist_ok=False)
+    inputs=cases(); write(a.output/'cases.json',inputs)
+    wire=str(ROOT/'share/qualx/files/syminfo.lib')+'\n'
+    for c in inputs:
+        wire+=' '.join(map(str,[c['id'],c['number'],c['setting'],len(c['probes']),len(c['enumerations'])]))+'\n'
+        wire+=' '.join(map(str,c['cell']+[c['wavelength']]))+'\n'
+        wire+=''.join(' '.join(map(str,h))+'\n' for h in c['probes'])
+        wire+=''.join(f"{e['mode']} {e['low']} {e['high']}\n" for e in c['enumerations'])
+    (a.output/'input.txt').write_text(wire,encoding='utf-8')
+    env=os.environ.copy()
+    env['PATH']=str(ROOT/'build-phase7/qt/Tools/mingw1310_64/bin')+os.pathsep+str(ROOT/'build-phase7/qt/6.8.3/mingw_64/bin')+os.pathsep+env['PATH']
+    with (a.output/'stdout.txt').open('wb') as out, (a.output/'stderr.txt').open('wb') as err:
+        run=subprocess.run([str(a.runner.resolve())],input=wire.encode(),stdout=out,stderr=err,
+                           cwd=a.output,env=env,timeout=3600)
+    if run.returncode: raise RuntimeError(f'Native capture failed {run.returncode}')
+    expected=parse((a.output/'stdout.txt').read_text(),inputs)
+    write(a.output/'expected.json',expected)
+    sources=[p for p in (ROOT/'legacy').rglob('*') if p.suffix.lower() in ('.f','.f90')]
+    (a.output/'capture-source').mkdir()
+    for name in ('reflection_capture.py','reflection_capture.f90','reflection_capture_main.cpp'):
+        (a.output/'capture-source'/name).write_bytes((ROOT/'tests/compatibility'/name).read_bytes())
+    (a.output/'capture-source/CMakeLists.txt').write_bytes((ROOT/'tests/CMakeLists.txt').read_bytes())
+    write(a.output/'manifest.json',dict(schema_version=1,kind='legacy_reflection_capture',
+        source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+        compiler=subprocess.check_output([str(ROOT/'build-phase7/qt/Tools/mingw1310_64/bin/gfortran.exe'),'--version'],text=True).splitlines()[0],
+        flags='Retained product Fortran -O0, default REAL binary32; serial',runner_sha256=sha(a.runner),
+        fortran_sources={p.relative_to(ROOT).as_posix():sha(p) for p in sources},
+        resources={p:sha(ROOT/p) for p in ('share/qualx/files/syminfo.lib','tests/data/symmetry-reference.zip','tests/data/crystallography-real-cells.json')},
+        comparison=dict(exact=['hkl','images','orbit','powder_orbit','canonical','multiplicity','absent','ordered reflection membership'],
+            d_relative=2e-5,two_theta_absolute=1e-4,two_theta_relative=2e-6,
+            ordering='Raw Legacy order frozen, including d-entry unsorted order and unstable angle ties. All differences must be reported; no implicit waiver.',
+            zero='Legacy zero outputs retained as observation; C++ rejects zero reflection class'),
+        files={p.relative_to(a.output).as_posix():sha(p) for p in a.output.rglob('*') if p.is_file()},
+        counts=dict(groups=230,settings=551,cases=len(inputs),probes=sum(len(c['probes']) for c in inputs),
+            enumerations=sum(len(c['enumerations']) for c in inputs),reflections=sum(len(e) for c in expected for e in c['enumerations']))))
+    print('Captured',len(inputs),'cases',flush=True)
+
+if __name__=='__main__': main()

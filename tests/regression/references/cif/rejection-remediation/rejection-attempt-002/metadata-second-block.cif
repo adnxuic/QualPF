@@ -1,0 +1,36 @@
+data_phase19
+# Controlled input, native outputs are the only oracle.
+_cell_length_a 5
+_cell_length_b 6
+_cell_length_c 7
+_cell_angle_alpha 80
+_cell_angle_beta 85
+_cell_angle_gamma 75
+_symmetry_space_group_name_H-M 'P 1'
+_chemical_name_systematic 'Phase 19 fixture'
+_chemical_name_mineral 'Native observation'
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+Si1 Si 0.123 0.234 0.345
+data_second
+# Controlled input, native outputs are the only oracle.
+_cell_length_a 5
+_cell_length_b 6
+_cell_length_c 7
+_cell_angle_alpha 80
+_cell_angle_beta 85
+_cell_angle_gamma 75
+_symmetry_space_group_name_H-M 'P 1'
+_chemical_name_systematic 'SECOND name'
+_chemical_name_mineral 'Native observation'
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+Si1 Si 0.123 0.234 0.345

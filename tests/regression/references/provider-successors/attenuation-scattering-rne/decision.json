@@ -1,0 +1,127 @@
+{
+  "schema": "qualpf.autonomous_numerical_decision.v1",
+  "scope_id": "36D-ATTENUATION-SCATTERING-RNE-PREREQUISITE",
+  "proposal_SHA256": "3c480998644bfc66d2e1e5866392d9221c7701426786e089e4708290062d04e0",
+  "status": "AI_APPROVED_WITH_BOUNDED_CONTRACT",
+  "classification": "AI_APPROVED_NUMERICAL_CORRECTION",
+  "selected_option": "B",
+  "human_approved": false,
+  "confidence": "EVIDENCE_STRONG",
+  "considered_alternatives": [
+    {
+      "option": "A",
+      "description": "Accept another host-CRT complete profile",
+      "recommended": false,
+      "reason": "No deterministic correct primitive; no unexplained ULP/profile waiver"
+    },
+    {
+      "option": "B",
+      "description": "One private certified integer/rational owner: log10/exp/pow10 and replay-only exact sqrt magnitude",
+      "recommended": true,
+      "reason": "Analytical enclosures and exact ties-even rounding; no host libm authority"
+    },
+    {
+      "option": "C",
+      "description": "Replace global libm/redesign numerical architecture",
+      "recommended": false,
+      "reason": "Unnecessary/out of scope"
+    },
+    {
+      "option": "D",
+      "description": "Widen tolerance or generate golden from new C++",
+      "recommended": false,
+      "reason": "Forbidden"
+    }
+  ],
+  "recommendation_rationale": "Independent arithmetic and actual limited libm observation explain every new Linux difference. One exact private primitive owner removes the causes; source formula/order/domain/state and old named qualifications are preserved. Three old non-RNE fields have no explicit named human authority and require independent exact successor, never a rewritten reference.",
+  "numerical_state_dependencies": "Existing chemistry interpolation -> composition weighted/MAC/mu and anomalous/Gaussian scattering -> direct callers. Replay magnitude is diagnostic only. No state/ABI/layout/schema change.",
+  "independent_proof_references": [
+    {
+      "path": ".evidence/raw/phase36d-linux-acceptance/batch-001/independent-numerical-review001.md",
+      "sha256": "1dfe10af0227b439bcef35d671b6b25e7c17dfd1b189952d1115071212db761a"
+    },
+    {
+      "path": ".evidence/raw/phase36d-linux-acceptance/batch-001/independent-numerical-diagnostic001.json",
+      "sha256": "340e30a66d09a6c31d224a0715be2fb74a39c6f0bcde0fe71484cb830cf55e6a"
+    }
+  ],
+  "native_observations": "Original sealed Card/Scattering corpus, decimal tables/formula conventions, original 109/329 named qualifications and all 650 error tokens remain historical unchanged authority.",
+  "current_CPP_observations": {
+    "Card_fields": 1312,
+    "Scattering_fields": 222,
+    "Scattering_breakdown": {
+      "ANOM": 179,
+      "SCAT": 2,
+      "STRUCT_replay_magnitude": 41
+    },
+    "unchanged_error_tokens": 650
+  },
+  "known_differences": [
+    "card.157.mac.39.mac",
+    "card.312.mac.194.mac",
+    "scattering.cases.7324.values.4"
+  ],
+  "excluded_scope": [
+    "UnitCell/phase/LP formulas",
+    "global libm replacement",
+    "GUI lifecycle/SearchSession/state",
+    "ABI/layout/schema",
+    "architecture37/PFSM",
+    "new domain/feature",
+    "old approvals/reference/tolerance/raw FAILs"
+  ],
+  "source_fingerprints": {
+    "src/core/crystallography/chemistry.cpp": "037f2b84e881c810acf8b02bf59d8aa947d732e1e88ec56a5f82c456e3b30b05",
+    "src/core/crystallography/scattering.cpp": "3af37b166998f0825a8b716012f4d81acb0b9a4244d105abbef24e830ab3b70c",
+    "src/core/crystallography/scattering_data.inc": "639abc5babf0f43ab03253b6ed47ee07cd53908ab231f53db01af91de08f1eb5",
+    "src/core/crystallography/chemistry_data.inc": "8e5e9186d8f025aa7aa679a58bd202cfcb5a163a33f1d7eb4d7c8bdcfc513397",
+    "src/core/CMakeLists.txt": "cb91f41dc3b4046f52d7d7f8f2a5a87d1b047a9f9fc88d112363806e76240065",
+    "tests/compatibility/scattering_replay.cpp": "3e1c0f23a236f01f10c646371036c1fa56bae200d1abe479325064697b1b1686",
+    "tests/data/scattering-reference.zip": "0f8f888d047c79697ac35b9c752bd01facc17850739b567ac71fbda03653fe5e",
+    "tests/data/scattering-reference-manifest.json": "ea944d25549e183cac4d598188eacfc277eda6c22834f908dfa82e6f27940e0e",
+    "tests/data/theoretical-card-reference.zip": "19312fffd4a1e4bec2630701d7f4088f1baf60a1953a7414da6e1ad833a02a0f",
+    "tests/data/card-reference-manifest.json": "bf10ba2d63017b4363707ec51413123cd0de0dbac8813a6929820f5341f710bc"
+  },
+  "runner_fingerprints": {
+    "src/core/crystallography/chemistry.cpp": "037f2b84e881c810acf8b02bf59d8aa947d732e1e88ec56a5f82c456e3b30b05",
+    "src/core/crystallography/composition.cpp": "7530547011e487e7a31202018a9fbb025932409c7856cae023cd853120eb99dc",
+    "src/core/crystallography/scattering.cpp": "3af37b166998f0825a8b716012f4d81acb0b9a4244d105abbef24e830ab3b70c",
+    "src/core/crystallography/scattering_data.inc": "639abc5babf0f43ab03253b6ed47ee07cd53908ab231f53db01af91de08f1eb5",
+    "tests/compatibility/card_replay.cpp": "0de1846319fb4975fc42632b4ea41d7fa3572b18af3ec18028761dd853f0e05c",
+    "tests/compatibility/scattering_replay.cpp": "3e1c0f23a236f01f10c646371036c1fa56bae200d1abe479325064697b1b1686",
+    "tests/data/scattering-reference.zip": "0f8f888d047c79697ac35b9c752bd01facc17850739b567ac71fbda03653fe5e",
+    "tests/data/theoretical-card-reference.zip": "19312fffd4a1e4bec2630701d7f4088f1baf60a1953a7414da6e1ad833a02a0f",
+    "tests/data/cell-historical-scattering-reference.zip": "281d5984c87b28f7ab8e6b20252fbef4e7dac175065b6be84b279e5b1d91b035",
+    "docs/refactoring/phase-18/cpp-replay-evidence.zip": "3e4169ae5629dd4860ce542233c72ecc7e6dd8ea70cbbb1bfbdc5d651e694827",
+    "docs/refactoring/phase-18/acceptance-decision.json": "c181c0bbc2ad05d7e91b74fea91e5fb358ebf8d2e497c1c38aef14fc3dea36d4",
+    "docs/refactoring/phase-18/qualification-records.json": "b0c2d206b11827d03da2e4ed1862097e8df0010957b2d838e4fd317ac058d3fa",
+    "docs/refactoring/phase-16/acceptance-decision.json": "7adcf7791aa41c6aeb18bfd0b2c84befbd156e84bd0cd8c5b540b0a6c18c1c3a",
+    "docs/refactoring/phase-16/qualification-records.json": "80389609d870095fbb13ff2eb93d3956cffc09b43c621b9679c7d45a7f751c82",
+    "build-phase36d/linux-001/tests/card-differential-lp-opxzb21d/historical-gate.actual.json": "b2c1d307d42f8921ea32548c511d6770279310b32a0196ecb534bf3183df706d",
+    "build-phase36d/linux-001/tests/card-differential-lp-opxzb21d/historical-gate.json": "de47a0009d73aa289c41ae5665a987d6ede37dae5277e41c49d9048cf1dacca7",
+    "build-phase36d/linux-001/tests/scattering-differential-lp-qxmdhvfx/historical-gate.stdout.txt": "b824fbe03a42c4e99d155bb1bb60d12a5485ad9864151e99e5359268d2dfe2c2",
+    "build-phase36d/linux-001/tests/scattering-differential-lp-qxmdhvfx/historical-gate.json": "e8add92b0f4bceaebd9a11c32312ef2d3320d581502e19f6f03c182a899c1aa8",
+    ".evidence/raw/phase36d-linux-acceptance/batch-001/current002.xml": "2331d200c467672e33af6994e1d49f85c1366f006b5ecb3fdd39d2ddf517315f"
+  },
+  "evidence_fingerprints": {
+    "review": "1dfe10af0227b439bcef35d671b6b25e7c17dfd1b189952d1115071212db761a",
+    "independent_diagnosis": "340e30a66d09a6c31d224a0715be2fb74a39c6f0bcde0fe71484cb830cf55e6a"
+  },
+  "regression_impact": "Only primitive-dependent numeric fields and replay magnitude may change to independently certified RNE. Any other new output/error/state difference fails; conformance on current GNU/MSVC/Linux actual consumers required.",
+  "evidence_completeness": "Complete initial causal attribution and mathematical implementation eligibility; final code/interval/fallback/domain/primitive/caller conformance not yet executed.",
+  "final_gate": "PASS_IMPLEMENTATION_ELIGIBILITY_FINAL_CONFORMANCE_REQUIRED",
+  "implementation_eligible": true,
+  "commit_eligible": false,
+  "required_final_conformance": [
+    "bounded independent eligibility/source/analytical review",
+    "frozen corpus and independent exact primitive/caller successor",
+    "GNU/MSVC/Linux actual affected product/Core/replay build and tests",
+    "unchanged domain/error/state/operation order",
+    "existing numerical and current product checkpoint",
+    "all old reports preserved; no tolerance or self-generated golden",
+    "successor maps only changed providers/fields; no historical live-hash cascade"
+  ],
+  "historical_authority_rewritten": false,
+  "new_tolerance": false,
+  "expected_from_production_CPP": false
+}

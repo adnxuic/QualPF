@@ -1,0 +1,28 @@
+{
+  "archive": "scattering-reference.zip",
+  "archive_sha256": "0f8f888d047c79697ac35b9c752bd01facc17850739b567ac71fbda03653fe5e",
+  "parent_manifest": "scattering-reference-manifest.json",
+  "counts": {
+    "structures": 104,
+    "reflections": 638
+  },
+  "provenance": "Six explicitly transcribed COD structures (four from prior repository workflows), plus isolated synthetic physical cases; see archived cases.json",
+  "tolerances": {
+    "complex": {
+      "absolute": 0.0002,
+      "relative": 2e-05
+    },
+    "magnitude": {
+      "absolute": 0.0002,
+      "relative": 2e-05
+    },
+    "fc2": {
+      "absolute": 0.02,
+      "relative": 6e-05
+    },
+    "adp": {
+      "absolute": 2e-07,
+      "relative": 3e-06
+    }
+  }
+}

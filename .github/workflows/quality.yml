@@ -1,0 +1,24 @@
+name: Current project quality
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check current development context
+        run: python -B tools/agent/check_current_context.py --self-test
+      - name: Check accepted project baseline
+        run: python -B tools/validation/check_project_baseline.py --self-test
+      - name: Check architecture boundaries
+        run: python -B tools/architecture/check_boundaries.py --self-test
+      - name: Check product identity
+        run: python -B tools/validation/check_product_identity.py --self-test
+      - name: Verify independent regression resources
+        run: python -B tools/validation/check_references.py

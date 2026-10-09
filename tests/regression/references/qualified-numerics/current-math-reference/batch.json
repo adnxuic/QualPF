@@ -1,0 +1,157 @@
+{
+  "schema": "qualpf.current_qualified_reference.v1",
+  "batch_id": "34C-CURRENT-MATH-REFERENCE-BATCH",
+  "baseline": "cfbaa02",
+  "risk_class": "B",
+  "status": "CURRENT_CONTRACT",
+  "decision": "Reuse accepted canonical mathematical source/value authority in current normal reference tests; historical runner/CMake byte authority remains distinct.",
+  "historical_provider_authority": {
+    "path": "docs/refactoring/phase-19/product-integration/build-attempt-014-inputs.json",
+    "sha256": "e3e90747dfbb8d49d49130ed08bd8b363b757c14b3dcf13c12d9ee7a38b82018"
+  },
+  "provider_hashes": {
+    "src/core/crystallography/chemistry.cpp": "037f2b84e881c810acf8b02bf59d8aa947d732e1e88ec56a5f82c456e3b30b05",
+    "src/core/crystallography/chemistry_data.inc": "8e5e9186d8f025aa7aa679a58bd202cfcb5a163a33f1d7eb4d7c8bdcfc513397",
+    "src/core/crystallography/composition.cpp": "7530547011e487e7a31202018a9fbb025932409c7856cae023cd853120eb99dc",
+    "src/core/crystallography/powder_intensity.cpp": "da6055402c7b493759d57cce6d11d9401ca457097f51381e52db8ec215d4495d",
+    "src/core/crystallography/reflection.cpp": "830ae1eb88f0a99a4f46a62f9857c350db52141eaa4b2c10b4ad498888022267",
+    "src/core/crystallography/scattering.cpp": "3af37b166998f0825a8b716012f4d81acb0b9a4244d105abbef24e830ab3b70c",
+    "src/core/crystallography/scattering_data.inc": "639abc5babf0f43ab03253b6ed47ee07cd53908ab231f53db01af91de08f1eb5",
+    "src/core/crystallography/space_group_data.inc": "e85c28e71aea03b215f4885fe966158a3148055f164a042773cf7b9fd9b693bd",
+    "src/core/crystallography/structure_factor.cpp": "e6b346510b03ef5c3aa696bac581ca8283617b54b42e3a698787433c11b0a762",
+    "src/core/crystallography/symmetry.cpp": "e8c8f34eaaf24c8a112d9ce48d1cba122fa0f43d49a6b0b3ff4d1146bd74a120",
+    "src/core/crystallography/theoretical_card.cpp": "76fcb4f5acb6375982f73d15f97d214983545971c637861d811fc5a1bcb6251b",
+    "src/core/crystallography/unit_cell.cpp": "d80ea785e97a2caa4f4011b62db80cc6c0b231b483c8c61041e9a7b9bbdf89e2",
+    "src/core/include/qualpf/crystallography/chemistry.h": "40598c0174d3124e427d87660703c4021aadce824c472f43458f7f95ce953268",
+    "src/core/include/qualpf/crystallography/composition.h": "2afb0f9c0ce6f103c87f45a9d124c62dfd5d0ef86545a2ed555bd962b0d3c5d0",
+    "src/core/include/qualpf/crystallography/powder_intensity.h": "03d7530c6050238d67ce84b6847726552ff864e1ab7be30aefedaf03ee4316f2",
+    "src/core/include/qualpf/crystallography/reflection.h": "eb32e4927e8faac294df48b58ed3d83907a91c40104d6d900c4e4fa09c0774ba",
+    "src/core/include/qualpf/crystallography/scattering.h": "bee69aba260f76e710876e500ee26b73b69a1037d4ca801aa2697079f2216562",
+    "src/core/include/qualpf/crystallography/structure_factor.h": "d25b9adb7bac8e26e0ee6e6515d2825aa3753359c4f382d49b2a673f28610787",
+    "src/core/include/qualpf/crystallography/symmetry.h": "f81f911678d2cf3c12683524af2e9ce1dc2a0405351a5a7c5280a6134de2b1c2",
+    "src/core/include/qualpf/crystallography/theoretical_card.h": "1e6daaa25d3828a2c6229e48bfa71349c3caf4df98090ff41c087bf072b3d1db",
+    "src/core/include/qualpf/crystallography/unit_cell.h": "3a0cafa7ef8e2604e1f587ed00c443e4b47a6d2675e11033a7ba11ecd9fb6d0c",
+    "src/core/include/qualpf/domain/pattern.h": "9dd26d93189f568de536e7019d6b3da2008b5cb611432ade13fb9ae909163ba1",
+    "src/core/include/qualpf/domain/peaks.h": "2c1306d5143dbfb74b2f15d82e86937eedd6e359c84b8384da1b5ca6dc05f1ea",
+    "src/core/include/qualpf/domain/radiation.h": "7005cfcba3d295e6ef71013d47069a36aa6998822ace19b7e442551804f494c0",
+    "src/core/include/qualpf/domain/reference_card.h": "fc6484e9401907b4d48d9d41d5a9477e0396bdd0c15282faddf0819629213fd2",
+    "src/core/include/qualpf/domain/result.h": "0e5eb1a0aca4dd1a309605f4cdd5de823d6b0ae6f5bf61625544823f43abd469",
+    "src/core/include/qualpf/domain/search.h": "835df3fa24681075ac71f733095662d9b12ba9fcefab35a77d010f5b75b0ce2c",
+    "src/core/include/qualpf/domain/units.h": "326ab042d069842d3b87d8b70f7b61ebc66cd3ebeff30df27006bc344dd17ea4",
+    "src/core/include/qualpf/domain/validation.h": "fd7af83f72cb0c3ae5cd5d5dfda775fcb27dae0fabcdefcf433fd001c5316a5f"
+  },
+  "math_compile_options": [
+    {
+      "sources": [
+        "crystallography/chemistry.cpp",
+        "crystallography/composition.cpp",
+        "crystallography/theoretical_card.cpp"
+      ],
+      "options": "/fp:strict"
+    },
+    {
+      "sources": [
+        "crystallography/powder_intensity.cpp"
+      ],
+      "options": "/fp:strict"
+    },
+    {
+      "sources": [
+        "crystallography/scattering.cpp",
+        "crystallography/structure_factor.cpp"
+      ],
+      "options": "/fp:strict"
+    },
+    {
+      "sources": [
+        "crystallography/reflection.cpp"
+      ],
+      "options": "/fp:strict"
+    },
+    {
+      "sources": [
+        "crystallography/symmetry.cpp"
+      ],
+      "options": "/fp:strict"
+    },
+    {
+      "sources": [
+        "crystallography/unit_cell.cpp"
+      ],
+      "options": "/fp:strict"
+    },
+    {
+      "sources": [
+        "crystallography/chemistry.cpp",
+        "crystallography/composition.cpp",
+        "crystallography/theoretical_card.cpp"
+      ],
+      "options": "-ffp-contract=off;-fno-fast-math"
+    },
+    {
+      "sources": [
+        "crystallography/powder_intensity.cpp"
+      ],
+      "options": "-ffp-contract=off;-fno-fast-math"
+    },
+    {
+      "sources": [
+        "crystallography/scattering.cpp",
+        "crystallography/structure_factor.cpp"
+      ],
+      "options": "-ffp-contract=off;-fno-fast-math"
+    },
+    {
+      "sources": [
+        "crystallography/reflection.cpp"
+      ],
+      "options": "-ffp-contract=off;-fno-fast-math"
+    },
+    {
+      "sources": [
+        "crystallography/symmetry.cpp"
+      ],
+      "options": "-ffp-contract=off;-fno-fast-math"
+    },
+    {
+      "sources": [
+        "crystallography/unit_cell.cpp"
+      ],
+      "options": "-fno-fast-math;-ffp-contract=off"
+    }
+  ],
+  "original_decisions": {
+    "card": {
+      "path": "docs/refactoring/phase-18/acceptance-decision.json",
+      "sha256": "c181c0bbc2ad05d7e91b74fea91e5fb358ebf8d2e497c1c38aef14fc3dea36d4"
+    },
+    "powder": {
+      "path": "docs/refactoring/phase-17/acceptance-decision.json",
+      "sha256": "89ea26909a256c6ca46a3a400442f6819756280f4acddba80d3b599d08f6ee94"
+    },
+    "scattering": {
+      "path": "docs/refactoring/phase-16/acceptance-decision.json",
+      "sha256": "7adcf7791aa41c6aeb18bfd0b2c84befbd156e84bd0cd8c5b540b0a6c18c1c3a"
+    }
+  },
+  "historical_registration_paths": [
+    "src/core/CMakeLists.txt",
+    "tests/CMakeLists.txt"
+  ],
+  "excluded_live_source_hash_prefixes": [
+    "legacy/fortran/"
+  ],
+  "normal_ci_native_execution": false,
+  "Milestone_F": "NOT_REACHED",
+  "execution_hashes": {
+    "tests/compatibility/card_differential.py": "f1a8d686d4696cf279f9b69ed6c45fa257f820da2393b5d53b50955d2ff0a17b",
+    "tests/compatibility/card_capture.py": "a0d66d1f73d89001ea412b2e44c01f9ef4ba67abf50b01f3b9c5cd1028c3680e",
+    "tests/compatibility/card_qualification.py": "2244a1ac5832bc8fd79a43a2533992270db1df4ccb1d14f8ddf26411d532641f",
+    "tests/compatibility/powder_differential.py": "d3d39570116dd3d3397f60cccecddca1c2f2591b2041aed331913f4e2a763ccc",
+    "tests/compatibility/powder_capture.py": "82b5a354d3f189281ae1e70454fb837489cf5e1b83c10e2cfca6fb0e42143883",
+    "tests/compatibility/powder_qualification.py": "cd5401fb38bf71c5ea59d9db881c3ea651ed305e3146fe33b857eb2cf261d679",
+    "tests/compatibility/scattering_differential.py": "d104e5f5c55a57508ec1f5b560c9778f27dc1495e9a34334defb114c7b1e89b1",
+    "tests/compatibility/scattering_capture.py": "d80b4d2d53ee18bc6b7b84737ee6fcecc703a8fb52d6ffe5da688a5ba5ed0a66",
+    "tests/compatibility/scattering_qualification.py": "2ba5c81a6432c99f7c582438ca786c3412cd08135a33980db07f52e170280193"
+  }
+}

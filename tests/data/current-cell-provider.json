@@ -1,0 +1,34 @@
+{
+  "schema": "qualpf.current_cell_provider.v1",
+  "scope": "36D-WINDOWS-UNIT-CELL-FORMED-ANGLE-CONTRACT",
+  "expected_from_new_CPP": false,
+  "new_tolerance": false,
+  "decision": {
+    "path": "docs/refactoring/phase-36/unit-cell-contract/decision.json",
+    "sha256": "b3fd6f613f090cbb5be437d763a4164729cb659b682682add86ea037b960ce9c"
+  },
+  "current_providers": {
+    "src/core/crystallography/unit_cell.cpp": "465513b782a5a60d5669616913df6950029e067c5c5d8d9f89fecbf6f1a33868"
+  },
+  "historical_sha256": "d80ea785e97a2caa4f4011b62db80cc6c0b231b483c8c61041e9a7b9bbdf89e2",
+  "value_successor": {
+    "path": "tests/data/cell-successor-fields.json",
+    "sha256": "f05165afce4878f74152abff45b6dddf20491457c2c9eeb6c67438d014d4e709"
+  },
+  "normal_cell_reference": {
+    "path": "tests/data/unit-cell-formed-angle-reference.txt",
+    "sha256": "ecbb22ccb2e8dc0dfe22967b90a3de18d43455474872f25329add09d33cc26b2"
+  },
+  "historical_scattering_reference": {
+    "path": "tests/data/cell-historical-scattering-reference.zip",
+    "sha256": "281d5984c87b28f7ab8e6b20252fbef4e7dac175065b6be84b279e5b1d91b035"
+  },
+  "reflection_boundary_decision": {
+    "path": "docs/refactoring/phase-36/unit-cell-contract/reflection-boundary-decision.json",
+    "sha256": "79d179e5123baf6301193224959f2d6562403c26753cd558f7c27fb4b05b809e"
+  },
+  "scattering_environment_reference": {
+    "path": "tests/data/cell-scattering-environments.json",
+    "sha256": "8cf7fe777b06ac2999e37f3593d58d38cdcecbb087bdadfedf4d6077effc2cf7"
+  }
+}

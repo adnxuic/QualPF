@@ -1,0 +1,108 @@
+{
+  "schema": "qualpf.bounded_numerical_proposal.v1",
+  "scope_id": "36D-ATTENUATION-SCATTERING-RNE-PREREQUISITE",
+  "baseline": "82fd1e5",
+  "risk": "D",
+  "status": "PENDING_BOUNDED_AI_REVIEW",
+  "human_review_required": false,
+  "objective": "Correct direct Card/Scattering Windows/Linux primitive rounding deterministically; preserve formulas/order/domain/errors/state and immutable history.",
+  "alternatives": [
+    {
+      "option": "A",
+      "description": "Accept another host-CRT complete profile",
+      "recommended": false,
+      "reason": "No deterministic correct primitive; no unexplained ULP/profile waiver"
+    },
+    {
+      "option": "B",
+      "description": "One private certified integer/rational owner: log10/exp/pow10 and replay-only exact sqrt magnitude",
+      "recommended": true,
+      "reason": "Analytical enclosures and exact ties-even rounding; no host libm authority"
+    },
+    {
+      "option": "C",
+      "description": "Replace global libm/redesign numerical architecture",
+      "recommended": false,
+      "reason": "Unnecessary/out of scope"
+    },
+    {
+      "option": "D",
+      "description": "Widen tolerance or generate golden from new C++",
+      "recommended": false,
+      "reason": "Forbidden"
+    }
+  ],
+  "recommended_option": "B",
+  "primitive_contract": {
+    "log10": "RNE(log10(x)) for existing positive finite binary64 input; exact powers of ten",
+    "exp": "RNE(exp(x)) for each source-formed binary64 argument; exp(-inf)=0/exp(+inf)=+inf retain existing caller errors, subnormal and overflow behavior",
+    "pow10": "RNE(10^x), mathematical base-ten power; exact integer-exponent rational path includes the 10^23 midpoint; no RNE(x*ln10) intermediate",
+    "replay_magnitude": "RNE(sqrt(exact(real^2+imaginary^2))); production amplitude/Fc2 remain their existing algorithms"
+  },
+  "analytical_proof_plan": {
+    "log": "Normalize exact dyadic m*2^k. ln(m)=2*atanh((m-1)/(m+1)); ln2=2*atanh(1/3); ln10=2*atanh(1/9)+3ln2. Outward rational-series remainder and signed division.",
+    "exp": "Exact range reduction by2^14, positive Taylor enclosure with explicit tail,14 outward squarings; reciprocal for negative input avoids subnormal loss.",
+    "pow10": "Enclose exact x*ln10 before monotone exponential; exact integer-exponent rational special cases.",
+    "round": "Integer quotient/remainder RNE and midpoint-squared sqrt; identical endpoint bits required. Refine or exact-rational fallback if ambiguous.",
+    "independent": "Python Fraction/Decimal120/180, separate mpmath100/160. New reference is never produced by production C++."
+  },
+  "allowed_production_files": [
+    "src/core/crystallography/chemistry.cpp",
+    "src/core/crystallography/scattering.cpp",
+    "src/core/crystallography/rounded_transcendentals.cpp",
+    "src/core/crystallography/rounded_transcendentals.h",
+    "src/core/CMakeLists.txt"
+  ],
+  "allowed_test_scope": [
+    "tests/CMakeLists.txt",
+    "tests/compatibility/scattering_replay.cpp",
+    "targeted long-lived primitive/property test",
+    "successor field comparator preserving all prior assertions"
+  ],
+  "excluded_scope": [
+    "UnitCell/phase/LP formulas",
+    "global libm replacement",
+    "GUI lifecycle/SearchSession/state",
+    "ABI/layout/schema",
+    "architecture37/PFSM",
+    "new domain/feature",
+    "old approvals/reference/tolerance/raw FAILs"
+  ],
+  "source_fingerprints": {
+    "src/core/crystallography/chemistry.cpp": "037f2b84e881c810acf8b02bf59d8aa947d732e1e88ec56a5f82c456e3b30b05",
+    "src/core/crystallography/scattering.cpp": "3af37b166998f0825a8b716012f4d81acb0b9a4244d105abbef24e830ab3b70c",
+    "src/core/crystallography/scattering_data.inc": "639abc5babf0f43ab03253b6ed47ee07cd53908ab231f53db01af91de08f1eb5",
+    "src/core/crystallography/chemistry_data.inc": "8e5e9186d8f025aa7aa679a58bd202cfcb5a163a33f1d7eb4d7c8bdcfc513397",
+    "src/core/CMakeLists.txt": "cb91f41dc3b4046f52d7d7f8f2a5a87d1b047a9f9fc88d112363806e76240065",
+    "tests/compatibility/scattering_replay.cpp": "3e1c0f23a236f01f10c646371036c1fa56bae200d1abe479325064697b1b1686",
+    "tests/data/scattering-reference.zip": "0f8f888d047c79697ac35b9c752bd01facc17850739b567ac71fbda03653fe5e",
+    "tests/data/scattering-reference-manifest.json": "ea944d25549e183cac4d598188eacfc277eda6c22834f908dfa82e6f27940e0e",
+    "tests/data/theoretical-card-reference.zip": "19312fffd4a1e4bec2630701d7f4088f1baf60a1953a7414da6e1ad833a02a0f",
+    "tests/data/card-reference-manifest.json": "bf10ba2d63017b4363707ec51413123cd0de0dbac8813a6929820f5341f710bc"
+  },
+  "initial_failures": {
+    "Card_fields": 1312,
+    "Scattering_fields": 222,
+    "Scattering_breakdown": {
+      "ANOM": 179,
+      "SCAT": 2,
+      "STRUCT_replay_magnitude": 41
+    },
+    "unchanged_error_tokens": 650
+  },
+  "known_existing_non_RNE_fields": [
+    "card.157.mac.39.mac",
+    "card.312.mac.194.mac",
+    "scattering.cases.7324.values.4"
+  ],
+  "conformance_required": [
+    "bounded independent eligibility/source/analytical review",
+    "frozen corpus and independent exact primitive/caller successor",
+    "GNU/MSVC/Linux actual affected product/Core/replay build and tests",
+    "unchanged domain/error/state/operation order",
+    "existing numerical and current product checkpoint",
+    "all old reports preserved; no tolerance or self-generated golden",
+    "successor maps only changed providers/fields; no historical live-hash cascade"
+  ],
+  "final_gate": "NOT_PASSED_IMPLEMENTATION_NOT_STARTED"
+}

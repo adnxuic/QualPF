@@ -1,0 +1,96 @@
+from reference_paths import reference_path, provenance_path
+"""Try to falsify current-reference scope without granting new qualifications."""
+from copy import deepcopy
+import math
+import unittest
+from unittest.mock import patch
+
+import current_qualified_reference as current
+
+
+class CurrentReferenceContract(unittest.TestCase):
+    def test_original_authority_and_current_provider_closure(self):
+        for domain in current.PHASE:
+            with self.subTest(domain=domain):
+                records, historical = current.verify_bundle(domain)
+                self.assertEqual(len(records), {'card': 109, 'powder': 2, 'scattering': 329}[domain])
+
+    def test_missing_provider_or_changed_compile_policy_rejects(self):
+        policy = current.read(current.POLICY)
+        for field in ('provider_hashes', 'math_compile_options', 'execution_hashes'):
+            changed = deepcopy(policy)
+            changed[field] = [] if field == 'math_compile_options' else {}
+            original_read = current.read
+            with self.subTest(field=field), patch.object(
+                    current, 'read', side_effect=lambda path: changed if path == current.POLICY
+                    else original_read(path)):
+                with self.assertRaises(ValueError):
+                    current.verify_bundle('card')
+
+    def test_changed_math_reference_proof_or_decision_rejects(self):
+        names = ['src/core/crystallography/unit_cell.cpp',
+                 'tests/data/scattering-reference.zip',
+                 'docs/refactoring/phase-16/qualification-proof.json',
+                 'docs/refactoring/phase-16/acceptance-decision.json']
+        original_sha = current.sha_file
+        for name in names:
+            with self.subTest(path=name), patch.object(
+                    current, 'sha_file', side_effect=lambda path: '0' * 64
+                    if path == reference_path(current.ROOT / name) else original_sha(path)):
+                with self.assertRaises(ValueError):
+                    current.verify_bundle('scattering')
+
+    def test_every_executed_comparator_parser_and_qualifier_is_bound(self):
+        original_sha = current.sha_file
+        for name in current.read(current.POLICY)['execution_hashes']:
+            with self.subTest(path=name), patch.object(
+                    current, 'sha_file', side_effect=lambda path: '0' * 64
+                    if path == provenance_path(current.ROOT / name) else original_sha(path)):
+                with self.assertRaises(ValueError):
+                    current.verify_bundle('card')
+
+    def test_archived_generator_and_current_reader_are_separately_bound(self):
+        original_sha = current.sha_file
+        for domain, name in [('card', 'tools/crystallography/generate_chemistry.py'),
+                             ('scattering', 'tools/crystallography/generate_scattering.py')]:
+            for path in [reference_path(current.ROOT / name),
+                         reference_path(current.ROOT / current.HISTORICAL_GENERATORS[name]),
+                         current.GENERATOR_ARCHIVE_AUTHORITY]:
+                with self.subTest(domain=domain, path=str(path)), patch.object(
+                        current, 'sha_file', side_effect=lambda item: '0' * 64
+                        if item == path else original_sha(item)):
+                    with self.assertRaises(ValueError):
+                        current.verify_bundle(domain)
+
+    def test_both_compilers_exact_named_scope_and_adversarial_differences(self):
+        for domain, phase in current.PHASE.items():
+            records = current.read(reference_path(current.ROOT / (
+                f'docs/refactoring/phase-{phase}/qualification-records.json')))['records']
+            for compiler in ('GNU', 'MSVC'):
+                failures = [dict(case=r['case'], field=r['field'], legacy=r['legacy'],
+                                 cpp=r['cpp_by_compiler'][compiler]) for r in records]
+                current.validate_numeric_scope(failures, records, compiler)
+                changes = [failures[:-1], failures + [failures[0]]]
+                for field, value in [('case', -1), ('field', 'unapproved.field'),
+                                     ('cpp', math.nextafter(failures[0]['cpp'], math.inf))]:
+                    changed = deepcopy(failures)
+                    changed[0][field] = value
+                    changes.append(changed)
+                for changed in changes:
+                    with self.subTest(domain=domain, compiler=compiler), self.assertRaises(ValueError):
+                        current.validate_numeric_scope(changed, records, compiler)
+                with self.assertRaises(ValueError):
+                    current.validate_numeric_scope(failures, records, 'unknown')
+                unproved = deepcopy(records)
+                unproved[0]['independent_check_passed'] = False
+                with self.assertRaises(ValueError):
+                    current.validate_numeric_scope(failures, unproved, compiler)
+
+    def test_signed_zero_and_nonfinite_cannot_hide_in_JSON_equality(self):
+        self.assertFalse(current.exact_json([0.0], [-0.0]))
+        with self.assertRaises(ValueError):
+            current.exact_json([float('nan')], [float('nan')])
+
+
+if __name__ == '__main__':
+    unittest.main()

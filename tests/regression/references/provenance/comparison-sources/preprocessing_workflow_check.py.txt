@@ -1,0 +1,83 @@
+"""Differential check of the product probe's complete measured-input chains.
+
+Archives new observations in a new directory. Never edits frozen phase 9
+references. Nonfinite Legacy candidates remain an explicit blocked workflow.
+"""
+import argparse
+import hashlib
+import json
+import math
+from pathlib import Path
+import shutil
+import subprocess
+import preprocessing_compare as compare
+
+ROOT=Path(__file__).resolve().parents[2]
+
+def main():
+    p=argparse.ArgumentParser()
+    p.add_argument('--oracle',type=Path,required=True)
+    p.add_argument('--mingw',type=Path,required=True)
+    p.add_argument('--msvc',type=Path,required=True)
+    p.add_argument('--product-results',type=Path,required=True)
+    p.add_argument('--output',type=Path,required=True)
+    args=p.parse_args();args.output.mkdir(parents=True,exist_ok=False)
+    policy=ROOT/'tests/compatibility/preprocessing_tolerances.json'
+    assert compare.sha(policy)==compare.POLICY_SHA256
+    tol=json.loads(policy.read_text());report=[]
+    for name in ('example1','CPD2','MIXT_5'):
+        source=args.product_results/f'preprocessing-{name}-unprocessed.qxp'
+        raw=json.loads(source.read_text())['diffraction_data']
+        shutil.copyfile(source,args.output/(name+'.source.qxp'))
+        x=raw['x'];ys={key:raw['y'] for key in ('fortran','mingw','msvc')}
+        wave=raw['wave'][0];row=dict(id=name,steps=[],source_sha256=compare.sha(source))
+        results={}
+        for label,op,params in [('background',1,'3 1 6 5 50 '+str(x[0])+' '+str(x[-1])),
+                                ('smoothing',0,'0 4 5 0'),('peaks',2,'1.5 .1 -1 11 9 -1 -1 1')]:
+            decoded={};counts={}
+            for backend,exe in [('fortran',args.oracle),('mingw',args.mingw),('msvc',args.msvc)]:
+                wire=f'{op} {len(x)} {wave} .15\n'+''.join(f'{a:.17g} {b:.17g}\n' for a,b in zip(x,ys[backend]))+params+'\n'
+                out=subprocess.run([str(exe.resolve())],input=wire,text=True,capture_output=True,timeout=60)
+                prefix=args.output/(name+'.'+label+'.'+backend)
+                for ext,text in [('wire',wire),('out',out.stdout),('err',out.stderr)]:
+                    Path(str(prefix)+'.'+ext).write_text(text)
+                counts[backend]=sum(v.lower() in ('nan','+nan','-nan','inf','+inf','-inf') for v in out.stdout.split())
+                try:
+                    if out.returncode:raise ValueError(f'exit {out.returncode}')
+                    decoded[backend]=compare.decode(out.stdout,op)
+                except ValueError as e:decoded[backend]={'error':str(e)}
+                if label=='smoothing':ys[backend]=decoded[backend]['fields']['signal']
+            if 'error' in decoded['fortran']:
+                # Still counted as blocked, never an equivalence pass or skip.
+                step=dict(stage=label,status='legacy_nonfinite_blocked',nonfinite_counts=counts,results=decoded)
+            else:
+                diffs={b:compare.compare(decoded[b],decoded['fortran'],tol) for b in ('mingw','msvc')}
+                step=dict(stage=label,status='passed' if all(v['status']=='passed' for v in diffs.values()) else 'failed',comparisons=diffs)
+            row['steps'].append(step);results[label]=decoded
+        if all(s['status']=='passed' for s in row['steps']):
+            product=args.product_results/f'preprocessing-{name}-preprocessing.json'
+            state=json.loads(product.read_text());fields=results['peaks']['fortran']['fields']
+            peaks=state['normal_peaks'];snapshot={}
+            mapping={'two_theta':'tth','d':'d','delta_d':'delta_d','intensity':'current_intensity','fwhm':'fwhm'}
+            # Names below follow the actual product project codec, not a lossy
+            # reconstruction from a Search-Match projection.
+            for field,key in mapping.items():
+                if key not in peaks: raise ValueError('Missing complete snapshot field '+key)
+                expected=fields['peaks.'+field];actual=peaks[key]
+                at,rt=tol[field]
+                snapshot[field]=len(actual)==len(expected) and all(abs(a-b)<=at+rt*abs(b) for a,b in zip(actual,expected))
+            snapshot['original_intensity']=peaks['intensity']==peaks['current_intensity']
+            at,rt=tol['automatic_tolerance'];ref=fields['automatic_tolerance'][0]
+            snapshot['automatic_tolerance']=abs(state['normal_automatic_tolerance']-ref)<=at+rt*abs(ref)
+            row['complete_product_snapshot']=snapshot
+            row['status']='passed' if all(snapshot.values()) else 'failed'
+            shutil.copyfile(product,args.output/(name+'.product.json'))
+        else:row['status']='blocked'
+        report.append(row);print(name,row['status'],flush=True)
+    files={f.name:compare.sha(f) for f in args.output.iterdir() if f.is_file()}
+    result=dict(passed=sum(r['status']=='passed' for r in report),blocked=sum(r['status']=='blocked' for r in report),
+                tolerances_sha256=compare.sha(policy),runners={k:compare.sha(v) for k,v in [('fortran',args.oracle),('mingw',args.mingw),('msvc',args.msvc)]},cases=report,files=files)
+    (args.output/'report.json').write_text(json.dumps(result,indent=2))
+    return result['passed']!=3
+
+if __name__=='__main__':raise SystemExit(main())

@@ -1,0 +1,11 @@
+# Explicitly opt-in isolated Phase28M target. No product CMake registration.
+add_library(qualpf_peak_measurement STATIC measurement.cpp)
+target_compile_features(qualpf_peak_measurement PUBLIC cxx_std_20)
+target_include_directories(qualpf_peak_measurement PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../../include")
+target_link_libraries(qualpf_peak_measurement PRIVATE qualpf::core)
+set_target_properties(qualpf_peak_measurement PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+if(MSVC)
+    target_compile_options(qualpf_peak_measurement PRIVATE /fp:strict)
+else()
+    target_compile_options(qualpf_peak_measurement PRIVATE -fno-fast-math -ffp-contract=off)
+endif()

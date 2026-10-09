@@ -1,0 +1,132 @@
+{
+  "schema": "qualpf.autonomous_numerical_decision.v1",
+  "scope_id": "36D-WINDOWS-UNIT-CELL-FORMED-ANGLE-CONTRACT",
+  "proposal_SHA256": "d8259e0a86199392211ab6dcaa75111840a3e7ec1b17dbc82963e376a5d6e226",
+  "status": "AI_APPROVED_WITH_BOUNDED_CONTRACT",
+  "classification": "AI_APPROVED_NUMERICAL_CORRECTION",
+  "selected_option": "B",
+  "human_approved": false,
+  "confidence": "EVIDENCE_STRONG",
+  "considered_alternatives": [
+    {
+      "option": "A",
+      "description": "Retain CPU/CRT dependent sin/cos",
+      "selected": false
+    },
+    {
+      "option": "B",
+      "description": "Reuse exact qualified phase owner with impossible-parameter guard before bounded trig",
+      "selected": true
+    },
+    {
+      "option": "C",
+      "description": "Change determinant formula to force ideal geometric identities",
+      "selected": false
+    },
+    {
+      "option": "D",
+      "description": "Widen tolerances or bless one ULP",
+      "selected": false
+    }
+  ],
+  "recommendation_rationale": "Correct primitive rounding reproduces already accepted GNU semantics; full exact rational cell, density, absorption.mu and RIR proof. New independently derived cell/ADP/s2 caller inputs exactly match immutable qualified GNU inputs, with identical actual downstream638 results. No new exp/hypot algorithm or historical human-approval expansion.",
+  "numerical_state_dependencies": "Pure UnitCell constructor, direct Card volume/density/absorption/RIR, direct ADP/s2 inputs. No state publication or ABI/layout change. Existing downstream suboperations retain qualified ownership.",
+  "independent_proof_references": [
+    {
+      "path": ".evidence/raw/phase36d-unit-cell-contract/batch-001/independent-cell001.py",
+      "sha256": "3cc8e018124fdd2c39875cd71123fa731ca0ea4bbae15e88f58972b3b6706893"
+    },
+    {
+      "path": ".evidence/raw/phase36d-unit-cell-contract/batch-001/independent-cell001.json",
+      "sha256": "f4fc9366e533936d63acfbf35c3ec12ab59307ab077a3684038c97c479a74e4b"
+    },
+    {
+      "path": ".evidence/raw/phase36d-unit-cell-contract/batch-001/caller-input-conformance001.py",
+      "sha256": "fea31432ef5b021478ab36fd4be09302a306ef737b33ba735162a94c27243abc"
+    },
+    {
+      "path": ".evidence/raw/phase36d-unit-cell-contract/batch-001/caller-input-conformance001.json",
+      "sha256": "c20476ab8f243598c69eccf1db29375a4ddf1c44dba8be9fe5787e8b5cc41910"
+    }
+  ],
+  "independent_review": {
+    "path": ".evidence/raw/phase36d-unit-cell-contract/batch-001/independent-review001.md",
+    "sha256": "cd1435443400dc9c4709f9d4ec50ff2845480333dd733662a78bd5edb0dfdfdb",
+    "status": "PASS_BOUNDED_IMPLEMENTATION_ELIGIBILITY"
+  },
+  "native_observations": "Immutable original cell/Card/Scattering corpora retained; source formulas remain accepted canonical C++ equations and binary64 operation order, not reproduction of legacy UB",
+  "current_CPP_observations": {
+    "independent_counts": {
+      "GNU": {
+        "cells": 16,
+        "card_exact_changed_fields": 0,
+        "scattering_independent_cell_ADP_s2_fields": 1853
+      },
+      "MSVC": {
+        "cells": 16,
+        "card_exact_changed_fields": 1862,
+        "scattering_independent_cell_ADP_s2_fields": 1853
+      }
+    },
+    "qualified_exact_mapped_caller": [
+      {
+        "compiler": "GNU",
+        "frames": 638,
+        "exact_results": 638,
+        "exact_contributions": 2521,
+        "source_unitcell_math_independently_proved": true,
+        "unchanged_qualified_call_inputs_and_outputs_equal": true
+      },
+      {
+        "compiler": "MSVC",
+        "frames": 638,
+        "exact_results": 638,
+        "exact_contributions": 2521,
+        "source_unitcell_math_independently_proved": true,
+        "unchanged_qualified_call_inputs_and_outputs_equal": true
+      }
+    ]
+  },
+  "known_differences": "Original isolated MSVC Card5 mismatch fields remain, exploratory Card model omitted267 absorption.mu effects and was corrected separately without overwriting it; original compiler/prototype comparisons remain intact",
+  "excluded_scope": [
+    "LP implementation/decision",
+    "Global exp/log/hypot/asin/atan2",
+    "GUI/lifecycle/Session",
+    "ABI/type layout",
+    "schema",
+    "new algorithms",
+    "architecture37",
+    "PFSM",
+    "Linux/macOS current execution"
+  ],
+  "source_fingerprints": {
+    "src/core/crystallography/unit_cell.cpp": "d80ea785e97a2caa4f4011b62db80cc6c0b231b483c8c61041e9a7b9bbdf89e2",
+    "src/core/crystallography/phase_sincos.cpp": "503f0fb1b912c79cc964461c20af6e34640b01a2b980ff06d0ee412f0548eac3",
+    "src/core/crystallography/phase_sincos.h": "e5e44de697702a5224974694bcff8b2276623c0c6c66a69ce3b1fefdee97880d",
+    "src/core/crystallography/structure_factor.cpp": "fb5901154d9a023cfc2bcd3a35dc09f66f84c259fea4dc6c198c7190addb5646",
+    "src/core/crystallography/scattering.cpp": "3af37b166998f0825a8b716012f4d81acb0b9a4244d105abbef24e830ab3b70c",
+    "src/core/crystallography/composition.cpp": "7530547011e487e7a31202018a9fbb025932409c7856cae023cd853120eb99dc",
+    "src/core/crystallography/theoretical_card.cpp": "76fcb4f5acb6375982f73d15f97d214983545971c637861d811fc5a1bcb6251b",
+    "src/core/profile/structure_profile.cpp": "8956286909b2215a40fadb49f5cfa1c40d2cb4826e75b4d94c88f8a027dbc2ea",
+    "src/core/CMakeLists.txt": "cb91f41dc3b4046f52d7d7f8f2a5a87d1b047a9f9fc88d112363806e76240065"
+  },
+  "candidate": {
+    "path": ".evidence/raw/phase36d-formed-angle-contract/batch-001/unit-cell-candidate001.cpp",
+    "sha256": "465513b782a5a60d5669616913df6950029e067c5c5d8d9f89fecbf6f1a33868"
+  },
+  "runner_fingerprints": {
+    ".evidence/raw/phase36d-unit-cell-contract/batch-001/independent-cell001.py": "3cc8e018124fdd2c39875cd71123fa731ca0ea4bbae15e88f58972b3b6706893",
+    ".evidence/raw/phase36d-unit-cell-contract/batch-001/caller-input-trial001.py": "8bb86de36178fcb0ba89fbc41cdd2e62fdabe551e26b12181c9e76e12672768b",
+    ".evidence/raw/phase36d-unit-cell-contract/batch-001/caller-input-conformance001.py": "fea31432ef5b021478ab36fd4be09302a306ef737b33ba735162a94c27243abc"
+  },
+  "evidence_fingerprints": {
+    ".evidence/raw/phase36d-unit-cell-contract/batch-001/independent-cell001.json": "f4fc9366e533936d63acfbf35c3ec12ab59307ab077a3684038c97c479a74e4b",
+    ".evidence/raw/phase36d-unit-cell-contract/batch-001/caller-input-conformance001.json": "c20476ab8f243598c69eccf1db29375a4ddf1c44dba8be9fe5787e8b5cc41910"
+  },
+  "regression_impact": "0 GNU /1862 MSVC exact Card field changes;1853 independently proved Cell/ADP/s2 caller fields each;638 complete frame results2521 contributions preserve qualified GNU contract. Actual normal host/guest/profile regression remains required.",
+  "new_tolerance": false,
+  "new_goldens_from_CPP": false,
+  "expected_reference_origin": "Independent cell/Card arithmetic plus reuse of immutable already-qualified nonowned Scattering contract after independently proven exact input mapping",
+  "implementation_dependency": "LP batch must close and commit before any actual UnitCell production change",
+  "final_gate": "IMPLEMENTATION_ALLOWED_AFTER_LP_PARENT_CLOSE_AND_COMMIT; fresh normal GNU/MSVC host and isolated Windows full affected references/properties and retained profile conformance required before UnitCell commit; F NOT_REACHED"
+}

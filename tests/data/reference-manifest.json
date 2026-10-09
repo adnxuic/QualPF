@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "phase2_source_commit": "f05bcdf2cd7790468d6fb9380f2762851ca4823c",
+  "purpose": "Phase 3 broad backlog retired into scoped references, C++ contracts and the Legacy domain inventory. Superseded does not claim untested functionality passed.",
+  "available_inputs": [
+    {
+      "path": "share/qualx/examples/CPD2.dat",
+      "sha256": "d50103d2a5efa2ace2652f2797af3db7fcc002dd3d2bef6b17a41b03b4b165ed",
+      "role": "candidate_input",
+      "reference_output_available": false,
+      "source_and_usage_terms": "existing repository resource; provenance/usage review remains U06"
+    },
+    {
+      "path": "share/qualx/examples/example1.dat",
+      "sha256": "a14546157ee64fc5b25561c480a0f7c7d76cfcd7b16e449db78c03c5b9acdb7a",
+      "role": "candidate_input",
+      "reference_output_available": false,
+      "source_and_usage_terms": "existing repository resource; provenance/usage review remains U06"
+    },
+    {
+      "path": "share/qualx/examples/MIXT_5.dat",
+      "sha256": "3928a0d11b4e76d4c68fc189ff65153711c76b8e8969f523cb66cb36264ed75c",
+      "role": "candidate_input",
+      "reference_output_available": false,
+      "source_and_usage_terms": "existing repository resource; provenance/usage review remains U06"
+    },
+    {
+      "path": "share/qualx/files/AtomProperties.xen",
+      "sha256": "5062942c7d0b5a92fac7b864e046bcba77313f00764c2f941178cd2b4cc6996e",
+      "role": "reference_table",
+      "reference_output_available": false,
+      "source_and_usage_terms": "existing repository resource; provenance/usage review remains U06"
+    },
+    {
+      "path": "share/qualx/files/syminfo.lib",
+      "sha256": "3640c984950b899e667d9b853786745cd6ac272dbb4a7ef7fb22bffe9baa821b",
+      "role": "reference_table",
+      "reference_output_available": false,
+      "source_and_usage_terms": "existing repository resource; provenance/usage review remains U06"
+    }
+  ],
+  "coverage": [
+    {
+      "feature": "F01",
+      "scope": "startup_cli",
+      "status": "qualpf_contract",
+      "reference_required": false,
+      "validation_entrypoints": [
+        "qualpf.product.startup",
+        "qualpf.cutover.default.startup"
+      ],
+      "decision": "Startup/CLI errors and backend selection are product contracts."
+    },
+    {
+      "feature": "F02",
+      "scope": "pattern_io_radiation",
+      "status": "qualpf_contract",
+      "reference_required": false,
+      "validation_entrypoints": [
+        "qualpf.project.codec",
+        "qualpf.product.gui_defaults96.example1"
+      ],
+      "decision": "Canonical radiation and persistence are product contracts; Pattern IO algorithm remains Legacy and is inventoried for later migration."
+    },
+    {
+      "feature": "F03",
+      "scope": "background",
+      "status": "legacy_reference",
+      "reference_required": true,
+      "validation_entrypoints": [
+        "qualpf.preprocessing.reference",
+        "qualpf.preprocessing.product_reference"
+      ],
+      "decision": "Phase 9 frozen Fortran background corpus plus deterministic undefined preprocessing contracts.",
+      "reference_manifest": "preprocessing-fortran/manifest.json"
+    },
+    {
+      "feature": "F04",
+      "scope": "smoothing_range_kalpha2",
+      "status": "superseded_by_scoped_tests",
+      "reference_required": false,
+      "validation_entrypoints": [
+        "qualpf.preprocessing.reference",
+        "qualpf.preprocessing.product_reference"
+      ],
+      "decision": "Smoothing/range covered by Phase 9; Kalpha2 remains active Legacy inventory, no migration/equivalence claim for that subdomain."
+    },
+    {
+      "feature": "F05",
+      "scope": "peak_processing",
+      "status": "legacy_reference",
+      "reference_required": true,
+      "validation_entrypoints": [
+        "qualpf.preprocessing.reference",
+        "qualpf.preprocessing.export.reference",
+        "qualpf.preprocessing.product_reference"
+      ],
+      "decision": "Frozen peak candidate, selection, export and advanced references plus transaction contracts.",
+      "reference_manifest": "preprocessing-fortran/manifest.json"
+    },
+    {
+      "feature": "F06",
+      "scope": "candidate_fom",
+      "status": "legacy_reference",
+      "reference_required": true,
+      "validation_entrypoints": [
+        "qualpf.classic.reference",
+        "qualpf.classic"
+      ],
+      "decision": "S01-S06 closed references and explicit UB contracts.",
+      "reference_manifest": "classic-reference-manifest.json"
+    },
+    {
+      "feature": "F07",
+      "scope": "query_constraints",
+      "status": "qualpf_contract",
+      "reference_required": false,
+      "validation_entrypoints": [
+        "qualpf.product.tolerance96.example1.cpp",
+        "qualpf.legacy_historical.example1"
+      ],
+      "decision": "Real SQL candidate identity/order and exact filter behavior in product matrix; immutable query and stale publication are C++ contracts."
+    },
+    {
+      "feature": "F08",
+      "scope": "accepted_phases_residual",
+      "status": "legacy_reference_and_qualpf_contract",
+      "reference_required": true,
+      "validation_entrypoints": [
+        "qualpf.classic.reference",
+        "qualpf.search.integration"
+      ],
+      "decision": "Legacy C++ association/subtraction reference; atomic multi-phase ownership and stale transitions are QualPF-only contracts.",
+      "reference_manifest": "classic-reference-manifest.json"
+    },
+    {
+      "feature": "F09",
+      "scope": "rir_quantification",
+      "status": "obsolete_backlog_superseded_by_inventory",
+      "reference_required": false,
+      "validation_entrypoints": [],
+      "decision": "Broad RIR validation placeholder is retired, not validated: unchanged Qt RIR behavior must get a scoped oracle before a future algorithm change."
+    },
+    {
+      "feature": "F10",
+      "scope": "pdf2_import",
+      "status": "obsolete_backlog_superseded_by_inventory",
+      "reference_required": false,
+      "validation_entrypoints": [],
+      "decision": "PDF2 importer is not rewritten in Phase 10; broad unsupplied-input placeholder retired. Require scoped fixtures when migrating this domain."
+    },
+    {
+      "feature": "F11",
+      "scope": "cif_import_crystallography",
+      "status": "obsolete_backlog_superseded_by_inventory",
+      "reference_required": false,
+      "validation_entrypoints": [],
+      "decision": "CIF/structure/crystallography remain retained Legacy modules. No numerical equivalence claim; future migration must first capture domain-specific oracles."
+    },
+    {
+      "feature": "F12",
+      "scope": "tables_resources",
+      "status": "qualpf_contract",
+      "reference_required": false,
+      "validation_entrypoints": [
+        "qualpf.product.startup"
+      ],
+      "decision": "Resource hashes and startup table loading validated; table algorithms remain in inventory."
+    },
+    {
+      "feature": "F13",
+      "scope": "database_management",
+      "status": "qualpf_contract",
+      "reference_required": false,
+      "validation_entrypoints": [
+        "qualpf.legacy_historical.example1"
+      ],
+      "decision": "Database close/reopen, failed SQL publication and imported candidate ownership are product contracts; DB classes refactor is future scope."
+    },
+    {
+      "feature": "F14",
+      "scope": "project_session",
+      "status": "qualpf_contract",
+      "reference_required": false,
+      "validation_entrypoints": [
+        "qualpf.contracts",
+        "qualpf.search.integration",
+        "qualpf.project.codec",
+        "qualpf.product.project.example1"
+      ],
+      "decision": "Immutable snapshots, transaction ownership, stale commits and invalidation have no Fortran oracle. QXP v1 residual remains unknown."
+    },
+    {
+      "feature": "F15",
+      "scope": "plot_export_report",
+      "status": "superseded_by_scoped_tests",
+      "reference_required": false,
+      "validation_entrypoints": [
+        "qualpf.preprocessing.export.reference",
+        "qualpf.preprocessing.formats95.example1"
+      ],
+      "decision": "Peak text formatting has real references; DICVOL/McMaille explicit unavailable/no file. Broad plot/report placeholder retired; no new renderer migration claim."
+    },
+    {
+      "feature": "F16",
+      "scope": "updates_help_packaging",
+      "status": "obsolete_backlog_superseded_by_inventory",
+      "reference_required": false,
+      "validation_entrypoints": [],
+      "decision": "Updates/help/packaging were not a numerical reference case. Existing behavior unchanged; deployment acceptance is a separate future release gate."
+    },
+    {
+      "feature": "F17",
+      "scope": "unconfirmed_capabilities",
+      "status": "qualpf_contract",
+      "reference_required": false,
+      "validation_entrypoints": [
+        "qualpf.preprocessing.formats95.example1"
+      ],
+      "decision": "Unconfirmed DICVOL/McMaille are explicitly unavailable and cannot produce pretend output."
+    }
+  ]
+}

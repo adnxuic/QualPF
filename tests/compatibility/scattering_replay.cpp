@@ -1,0 +1,229 @@
+#include "qualpf/crystallography/structure_factor.h"
+#include "../../src/core/crystallography/rounded_transcendentals.h"
+#include <cmath>
+#include <iomanip>
+#include <iostream>
+#include <numbers>
+#include <string>
+
+using namespace qualpf;
+using namespace qualpf::crystallography;
+namespace {
+double number() {
+  std::string s;
+  std::cin >> s;
+  return std::stod(s);
+}
+template <std::size_t N> std::array<double, N> numbers() {
+  std::array<double, N> out{};
+  for (double &v : out)
+    v = number();
+  return out;
+}
+void failure(int id, const Error &error) {
+  std::cout << "ERROR " << id << ' ' << error.field << ' ' << error.reason
+            << '\n';
+}
+Result<UnitCell> read_cell() {
+  const auto c = numbers<6>();
+  return UnitCell::create({{c[0], c[1], c[2]}, {c[3], c[4], c[5]}});
+}
+Result<Displacement> displacement(int adp, const DisplacementTensor &t) {
+  if (adp == 0)
+    return Displacement::isotropic_b(t[0]);
+  if (adp == 1)
+    return Displacement::isotropic_u(t[0]);
+  if (adp == 2)
+    return Displacement::anisotropic_u(t);
+  return Displacement::anisotropic_beta(t);
+}
+} // namespace
+int main() {
+  std::cout << std::setprecision(17);
+  std::string unused, mode;
+  std::getline(std::cin, unused);
+  std::getline(std::cin, unused);
+  int id = 0;
+  const ScatteringRegistry registry;
+  while (std::cin >> mode >> id) {
+    if (mode == "SCAT") {
+      std::string label;
+      int rad = 0;
+      std::cin >> label >> rad;
+      const double s2 = number();
+      auto species = registry.find(label);
+      auto s = ScatteringVariable::from_squared(s2);
+      if (!species) {
+        failure(id, species.error());
+        continue;
+      }
+      if (!s) {
+        failure(id, s.error());
+        continue;
+      }
+      auto f = scattering_amplitude(species.value(), s.value(),
+                                    {static_cast<RadiationKind>(rad),
+                                     WavelengthAngstrom{1.54059307}, false});
+      if (!f) {
+        failure(id, f.error());
+        continue;
+      }
+      std::cout << "SCAT " << id << ' ' << species.value().index() + 1 << ' '
+                << rad << ' ' << s2 << ' ' << f.value().real() << '\n';
+    } else if (mode == "ANOM") {
+      int z = 0;
+      std::cin >> z;
+      double wave = number();
+      auto species = registry.by_index(static_cast<std::size_t>(z - 1));
+      if (z < 1 || z > 111 || !species) {
+        failure(id, {ErrorCode::unsupported, "species.anomalous", "",
+                     "unsupported_anomalous_species"});
+        continue;
+      }
+      auto f = anomalous_correction(species.value(), WavelengthAngstrom{wave});
+      if (!f) {
+        failure(id, f.error());
+        continue;
+      }
+      std::cout << "ANOM " << id << ' ' << z << " F " << wave << ' '
+                << f.value().real << ' ' << f.value().imaginary << " 0\n";
+    } else if (mode == "ADP") {
+      auto cell = read_cell();
+      auto tensor = numbers<6>();
+      auto adp = Displacement::anisotropic_u(tensor);
+      if (!cell) {
+        failure(id, cell.error());
+        continue;
+      }
+      if (!adp) {
+        failure(id, adp.error());
+        continue;
+      }
+      auto beta = adp.value().beta(cell.value());
+      if (!beta) {
+        failure(id, beta.error());
+        continue;
+      }
+      auto u = crystallographic_u_from_beta(beta.value(), cell.value());
+      auto b = crystallographic_b_from_beta(beta.value(), cell.value());
+      auto eq = equivalent_isotropic_b(beta.value(), cell.value());
+      if (!u) {
+        failure(id, u.error());
+        continue;
+      }
+      if (!b) {
+        failure(id, b.error());
+        continue;
+      }
+      if (!eq) {
+        failure(id, eq.error());
+        continue;
+      }
+      std::cout << "ADP " << id;
+      for (double x : beta.value())
+        std::cout << ' ' << x;
+      for (double x : u.value())
+        std::cout << ' ' << x;
+      for (double x : b.value())
+        std::cout << ' ' << x;
+      std::cout << ' ' << eq.value() << '\n';
+    } else if (mode == "STRUCT") {
+      int group_number = 0, setting = 0, na = 0, nr = 0, rad = 0, anom = 0,
+          anis = 0;
+      std::cin >> group_number >> setting >> na >> nr >> rad >> anom >> anis;
+      double wave = number();
+      auto cell = read_cell();
+      auto group = SpaceGroupRegistry{}.by_number(group_number, setting);
+      std::vector<AtomicSite> sites;
+      std::optional<Error> err;
+      for (int i = 0; i < na; ++i) {
+        std::string label;
+        std::cin >> label;
+        auto xyz = numbers<3>();
+        double occ = number();
+        int adp = 0;
+        std::cin >> adp;
+        auto tensor = numbers<6>();
+        if (!anis && adp >= 2) {
+          adp = 0;
+          tensor = {};
+        } // exact input semantics of retained isotropic branch
+        auto sp = registry.find(label);
+        auto pos = FractionalPosition::create(xyz);
+        auto occupancy = Occupancy::create(occ);
+        auto disp = displacement(adp, tensor);
+        if (!sp)
+          err = sp.error();
+        else if (!pos)
+          err = pos.error();
+        else if (!occupancy)
+          err = occupancy.error();
+        else if (!disp)
+          err = disp.error();
+        else
+          sites.push_back(
+              {sp.value(), pos.value(), occupancy.value(), disp.value()});
+      }
+      std::vector<Hkl> hkls(static_cast<std::size_t>(nr));
+      for (auto &h : hkls)
+        std::cin >> h.h >> h.k >> h.l;
+      if (!cell) {
+        failure(id, cell.error());
+        continue;
+      }
+      if (!group) {
+        failure(id, group.error());
+        continue;
+      }
+      if (err) {
+        failure(id, *err);
+        continue;
+      }
+      auto structure =
+          CrystalStructure::create(cell.value(), group.value(), sites);
+      if (!structure) {
+        failure(id, structure.error());
+        continue;
+      }
+      std::cout << "STRUCT " << id << ' ' << group.value().setting().id << ' '
+                << group.value().operations().size() << '\n';
+      for (std::size_t i = 0; i < sites.size(); ++i) {
+        auto expanded = expand_site(sites[i], cell.value(), group.value());
+        auto beta = sites[i].displacement.beta(cell.value());
+        std::cout << "SITE " << i + 1 << ' '
+                  << double(expanded.value().size()) /
+                         group.value().operations().size()
+                  << " 0";
+        for (double x : beta.value())
+          std::cout << ' ' << x;
+        std::cout << '\n';
+      }
+      for (std::size_t i = 0; i < hkls.size(); ++i) {
+        auto h = hkls[i];
+        auto f = structure_factor(structure.value(), h,
+                                  {static_cast<RadiationKind>(rad),
+                                   WavelengthAngstrom{wave}, anom != 0});
+        if (!f) {
+          std::cout << "REFERROR " << id << ' ' << i + 1 << ' '
+                    << f.error().field << ' ' << f.error().reason << '\n';
+          continue;
+        }
+        auto d = cell.value().d_spacing(h);
+        auto s = ScatteringVariable::from_d(d.value());
+        const double phase =
+            std::arg(f.value().amplitude) * 180 / std::numbers::pi;
+        int rounded = static_cast<int>(std::floor(phase + 360.5)) % 360;
+        std::cout << "FC " << i + 1 << ' ' << h.h << ' ' << h.k << ' ' << h.l
+                  << ' ' << rounded << ' '
+                  << s.value().squared_inverse_angstrom() << ' '
+                  << qualpf::crystallography::detail::rounded_magnitude(
+                         f.value().amplitude.real(), f.value().amplitude.imag()) << ' '
+                  << f.value().fc_squared << " 0\n";
+        std::cout << "COMPLEX " << f.value().amplitude.real() << ' '
+                  << f.value().amplitude.imag() << '\n';
+      }
+    } else
+      return 2;
+  }
+  return 0;
+}

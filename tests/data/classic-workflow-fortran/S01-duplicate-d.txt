@@ -1,0 +1,1 @@
+{"error":null,"fields":{"evaluated.0.intensity":[1],"evaluated.0.position":[1],"evaluated.0.scale":[10],"evaluated.0.total":[1],"retained.0.intensity":[1],"retained.0.position":[1],"retained.0.scale":[10],"retained.0.total":[1]},"discrete":{"evaluated":["controlled-input","0"],"prefilter":["true"],"retained":["controlled-input","0"]}}

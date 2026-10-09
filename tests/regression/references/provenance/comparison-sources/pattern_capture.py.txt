@@ -1,0 +1,126 @@
+"""Explicit, isolated Legacy Pattern IO capture. Never generates C++ expectations."""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import shutil
+import subprocess
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def sha(p):
+    return hashlib.sha256(p.read_bytes()).hexdigest()
+
+
+def fixtures():
+    xy = '10 2\n11 4\n12 8\n'
+    yield 'xy.xy', xy
+    yield 'extra.xye', '10 2 99\n11 4 88\n12 8 77\n'
+    yield 'extra-text.xy', '10 2 ignored\n11 4 ignored\n12 8 ignored\n'
+    yield 'comments.xy', '# heading\n! heading\n> heading\n\n10 2\n# middle\n\n11 4\n12 8\n'
+    yield 'indented-comments.xy', '  # heading\n10 2\n  # middle\n11 4\n12 8\n'
+    yield 'wave.xy', '0.71073\n' + xy
+    yield 'wave-zero.xy', '0\n' + xy
+    yield 'wave-negative.xy', '-1\n' + xy
+    yield 'wave-repeat.xy', '1.2\n1.3\n' + xy
+    yield 'empty.dat', ''
+    yield 'one.xy', '10 4\n'
+    yield 'two.xy', '10 2\n11 4\n'
+    yield 'duplicate.xy', '10 2\n10 4\n12 8\n'
+    yield 'descending.xy', '12 2\n11 4\n10 8\n'
+    yield 'unsorted.xy', '10 2\n12 4\n11 8\n'
+    yield 'malformed.xy', '10 2\n11\n12 8\n'
+    yield 'text.xy', '10 2\n11 hello\n12 8\n'
+    yield 'nan.xy', '10 2\n11 NaN\n12 8\n'
+    yield 'inf.xy', '10 2\n11 Inf\n12 8\n'
+    yield 'overflow.xy', '10 2\n11 1E39\n12 8\n'
+    yield 'zero.xy', '10 0\n11 0\n12 0\n'
+    yield 'negative.xy', '10 -2\n11 -4\n12 -8\n'
+    yield 'mixed.xy', '10 -2\n11 4\n12 8\n'
+    yield 'exponent.xy', '1.0E1 2E0\n1.1E1 4E0\n1.2E1 8E0\n'
+    yield 'd-exponent.xy', '1.0D1 2D0\n1.1D1 4D0\n1.2D1 8D0\n'
+    yield 'plus.xy', '+10 +2\n+11 +4\n+12 +8\n'
+    yield 'commas.xy', '10,2\n11,4\n12,8\n'
+    yield 'counts.dat', '10 1 12\n2 4 8\n'
+    yield 'counts-lines.dat', '10 1 12\n2\n4\n8\n'
+    yield 'counts-short.dat', '10 1 15\n2 4 8\n'
+    yield 'counts-long.dat', '10 1 12\n2 4 8 16 32\n'
+    yield 'counts-comment.dat', '# heading\n10 1 15\n2 4 8\n# stop\n16 32 64\n'
+    yield 'xy.dat', xy
+    yield 'xy.txt', xy
+    yield 'counts.pow', '10 1 12\n2 4 8\n'
+    yield 'counts.dbw', '10 1 12\n2 4 8\n'
+    yield 'counts.xdd', '/* header\n*/\n10 1 12\n2 4 8\n'
+    yield 'counts.xda', 'header\nheader\n10 12 1\n2 4 8\n'
+    yield 'counts.uxd', '_WL1=1.2\n_START=10\n_STEPSIZE=1\n_COUNTS\n2 4 8\n'
+    yield 'counts.cpi', 'SIETRONICS XRD SCAN\n10\n12\n1\nCu\n1.2\ndate\n1\nsample\nSCANDATA\n2\n4\n8\n'
+    yield 'counts.udf', 'LabdaAlpha1,1.2,1\nDataAngleRange,10,12\nScanStepSize,1\nRawScan\n2,4,8\n'
+    yield 'counts-spaced.udf', 'LabdaAlpha1,1.2,1\nDataAngleRange,10,12\nScanStepSize,1\nRawScan\n2, 4, 8\n'
+    yield 'counts-dual.uxd', '_WL1=1.2\n_WL2=1.3\n_WLRATIO=0.4\n_START=10\n_STEPSIZE=1\n_COUNTS\n2 4 8\n'
+    yield 'counts-esd.gda', 'sample\nBANK 1 3 1 CONST 1000 100 0 0 ESD\n' + ''.join(f'{n:8d}{1:8d}' for n in (2,4,8)) + '\n'
+    yield 'counts-bad.dat', '10 1 12\n2 bad 8\n'
+    yield 'powder.cif', 'data_test\n_diffrn_radiation_wavelength 1.2\nloop_\n_pd_meas_2theta_scan\n_pd_meas_counts_total\n10 2\n11 4\n12 8\n'
+    yield 'counts.xrdml', '<xrdMeasurements>\n<usedWavelength unit="Angstrom">\n<kAlpha1>1.2</kAlpha1>\n</usedWavelength>\n<dataPoints>\n<positions axis="2Theta" unit="deg">\n<startPosition>10</startPosition>\n<endPosition>12</endPosition>\n</positions>\n<intensities unit="counts">2 4 8</intensities>\n</dataPoints>\n</xrdMeasurements>\n'
+    yield 'counts.gda', 'sample\nBANK 1 3 1 CONST 1000 100 0 0 STD\n' + ''.join(f'  {n:6d}' for n in (2,4,8)) + '\n'
+    yield 'unknown.zzz', xy
+    yield 'edge-wave-comment.xy', '0.71073\n# comment\n' + xy
+    yield 'edge-wave-indent-comment.xy', '0.71073\n  # comment\n' + xy
+    yield 'edge-multiple-axes.xrdml', '<xrdMeasurements>\n<dataPoints>\n<positions axis="2Theta" unit="deg">\n<startPosition>10</startPosition>\n<endPosition>12</endPosition>\n</positions>\n<positions axis="Omega" unit="deg">\n<startPosition>20</startPosition>\n<endPosition>22</endPosition>\n</positions>\n<intensities unit="counts">2 4 8</intensities>\n</dataPoints>\n</xrdMeasurements>\n'
+    for token in ('0.71073', '+0.71073', '7.1073D-1'):
+        label = {'0.71073':'decimal', '+0.71073':'plus', '7.1073D-1':'exponent'}[token]
+        yield 'vendor-'+label+'.cpi', f'SIETRONICS XRD SCAN\n10\n12\n1\nMo\n{token}\ndate\n1\nsample\nSCANDATA\n2\n4\n8\n'
+        yield 'vendor-'+label+'.uxd', f'_WL1={token}\n_START=10\n_STEPSIZE=1\n_COUNTS\n2 4 8\n'
+        yield 'vendor-'+label+'.xrdml', f'<xrdMeasurements>\n<usedWavelength unit="Angstrom">\n<kAlpha1>{token}</kAlpha1>\n</usedWavelength>\n<dataPoints>\n<positions axis="2Theta" unit="deg">\n<startPosition>10</startPosition>\n<endPosition>12</endPosition>\n</positions>\n<intensities unit="counts">2 4 8</intensities>\n</dataPoints>\n</xrdMeasurements>\n'
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--runner', type=Path, required=True)
+    ap.add_argument('--output', type=Path, required=True)
+    ap.add_argument('--only-prefix')
+    args = ap.parse_args()
+    runner = args.runner.resolve()
+    out = args.output.resolve()
+    out.mkdir(parents=True, exist_ok=False)
+    sources = list(fixtures())
+    for name in ('example1', 'CPD2', 'MIXT_5'):
+        sources.append((name+'.dat', (ROOT/'share/qualx/examples'/f'{name}.dat').read_bytes()))
+    sources.append(('inaccessible.xy', None))
+    if args.only_prefix:
+        sources = [(name, contents) for name, contents in sources if name.startswith(args.only_prefix)]
+    cases = []
+    for filename, content in sources:
+        case = out/filename.replace('.', '-')
+        case.mkdir()
+        path = case/filename
+        if content is not None:
+            path.write_bytes(content if isinstance(content, bytes) else content.encode())
+        before = {p.name:sha(p) for p in case.iterdir()}
+        try:
+            process = subprocess.run([str(runner), str(path)], cwd=case, capture_output=True, timeout=10)
+            stdout, stderr, code = process.stdout, process.stderr, process.returncode
+        except subprocess.TimeoutExpired as e:
+            stdout, stderr, code = e.stdout or b'', e.stderr or b'', 'timeout'
+        after = {p.name:sha(p) for p in case.iterdir()}
+        (case/'stdout.txt').write_bytes(stdout)
+        (case/'stderr.txt').write_bytes(stderr)
+        status = 'abnormal'
+        if b'PATTERN11' in stdout:
+            data = stdout.split(b'PATTERN11', 1)[1].split()
+            status = 'accepted' if data[0] == b'0' else 'rejected'
+        item = dict(id=case.name, input=filename, returncode=code, native_status=status,
+                    input_sha256=sha(path) if path.exists() else None,
+                    stdout_sha256=sha(case/'stdout.txt'), stderr_sha256=sha(case/'stderr.txt'),
+                    side_effects={k:v for k,v in after.items() if before.get(k)!=v})
+        cases.append(item)
+        print(case.name, status, code, flush=True)
+    provenance = dict(source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+        runner_sha256=sha(runner), compiler='GNU Fortran 13.1.0; existing Qt MinGW product build; -O0',
+        source_hashes={str(p.relative_to(ROOT)).replace('\\','/'):sha(p) for p in (ROOT/'legacy').rglob('*') if p.suffix.lower() in ('.f','.f90')},
+        capture_sources={p.name:sha(p) for p in [Path(__file__),Path(__file__).with_suffix('.f90'),Path(__file__).with_name('pattern_capture_main.cpp')]})
+    (out/'manifest.json').write_text(json.dumps(dict(schema_version=1,status='captured',provenance=provenance,cases=cases),indent=2)+'\n')
+
+
+if __name__ == '__main__':
+    main()

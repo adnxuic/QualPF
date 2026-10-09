@@ -1,0 +1,1022 @@
+{
+  "schema": "qualpf.normal_reference_locations.v1",
+  "baseline": "cdb20666fb730e8288cea41ed350f4536ef86bb3",
+  "expected_from_product": false,
+  "files": [
+    {
+      "original_path": "archive/legacy/native-provider/fortran/crystallography/nist_table.f90.txt",
+      "path": "tests/regression/references/provenance/resource-inputs/fortran/crystallography/nist_table.f90.txt",
+      "bytes": 2457815,
+      "sha256": "eaed0142962ebb40116486e134e0a8d9a468371d7e355a8619968a93b26654d3"
+    },
+    {
+      "original_path": "archive/legacy/native-provider/fortran/crystallography/scatt_params.F90.txt",
+      "path": "tests/regression/references/provenance/resource-inputs/fortran/crystallography/scatt_params.F90.txt",
+      "bytes": 83437,
+      "sha256": "fd267c16d52a7ebe39284dbe6be50b66d3e7efc55d32323ef1f922a116e6fe8f"
+    },
+    {
+      "original_path": "archive/legacy/native-provider/tools/crystallography/generate_chemistry.py.txt",
+      "path": "tests/regression/references/provenance/resource-inputs/tools/crystallography/generate_chemistry.py.txt",
+      "bytes": 3649,
+      "sha256": "aa5488fe1cd7306a3752eee4b44e88d095f419bb4f6798f1571b79e793d9ae69"
+    },
+    {
+      "original_path": "archive/legacy/native-provider/tools/crystallography/generate_scattering.py.txt",
+      "path": "tests/regression/references/provenance/resource-inputs/tools/crystallography/generate_scattering.py.txt",
+      "bytes": 5424,
+      "sha256": "2d4593ac68a8346a24e1f979d604dda416ec37f166c2b8e293508aab01d7ff71"
+    },
+    {
+      "original_path": "archive/legacy/phase36d-test-reference/chemistry.cpp.txt",
+      "path": "tests/regression/references/provenance/previous-providers/chemistry.cpp.txt",
+      "bytes": 5793,
+      "sha256": "037f2b84e881c810acf8b02bf59d8aa947d732e1e88ec56a5f82c456e3b30b05"
+    },
+    {
+      "original_path": "archive/legacy/phase36d-test-reference/powder_intensity.cpp.txt",
+      "path": "tests/regression/references/provenance/previous-providers/powder_intensity.cpp.txt",
+      "bytes": 13493,
+      "sha256": "da6055402c7b493759d57cce6d11d9401ca457097f51381e52db8ec215d4495d"
+    },
+    {
+      "original_path": "archive/legacy/phase36d-test-reference/scattering.cpp.txt",
+      "path": "tests/regression/references/provenance/previous-providers/scattering.cpp.txt",
+      "bytes": 7975,
+      "sha256": "3af37b166998f0825a8b716012f4d81acb0b9a4244d105abbef24e830ab3b70c"
+    },
+    {
+      "original_path": "archive/legacy/phase36d-test-reference/scattering_replay.cpp.txt",
+      "path": "tests/regression/references/provenance/previous-providers/scattering_replay.cpp.txt",
+      "bytes": 7609,
+      "sha256": "3e1c0f23a236f01f10c646371036c1fa56bae200d1abe479325064697b1b1686"
+    },
+    {
+      "original_path": "archive/legacy/phase36d-test-reference/structure_factor.cpp.txt",
+      "path": "tests/regression/references/provenance/previous-providers/structure_factor.cpp.txt",
+      "bytes": 16889,
+      "sha256": "e6b346510b03ef5c3aa696bac581ca8283617b54b42e3a698787433c11b0a762"
+    },
+    {
+      "original_path": "archive/legacy/phase36d-test-reference/unit_cell.cpp.txt",
+      "path": "tests/regression/references/provenance/previous-providers/unit_cell.cpp.txt",
+      "bytes": 8874,
+      "sha256": "d80ea785e97a2caa4f4011b62db80cc6c0b231b483c8c61041e9a7b9bbdf89e2"
+    },
+    {
+      "original_path": "docs/refactoring/phase-14/acceptance-decision.json",
+      "path": "tests/regression/references/symmetry/acceptance-decision.json",
+      "bytes": 897,
+      "sha256": "d56c627f5e3235a8bed0d33279e4c0a4143d040c7837ea35d564b5adff744d2f"
+    },
+    {
+      "original_path": "docs/refactoring/phase-14/translation-qualification.json",
+      "path": "tests/regression/references/symmetry/translation-qualification.json",
+      "bytes": 119414,
+      "sha256": "845c330816876d7b265e7545698d9465b33d337928a008ad75bada39c9bec1df"
+    },
+    {
+      "original_path": "docs/refactoring/phase-15/acceptance-decision.json",
+      "path": "tests/regression/references/reflection/acceptance-decision.json",
+      "bytes": 80903,
+      "sha256": "2584800282643bb6fb64352b133ed1b710bfd0e8b6bae3f60f210a28670ba981"
+    },
+    {
+      "original_path": "docs/refactoring/phase-15/qualification-proof.json",
+      "path": "tests/regression/references/reflection/qualification-proof.json",
+      "bytes": 1224470,
+      "sha256": "8a763eb6bfb39073071d2558350d5ab6ab75b5991c655375abdbab836c8e7bba"
+    },
+    {
+      "original_path": "docs/refactoring/phase-15/qualification-records.json",
+      "path": "tests/regression/references/reflection/qualification-records.json",
+      "bytes": 1080293,
+      "sha256": "8b15b717a64f9a172d52a42507c84953204b392092da514255db72590b51f921"
+    },
+    {
+      "original_path": "docs/refactoring/phase-16/acceptance-decision.json",
+      "path": "tests/regression/references/scattering/acceptance-decision.json",
+      "bytes": 4141,
+      "sha256": "7adcf7791aa41c6aeb18bfd0b2c84befbd156e84bd0cd8c5b540b0a6c18c1c3a"
+    },
+    {
+      "original_path": "docs/refactoring/phase-16/prove_qualification.py",
+      "path": "tests/regression/references/scattering/prove_qualification.py.txt",
+      "bytes": 11922,
+      "sha256": "3172da6158370d96da8e8938a141e38a52bb8966bef8bcb85d24d645a8fda42d"
+    },
+    {
+      "original_path": "docs/refactoring/phase-16/qualification-proof.json",
+      "path": "tests/regression/references/scattering/qualification-proof.json",
+      "bytes": 98,
+      "sha256": "e73d73bba05fbb9ca62d0c184b2432acc3410094ed55027d797bdfa35e179cb9"
+    },
+    {
+      "original_path": "docs/refactoring/phase-16/qualification-records.json",
+      "path": "tests/regression/references/scattering/qualification-records.json",
+      "bytes": 250019,
+      "sha256": "80389609d870095fbb13ff2eb93d3956cffc09b43c621b9679c7d45a7f751c82"
+    },
+    {
+      "original_path": "docs/refactoring/phase-16/qualification-review.md",
+      "path": "tests/regression/references/scattering/qualification-review.md",
+      "bytes": 59263,
+      "sha256": "17eccb6ddc749ab600c710367dde1f6ad79ee7e3c8521ab5d1db9554345da219"
+    },
+    {
+      "original_path": "docs/refactoring/phase-16/table-resource-hashes.json",
+      "path": "tests/regression/references/scattering/table-resource-hashes.json",
+      "bytes": 1312,
+      "sha256": "d5c041634389992692ce13d80f9b4f07cfe9f6d413adc181151987ce2a817e51"
+    },
+    {
+      "original_path": "docs/refactoring/phase-16/test-results/approved-mingw-differential.json",
+      "path": "tests/regression/references/scattering/test-results/approved-mingw-differential.json",
+      "bytes": 391842,
+      "sha256": "ebec5961566054768bb99321c925a334ff58d9de4d5b10f97daec3ac0abfd323"
+    },
+    {
+      "original_path": "docs/refactoring/phase-16/test-results/approved-msvc-differential.json",
+      "path": "tests/regression/references/scattering/test-results/approved-msvc-differential.json",
+      "bytes": 391847,
+      "sha256": "e9bec81ee272026e4de98a6d0ee9af1aa3c1dcd00bd3eae171205f23cd3b3c82"
+    },
+    {
+      "original_path": "docs/refactoring/phase-17/acceptance-decision.json",
+      "path": "tests/regression/references/powder/acceptance-decision.json",
+      "bytes": 3185,
+      "sha256": "89ea26909a256c6ca46a3a400442f6819756280f4acddba80d3b599d08f6ee94"
+    },
+    {
+      "original_path": "docs/refactoring/phase-17/prove_qualification.py",
+      "path": "tests/regression/references/powder/prove_qualification.py.txt",
+      "bytes": 7249,
+      "sha256": "82667d4fa8b5ab1fda4e94d5c341ce18212e9f58263e9dabd523c2093635a1f2"
+    },
+    {
+      "original_path": "docs/refactoring/phase-17/qualification-proof.json",
+      "path": "tests/regression/references/powder/qualification-proof.json",
+      "bytes": 368,
+      "sha256": "a62ee74c5a1123462f9128522dce7be28ee6cb200bb29d8e596d2aaf1dcd88b0"
+    },
+    {
+      "original_path": "docs/refactoring/phase-17/qualification-records.json",
+      "path": "tests/regression/references/powder/qualification-records.json",
+      "bytes": 2394,
+      "sha256": "df124c922e60fdaf78f09e2d7305fcaa8405caaf9c8210569ea295d47248c919"
+    },
+    {
+      "original_path": "docs/refactoring/phase-17/qualification-review.md",
+      "path": "tests/regression/references/powder/qualification-review.md",
+      "bytes": 1290,
+      "sha256": "2842d3945808fb35351b9697aee5a9b2edd313f24c4747b5658a4edb084b9f93"
+    },
+    {
+      "original_path": "docs/refactoring/phase-17/test-results/cpp-replay-transcripts.zip",
+      "path": "tests/regression/references/powder/test-results/cpp-replay-transcripts.zip",
+      "bytes": 1895201,
+      "sha256": "0d22e1669a9aa9d4fa016a5df0a8b07a96ffba0815fa1a37c02371f1dd9c3411"
+    },
+    {
+      "original_path": "docs/refactoring/phase-17/test-results/unqualified-mingw-powder-differential.json",
+      "path": "tests/regression/references/powder/test-results/unqualified-mingw-powder-differential.json",
+      "bytes": 14140,
+      "sha256": "c0a0c32a05e3e72b61ff6ccd382f7882894634656d15fdc5b68de5084b7f2d39"
+    },
+    {
+      "original_path": "docs/refactoring/phase-17/test-results/unqualified-msvc-powder-differential.json",
+      "path": "tests/regression/references/powder/test-results/unqualified-msvc-powder-differential.json",
+      "bytes": 14141,
+      "sha256": "04313a5c55618ceac58709646596d79fb3feee1cd18afa1e9ddda07e00ad11c4"
+    },
+    {
+      "original_path": "docs/refactoring/phase-18/acceptance-decision.json",
+      "path": "tests/regression/references/card/acceptance-decision.json",
+      "bytes": 4978,
+      "sha256": "c181c0bbc2ad05d7e91b74fea91e5fb358ebf8d2e497c1c38aef14fc3dea36d4"
+    },
+    {
+      "original_path": "docs/refactoring/phase-18/chemistry-resource-hashes.json",
+      "path": "tests/regression/references/card/chemistry-resource-hashes.json",
+      "bytes": 9822,
+      "sha256": "8afce21e14d847aeebdfaa9d2bb3f7c58cf8864553f4578370ebded1ba4bc44e"
+    },
+    {
+      "original_path": "docs/refactoring/phase-18/contracts.md",
+      "path": "tests/regression/references/card/contracts.md",
+      "bytes": 8594,
+      "sha256": "45b7745c832b43914c2f7296695c9207aa98006adb9cbbc5fda50d70119e58aa"
+    },
+    {
+      "original_path": "docs/refactoring/phase-18/cpp-replay-evidence-manifest.json",
+      "path": "tests/regression/references/card/cpp-replay-evidence-manifest.json",
+      "bytes": 4241,
+      "sha256": "2b25c32c19dbea50cbf41036622cc6f2b0f09ba1bdba6c6d4b95052751cad801"
+    },
+    {
+      "original_path": "docs/refactoring/phase-18/cpp-replay-evidence.zip",
+      "path": "tests/regression/references/card/cpp-replay-evidence.zip",
+      "bytes": 4511200,
+      "sha256": "3e4169ae5629dd4860ce542233c72ecc7e6dd8ea70cbbb1bfbdc5d651e694827"
+    },
+    {
+      "original_path": "docs/refactoring/phase-18/oracle-seal.json",
+      "path": "tests/regression/references/card/oracle-seal.json",
+      "bytes": 1000,
+      "sha256": "b800846b4688c57899e1882ff0f0425a9eee2818a57bf8520a42044e6c4fa41e"
+    },
+    {
+      "original_path": "docs/refactoring/phase-18/prove_qualification.py",
+      "path": "tests/regression/references/card/prove_qualification.py.txt",
+      "bytes": 14134,
+      "sha256": "fb8deaf2bfe3def43144da8abdc04a27ced5a2c0df684e84af6e8801ab59ca19"
+    },
+    {
+      "original_path": "docs/refactoring/phase-18/qualification-proof.json",
+      "path": "tests/regression/references/card/qualification-proof.json",
+      "bytes": 107593,
+      "sha256": "8f3acf6123f55faf9c9bd2c2d2c796c00da8e2771ca2b2ce8b0eb7c2a84f7db8"
+    },
+    {
+      "original_path": "docs/refactoring/phase-18/qualification-records.json",
+      "path": "tests/regression/references/card/qualification-records.json",
+      "bytes": 99988,
+      "sha256": "b0c2d206b11827d03da2e4ed1862097e8df0010957b2d838e4fd317ac058d3fa"
+    },
+    {
+      "original_path": "docs/refactoring/phase-18/qualification-review.md",
+      "path": "tests/regression/references/card/qualification-review.md",
+      "bytes": 18716,
+      "sha256": "13f92d2b12415cd1cdef67834641ed48d307a19617640f6bdb81c7ec0c43ed2c"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/product-integration/build-attempt-014-inputs.json",
+      "path": "tests/regression/references/cif/product-integration/build-attempt-014-inputs.json",
+      "bytes": 73115,
+      "sha256": "e3e90747dfbb8d49d49130ed08bd8b363b757c14b3dcf13c12d9ee7a38b82018"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/adp-malformed.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/adp-malformed.cif",
+      "bytes": 465,
+      "sha256": "38435ab0de883034977b65b014564244d685587fbc7b8185bf10abfdd6f0a207"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/anisotropic-invalid.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/anisotropic-invalid.cif",
+      "bytes": 620,
+      "sha256": "dcfe8c0195f38016dc4f4d1d04f063b766b847ee7610bfcbcf558943ed45a557"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/anisotropic-malformed.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/anisotropic-malformed.cif",
+      "bytes": 617,
+      "sha256": "8bcdb4a8ee4a0c6b8200cfa28f054cb935527fceb98369f0787e9f1a58540a76"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/bad-coordinate.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/bad-coordinate.cif",
+      "bytes": 439,
+      "sha256": "3da44c25b621b0e1d0ae5ce01195dd189f73c66edf8ef1dcc97ac37fc13ad735"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/cod-2300112.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/cod-2300112.cif",
+      "bytes": 8040,
+      "sha256": "bf25e35b06c55d9f35dc51f8afc992b4654844f433c5192327beacf3bffb038b"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/cod-4343150.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/cod-4343150.cif",
+      "bytes": 13697,
+      "sha256": "5e58cacb9b858f84f751357ff80fe3c8d3aa1b843c93928287a2d8998aaae802"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/conflicting-hall-HM.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/conflicting-hall-HM.cif",
+      "bytes": 466,
+      "sha256": "f164b59d19e046a3fe1e102f06e89c68519e9e677390102115f7a9f48c74f6a2"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/duplicate-tag.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/duplicate-tag.cif",
+      "bytes": 453,
+      "sha256": "78c9dcbb89fa722c5cdfb2c626ae7736da894996be1679dc8bc97a9faa0c7ba3"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/invalid-cell.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/invalid-cell.cif",
+      "bytes": 436,
+      "sha256": "d1d109e93eb5aafb97aa3733e5322c4305420b866b65080a3aa628a390655005"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/metadata-second-block.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/metadata-second-block.cif",
+      "bytes": 866,
+      "sha256": "f3ea8b97244fd09c8994d53841ccb518506e39c80a94e8aa2c0502df305152f8"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/missing-cell.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/missing-cell.cif",
+      "bytes": 323,
+      "sha256": "4ec4d1db7ede95d2fe2b44e505ae4578df487e23f67a1590259a666881e8a1cb"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/missing-symmetry.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/missing-symmetry.cif",
+      "bytes": 399,
+      "sha256": "cd14e727b304b7c6512ee65b3021b51a6f5fb4db5828d32e9913e3c2fe18afa6"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/missing-type-and-label.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/missing-type-and-label.cif",
+      "bytes": 389,
+      "sha256": "c449b70a1f872cb4bd1822b0eeda79f348644b611a63544bb1f1c96623c5ca7b"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/multiple-blocks.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/multiple-blocks.cif",
+      "bytes": 871,
+      "sha256": "02c6f84f50466690b9fe1558aec62a194eb9ad2cd4b1436c8793bca09e6f40e4"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/number-HM-conflict.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/number-HM-conflict.cif",
+      "bytes": 461,
+      "sha256": "b33547f17264a461fadac016d7f4141eec57b53e714bb51023fe66f6ab961734"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/occupancy--0dot1.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/occupancy--0dot1.cif",
+      "bytes": 462,
+      "sha256": "ae227389b1450fd49005490b5d177e27c11a18a073d2b2aab84700f930bae500"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/occupancy-1dot1.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/occupancy-1dot1.cif",
+      "bytes": 461,
+      "sha256": "3444bc7215d8ac8514bcd27f590a2c8def80fead509cd3e0867540c557e94d43"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/occupancy-invalid.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/occupancy-invalid.cif",
+      "bytes": 465,
+      "sha256": "292fe4d3b51ab7da8d9445ae918392c0244017f966ebf274702bc698adfc9de6"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/operators-malformed.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/operators-malformed.cif",
+      "bytes": 486,
+      "sha256": "bf75f88705ebc1bc57cac0aaff4e55ffc78b3dc6dd315e7a0740a97052024477"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/operators-unknown.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/operators-unknown.cif",
+      "bytes": 487,
+      "sha256": "aa0405d9baa6cb655fc65121b75b97e5c7369de1f018c5e006c4a3b405f4399c"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-CoO.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/repository-CoO.cif",
+      "bytes": 4299,
+      "sha256": "2b4850c8553e623344052cc6f91e4b04044fc1353632e9127c55a68a215a0443"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-KYbSe2.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/repository-KYbSe2.cif",
+      "bytes": 2870,
+      "sha256": "0aac9dd1b92f1f38d2275408a0ef594bf5579ef96f30958f83a8849d27d135e7"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-Sr3Fe2O4F4.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/repository-Sr3Fe2O4F4.cif",
+      "bytes": 5315,
+      "sha256": "e8c8b89a62b879a15c591d43fd8e5260b9b21a559fc205f2d35a660183966ae3"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-YBC2.78O.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/repository-YBC2.78O.cif",
+      "bytes": 2679,
+      "sha256": "1efc18e93353e40fb525d068012b343fb0f439beab5a9a104e8c0aa3a651d8d8"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-YBCO6.98.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/repository-YBCO6.98.cif",
+      "bytes": 2627,
+      "sha256": "7efd473b9c742b4b8636393bb596ff91edfd299933994a4ce85bb3b1fec51215"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-YInO3.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/repository-YInO3.cif",
+      "bytes": 2395,
+      "sha256": "da6eda6f6d2d081057b5d48c64bde6be40ebf7ad228512c083dfba8395f71e93"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/short-row.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/short-row.cif",
+      "bytes": 430,
+      "sha256": "4b10fd052c2a93b4335c548bff39db583ed011067008d0d98e1405e53578b4fe"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/unclosed-quote.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/unclosed-quote.cif",
+      "bytes": 429,
+      "sha256": "f671352d2bbf203552406b131f67b5038456b3312a2872fb75d61eb458fe37ee"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/unknown-symmetry.cif",
+      "path": "tests/regression/references/cif/rejection-remediation/rejection-attempt-002/unknown-symmetry.cif",
+      "bytes": 446,
+      "sha256": "02d8e47083c77ada69449837ba60b4719f8ac651928f3b225f0379031410f511"
+    },
+    {
+      "original_path": "docs/refactoring/phase-34/current-math-reference/batch.json",
+      "path": "tests/regression/references/qualified-numerics/current-math-reference/batch.json",
+      "bytes": 7774,
+      "sha256": "8c8c5b4951a146606706754adc041f81027484eefffdc95c0edcad04fc54525e"
+    },
+    {
+      "original_path": "docs/refactoring/phase-36/attenuation-scattering-rne/decision.json",
+      "path": "tests/regression/references/provider-successors/attenuation-scattering-rne/decision.json",
+      "bytes": 8256,
+      "sha256": "bfefd5fe34bb721d3453c0915fa041530d0d0708b6eb8ede695902356f7a0dfe"
+    },
+    {
+      "original_path": "docs/refactoring/phase-36/attenuation-scattering-rne/proposal.json",
+      "path": "tests/regression/references/provider-successors/attenuation-scattering-rne/proposal.json",
+      "bytes": 5473,
+      "sha256": "3c480998644bfc66d2e1e5866392d9221c7701426786e089e4708290062d04e0"
+    },
+    {
+      "original_path": "docs/refactoring/phase-36/formed-angle-contract/decision.json",
+      "path": "tests/regression/references/provider-successors/formed-angle-contract/decision.json",
+      "bytes": 6873,
+      "sha256": "1402551825cc742cd1dc36df59c48bcfeea65fce4a16307e72f2be7246830274"
+    },
+    {
+      "original_path": "docs/refactoring/phase-36/native-provider-exit/successor-inventory.json",
+      "path": "tests/regression/references/provider-successors/native-provider-exit/successor-inventory.json",
+      "bytes": 8635,
+      "sha256": "61cae01793d7696d32e2a7c1e4fe0bfb8fdb3b5e3ed6ac57e1419a741e12fc1c"
+    },
+    {
+      "original_path": "docs/refactoring/phase-36/phase-sincos-contract/decision.json",
+      "path": "tests/regression/references/provider-successors/phase-sincos-contract/decision.json",
+      "bytes": 8461,
+      "sha256": "0f59b469d55394d39e7f4609a72abad7845e3fb1d233343ae6fc3ca843bcfa03"
+    },
+    {
+      "original_path": "docs/refactoring/phase-36/unit-cell-contract/decision.json",
+      "path": "tests/regression/references/provider-successors/unit-cell-contract/decision.json",
+      "bytes": 7379,
+      "sha256": "b3fd6f613f090cbb5be437d763a4164729cb659b682682add86ea037b960ce9c"
+    },
+    {
+      "original_path": "docs/refactoring/phase-36/unit-cell-contract/reflection-boundary-decision.json",
+      "path": "tests/regression/references/provider-successors/unit-cell-contract/reflection-boundary-decision.json",
+      "bytes": 11683,
+      "sha256": "79d179e5123baf6301193224959f2d6562403c26753cd558f7c27fb4b05b809e"
+    },
+    {
+      "original_path": "docs/refactoring/phase-9.3/advanced-reference.zip",
+      "path": "tests/regression/references/preprocessing/advanced-reference.zip",
+      "bytes": 4602639,
+      "sha256": "0e86a1b8f14aca6be14ed517b647318bdecc6598ddd9f4d5dfb94cb614680a62"
+    },
+    {
+      "original_path": "tests/CMakeLists.txt",
+      "path": "tests/regression/references/provenance/test-registration/CMakeLists.txt.txt",
+      "bytes": 34801,
+      "sha256": "67383c228f30ed74b9e90bc5cd0bd4ed1c1cfdda8f37e3e7121527a63bd02458"
+    },
+    {
+      "original_path": "tests/compatibility/card_acceptance_test.py",
+      "path": "tests/regression/references/provenance/comparison-sources/card_acceptance_test.py.txt",
+      "bytes": 5074,
+      "sha256": "7aa3d24f7315a75650dae388c88df7e82c451e6b1c6f92f0f2f43b8cdd1ad07b"
+    },
+    {
+      "original_path": "tests/compatibility/card_capture.py",
+      "path": "tests/regression/references/provenance/comparison-sources/card_capture.py.txt",
+      "bytes": 14699,
+      "sha256": "a0d66d1f73d89001ea412b2e44c01f9ef4ba67abf50b01f3b9c5cd1028c3680e"
+    },
+    {
+      "original_path": "tests/compatibility/card_differential.py",
+      "path": "tests/regression/references/provenance/comparison-sources/card_differential.py.txt",
+      "bytes": 13620,
+      "sha256": "f1a8d686d4696cf279f9b69ed6c45fa257f820da2393b5d53b50955d2ff0a17b"
+    },
+    {
+      "original_path": "tests/compatibility/card_properties.py",
+      "path": "tests/regression/references/provenance/comparison-sources/card_properties.py.txt",
+      "bytes": 3105,
+      "sha256": "3c41f99a06ad3ff8a0aacc2747888a3a3725b57f35165109fc6269cb779c22ea"
+    },
+    {
+      "original_path": "tests/compatibility/card_qualification.py",
+      "path": "tests/regression/references/provenance/comparison-sources/card_qualification.py.txt",
+      "bytes": 4279,
+      "sha256": "2244a1ac5832bc8fd79a43a2533992270db1df4ccb1d14f8ddf26411d532641f"
+    },
+    {
+      "original_path": "tests/compatibility/classic_capture.py",
+      "path": "tests/regression/references/provenance/comparison-sources/classic_capture.py.txt",
+      "bytes": 6373,
+      "sha256": "1779828b8ed4b8bec1a8da23c36a5914640902490774d9ae8b44a9c0dfa9ee83"
+    },
+    {
+      "original_path": "tests/compatibility/classic_reference_test.py",
+      "path": "tests/regression/references/provenance/comparison-sources/classic_reference_test.py.txt",
+      "bytes": 3461,
+      "sha256": "66d2fb465b5979f74c238a38a951aaa6b74f18e0ca8fbd1158e4786f31659127"
+    },
+    {
+      "original_path": "tests/compatibility/crystallography_capture.py",
+      "path": "tests/regression/references/provenance/comparison-sources/crystallography_capture.py.txt",
+      "bytes": 5720,
+      "sha256": "609699254c10d3fd1aa48552830472ba6f881985048b15f3205afd44f2c8c55a"
+    },
+    {
+      "original_path": "tests/compatibility/crystallography_differential.py",
+      "path": "tests/regression/references/provenance/comparison-sources/crystallography_differential.py.txt",
+      "bytes": 7941,
+      "sha256": "2e754c41fb1b5c35951bd1dba77daa922684439929f87f19c6014b24fb45b6a6"
+    },
+    {
+      "original_path": "tests/compatibility/current_cell_reference.py",
+      "path": "tests/regression/references/provenance/comparison-sources/current_cell_reference.py.txt",
+      "bytes": 15075,
+      "sha256": "e89ce4f723f2984fb665515634ec8935c156706307c35d9de9bf4bba43bdb260"
+    },
+    {
+      "original_path": "tests/compatibility/current_cell_reference_test.py",
+      "path": "tests/regression/references/provenance/comparison-sources/current_cell_reference_test.py.txt",
+      "bytes": 6101,
+      "sha256": "cb9694b5cd22e45beacd32b1bb36c5d80260cd5022c6a0cac36d98dd4e3d327d"
+    },
+    {
+      "original_path": "tests/compatibility/current_lp_reference.py",
+      "path": "tests/regression/references/provenance/comparison-sources/current_lp_reference.py.txt",
+      "bytes": 7951,
+      "sha256": "96888f366729bbb2acfc1c52c6a7107e53ee19e812d5900d25c9c0332ef9ece8"
+    },
+    {
+      "original_path": "tests/compatibility/current_lp_reference_test.py",
+      "path": "tests/regression/references/provenance/comparison-sources/current_lp_reference_test.py.txt",
+      "bytes": 2657,
+      "sha256": "95d6617e29ad9bc0471b9f1c96ce99572bde10ca552a03655416704fb33c0555"
+    },
+    {
+      "original_path": "tests/compatibility/current_pattern_reference.py",
+      "path": "tests/regression/references/provenance/comparison-sources/current_pattern_reference.py.txt",
+      "bytes": 615,
+      "sha256": "bc3720e9e70032e09a48ee6f23777c40eaf46f2def9be267ce4a2079e3954564"
+    },
+    {
+      "original_path": "tests/compatibility/current_phase_reference.py",
+      "path": "tests/regression/references/provenance/comparison-sources/current_phase_reference.py.txt",
+      "bytes": 13273,
+      "sha256": "63e309fbb7e6e138011851e8cad013d0f92a3305872c1fc4ecd2382f3a5f9866"
+    },
+    {
+      "original_path": "tests/compatibility/current_phase_reference_test.py",
+      "path": "tests/regression/references/provenance/comparison-sources/current_phase_reference_test.py.txt",
+      "bytes": 2770,
+      "sha256": "9d66535b1208916180d61d92e34b4e505950cd18662dec5261781424bfff90a6"
+    },
+    {
+      "original_path": "tests/compatibility/current_qualified_reference.py",
+      "path": "tests/regression/references/provenance/comparison-sources/current_qualified_reference.py.txt",
+      "bytes": 11177,
+      "sha256": "2b79f51e23d554718371385518730023c4042f386a442431f14d18e5db1df62e"
+    },
+    {
+      "original_path": "tests/compatibility/current_qualified_reference_test.py",
+      "path": "tests/regression/references/provenance/comparison-sources/current_qualified_reference_test.py.txt",
+      "bytes": 5126,
+      "sha256": "be31404ee87b0136d64c2a772da4963b80fa882404943f1cd10bb66b9bfa36ec"
+    },
+    {
+      "original_path": "tests/compatibility/current_transcendental_reference.py",
+      "path": "tests/regression/references/provenance/comparison-sources/current_transcendental_reference.py.txt",
+      "bytes": 8543,
+      "sha256": "68c04652f2d04a57bb4100695884f171c96a381bfe6e6d91cd578aa67012ffea"
+    },
+    {
+      "original_path": "tests/compatibility/current_transcendental_reference_test.py",
+      "path": "tests/regression/references/provenance/comparison-sources/current_transcendental_reference_test.py.txt",
+      "bytes": 4687,
+      "sha256": "c81ffc10c4ca3620d33ee64c0387fff1bcb99e77df33a25154b437c6448ba8c3"
+    },
+    {
+      "original_path": "tests/compatibility/fortran_capture/capture.py",
+      "path": "tests/regression/references/provenance/comparison-sources/fortran_capture/capture.py.txt",
+      "bytes": 11324,
+      "sha256": "61147f8e031d15b420b2f11a36e2eee9d3d116e3a7ac15c81cc867f81cec7134"
+    },
+    {
+      "original_path": "tests/compatibility/fortran_capture/make_inputs.py",
+      "path": "tests/regression/references/provenance/comparison-sources/fortran_capture/make_inputs.py.txt",
+      "bytes": 6282,
+      "sha256": "6f047e28319f5d5b51dae7c8bfe5d644978bff17f818628b9a9b3b3c6c6cf6b2"
+    },
+    {
+      "original_path": "tests/compatibility/generate_card_trace.py",
+      "path": "tests/regression/references/provenance/comparison-sources/generate_card_trace.py.txt",
+      "bytes": 3501,
+      "sha256": "848b21ce196f84591bf8c517947f5a2f531ce96d63ff4fdc0748702796d27cf7"
+    },
+    {
+      "original_path": "tests/compatibility/generate_scattering_trace.py",
+      "path": "tests/regression/references/provenance/comparison-sources/generate_scattering_trace.py.txt",
+      "bytes": 1695,
+      "sha256": "d1d8358933b83bd1fc0f8d907f050b2a69d3c8ae65e40f84e729c39fa45fd11b"
+    },
+    {
+      "original_path": "tests/compatibility/kalpha2_capture.py",
+      "path": "tests/regression/references/provenance/comparison-sources/kalpha2_capture.py.txt",
+      "bytes": 4498,
+      "sha256": "e71c5185beb07feaf306b88e1acc6f70c4be4040558e27a8f479ca88929a3fd8"
+    },
+    {
+      "original_path": "tests/compatibility/kalpha2_compare.py",
+      "path": "tests/regression/references/provenance/comparison-sources/kalpha2_compare.py.txt",
+      "bytes": 2012,
+      "sha256": "b26e76ccbe7f2a78cb02eb4dc644504e074edd154e91c3e1319b1d3dd8437b25"
+    },
+    {
+      "original_path": "tests/compatibility/numerical_reference.py",
+      "path": "tests/regression/references/provenance/comparison-sources/numerical_reference.py.txt",
+      "bytes": 7556,
+      "sha256": "1b7ed8a1008a937e17fefe00ac355c162c5358e4006247cfd7b87a1518009f7e"
+    },
+    {
+      "original_path": "tests/compatibility/pattern_capture.py",
+      "path": "tests/regression/references/provenance/comparison-sources/pattern_capture.py.txt",
+      "bytes": 7518,
+      "sha256": "c1f67a58f5a8530d363dffc8c731112bd7b23a1760a72e23f91275230771e4c1"
+    },
+    {
+      "original_path": "tests/compatibility/pattern_differential.py",
+      "path": "tests/regression/references/provenance/comparison-sources/pattern_differential.py.txt",
+      "bytes": 4275,
+      "sha256": "c0fbf509574941ee264b5e1296fba9324ed2cb84e806fa6cb57a815418b8b4ce"
+    },
+    {
+      "original_path": "tests/compatibility/phase6_reference_test.py",
+      "path": "tests/regression/references/provenance/comparison-sources/phase6_reference_test.py.txt",
+      "bytes": 6376,
+      "sha256": "32fe2c4ca875f5ccbaa7555d84ec9ccfbc831041fa3f9ec47decc1c57152233b"
+    },
+    {
+      "original_path": "tests/compatibility/powder_capture.py",
+      "path": "tests/regression/references/provenance/comparison-sources/powder_capture.py.txt",
+      "bytes": 7996,
+      "sha256": "82b5a354d3f189281ae1e70454fb837489cf5e1b83c10e2cfca6fb0e42143883"
+    },
+    {
+      "original_path": "tests/compatibility/powder_differential.py",
+      "path": "tests/regression/references/provenance/comparison-sources/powder_differential.py.txt",
+      "bytes": 6377,
+      "sha256": "d3d39570116dd3d3397f60cccecddca1c2f2591b2041aed331913f4e2a763ccc"
+    },
+    {
+      "original_path": "tests/compatibility/powder_properties.py",
+      "path": "tests/regression/references/provenance/comparison-sources/powder_properties.py.txt",
+      "bytes": 2243,
+      "sha256": "5bd7caded5137e5596329b0f7cd52635870754d10a23e2395896d974b21732d1"
+    },
+    {
+      "original_path": "tests/compatibility/powder_protocol_test.py",
+      "path": "tests/regression/references/provenance/comparison-sources/powder_protocol_test.py.txt",
+      "bytes": 2777,
+      "sha256": "c61b28fbb3cb23c09eebb37328fe263de7c41ab29521c6f5e6808e9d985d56e0"
+    },
+    {
+      "original_path": "tests/compatibility/powder_qualification.py",
+      "path": "tests/regression/references/provenance/comparison-sources/powder_qualification.py.txt",
+      "bytes": 3535,
+      "sha256": "cd5401fb38bf71c5ea59d9db881c3ea651ed305e3146fe33b857eb2cf261d679"
+    },
+    {
+      "original_path": "tests/compatibility/preprocessing_capture.py",
+      "path": "tests/regression/references/provenance/comparison-sources/preprocessing_capture.py.txt",
+      "bytes": 7068,
+      "sha256": "773bf52675866120e138356558f32bd61fba7d3115738bc2c1828b7a15a35cef"
+    },
+    {
+      "original_path": "tests/compatibility/preprocessing_compare.py",
+      "path": "tests/regression/references/provenance/comparison-sources/preprocessing_compare.py.txt",
+      "bytes": 6985,
+      "sha256": "6ca479ee5d5cb0af95c6e6eaca12c152f416a58ed4317cec06d1d939999d0007"
+    },
+    {
+      "original_path": "tests/compatibility/preprocessing_compare_test.py",
+      "path": "tests/regression/references/provenance/comparison-sources/preprocessing_compare_test.py.txt",
+      "bytes": 4334,
+      "sha256": "9d5a85f4e229aa546da9e2e64797f5d27c111086fd8b96241615c40ca74fb57e"
+    },
+    {
+      "original_path": "tests/compatibility/preprocessing_product_reference.py",
+      "path": "tests/regression/references/provenance/comparison-sources/preprocessing_product_reference.py.txt",
+      "bytes": 1827,
+      "sha256": "43a31437afc73b24744d6e05e8dfbcc6931c7c82f70bf84cc01e778910da51d1"
+    },
+    {
+      "original_path": "tests/compatibility/preprocessing_rounding_test.py",
+      "path": "tests/regression/references/provenance/comparison-sources/preprocessing_rounding_test.py.txt",
+      "bytes": 2186,
+      "sha256": "08c30a360e56e7314c89de99f4275df7ae12e08da853f911fe7a913d2204c4b4"
+    },
+    {
+      "original_path": "tests/compatibility/preprocessing_source_snapshot.py",
+      "path": "tests/regression/references/provenance/comparison-sources/preprocessing_source_snapshot.py.txt",
+      "bytes": 1714,
+      "sha256": "4fb52c424a983a223d9f965907f573c23f51ec9389396282e4798b0af4c0f175"
+    },
+    {
+      "original_path": "tests/compatibility/preprocessing_trace.py",
+      "path": "tests/regression/references/provenance/comparison-sources/preprocessing_trace.py.txt",
+      "bytes": 9927,
+      "sha256": "2d1f3d9094055a810c7436668d2d28061d1cbaf920449afcd3778ec94e595233"
+    },
+    {
+      "original_path": "tests/compatibility/preprocessing_trace_check.py",
+      "path": "tests/regression/references/provenance/comparison-sources/preprocessing_trace_check.py.txt",
+      "bytes": 4554,
+      "sha256": "55b58778ee3795a1214cc8be376a1f7bf0e86c72e390e241e895a3ee8264c0ea"
+    },
+    {
+      "original_path": "tests/compatibility/preprocessing_workflow_check.py",
+      "path": "tests/regression/references/provenance/comparison-sources/preprocessing_workflow_check.py.txt",
+      "bytes": 5225,
+      "sha256": "2d035799ad19ea9a69da3a296dfb864c447f46172fb6ae2fb38da73c3979f4c8"
+    },
+    {
+      "original_path": "tests/compatibility/reflection_capture.py",
+      "path": "tests/regression/references/provenance/comparison-sources/reflection_capture.py.txt",
+      "bytes": 7551,
+      "sha256": "477dcdca2013dac433e8928d26b024e94640c8b22b715502769053ed1516d698"
+    },
+    {
+      "original_path": "tests/compatibility/reflection_differential.py",
+      "path": "tests/regression/references/provenance/comparison-sources/reflection_differential.py.txt",
+      "bytes": 5561,
+      "sha256": "af35e90fef174632c568099c7be2a0daa55f566bdb01adf6ff9cc310ddbc807b"
+    },
+    {
+      "original_path": "tests/compatibility/scattering_capture.py",
+      "path": "tests/regression/references/provenance/comparison-sources/scattering_capture.py.txt",
+      "bytes": 12036,
+      "sha256": "d80b4d2d53ee18bc6b7b84737ee6fcecc703a8fb52d6ffe5da688a5ba5ed0a66"
+    },
+    {
+      "original_path": "tests/compatibility/scattering_differential.py",
+      "path": "tests/regression/references/provenance/comparison-sources/scattering_differential.py.txt",
+      "bytes": 9627,
+      "sha256": "d104e5f5c55a57508ec1f5b560c9778f27dc1495e9a34334defb114c7b1e89b1"
+    },
+    {
+      "original_path": "tests/compatibility/scattering_protocol_test.py",
+      "path": "tests/regression/references/provenance/comparison-sources/scattering_protocol_test.py.txt",
+      "bytes": 8598,
+      "sha256": "ddb59db7addb68a28eceef674df09387643f86c6fd37b5151d569217b772ed67"
+    },
+    {
+      "original_path": "tests/compatibility/scattering_qualification.py",
+      "path": "tests/regression/references/provenance/comparison-sources/scattering_qualification.py.txt",
+      "bytes": 5829,
+      "sha256": "2ba5c81a6432c99f7c582438ca786c3412cd08135a33980db07f52e170280193"
+    },
+    {
+      "original_path": "tests/compatibility/symmetry_capture.py",
+      "path": "tests/regression/references/provenance/comparison-sources/symmetry_capture.py.txt",
+      "bytes": 6151,
+      "sha256": "2edb0376f16840db31cb7e4b18de2acd82ef8737a46e939e682a6fc624d12690"
+    },
+    {
+      "original_path": "tests/compatibility/symmetry_differential.py",
+      "path": "tests/regression/references/provenance/comparison-sources/symmetry_differential.py.txt",
+      "bytes": 4200,
+      "sha256": "8b08668161e6f5ba366b63e1f20874b5a816ed4ffd196b451af9dbe681670182"
+    },
+    {
+      "original_path": "tests/compatibility/symmetry_source.py",
+      "path": "tests/regression/references/provenance/comparison-sources/symmetry_source.py.txt",
+      "bytes": 2058,
+      "sha256": "49bb0564e115379fad1a59677002937d85cb9faf7bd5a43f02b27389465bb756"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-001/adp-malformed.cif",
+      "path": "tests/data/cif/adp-malformed.cif",
+      "bytes": 465,
+      "sha256": "38435ab0de883034977b65b014564244d685587fbc7b8185bf10abfdd6f0a207"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-001/anisotropic-invalid.cif",
+      "path": "tests/data/cif/anisotropic-invalid.cif",
+      "bytes": 620,
+      "sha256": "dcfe8c0195f38016dc4f4d1d04f063b766b847ee7610bfcbcf558943ed45a557"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-001/anisotropic-malformed.cif",
+      "path": "tests/data/cif/anisotropic-malformed.cif",
+      "bytes": 617,
+      "sha256": "8bcdb4a8ee4a0c6b8200cfa28f054cb935527fceb98369f0787e9f1a58540a76"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-001/bad-coordinate.cif",
+      "path": "tests/data/cif/bad-coordinate.cif",
+      "bytes": 439,
+      "sha256": "3da44c25b621b0e1d0ae5ce01195dd189f73c66edf8ef1dcc97ac37fc13ad735"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-001/cod-2300112.cif",
+      "path": "tests/data/cif/cod-2300112.cif",
+      "bytes": 8040,
+      "sha256": "bf25e35b06c55d9f35dc51f8afc992b4654844f433c5192327beacf3bffb038b"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-001/cod-4343150.cif",
+      "path": "tests/data/cif/cod-4343150.cif",
+      "bytes": 13697,
+      "sha256": "5e58cacb9b858f84f751357ff80fe3c8d3aa1b843c93928287a2d8998aaae802"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-001/conflicting-hall-HM.cif",
+      "path": "tests/data/cif/conflicting-hall-HM.cif",
+      "bytes": 466,
+      "sha256": "f164b59d19e046a3fe1e102f06e89c68519e9e677390102115f7a9f48c74f6a2"
+    },
+    {
+      "original_path": "tests/real_example_data/03_reference_structures/CoO.cif",
+      "path": "tests/data/cif/CoO.cif",
+      "bytes": 4299,
+      "sha256": "2b4850c8553e623344052cc6f91e4b04044fc1353632e9127c55a68a215a0443"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-001/duplicate-tag.cif",
+      "path": "tests/data/cif/duplicate-tag.cif",
+      "bytes": 453,
+      "sha256": "78c9dcbb89fa722c5cdfb2c626ae7736da894996be1679dc8bc97a9faa0c7ba3"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/invalid-cell.cif",
+      "path": "tests/data/cif/invalid-cell.cif",
+      "bytes": 436,
+      "sha256": "d1d109e93eb5aafb97aa3733e5322c4305420b866b65080a3aa628a390655005"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/metadata-second-block.cif",
+      "path": "tests/data/cif/metadata-second-block.cif",
+      "bytes": 866,
+      "sha256": "f3ea8b97244fd09c8994d53841ccb518506e39c80a94e8aa2c0502df305152f8"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/missing-cell.cif",
+      "path": "tests/data/cif/missing-cell.cif",
+      "bytes": 323,
+      "sha256": "4ec4d1db7ede95d2fe2b44e505ae4578df487e23f67a1590259a666881e8a1cb"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/missing-symmetry.cif",
+      "path": "tests/data/cif/missing-symmetry.cif",
+      "bytes": 399,
+      "sha256": "cd14e727b304b7c6512ee65b3021b51a6f5fb4db5828d32e9913e3c2fe18afa6"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/missing-type-and-label.cif",
+      "path": "tests/data/cif/missing-type-and-label.cif",
+      "bytes": 389,
+      "sha256": "c449b70a1f872cb4bd1822b0eeda79f348644b611a63544bb1f1c96623c5ca7b"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/multiple-blocks.cif",
+      "path": "tests/data/cif/multiple-blocks.cif",
+      "bytes": 871,
+      "sha256": "02c6f84f50466690b9fe1558aec62a194eb9ad2cd4b1436c8793bca09e6f40e4"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/number-HM-conflict.cif",
+      "path": "tests/data/cif/number-HM-conflict.cif",
+      "bytes": 461,
+      "sha256": "b33547f17264a461fadac016d7f4141eec57b53e714bb51023fe66f6ab961734"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/occupancy--0dot1.cif",
+      "path": "tests/data/cif/occupancy--0dot1.cif",
+      "bytes": 462,
+      "sha256": "ae227389b1450fd49005490b5d177e27c11a18a073d2b2aab84700f930bae500"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/occupancy-1dot1.cif",
+      "path": "tests/data/cif/occupancy-1dot1.cif",
+      "bytes": 461,
+      "sha256": "3444bc7215d8ac8514bcd27f590a2c8def80fead509cd3e0867540c557e94d43"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/occupancy-invalid.cif",
+      "path": "tests/data/cif/occupancy-invalid.cif",
+      "bytes": 465,
+      "sha256": "292fe4d3b51ab7da8d9445ae918392c0244017f966ebf274702bc698adfc9de6"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/operators-malformed.cif",
+      "path": "tests/data/cif/operators-malformed.cif",
+      "bytes": 486,
+      "sha256": "bf75f88705ebc1bc57cac0aaff4e55ffc78b3dc6dd315e7a0740a97052024477"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/operators-unknown.cif",
+      "path": "tests/data/cif/operators-unknown.cif",
+      "bytes": 487,
+      "sha256": "aa0405d9baa6cb655fc65121b75b97e5c7369de1f018c5e006c4a3b405f4399c"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-CoO.cif",
+      "path": "tests/data/cif/repository-CoO.cif",
+      "bytes": 4299,
+      "sha256": "2b4850c8553e623344052cc6f91e4b04044fc1353632e9127c55a68a215a0443"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-KYbSe2.cif",
+      "path": "tests/data/cif/repository-KYbSe2.cif",
+      "bytes": 2870,
+      "sha256": "0aac9dd1b92f1f38d2275408a0ef594bf5579ef96f30958f83a8849d27d135e7"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-Sr3Fe2O4F4.cif",
+      "path": "tests/data/cif/repository-Sr3Fe2O4F4.cif",
+      "bytes": 5315,
+      "sha256": "e8c8b89a62b879a15c591d43fd8e5260b9b21a559fc205f2d35a660183966ae3"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-YBC2.78O.cif",
+      "path": "tests/data/cif/repository-YBC2.78O.cif",
+      "bytes": 2679,
+      "sha256": "1efc18e93353e40fb525d068012b343fb0f439beab5a9a104e8c0aa3a651d8d8"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-YBCO6.98.cif",
+      "path": "tests/data/cif/repository-YBCO6.98.cif",
+      "bytes": 2627,
+      "sha256": "7efd473b9c742b4b8636393bb596ff91edfd299933994a4ce85bb3b1fec51215"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/repository-YInO3.cif",
+      "path": "tests/data/cif/repository-YInO3.cif",
+      "bytes": 2395,
+      "sha256": "da6eda6f6d2d081057b5d48c64bde6be40ebf7ad228512c083dfba8395f71e93"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/short-row.cif",
+      "path": "tests/data/cif/short-row.cif",
+      "bytes": 430,
+      "sha256": "4b10fd052c2a93b4335c548bff39db583ed011067008d0d98e1405e53578b4fe"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/unclosed-quote.cif",
+      "path": "tests/data/cif/unclosed-quote.cif",
+      "bytes": 429,
+      "sha256": "f671352d2bbf203552406b131f67b5038456b3312a2872fb75d61eb458fe37ee"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/rejection-remediation/rejection-attempt-002/unknown-symmetry.cif",
+      "path": "tests/data/cif/unknown-symmetry.cif",
+      "bytes": 446,
+      "sha256": "02d8e47083c77ada69449837ba60b4719f8ac651928f3b225f0379031410f511"
+    },
+    {
+      "original_path": "tests/compatibility/preprocessing_tolerances.json",
+      "path": "tests/reference_checks/preprocessing_tolerances.json",
+      "bytes": 487,
+      "sha256": "822e6baaa74a345181c437ff8f251170a69e58e1dd2ae315ab3665bb2ccd77e6"
+    },
+    {
+      "original_path": "tests/compatibility/preprocessing_compare.py",
+      "path": "tests/reference_checks/preprocessing_compare.py",
+      "bytes": 6985,
+      "sha256": "6ca479ee5d5cb0af95c6e6eaca12c152f416a58ed4317cec06d1d939999d0007"
+    },
+    {
+      "original_path": "tools/crystallography/generate_chemistry.py",
+      "path": "tests/regression/references/provenance/table-generators/generate_chemistry.py.txt",
+      "bytes": 4553,
+      "sha256": "8e83f4453236609cb6c81ec57c20151b88f58b1ee08081be141e7140fb68dac0"
+    },
+    {
+      "original_path": "tools/crystallography/generate_scattering.py",
+      "path": "tests/regression/references/provenance/table-generators/generate_scattering.py.txt",
+      "bytes": 6293,
+      "sha256": "cc568d371002e09a5cbe2632043e4f11ba7eaa2c9233a9f560ff9da32fd8f68a"
+    },
+    {
+      "original_path": "docs/refactoring/phase-19/site-symmetry/constraint-catalogue.json",
+      "path": "tests/regression/references/cif/site-symmetry/constraint-catalogue.json",
+      "bytes": 624652,
+      "sha256": "47e003e1275ba44b249e89614a9dbfe185c40963f372b68b24f46bc3c33d970a"
+    }
+  ],
+  "organization": "Stable independent regression datasets and inert provenance; original logical identities unchanged"
+}

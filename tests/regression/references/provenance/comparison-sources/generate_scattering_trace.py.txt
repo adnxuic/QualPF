@@ -1,0 +1,36 @@
+"""Extract retained routines, changing only their names and adding WRITE lines.
+
+No calculation is translated. The harness separately calls the unchanged
+production routine and requires bit-identical Fc and integer phase.
+"""
+from pathlib import Path
+import re
+import sys
+
+root = Path(__file__).resolve().parents[2]
+source = root / 'legacy/fortran/crystallography/reflectionsutil.f90'
+text = source.read_text(encoding='utf-8-sig')
+out = ['! Generated WRITE-only native observation clone. Do not edit.',
+       'module phase16_trace', 'use reflection_type_util, only: reflection_type',
+       'implicit none', 'contains']
+for name in ('sfcalc_no_anomal', 'sfcalc_anomal',
+             'sfcalc_anis_no_anomal', 'sfcalc_anis_anomal'):
+    block = re.search(r'^   subroutine ' + name + r'\(.*?^   end subroutine ' + name,
+                      text, re.M | re.S).group()
+    block = block.replace('subroutine ' + name, 'subroutine trace_' + name)
+    lines = block.splitlines()
+    for i, line in enumerate(lines):
+        if re.match(r'\s*enddo loop_riflessi1?\s*$', line):
+            centro = line.strip() == 'enddo loop_riflessi'
+            if name == 'sfcalc_anis_no_anomal':
+                pair = '2.0*act,0.0' if centro else 'act,bct'
+            elif name == 'sfcalc_no_anomal' and centro:
+                pair = 'freal,0.0'
+            else:
+                pair = 'freal,fimag'
+            lines[i] = "          write(*,'(a,2(1x,es25.17e3))') 'COMPLEX'," + pair + '\n' + line
+    out.extend(lines)
+out.append('end module phase16_trace')
+destination = Path(sys.argv[1])
+destination.parent.mkdir(parents=True, exist_ok=True)
+destination.write_text('\n'.join(out) + '\n', encoding='utf-8')

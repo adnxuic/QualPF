@@ -1,0 +1,9 @@
+{
+  "success": true,
+  "precision_decimal_digits": 80,
+  "checks": 91942,
+  "failures": [],
+  "records": 2,
+  "method": "mpmath 80-digit trig with exact binary64 frozen inputs, rational 4/5 polarization, independent L*P and sums/max; rational adjacent-threshold groups",
+  "script_sha256": "82667d4fa8b5ab1fda4e94d5c341ce18212e9f58263e9dabd523c2093635a1f2"
+}

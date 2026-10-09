@@ -1,0 +1,46 @@
+{
+  "status": "approved-by-user",
+  "recorded_at_utc": "2026-09-26T07:51:13Z",
+  "authority": "Explicit user message in the current Codex conversation",
+  "user_approval": "批准 `qualification-review.md` / `qualification-records.json` 中当前列明的 329 个逐字段 qualification。批准仅适用于现有 case、field、Legacy value、C++ compiler fingerprint 和 independent 80-digit proof；保留所有原始差分失败，不修改 reference 或 tolerance。任何新增、变化或 stale fingerprint 均重新视为失败。该批准不表示这些字段与 Legacy 数值等价。",
+  "qualification_count": 329,
+  "qualification_records_sha256": "80389609d870095fbb13ff2eb93d3956cffc09b43c621b9679c7d45a7f751c82",
+  "compiler_fingerprints": {
+    "GNU": {
+      "runner_sha256": "063b175127cd4074d46c9ff831cdfb691c7a6880976ac4ab127a6fc834d2c2b5",
+      "report_sha256": "ebec5961566054768bb99321c925a334ff58d9de4d5b10f97daec3ac0abfd323"
+    },
+    "MSVC": {
+      "runner_sha256": "6dfabc3031b412aa3efb99372e74436426bdb13c5f5c22b690b05cb2ee1f3f68",
+      "report_sha256": "e9bec81ee272026e4de98a6d0ee9af1aa3c1dcd00bd3eae171205f23cd3b3c82"
+    }
+  },
+  "evidence_sha256": {
+    "docs/refactoring/phase-16/prove_qualification.py": "3172da6158370d96da8e8938a141e38a52bb8966bef8bcb85d24d645a8fda42d",
+    "docs/refactoring/phase-16/qualification-proof.json": "e73d73bba05fbb9ca62d0c184b2432acc3410094ed55027d797bdfa35e179cb9",
+    "docs/refactoring/phase-16/qualification-records.json": "80389609d870095fbb13ff2eb93d3956cffc09b43c621b9679c7d45a7f751c82",
+    "docs/refactoring/phase-16/qualification-review.md": "17eccb6ddc749ab600c710367dde1f6ad79ee7e3c8521ab5d1db9554345da219",
+    "docs/refactoring/phase-16/table-resource-hashes.json": "d5c041634389992692ce13d80f9b4f07cfe9f6d413adc181151987ce2a817e51",
+    "docs/refactoring/phase-16/test-results/approved-mingw-differential.json": "ebec5961566054768bb99321c925a334ff58d9de4d5b10f97daec3ac0abfd323",
+    "docs/refactoring/phase-16/test-results/approved-msvc-differential.json": "e9bec81ee272026e4de98a6d0ee9af1aa3c1dcd00bd3eae171205f23cd3b3c82",
+    "legacy/fortran/crystallography/nist_table.f90": "eaed0142962ebb40116486e134e0a8d9a468371d7e355a8619968a93b26654d3",
+    "legacy/fortran/crystallography/scatt_params.F90": "fd267c16d52a7ebe39284dbe6be50b66d3e7efc55d32323ef1f922a116e6fe8f",
+    "share/qualx/files/AtomProperties.xen": "5062942c7d0b5a92fac7b864e046bcba77313f00764c2f941178cd2b4cc6996e",
+    "src/core/crystallography/scattering.cpp": "3af37b166998f0825a8b716012f4d81acb0b9a4244d105abbef24e830ab3b70c",
+    "src/core/crystallography/scattering_data.inc": "639abc5babf0f43ab03253b6ed47ee07cd53908ab231f53db01af91de08f1eb5",
+    "src/core/crystallography/structure_factor.cpp": "e6b346510b03ef5c3aa696bac581ca8283617b54b42e3a698787433c11b0a762",
+    "src/core/include/qualpf/crystallography/scattering.h": "bee69aba260f76e710876e500ee26b73b69a1037d4ca801aa2697079f2216562",
+    "src/core/include/qualpf/crystallography/structure_factor.h": "d25b9adb7bac8e26e0ee6e6515d2825aa3753359c4f382d49b2a673f28610787",
+    "tests/compatibility/scattering_replay.cpp": "3e1c0f23a236f01f10c646371036c1fa56bae200d1abe479325064697b1b1686",
+    "tests/data/scattering-reference-manifest.json": "ea944d25549e183cac4d598188eacfc277eda6c22834f908dfa82e6f27940e0e",
+    "tests/data/scattering-reference.zip": "0f8f888d047c79697ac35b9c752bd01facc17850739b567ac71fbda03653fe5e",
+    "tests/data/structure-factor-reference-manifest.json": "85ac730d83bced5215e5816df73d12af3cd7e42ed09b9b9526b38ba6ac28f805",
+    "tools/crystallography/generate_scattering.py": "2d4593ac68a8346a24e1f979d604dda416ec37f166c2b8e293508aab01d7ff71"
+  },
+  "numerical_equivalence_to_legacy": false,
+  "raw_failures_preserved": true,
+  "reference_changed": false,
+  "tolerance_changed": false,
+  "stale_or_new_or_changed_fields": "fail; no implicit approval or tolerance expansion",
+  "historical_review_status": "Pending labels inside the approved review and records are preserved byte-for-byte. This separate decision records the subsequent explicit approval."
+}

@@ -1,0 +1,18 @@
+{
+  "allowed_old_name_lines": {
+    "src/infrastructure/settings/settings_migration.cpp": [
+      "QCoreApplication::organizationName(), QStringLiteral(\"qualxpf\"));"
+    ],
+    "tests/unit/infrastructure/settings_migration_test.cpp": [
+      "QSettings source(QSettings::NativeFormat, QSettings::UserScope, organization, \"qualxpf\");",
+      "const auto sourcePath = settingsRoot + \"/IC/qualxpf.ini\";"
+    ],
+    ".gitignore": [
+      "/QualXPF-*-win64.exe"
+    ]
+  },
+  "reasons": [
+    "Previous application user-store identity is a supported settings import contract",
+    "The source tests retain that same identity; ignored original installers are user files"
+  ]
+}

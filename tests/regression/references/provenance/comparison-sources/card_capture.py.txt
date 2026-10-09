@@ -1,0 +1,217 @@
+"""Freeze independent native composition/density/attenuation/RIR/card observations."""
+import argparse
+import copy
+import hashlib
+import json
+import math
+import os
+from pathlib import Path
+import struct
+import subprocess
+import zipfile
+
+ROOT = Path(__file__).resolve().parents[2]
+WAVE = 1.54059307
+
+def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+def f32(x): return struct.unpack('f',struct.pack('f',x))[0]
+def next32(x,step):
+    return struct.unpack('f',struct.pack('I',struct.unpack('I',struct.pack('f',x))[0]+step))[0]
+def site(label,xyz=None,occ=1):
+    return dict(species=label,xyz=xyz or [0,0,0],occupancy=occ,adp=0,tensor=[0]*6)
+def slots(values):
+    return [dict(hkl=[i+1,0,0],multiplicity=1,two_theta=10+i*.1,raw=x,fc2=abs(x)) for i,x in enumerate(values)]
+
+def cases():
+    out=[]
+    def add(name,sites=None,group=1,cell=None,values=None,**extra):
+        c=dict(name=name,mode='RAW',group=group,setting=1,cell=cell or [5,5,5,90,90,90],
+            sites=sites if sites is not None else [site('Si')],wavelength=WAVE,anomalous=0,tolerance=.00005,
+            slots=slots(values if values is not None else [10,3,1]),category='normal',
+            provenance=dict(kind='synthetic explicitly specified composition and physical reflection slots'))
+        c.update(extra);out.append(c);return c
+    with zipfile.ZipFile(ROOT/'tests/data/scattering-reference.zip') as z:
+        old=json.loads(z.read('cases.json'))
+    for c in old:
+        if c['mode']=='STRUCT' and c['name'].startswith('cod-') and c['radiation']==0 and c['anomalous']==0:
+            for anomalous in (0,1):
+                r=copy.deepcopy(c);r.update(mode='EXPORT',name=c['name']+f'-export-an{anomalous}',
+                    wavelength=WAVE,anomalous=anomalous,tolerance=.00005,slots=[],category='normal')
+                out.append(r)
+    with zipfile.ZipFile(ROOT/'tests/data/powder-intensity-reference.zip') as z:
+        pc=json.loads(z.read('cases.json'));pe=json.loads(z.read('expected.json'))
+    for c in pc:
+        if c['mode']!='STRUCT' or c['radiation']!=0 or c['sync']: continue
+        e=pe[str(c['id'])];s=[];intensities={x['representative']:x['raw'] for x in e['lines']}
+        for r in e['reflections']:
+            s.append(dict(hkl=r['hkl'],multiplicity=r['multiplicity'],two_theta=r['two_theta'],
+                          raw=intensities.get(r['id'],0),fc2=r['fc2']))
+        r=copy.deepcopy(c);r.update(mode='RAW',name='phase17-'+c['name'],slots=s,
+            groups=copy.deepcopy(e['groups']),category='normal',
+            provenance=dict(prior=c['provenance'],archive_sha256=sha(ROOT/'tests/data/powder-intensity-reference.zip'),
+                phase17_case=c['id'],kind='Frozen native Phase 17 slot/membership replay; custom wavelength RIR is diagnostic only'))
+        out.append(r)
+    for group,pos in [(1,[.137,.271,.389]),(2,[0,0,0]),(2,[.137,.271,.389]),
+                      (225,[0,0,0]),(225,[.137,.271,.389]),(227,[0,0,0]),(229,[0,0,0])]:
+        for occ in (0,.125,.375,.667,1):
+            add(f'g{group}-occ{occ}',[site('Si',pos,occ)],group=group,
+                category='zero-composition-observation' if occ==0 else 'normal')
+    add('hydrogen',[site('H')]);add('deuterium',[site('D')]);add('uranium',[site('U')])
+    add('ions-distinct',[site('Fe2+',[0,0,0]),site('Fe3+',[.4,.5,.6])])
+    add('partial-mixed-ions',[site('Fe2+',[0,0,0],.6),site('Fe3+',[0,0,0],.4),site('O',[.4,.5,.6])])
+    add('hydrogen-without-carbon-hill',[site('O',[.4,.3,.2]),site('H'),site('H',[.6,.5,.4])])
+    add('carbon-hill',[site('O',[.4,.3,.2]),site('C'),site('H',[.6,.5,.4])])
+    for length in (.1,1,100,10000): add(f'density-length-{length}',cell=[length]*3+[90]*3)
+    for occ in (.000001,.04,.05,.04999,.05001,.9,.90001,1): add(f'formula-boundary-{occ}',[site('H',occ=occ)])
+    mixed=[site('Zn',[0,0,0],.667),site('Ge',[0,0,0],.333),site('S',[.25]*3)]
+    add('mixed-forward',mixed,group=216);add('mixed-reversed',list(reversed(mixed)),group=216)
+    # A witness for the first-species Z heuristic, plus equivalent ASU descriptions.
+    sensitive=[site('Zn',[0,0,0],.6),site('Ge',[0,0,0],.4),site('Zn',[.3,.3,.3])]
+    add('z-order-forward',sensitive);add('z-order-reversed',list(reversed(sensitive)),category='z-order-observation')
+    add('translated-site',[site('Si',[1.137,-.729,2.389])],group=2)
+    add('symmetry-equivalent-site',[site('Si',[.863,.729,.611])],group=2)
+    add('zero-site-no-mass',[site('Si'),site('U',[.4]*3,0)])
+    for n in (499,500,501,650):
+        add(f'slot-cap-{n}',values=[float(i+1) for i in range(n)])
+        add(f'ties-{n}',values=[10]*n)
+    eps=2**-23
+    add('threshold-float-neighbors',values=[10,next32(eps,-1),eps,next32(eps,1),0])
+    add('threshold-double-neighbors',values=[10,math.nextafter(eps,0),eps,math.nextafter(eps,math.inf),0],
+        category='binary64-boundary-observation')
+    for maximum in (0,1e-20,next32(eps,-1),eps,next32(eps,1)):
+        add(f'maximum-floor-{maximum}',values=[maximum,maximum*.5],category='floor-observation')
+    overlap=add('overlap-cap-500-501',values=[1]*499+[20,0,100])
+    overlap['slots'][500]['two_theta']=overlap['slots'][499]['two_theta']+.00001
+    overlap['groups']=[dict(id=i+1,representative=i+1,count=1,members=[i+1]) for i in range(499)]
+    overlap['groups'] += [dict(id=500,representative=500,count=2,members=[500,501]),
+                          dict(id=501,representative=502,count=1,members=[502])]
+    add('empty-lines',values=[],category='empty-observation')
+    add('negative-occupancy',[site('Si',occ=-.5)],category='invalid-observation')
+    add('excess-occupancy',[site('Si',occ=1.2)],category='invalid-observation')
+    add('empty-composition',[],category='invalid-observation')
+    add('negative-intensity',values=[10,-1],category='invalid-observation')
+    add('nan-intensity',values=[10,float('nan')],category='invalid-observation')
+    # Every resource mass entry, including unsupported attenuation/mass entries.
+    lines=(ROOT/'share/qualx/files/AtomProperties.xen').read_text().splitlines()[2:]
+    rows=[x.split() for x in lines if x.strip() and not x.startswith('#')]
+    for i in range(0,len(rows),9):
+        label=rows[i][0].capitalize();z=int(rows[i][1]);mass=float(rows[i][2])
+        add('registry-'+label,[site(label)],category='normal' if 1<=z<=92 and mass>0 else 'unsupported-observation')
+    # Native interpolation interiors and out-of-range observations at arbitrary X-ray wavelengths.
+    for label in ('H','O','Si','Fe','Ce','U'):
+        for wave in (.04,.71073,1.23456789,3,100,100000,1e-8):
+            add(f'attenuation-{label}-wave{wave}',[site(label)],wavelength=wave,
+                category='attenuation-probe')
+    for i,c in enumerate(out):c['id']=i
+    return out
+
+def protocol(records):
+    out=[str(ROOT/'share/qualx/files/AtomProperties.xen'),str(ROOT/'share/qualx/files/syminfo.lib')]
+    def row(values):out.append(' '.join(map(str,values)))
+    for c in records:
+        row([c['mode'],c['id'],c['group'],c['setting'],len(c['sites']),c['wavelength'],len(c['slots']),c['anomalous'],c['tolerance']])
+        row(c['cell'])
+        for s in c['sites']:row([s['species'],*s['xyz'],s['occupancy'],s['adp'],*s['tensor']])
+        for r in c['slots']:row([*r['hkl'],r['multiplicity'],r['two_theta'],r['raw'],r['fc2']])
+    return '\n'.join(out)+'\n'
+
+def parse(stdout):
+    out={};c=None
+    def nums(p):return list(map(float,p))
+    for line in stdout.splitlines():
+        p=line.split()
+        if not p:continue
+        key=p[0]
+        if key=='CASE':
+            c=dict(id=int(p[1]),sites_count=int(p[2]),nsym=int(p[3]),group=int(p[4]),wave=float(p[5]),
+                sites=[],species=[],zcounts=[],groups=[],slots=[],rank=[],card=[],complete=False)
+            if p[1] in out:raise ValueError('duplicate case')
+            out[p[1]]=c
+        elif key=='SITE':c['sites'].append(dict(id=int(p[1]),species_id=int(p[2]),z=int(p[3]),
+            xyz=nums(p[4:7]),**dict(zip(('occupancy','fraction','multiplicity','amount','weight','biso'),nums(p[7:])))))
+        elif key=='PHYS':c['physics']=dict(z=int(p[1]),species_count=int(p[2]),**dict(zip(
+            ('wave','energy','asu_mass','cell_mass','formula_mass','volume','density','mu','mixture_mac','rho_volume_ratio','intensity_ratio','rir'),nums(p[3:]))))
+        elif key=='FORMULA':c['formula']=line.partition(' ')[2].strip()
+        elif key=='EXPORTFORMULA':c['export_formula']=line.partition(' ')[2].strip()
+        elif key=='EXPORT':c['export']=dict(error=int(p[1]),z=int(p[2]),**dict(zip(('volume','density','mu','rir','wave'),nums(p[3:]))))
+        elif key=='SPECIES':c['species'].append(dict(id=int(p[1]),z=int(p[2]),label=p[3],**dict(zip(
+            ('formula_amount','cell_amount','mass','cell_mass','f1','f2','mac','weighted_mac'),nums(p[4:12]))),lookup_error=p[12]=='T'))
+        elif key=='LOOKUP':c.setdefault('lookups',{})[p[1]]={};lookup=c['lookups'][p[1]]
+        elif key=='BRACKET':lookup.update(z=int(p[1]),lower_row=int(p[2]),**dict(zip(
+            ('energy_low','mac_low','energy_high','mac_high','energy','log_fraction'),nums(p[3:]))))
+        elif key=='ZCOUNT':c['zcounts'].append(dict(id=int(p[1]),amount=float(p[2])))
+        elif key=='ZTRACE':c['ztrace']=int(p[1])
+        elif key=='GROUP':c['groups'].append(dict(id=int(p[1]),representative=int(p[2]),count=int(p[3]),members=list(map(int,p[4:]))))
+        elif key=='SLOT':c['slots'].append(dict(id=int(p[1]),hkl=list(map(int,p[2:5])),multiplicity=int(p[5]),**dict(zip(
+            ('d','two_theta','fc2','lp','raw','member_raw'),nums(p[6:])))))
+        elif key=='SELECT':c['selection']=dict(input_count=int(p[1]),prefilter_count=int(p[2]),retained_count=int(p[3]),**dict(zip(
+            ('all_maximum','prefilter_maximum','threshold'),nums(p[4:]))))
+        elif key=='RANK':c['rank']=list(map(int,p[1:]))
+        elif key=='CARD':c['card'].append(dict(rank=int(p[1]),slot=int(p[2]),raw=float(p[3]),relative=float(p[4]),two_theta=float(p[5])))
+        elif key=='END':c['complete']=True
+    for c in out.values():
+        if not c['complete'] or len(c['sites'])!=c['sites_count'] or len(c['species'])!=c['physics']['species_count']:
+            raise ValueError('incomplete native case '+str(c['id']))
+        if len(c['slots'])!=c['selection']['input_count'] or len(c['card'])!=c['selection']['retained_count']:
+            raise ValueError('incomplete native line output')
+        if c['sites_count'] and c['ztrace']!=c['physics']['z']:raise ValueError('Z trace changed original result')
+        if 'export' in c:
+            for k in ('z','volume','density','mu','rir','wave'):
+                if c['export'][k]!=c['physics'][k]:raise ValueError('extracted original arithmetic differs from export: '+k)
+            if c['export_formula']!=c['formula']:raise ValueError('formula export mismatch')
+    return out
+
+def environment():
+    env=os.environ.copy();env['PATH']=str(ROOT/'build-phase7/qt/Tools/mingw1310_64/bin')+';'+str(ROOT/'build-phase7/qt/6.8.3/mingw_64/bin')+';'+env['PATH']
+    return env
+
+def observations(stdout,records):
+    expected=parse(stdout)
+    if len(expected)!=len(records):raise ValueError('missing native cases')
+    for c in records:
+        e=expected[str(c['id'])]
+        if c.get('groups'):e['groups']=c['groups']
+        elif not e['groups']:e['groups']=[dict(id=i+1,representative=i+1,count=1,members=[i+1]) for i in range(len(e['slots']))]
+        for r in e['slots']:
+            r['within_cap']=r['id']<=500
+            r['retained']=r['id'] in {x['slot'] for x in e['card']}
+    return expected
+
+def main():
+    ap=argparse.ArgumentParser();ap.add_argument('--runner',type=Path,required=True)
+    ap.add_argument('--output',type=Path,required=True);ap.add_argument('--limit',type=int);a=ap.parse_args()
+    a.output.mkdir(parents=True,exist_ok=True)
+    if (a.output/'manifest.json').exists():raise RuntimeError('Refuse to overwrite frozen oracle')
+    records=cases();records=records[:a.limit] if a.limit else records
+    inp=protocol(records);(a.output/'input.txt').write_text(inp)
+    (a.output/'cases.json').write_text(json.dumps(records,indent=2)+'\n')
+    with (a.output/'stdout.txt').open('w') as stdout, (a.output/'stderr.txt').open('w') as stderr:
+        run=subprocess.run([str(a.runner.resolve())],input=inp,text=True,stdout=stdout,stderr=stderr,
+            env=environment(),cwd=a.output,timeout=120)
+    if run.returncode:raise RuntimeError(f'Native exit {run.returncode}: '+(a.output/'stderr.txt').read_text()[-2000:])
+    expected=observations((a.output/'stdout.txt').read_text(),records)
+    (a.output/'expected.json').write_text(json.dumps(expected,indent=2)+'\n')
+    sources=[p for p in (ROOT/'legacy/fortran').rglob('*') if p.suffix.lower() in ('.f','.f90','.inc')]
+    sources += [ROOT/p for p in ('share/qualx/files/AtomProperties.xen','share/qualx/files/syminfo.lib',
+        'tests/compatibility/card_capture.py','tests/compatibility/card_capture.f90',
+        'tests/compatibility/card_capture_main.cpp','tests/compatibility/generate_card_trace.py',
+        'tests/CMakeLists.txt','tests/data/scattering-reference.zip','tests/data/powder-intensity-reference.zip',
+        'docs/refactoring/phase-18/contracts.md','src/core/include/qualpf/domain/radiation.h',
+        'legacy/fortran/CMakeLists.txt')]
+    generated=[ROOT/'build-phase7/qt-product/tests/card_trace.f90',
+               ROOT/'build-phase7/qt-product/configured_files/include/qualpf_radiation.inc']
+    for p in generated:(a.output/p.name).write_bytes(p.read_bytes())
+    manifest=dict(source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+        compiler=subprocess.check_output([str(ROOT/'build-phase7/qt/Tools/mingw1310_64/bin/gfortran.exe'),'--version'],text=True),
+        executable_sha256=sha(a.runner),sources={p.relative_to(ROOT).as_posix():sha(p) for p in sources},
+        generated_sources={p.relative_to(ROOT).as_posix():sha(p) for p in generated},
+        counts=dict(cases=len(records),observed=len(expected),export_cases=sum(c['mode']=='EXPORT' for c in records),
+            slots=sum(len(c['slots']) for c in expected.values()),card_rows=sum(len(c['card']) for c in expected.values())),
+        files={p.name:sha(p) for p in a.output.iterdir() if p.is_file()},
+        tolerances=dict(composition=dict(absolute=1e-7,relative=3e-6),
+            absorption_rir=dict(absolute=1e-7,relative=1e-5),intensity=dict(absolute=1e-4,relative=8e-6),
+            discrete='exact; native equal-intensity rank recorded and tie-block membership compared'))
+    (a.output/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+    print(json.dumps(manifest['counts']))
+
+if __name__=='__main__':main()

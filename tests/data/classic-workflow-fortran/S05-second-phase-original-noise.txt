@@ -1,0 +1,1 @@
+{"error":null,"fields":{"quality":[0.995,0.98999999999999999,0.995]},"discrete":{"associations":["0","1","2"],"remaining_ids":[],"removed_ids":["1","2","3"]}}

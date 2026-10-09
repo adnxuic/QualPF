@@ -1,0 +1,47 @@
+{
+  "schema": "qualpf.current_transcendental_provider.v1",
+  "scope": "36D-ATTENUATION-SCATTERING-RNE-PREREQUISITE",
+  "new_tolerance": false,
+  "expected_from_new_CPP": false,
+  "proposal": {
+    "path": "docs/refactoring/phase-36/attenuation-scattering-rne/proposal.json",
+    "sha256": "3c480998644bfc66d2e1e5866392d9221c7701426786e089e4708290062d04e0"
+  },
+  "decision": {
+    "path": "docs/refactoring/phase-36/attenuation-scattering-rne/decision.json",
+    "sha256": "bfefd5fe34bb721d3453c0915fa041530d0d0708b6eb8ede695902356f7a0dfe"
+  },
+  "historical_sources": {
+    "src/core/crystallography/chemistry.cpp": {
+      "path": "archive/legacy/phase36d-test-reference/chemistry.cpp.txt",
+      "sha256": "037f2b84e881c810acf8b02bf59d8aa947d732e1e88ec56a5f82c456e3b30b05"
+    },
+    "src/core/crystallography/scattering.cpp": {
+      "path": "archive/legacy/phase36d-test-reference/scattering.cpp.txt",
+      "sha256": "3af37b166998f0825a8b716012f4d81acb0b9a4244d105abbef24e830ab3b70c"
+    },
+    "tests/compatibility/scattering_replay.cpp": {
+      "path": "archive/legacy/phase36d-test-reference/scattering_replay.cpp.txt",
+      "sha256": "3e1c0f23a236f01f10c646371036c1fa56bae200d1abe479325064697b1b1686"
+    }
+  },
+  "current_providers": {
+    "src/core/crystallography/chemistry.cpp": "08add36c0ba2919c0d7a3b35714100556a126cf1ef9a1a526e599cc654673df4",
+    "src/core/crystallography/scattering.cpp": "aa909ca46a83ecbda90e1a2ee1158b20006495bf5f4566d2fd558152e2a20999",
+    "tests/compatibility/scattering_replay.cpp": "d7e4e7b8847be96cb7cda1bdb979c7ed9272531571a56d61a17f2a7be19b1c77",
+    "src/core/crystallography/rounded_transcendentals.cpp": "7df582b35621afbc06d7e788c4f91bb03b5333f58dec9e2a6381381dab072c3e",
+    "src/core/crystallography/rounded_transcendentals.h": "aca55cc6dc2d7918940c78ca39f82cfcdd4b08ad18bbc7df0917f41686e6da8f"
+  },
+  "value_successor": {
+    "path": "tests/data/transcendental-successor-fields.json",
+    "sha256": "12524a472744e5c8433af44343cf064522db2fefacd5bdf9d96fc26f76565d40"
+  },
+  "primitive_reference": {
+    "path": "tests/data/rounded-transcendentals-reference.txt",
+    "sha256": "e89fb3756b16c2e586eb21f42b001acc04f475e7e0b952232108e8990fe3ba56"
+  },
+  "previous_named_qualifications_unchanged": true,
+  "primitive_contract": "Mathematical binary64 RNE, source formed arguments/order",
+  "no_host_libm": true,
+  "production_magnitude_change": false
+}

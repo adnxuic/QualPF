@@ -1,0 +1,68 @@
+"""Extract original card arithmetic verbatim into a test-only native module."""
+from pathlib import Path
+import re
+import sys
+
+ROOT = Path(__file__).resolve().parents[2]
+source = (ROOT/'legacy/fortran/crystal_io/exportqualx.F90').read_text()
+start=source.index('       if (nat > 0) then\n           dens')
+physics=source[start:source.index('       if (cry%spg%undef())',start)]
+constants = '\n'.join(s for s in source.splitlines() if 'real, parameter' in s and
+                     ('maxf_Cu_corundum' in s or 'rho_vsq_Cu_corundum' in s))
+abi = (ROOT/'legacy/fortran/crystal_io/import_data_structure.f90').read_text()
+selection = abi.split('   n = min(NMAXREFLD, nrefl_f)',1)[1].split('\n   nrefl_print_c',1)[0]
+selection = '   n = min(NMAXREFLD, nrefl_f)'+selection
+# An optional output parameter observes the permutation without changing it.
+selection = selection.replace('ORD_BY_INT, inte_c_arr)', 'ORD_BY_INT, inte_c_arr, order)')
+atoms = (ROOT/'legacy/fortran/crystallography/atomsutil.F90').read_text()
+ztrace = '   integer function Z_value'+atoms.split('   integer function Z_value',1)[1].split('   end function Z_value',1)[0]+'   end function Z_value\n'
+ztrace = re.sub(r'\bz_value\b','native_z_trace',ztrace,flags=re.I)
+ztrace = ztrace.replace('      elem(i)%nw = elem(i)%nw * nsym',
+    "      elem(i)%nw = elem(i)%nw * nsym\n      write(*,'(a,1x,i0,1x,es25.17e3)') 'ZCOUNT',elem(i)%ptab,elem(i)%nw")
+private_formula = '   subroutine formula_from_atom_elem'+atoms.split('   subroutine formula_from_atom_elem',1)[1].split('   end subroutine formula_from_atom_elem',1)[0]+'   end subroutine formula_from_atom_elem\n'
+text = '''! Generated test-only source excerpts; production files are unchanged.
+module phase18_native
+use crystal_phase
+use atom_type_util
+use reflection_type_util
+implicit none
+contains
+subroutine native_physics(cry,inte,wavel,vol,dens,mu,rir,zval,sform,chform,rapp_rho_v,rapp_I)
+type(crystal_phase_t),intent(inout) :: cry
+real,intent(in) :: inte(:),wavel(1)
+real,intent(out) :: vol,dens,mu,rir,rapp_rho_v,rapp_I
+integer,intent(out) :: zval
+integer :: nat
+character(len=:),allocatable,intent(out) :: sform
+type(element_type),allocatable,intent(out) :: chform(:)
+'''+constants+'\nnat=cry%natoms()\nrapp_rho_v=0; rapp_I=0\n'+physics+'''
+end subroutine
+subroutine native_selection(crystal,inte_f,reflc,inte_c_arr,maxinte,nrefl_print_f,order)
+type(crystal_phase_t),intent(in) :: crystal
+real,intent(in) :: inte_f(:)
+type(reflection_type),allocatable,intent(out) :: reflc(:)
+real,allocatable,intent(out) :: inte_c_arr(:)
+real,intent(out) :: maxinte
+integer,intent(out) :: nrefl_print_f
+integer,allocatable,intent(out) :: order(:)
+integer,parameter :: NMAXREFLD=500
+integer :: n,nrefl_f,i
+nrefl_f=size(inte_f)
+allocate(order(min(NMAXREFLD,nrefl_f)))
+order=[(i,i=1,size(order))]
+'''+selection+'''
+end subroutine
+'''+ztrace+private_formula+'end module\n'
+nist=(ROOT/'legacy/fortran/crystallography/nist_table.f90').read_text()
+nist=nist.replace('module nist_mod','module phase18_nist_trace')
+nist=nist.replace('   xvalue = angstroms_to_kev(wave)', '''   xvalue = angstroms_to_kev(wave)
+! WRITE-only test observation. The original interpolation calls below are unchanged.
+   j=1
+   do i=1,nrow
+      if(kev(i)<=xvalue) j=i
+   enddo
+   j=max(1,min(j,nrow-1))
+   write(*,'(a,2(1x,i0),6(1x,es25.17e3))') 'BRACKET',zval,j,kev(j),mu(j),kev(j+1),mu(j+1), &
+      xvalue,(log10(xvalue)-log10(kev(j)))/(log10(kev(j+1))-log10(kev(j)))''')
+text += '\n'+nist
+Path(sys.argv[1]).write_text(text)

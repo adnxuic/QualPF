@@ -1,0 +1,188 @@
+{
+  "schema": "qualpf.batched_successor_inventory.v1",
+  "batch_id": "36B-CLOSED-NATIVE-PROVIDER-EXIT-BATCH",
+  "scope_id": "36B-CLOSED-NATIVE-PROVIDER-EXIT-BATCH",
+  "risk_class": "B",
+  "status": "CLOSED_NATIVE_PROVIDER_EXIT_BATCH_COMPLETE",
+  "parent": {
+    "path": "docs/refactoring/phase-35/native-mirror-transport-exit/successor-inventory.json",
+    "sha256": "2738b1e19a3789e2dfc6f55e014599f0b29aa097b45c94b07218e546706a57c9"
+  },
+  "production_Fortran_sources": 0,
+  "maintained_test_Fortran_sources": 0,
+  "normal_production_compile_instances": 0,
+  "normal_test_compile_instances": 0,
+  "normal_CPP_compile_instances": 209,
+  "production_ABI_definitions": 0,
+  "test_ABI_definitions": 0,
+  "ABI_definitions": 0,
+  "CPP_lexical_sites": 0,
+  "callbacks": 0,
+  "production_callbacks": 0,
+  "historical_manual_observation_callbacks": 5,
+  "historical_retired_current_callbacks": 15,
+  "maintained_persistent_declarations": 0,
+  "persistent_declarations": 0,
+  "historical_frozen_persistent_declarations": 249,
+  "historical_generated_observer_persistent_declarations": 17,
+  "dataset_fields": 0,
+  "historical_frozen_dataset_fields": 52,
+  "SCCs": 0,
+  "cyclic_SCCs": 0,
+  "unknown_edges": 0,
+  "historical_retired_oracle_nodes": 50,
+  "normal_Fortran_compiler_required": true,
+  "Fortran_language_enabled": true,
+  "Fortran_runtime_retained": null,
+  "normal_direct_Fortran_runtime_imports": 0,
+  "recursive_installed_runtime_acceptance": "PENDING_36D",
+  "Fortran_module_generation": 0,
+  "production_Fortran_sources_removed": 92,
+  "normal_Fortran_objects_removed": 92,
+  "normal_CPP_objects_removed": 2,
+  "ABI_definitions_removed": 5,
+  "callback_definitions_removed": 15,
+  "native_state_ownership_removed": 249,
+  "native_dataset_field_ownership_removed": 52,
+  "source_observations": {
+    "path": ".evidence/raw/phase36b-native-provider-exit/batch-001/source-observations.json",
+    "sha256": "61d47df7c2a9583b4cc6ba485029646a40c2b94ed5b223db6b5ed6f861f18a06"
+  },
+  "graph_observation": {
+    "path": ".evidence/raw/phase36b-native-provider-exit/batch-001/graph-checkpoint.json",
+    "sha256": "f2807e16b1179a79abfca18194841c4487cd880d74e80f4613000f246cf30629"
+  },
+  "conformance": {
+    "path": ".evidence/raw/phase36b-native-provider-exit/batch-001/conformance.json",
+    "sha256": "685fd8d39fdf41a026c7ca6d485d992d97877720e1369f00d8f5b44a77fe344c"
+  },
+  "AI_decision": {
+    "status": "AI_APPROVED",
+    "human_approved": false,
+    "confidence": "EVIDENCE_STRONG",
+    "classification": [
+      "AI_APPROVED_ARCHIVE_TRANSITION",
+      "AI_APPROVED_OWNERLESS_INTERFACE_REMOVAL",
+      "AI_APPROVED_ORACLE_FREEZE_TRANSITION"
+    ],
+    "proposal_sha256": "a8f5efa29dc7bd73c27b260a9f77bae2d00d12560610812eaaaf4abf8a860a27",
+    "reviewed_scope": {
+      "path": ".evidence/raw/phase36b-native-provider-exit/batch-001/owner-proof.json",
+      "sha256": "a8f5efa29dc7bd73c27b260a9f77bae2d00d12560610812eaaaf4abf8a860a27"
+    },
+    "independent_review": {
+      "path": ".evidence/raw/phase36b-native-provider-exit/batch-001/independent-review.md",
+      "sha256": "f069c480663142936740abc34e62946c5d70d388bf83f6399f2312a6d8ca53aa"
+    },
+    "bounded_observer_repair_review": {
+      "path": ".evidence/raw/phase36b-native-provider-exit/batch-001/repair-review.md",
+      "sha256": "87612aa863784c19b104fd7d1801cfc1e1e40f10a8468a74bb21329d2bb27048"
+    },
+    "considered_alternatives": {
+      "A": "Keep closed Native provider indefinitely (prevents F)",
+      "B": "Freeze all remaining closed Native sources and obsolete C return ports, preserve accepted C++ owners and observation-only shell, remove normal objects/state/provider",
+      "C": "Rewrite math/state/GUI architecture (excluded)"
+    },
+    "selected_option": "B",
+    "rationale": "Entire remaining Native provider is closed to current C++ except its five retiring endpoints; archive all original source bytes and retain useful current C++ shell/owners.",
+    "numerical_state_dependency_analysis": "Current default and explicit compatibility operations already C++ under unchanged Phase9-30/32-35 authorities; native-only oracle sources/execution already frozen. This is source/provider exit, not new arithmetic, algorithm deletion or feature contract.",
+    "independent_proof_references": [
+      {
+        "path": ".evidence/raw/phase36b-native-provider-exit/batch-001/owner-proof.json",
+        "sha256": "a8f5efa29dc7bd73c27b260a9f77bae2d00d12560610812eaaaf4abf8a860a27"
+      },
+      {
+        "path": ".evidence/raw/phase36b-native-provider-exit/batch-001/final-bindings.json",
+        "sha256": "03407057d01c7764c668ac3a6717147340415618c304be829d19205497bfae2c"
+      },
+      {
+        "path": ".evidence/raw/phase36b-native-provider-exit/batch-001/archive-bytes-final.json",
+        "sha256": "a45b8ba983b7feb7e500230cf9a6b3be0586dfc544f43e4b823d91c4ad8483a9"
+      }
+    ],
+    "native_observations": {
+      "path": ".evidence/raw/phase35d-native-mirror-transport/batch-001/final-bindings.json",
+      "sha256": "8016bddca2f8c10e69159850624f2f87ad0b7dd32f18cd0c2d8be308c0d9b9ff"
+    },
+    "current_CPP_observations": {
+      "path": ".evidence/raw/phase36b-native-provider-exit/batch-001/consumer-results.json",
+      "sha256": "f65143b3b6fb14c4c5f091a043f0de38b4199ad3ac44703aeacd85dad216a259"
+    },
+    "known_differences": "Native source/build/ABI/callback/state ownership exits; no new supported numerical/product contract; historical graph tail classified without changing old graph.",
+    "excluded_scope": [
+      "Root Fortran language/compiler flags/packaging exit (36C)",
+      "All shared current C++ mathematical, schema, state, Qt controls and selectors",
+      "General lifecycle/Session redesign",
+      "Architecture/PFSM"
+    ],
+    "source_fingerprints": [
+      {
+        "path": "legacy/bridge/presentation_mirror.cpp",
+        "sha256": "2746b1c9c61fbdfcd14b926d0dc94a4939f68e809ca73dd35d161bc33ee3f47e"
+      },
+      {
+        "path": "legacy/bridge/presentation_mirror.h",
+        "sha256": "92aa639b52c1301379996c26722230413d2854864a08f926cb0148b464e2efd5"
+      },
+      {
+        "path": "legacy/bridge/CMakeLists.txt",
+        "sha256": "2fb520576dc2a56bb59e5524255d849dbb5f9a08a42966d8722eeb11d6e6031c"
+      },
+      {
+        "path": "legacy/bridge/fortran_api.h",
+        "sha256": "51c4438475d85bf6eda0f5ac4e658ddf6f8cf746940d8a958b7f40296f8db6bc"
+      },
+      {
+        "path": "legacy/fortran/CMakeLists.txt",
+        "sha256": "ae0d7fc6aeae96136189b221727dbe5056931721f1ed197714311958961f006b"
+      },
+      {
+        "path": "tools/crystallography/generate_chemistry.py",
+        "sha256": "8e83f4453236609cb6c81ec57c20151b88f58b1ee08081be141e7140fb68dac0"
+      },
+      {
+        "path": "tools/crystallography/generate_scattering.py",
+        "sha256": "cc568d371002e09a5cbe2632043e4f11ba7eaa2c9233a9f560ff9da32fd8f68a"
+      }
+    ],
+    "runner_fingerprints": [
+      {
+        "path": ".evidence/raw/phase36b-native-provider-exit/batch-001/collect-final-v2.py",
+        "sha256": "e17ec1b64ca090c0d4f95a54ad88acbfacc5077f1d2c0d1cff0ec665af6ed3a4"
+      },
+      {
+        "path": "tools/fortran/phase31_graph.py",
+        "sha256": "70b5d590847618a16511eae3dfbc36e543bf98141a6b8178e749e6edc47d5822"
+      },
+      {
+        "path": "build-phase7/qt/Tools/mingw1310_64/bin/nm.exe",
+        "sha256": "e9b1cf0bdb3dd4263a38a6d57a565b8fa1bc94fe6e8a8a905a4e043c5a9f690d"
+      },
+      {
+        "path": "build-phase7/qt/Tools/mingw1310_64/bin/objdump.exe",
+        "sha256": "5e14030c76fc57f664844b8b996323507517361da025f67002bbf844b8d83bd5"
+      }
+    ],
+    "evidence_fingerprints": [
+      {
+        "path": ".evidence/raw/phase36b-native-provider-exit/batch-001/consumer-results.json",
+        "sha256": "f65143b3b6fb14c4c5f091a043f0de38b4199ad3ac44703aeacd85dad216a259"
+      },
+      {
+        "path": ".evidence/raw/phase36b-native-provider-exit/batch-001/archive-bytes-final.json",
+        "sha256": "a45b8ba983b7feb7e500230cf9a6b3be0586dfc544f43e4b823d91c4ad8483a9"
+      },
+      {
+        "path": ".evidence/raw/phase36b-native-provider-exit/batch-001/graph-checkpoint.json",
+        "sha256": "f2807e16b1179a79abfca18194841c4487cd880d74e80f4613000f246cf30629"
+      }
+    ],
+    "regression_impact": "All current 50 CTests pass (48 initial plus 2 causal reader repairs); 21 exact accepted consumer comparisons, original format/Kalpha assertions pass.",
+    "final_gate": "CLOSED_NATIVE_PROVIDER_CONFORMANCE_PASS"
+  },
+  "dependency_candidates": [
+    "36C_CXX_ONLY_TOOLCHAIN_INSTALL_CI_EXIT",
+    "36D_INDEPENDENT_ZERO_FORTRAN_ACCEPTANCE"
+  ],
+  "Milestone_F": "NOT_REACHED"
+}

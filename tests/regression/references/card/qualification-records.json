@@ -1,0 +1,2493 @@
+{
+  "status": "pending_explicit_user_acceptance",
+  "records": [
+    {
+      "case": 33,
+      "name": "phase17-hexagonal-r0-s0",
+      "field": "absorption.14.weighted_mac",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 3035.230712890625,
+      "cpp_by_compiler": {
+        "GNU": 6070.462950261661,
+        "MSVC": 6070.462950261661
+      },
+      "independent_decimal": "6070.462950261659077489820222303301536047975314366591146869851527110949602258663666",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000173039261539752778366903014968563340885313014847288905039774133633392043064095475",
+        "MSVC": "0.00000000000173039261539752778366903014968563340885313014847288905039774133633392043064095475"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "598b820bc40d7d54eef617440f439a62e1d5f066a18433c17af49c80fcf7da2c"
+    },
+    {
+      "case": 33,
+      "name": "phase17-hexagonal-r0-s0",
+      "field": "absorption.mu",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 33.256263732910156,
+      "cpp_by_compiler": {
+        "GNU": 66.51252920841581,
+        "MSVC": 66.51252920841581
+      },
+      "independent_decimal": "66.51252920841579274232811845110654731522115219366592068937642993043052904531369287",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000002054426419230906367401351419936883407931062357006956947095468630713427570266766122",
+        "MSVC": "0.00000000000002054426419230906367401351419936883407931062357006956947095468630713427570266766122"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "43430d52694a39791fc0fd2025f759d8eb1f92cf3603d53b49743c12870e5239"
+    },
+    {
+      "case": 33,
+      "name": "phase17-hexagonal-r0-s0",
+      "field": "composition.cell_mass",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 337.0320129394531,
+      "cpp_by_compiler": {
+        "GNU": 674.064,
+        "MSVC": 674.064
+      },
+      "independent_decimal": "674.0639999999999999999999999999999999999999999999999999999999999999999999999999997",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000003547029336914420127868652343749999999999999999999999999999999999974955111190226111",
+        "MSVC": "0.00000000000003547029336914420127868652343749999999999999999999999999999999999974955111190226111"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "58c6e99a4c1a9a71c3a84f028ffa8a32623287e1eba85b513792f22a9b12ca46"
+    },
+    {
+      "case": 33,
+      "name": "phase17-hexagonal-r0-s0",
+      "field": "composition.density",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 3.692775249481201,
+      "cpp_by_compiler": {
+        "GNU": 7.385548986244795,
+        "MSVC": 7.385548986244795
+      },
+      "independent_decimal": "7.38554898624479488579499045677906614452731843535810346414006254788665432056912337",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0000000000000002807608416542647894033776498263606465358599374521133456794308766298739832109098869",
+        "MSVC": "0.0000000000000002807608416542647894033776498263606465358599374521133456794308766298739832109098869"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "cda04634a806f2181beac3e275d17e96793da31efbe919fda94860326b06e05a"
+    },
+    {
+      "case": 33,
+      "name": "phase17-hexagonal-r0-s0",
+      "field": "composition.z",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 12,
+      "cpp_by_compiler": {
+        "GNU": 24,
+        "MSVC": 24
+      },
+      "independent_decimal": "24",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": null,
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "5b0f49136eb4dc90ab98c44b9c94920effe5b64b813a40bc19679bc1f1e3a566"
+    },
+    {
+      "case": 33,
+      "name": "phase17-hexagonal-r0-s0",
+      "field": "rir.denominator",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 84818.3984375,
+      "cpp_by_compiler": {
+        "GNU": 169636.8282778101,
+        "MSVC": 169636.8282778101
+      },
+      "independent_decimal": "169636.8282778101325331036870541441755071118453121314389419670616467715914255720531",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000003416256652522705677316336184531213143894196706164677159142557205313883940001701013",
+        "MSVC": "0.00000000003416256652522705677316336184531213143894196706164677159142557205313883940001701013"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "aa3e379908c80c9ba673bb4ba6287aa368297153c2f474f6f600fa7337b68845"
+    },
+    {
+      "case": 33,
+      "name": "phase17-hexagonal-r0-s0",
+      "field": "rir.rho_volume_ratio",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 3.054515838623047,
+      "cpp_by_compiler": {
+        "GNU": 1.527257631819857,
+        "MSVC": 1.527257631819857
+      },
+      "independent_decimal": "1.527257631819856681663085214263438685791858073537808091774458521016117460994718335",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0000000000000002828204208756278683701583067213840669082255414789838825390052816646002886412972719",
+        "MSVC": "0.0000000000000002828204208756278683701583067213840669082255414789838825390052816646002886412972719"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "b71765d8aa279039e5220072d32e1c9617fe7c9a6e61c959431e289a1d61dcde"
+    },
+    {
+      "case": 33,
+      "name": "phase17-hexagonal-r0-s0",
+      "field": "rir.rir",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 69.5367660522461,
+      "cpp_by_compiler": {
+        "GNU": 34.768378492293095,
+        "MSVC": 34.768378492293095
+      },
+      "independent_decimal": "34.76837849229308986208697166638876872409757521166651363987575447542958323537578778",
+      "absolute_error_by_compiler": {
+        "GNU": "0.000000000000005543242978487438898512230549788333486360124245524570416764624212220865756354071125",
+        "MSVC": "0.000000000000005543242978487438898512230549788333486360124245524570416764624212220865756354071125"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "035ddfac609be879e08da3ad8fd025e84327023c40c81e431829e75f1d1fcff0"
+    },
+    {
+      "case": 33,
+      "name": "phase17-hexagonal-r0-s0",
+      "field": "site.1.amount",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 12.0,
+      "cpp_by_compiler": {
+        "GNU": 24.0,
+        "MSVC": 24.0
+      },
+      "independent_decimal": "24.0",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "e1b3c1fa4a36d68ad59c4454155b32e2c7f4a814a2caa6c06781ee601871322b"
+    },
+    {
+      "case": 33,
+      "name": "phase17-hexagonal-r0-s0",
+      "field": "site.1.multiplicity",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 12,
+      "cpp_by_compiler": {
+        "GNU": 24.0,
+        "MSVC": 24.0
+      },
+      "independent_decimal": "24",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": null,
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "4a6e17e06e38e175cbbc9d864b26d04d4e3210be12d54a378e099568f96ca670"
+    },
+    {
+      "case": 33,
+      "name": "phase17-hexagonal-r0-s0",
+      "field": "species.14.cell_amount",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 12.0,
+      "cpp_by_compiler": {
+        "GNU": 24.0,
+        "MSVC": 24.0
+      },
+      "independent_decimal": "24.0",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "3cabc695d526e1944f36bc98fc6875cbe574f3e3e259d657f93a24af3890b596"
+    },
+    {
+      "case": 33,
+      "name": "phase17-hexagonal-r0-s0",
+      "field": "species.14.cell_mass",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 337.0320129394531,
+      "cpp_by_compiler": {
+        "GNU": 674.064,
+        "MSVC": 674.064
+      },
+      "independent_decimal": "674.0639999999999999999999999999999999999999999999999999999999999999999999999999997",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000003547029336914420127868652343749999999999999999999999999999999999974955111190226111",
+        "MSVC": "0.00000000000003547029336914420127868652343749999999999999999999999999999999999974955111190226111"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "1921a1c9be8ad9dfc3061507cbd9bb4fc0c1b8e1c5491e93b95e11fca745598b"
+    },
+    {
+      "case": 57,
+      "name": "g225-occ0.125",
+      "field": "absorption.14.weighted_mac",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 20982.89453125,
+      "cpp_by_compiler": {
+        "GNU": 41965.79727821752,
+        "MSVC": 41965.79727821752
+      },
+      "independent_decimal": "41965.79727821755221584836366210109083745323954544460994365577577289635092098101015",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000003200029978873763209669682823954544460994365577577289635092098101014614713082127443",
+        "MSVC": "0.00000000003200029978873763209669682823954544460994365577577289635092098101014614713082127443"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "c2f7fb893b2984b0873f23995bb7bfc697b0f0ba37991d19fa74f01db89e0d92"
+    },
+    {
+      "case": 57,
+      "name": "g225-occ0.125",
+      "field": "absorption.mu",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 278.74407958984375,
+      "cpp_by_compiler": {
+        "GNU": 557.4883491446803,
+        "MSVC": 557.4883491446802
+      },
+      "independent_decimal": "557.4883491446806865508177416182399049707837437443045950117099913660618248522583034",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0000000000003446996186958409190431543774937443045950117099913660618248522583034179267635061078",
+        "MSVC": "0.0000000000004583864564174569487825342603062443045950117099913660618248522583034179267635061078"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "44e30fc68883d3cdd7eea86331a878323d2967450425b5369cd574bba32bc7de"
+    },
+    {
+      "case": 57,
+      "name": "g225-occ0.125",
+      "field": "composition.cell_mass",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 337.0320129394531,
+      "cpp_by_compiler": {
+        "GNU": 674.064,
+        "MSVC": 674.064
+      },
+      "independent_decimal": "674.0639999999999999999999999999999999999999999999999999999999999999999999999999997",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000003547029336914420127868652343749999999999999999999999999999999999974955111190226111",
+        "MSVC": "0.00000000000003547029336914420127868652343749999999999999999999999999999999999974955111190226111"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "dbfc5f5c74b4ca8e6ccbd33174f357274d23249bf81b3174959aad15f8438535"
+    },
+    {
+      "case": 57,
+      "name": "g225-occ0.125",
+      "field": "composition.density",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 4.477251052856445,
+      "cpp_by_compiler": {
+        "GNU": 8.95450226017536,
+        "MSVC": 8.954502260175358
+      },
+      "independent_decimal": "8.954502260175360000000000000000000000000000000000000000000000000000000000000000002",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0000000000000001065865950658917427062988281249999999999999999999999999999999999978162944920894266",
+        "MSVC": "0.000000000000001669770244334358721971511840820312500000000000000000000000000000002183705507910573"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "ce7495e74549dabbb58bed4a33c849de08df79224bcb1633c1f67abffc74d7fa"
+    },
+    {
+      "case": 57,
+      "name": "g225-occ0.125",
+      "field": "composition.z",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 12,
+      "cpp_by_compiler": {
+        "GNU": 24,
+        "MSVC": 24
+      },
+      "independent_decimal": "24",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": null,
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "d1141918edc8585f6905b8547efb96765fa6a183554af6b17ce21bc3e00e9e71"
+    },
+    {
+      "case": 57,
+      "name": "g225-occ0.125",
+      "field": "rir.denominator",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 69957.046875,
+      "cpp_by_compiler": {
+        "GNU": 139914.09781523998,
+        "MSVC": 139914.09781523998
+      },
+      "independent_decimal": "139914.09781524",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000002337411046028137207031249999999999999999999999999999999999999999998744797982683254",
+        "MSVC": "0.00000000002337411046028137207031249999999999999999999999999999999999999999998744797982683254"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "7df276a5f325e74d6e9fa8a95f1e8dcb29ee2f19feca3e7972da62309465151f"
+    },
+    {
+      "case": 57,
+      "name": "g225-occ0.125",
+      "field": "rir.rho_volume_ratio",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 3.7034029960632324,
+      "cpp_by_compiler": {
+        "GNU": 1.85170147019152,
+        "MSVC": 1.85170147019152
+      },
+      "independent_decimal": "1.851701470191519682545394221439265086446961316020781356486317507649672463409323372",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0000000000000003000322938756414163865697775755807811435136824923503275365906766282884015269542081",
+        "MSVC": "0.0000000000000003000322938756414163865697775755807811435136824923503275365906766282884015269542081"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "db62279da3c08ed543828d0fb851ef0c9d6b6add39de67114dfc899e5cadf981"
+    },
+    {
+      "case": 57,
+      "name": "g225-occ0.125",
+      "field": "rir.rir",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 0.00010864811338251457,
+      "cpp_by_compiler": {
+        "GNU": 5.4324055523295424e-05,
+        "MSVC": 5.4324055523295424e-05
+      },
+      "independent_decimal": "0.000054324055523295413717415108954010352577735338315978905519416032493330578214029102",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000000000001041896397475870088284327588607309732739074021750666942178597089800223305694552016",
+        "MSVC": "0.00000000000000000001041896397475870088284327588607309732739074021750666942178597089800223305694552016"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "b6ffb124ec232c9eb6b624c4d6d4ce7ed75debfeb958c21b41f55224007078e6"
+    },
+    {
+      "case": 57,
+      "name": "g225-occ0.125",
+      "field": "site.1.amount",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 12.0,
+      "cpp_by_compiler": {
+        "GNU": 24.0,
+        "MSVC": 24.0
+      },
+      "independent_decimal": "24.0",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "91fad7969381e03ceb2c0472293fbdb7a8481dc89df97d9973a800c5795a0244"
+    },
+    {
+      "case": 57,
+      "name": "g225-occ0.125",
+      "field": "site.1.multiplicity",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 96,
+      "cpp_by_compiler": {
+        "GNU": 192.0,
+        "MSVC": 192.0
+      },
+      "independent_decimal": "192",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": null,
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "7b0997cc94e7bac3b78029e29cb124a68167e90fa8acae4ef85240da665e49fc"
+    },
+    {
+      "case": 57,
+      "name": "g225-occ0.125",
+      "field": "species.14.cell_amount",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 12.0,
+      "cpp_by_compiler": {
+        "GNU": 24.0,
+        "MSVC": 24.0
+      },
+      "independent_decimal": "24.0",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "255bd90382e8f33f50696913d7d2ff7393e8e22d12e851dd70b12aff3c67840a"
+    },
+    {
+      "case": 57,
+      "name": "g225-occ0.125",
+      "field": "species.14.cell_mass",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 337.0320129394531,
+      "cpp_by_compiler": {
+        "GNU": 674.064,
+        "MSVC": 674.064
+      },
+      "independent_decimal": "674.0639999999999999999999999999999999999999999999999999999999999999999999999999997",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000003547029336914420127868652343749999999999999999999999999999999999974955111190226111",
+        "MSVC": "0.00000000000003547029336914420127868652343749999999999999999999999999999999999974955111190226111"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "538ebbcc150810a0ce57de4a548123369900f1127a6ab5d796d51920995bf990"
+    },
+    {
+      "case": 58,
+      "name": "g225-occ0.375",
+      "field": "absorption.14.weighted_mac",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 62948.6796875,
+      "cpp_by_compiler": {
+        "GNU": 125897.39183465258,
+        "MSVC": 125897.39183465258
+      },
+      "independent_decimal": "125897.3918346526566475450909863032725123597186363338298309673273186890527629430305",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000008144898413784604448344985971863633382983096732731868905276294303050753074090457885",
+        "MSVC": "0.00000000008144898413784604448344985971863633382983096732731868905276294303050753074090457885"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "657ba3ca4c62573030c88cbe6fadf2a5d1cad8b6e6c128abea3ae0ebe7d6806b"
+    },
+    {
+      "case": 58,
+      "name": "g225-occ0.375",
+      "field": "absorption.mu",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 836.2323608398438,
+      "cpp_by_compiler": {
+        "GNU": 1672.4650474340413,
+        "MSVC": 1672.465047434041
+      },
+      "independent_decimal": "1672.465047434042059652453224854719714912351231232913785035129974098185474556774911",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0000000000008067251806442906976507033668562329137850351299740981854745567749113333013599051288",
+        "MSVC": "0.000000000001034098856087522757129463132481232913785035129974098185474556774911333301359905129"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "673eab03feeadda45c536646b8f232dec6ac7473831149dda77360f94ab9ab1f"
+    },
+    {
+      "case": 58,
+      "name": "g225-occ0.375",
+      "field": "composition.cell_mass",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 1011.0960693359375,
+      "cpp_by_compiler": {
+        "GNU": 2022.192,
+        "MSVC": 2022.192
+      },
+      "independent_decimal": "2022.192",
+      "absolute_error_by_compiler": {
+        "GNU": "0.000000000000007275957614183425903320312499999999999999999999999999999999999999671825594906411104",
+        "MSVC": "0.000000000000007275957614183425903320312499999999999999999999999999999999999999671825594906411104"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "66e85d8c8fda4e8e4031ed3887a69cc61cd18fefbf3b0e07fd1a62fbfaeab1ed"
+    },
+    {
+      "case": 58,
+      "name": "g225-occ0.375",
+      "field": "composition.density",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 13.431754112243652,
+      "cpp_by_compiler": {
+        "GNU": 26.863506780526084,
+        "MSVC": 26.86350678052608
+      },
+      "independent_decimal": "26.86350678052608000000000000000000000000000000000000000000000000000000000000000002",
+      "absolute_error_by_compiler": {
+        "GNU": "0.000000000000003872473463998176157474517822265624999999999999999999999999999999976581366767099443",
+        "MSVC": "0.0000000000000003197597851976752281188964843749999999999999999999999999999999999765813667670994427"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "6ca23819eb1c5255b76248028a1215919efc2a9c34bbb967cfa8767e8160281c"
+    },
+    {
+      "case": 58,
+      "name": "g225-occ0.375",
+      "field": "composition.z",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 36,
+      "cpp_by_compiler": {
+        "GNU": 72,
+        "MSVC": 72
+      },
+      "independent_decimal": "72",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": null,
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "5cbad0b4ace711967f12bdadef481026b174c1dad211b0e866902a262ee53585"
+    },
+    {
+      "case": 58,
+      "name": "g225-occ0.375",
+      "field": "rir.denominator",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 209871.15625,
+      "cpp_by_compiler": {
+        "GNU": 419742.29344572,
+        "MSVC": 419742.29344572
+      },
+      "independent_decimal": "419742.2934457200000000000000000000000000000000000000000000000000000000000000000005",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000001191467046737670898437500000000000000000000000000000000000000000051505872700654207",
+        "MSVC": "0.00000000001191467046737670898437500000000000000000000000000000000000000000051505872700654207"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "02fe147098fe4820fffe5fb3313812de998420a8ab83288ec581c93a8ecb253a"
+    },
+    {
+      "case": 58,
+      "name": "g225-occ0.375",
+      "field": "rir.rho_volume_ratio",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 1.234467625617981,
+      "cpp_by_compiler": {
+        "GNU": 0.6172338233971733,
+        "MSVC": 0.6172338233971733
+      },
+      "independent_decimal": "0.6172338233971732275151314071464216954823204386735937854954391692165574878031077895",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000000002599589631687003610061448131913890621450456083078344251219689221048368696997445503",
+        "MSVC": "0.00000000000000002599589631687003610061448131913890621450456083078344251219689221048368696997445503"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "5cd8d057a1c5fae044f43a4205f122ca2fe5566f99af611f36ae316fd01ed195"
+    },
+    {
+      "case": 58,
+      "name": "g225-occ0.375",
+      "field": "rir.rir",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 3.621603536885232e-05,
+      "cpp_by_compiler": {
+        "GNU": 1.8108018507765138e-05,
+        "MSVC": 1.8108018507765138e-05
+      },
+      "independent_decimal": "0.00001810801850776513790580503631800345085924511277199296850647201083111019273800970064",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000000000000008485620256903227134113529263913126092468033291888980726199029935552584227129017289",
+        "MSVC": "0.00000000000000000000008485620256903227134113529263913126092468033291888980726199029935552584227129017289"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "04819b55d4466d5f1ee633900e2b43c8bfba4810210711b61787f4224087f441"
+    },
+    {
+      "case": 58,
+      "name": "g225-occ0.375",
+      "field": "site.1.amount",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 36.0,
+      "cpp_by_compiler": {
+        "GNU": 72.0,
+        "MSVC": 72.0
+      },
+      "independent_decimal": "72.0",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "c5ec911665884f4aa9bdbed3b2c2dc8977e534109ae8bf01d404abc417191082"
+    },
+    {
+      "case": 58,
+      "name": "g225-occ0.375",
+      "field": "site.1.multiplicity",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 96,
+      "cpp_by_compiler": {
+        "GNU": 192.0,
+        "MSVC": 192.0
+      },
+      "independent_decimal": "192",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": null,
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "508c93eeae2d53b72980e85251a380ed146611d8bd5469f754984c21c39a162b"
+    },
+    {
+      "case": 58,
+      "name": "g225-occ0.375",
+      "field": "species.14.cell_amount",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 36.0,
+      "cpp_by_compiler": {
+        "GNU": 72.0,
+        "MSVC": 72.0
+      },
+      "independent_decimal": "72.0",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "fc617cdeacaa8afb1aaae9fda960c93ea41ca97e0a163f097db3a75d2894d3ab"
+    },
+    {
+      "case": 58,
+      "name": "g225-occ0.375",
+      "field": "species.14.cell_mass",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 1011.0960083007812,
+      "cpp_by_compiler": {
+        "GNU": 2022.192,
+        "MSVC": 2022.192
+      },
+      "independent_decimal": "2022.192",
+      "absolute_error_by_compiler": {
+        "GNU": "0.000000000000007275957614183425903320312499999999999999999999999999999999999999671825594906411104",
+        "MSVC": "0.000000000000007275957614183425903320312499999999999999999999999999999999999999671825594906411104"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "adeca388ffcdc496c985248a0bb76ad15210f1b9b7078afbc5438a8987ea2092"
+    },
+    {
+      "case": 59,
+      "name": "g225-occ0.667",
+      "field": "absorption.14.weighted_mac",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 111964.7109375,
+      "cpp_by_compiler": {
+        "GNU": 223929.49427656873,
+        "MSVC": 223929.49427656873
+      },
+      "independent_decimal": "223929.4942765688586237668685009714207086504862144924386593472195241749285143546702",
+      "absolute_error_by_compiler": {
+        "GNU": "0.000000000128494837849526667221489900486214492438659347219524174928514354670247620473629899",
+        "MSVC": "0.000000000128494837849526667221489900486214492438659347219524174928514354670247620473629899"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "e57e9132bb39578e8f6b34ea7913eb093a400df23df7492aca0e97e61039b95f"
+    },
+    {
+      "case": 59,
+      "name": "g225-occ0.667",
+      "field": "absorption.mu",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 1487.378662109375,
+      "cpp_by_compiler": {
+        "GNU": 2974.7578310360145,
+        "MSVC": 2974.7578310360145
+      },
+      "independent_decimal": "2974.757831036016143435163469274928132924102056619609318982484513929305897411650312",
+      "absolute_error_by_compiler": {
+        "GNU": "0.000000000001621038436935504366914662383306619609318982484513929305897411650312003854129247897",
+        "MSVC": "0.000000000001621038436935504366914662383306619609318982484513929305897411650312003854129247897"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "e7249fb7c414c18b4a076ff4ba04bfd81051da0a716df08118bb91974961c2c2"
+    },
+    {
+      "case": 59,
+      "name": "g225-occ0.667",
+      "field": "composition.cell_mass",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 1798.40283203125,
+      "cpp_by_compiler": {
+        "GNU": 3596.8055040000004,
+        "MSVC": 3596.8055040000004
+      },
+      "independent_decimal": "3596.805504",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0000000000003828026819974184036254882812500000000000000000000000000000000000000668784892906514",
+        "MSVC": "0.0000000000003828026819974184036254882812500000000000000000000000000000000000000668784892906514"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "4edeeffe0b8635d98174bc6d5802cb7e0fb7f86f30f33ae343f8e1879812607c"
+    },
+    {
+      "case": 59,
+      "name": "g225-occ0.667",
+      "field": "composition.density",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 23.89061164855957,
+      "cpp_by_compiler": {
+        "GNU": 47.78122406029573,
+        "MSVC": 47.78122406029573
+      },
+      "independent_decimal": "47.78122406029572096000000000000000000000000000000000000000000000000000000000000008",
+      "absolute_error_by_compiler": {
+        "GNU": "0.000000000000006480461632795631885528564453124999999999999999999999999999999999923711423380254196",
+        "MSVC": "0.000000000000006480461632795631885528564453124999999999999999999999999999999999923711423380254196"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "945dece2460cff07900f768e12c43ec31af0f09c9fabffc9f3b6642fb799335b"
+    },
+    {
+      "case": 59,
+      "name": "g225-occ0.667",
+      "field": "composition.z",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 64,
+      "cpp_by_compiler": {
+        "GNU": 128,
+        "MSVC": 128
+      },
+      "independent_decimal": "128",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": null,
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "5085cc0af0fba9082140fd2e42c845af6503917ded57acc157eecfad1adc7458"
+    },
+    {
+      "case": 59,
+      "name": "g225-occ0.667",
+      "field": "rir.denominator",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 373290.8125,
+      "cpp_by_compiler": {
+        "GNU": 746581.6259421206,
+        "MSVC": 746581.6259421208
+      },
+      "independent_decimal": "746581.6259421206400000000000000000000000000000000000000000000000000000000000000016",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000007862378597259521484375000000000000000000000000000000000000000000158232334633369507",
+        "MSVC": "0.0000000001542068576812744140624999999999999999999999999999999999999999999984176766536663049"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "ae678281bc972b9c5b35d54578a7b1fc90efcc8cf054996ba8753caa164950b8"
+    },
+    {
+      "case": 59,
+      "name": "g225-occ0.667",
+      "field": "rir.rho_volume_ratio",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 0.6940410137176514,
+      "cpp_by_compiler": {
+        "GNU": 0.3470205154032084,
+        "MSVC": 0.3470205154032083
+      },
+      "independent_decimal": "0.3470205154032083363091068630883180446864620157460234925948870891397437150317322653",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000000004865445573075069683567271080529889838240511291086025628496826773473844021977670696",
+        "MSVC": "0.00000000000000006236784673176495720669045600378313286759488708913974371503173226526155978022329304"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "d60ececd29a2e15e1fe22ad89fc90be1fc66ac62fe79bb1966d184e4590de3c0"
+    },
+    {
+      "case": 59,
+      "name": "g225-occ0.667",
+      "field": "rir.rir",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 2.0361339920782484e-05,
+      "cpp_by_compiler": {
+        "GNU": 1.0180670075580101e-05,
+        "MSVC": 1.0180670075580098e-05
+      },
+      "independent_decimal": "0.00001018067007558010002200433076349519351156959113867670643167466875812042320352869226",
+      "absolute_error_by_compiler": {
+        "GNU": "0.000000000000000000001259206158386791042315000600281938012959194471866879576796471307740007514213661209",
+        "MSVC": "0.000000000000000000002128925630630410313958289402436629835246371934383120423203528692259992485786338791"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "ca98951bb20a9b821cfed8c3c228eb2860dec98291cd300995fa8964d85efd14"
+    },
+    {
+      "case": 59,
+      "name": "g225-occ0.667",
+      "field": "site.1.amount",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 64.03199768066406,
+      "cpp_by_compiler": {
+        "GNU": 128.06400000000002,
+        "MSVC": 128.06400000000002
+      },
+      "independent_decimal": "128.064",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0000000000000213731254916638135910034179687499999999999999999999999999999999999805686207510375",
+        "MSVC": "0.0000000000000213731254916638135910034179687499999999999999999999999999999999999805686207510375"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "c24b22a07c9d1d9a59b1b3a91b53a46e8b39173a1a951399078f814643e27ded"
+    },
+    {
+      "case": 59,
+      "name": "g225-occ0.667",
+      "field": "site.1.multiplicity",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 96,
+      "cpp_by_compiler": {
+        "GNU": 192.0,
+        "MSVC": 192.0
+      },
+      "independent_decimal": "192",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": null,
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "68e323d166007462e631ce15d0822ec5ffa1491d53ce1038854131c120c90224"
+    },
+    {
+      "case": 59,
+      "name": "g225-occ0.667",
+      "field": "species.14.cell_amount",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 64.03199768066406,
+      "cpp_by_compiler": {
+        "GNU": 128.06400000000002,
+        "MSVC": 128.06400000000002
+      },
+      "independent_decimal": "128.064",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0000000000000213731254916638135910034179687499999999999999999999999999999999999805686207510375",
+        "MSVC": "0.0000000000000213731254916638135910034179687499999999999999999999999999999999999805686207510375"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "c5471681ed6c436e3c32a55691c4e87b6477cbff00025f6f8f4b69839000087b"
+    },
+    {
+      "case": 59,
+      "name": "g225-occ0.667",
+      "field": "species.14.cell_mass",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 1798.4027099609375,
+      "cpp_by_compiler": {
+        "GNU": 3596.8055040000004,
+        "MSVC": 3596.8055040000004
+      },
+      "independent_decimal": "3596.805504",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0000000000003828026819974184036254882812500000000000000000000000000000000000000668784892906514",
+        "MSVC": "0.0000000000003828026819974184036254882812500000000000000000000000000000000000000668784892906514"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "50002f17a07d06e57827ff8cf95fdee02af074c131a939c33a168b414015b0d7"
+    },
+    {
+      "case": 60,
+      "name": "g225-occ1",
+      "field": "absorption.14.weighted_mac",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 167863.15625,
+      "cpp_by_compiler": {
+        "GNU": 335726.37822574016,
+        "MSVC": 335726.37822574016
+      },
+      "independent_decimal": "335726.3782257404177267869092968087266996259163635568795492462061831708073678480812",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0000000002560023983099010567735746259163635568795492462061831708073678480811691770465701954",
+        "MSVC": "0.0000000002560023983099010567735746259163635568795492462061831708073678480811691770465701954"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "5befe394154e880cdc6adf9752d41d29c2dbc34a35543ca8db7ca4c0f89fdbfb"
+    },
+    {
+      "case": 60,
+      "name": "g225-occ1",
+      "field": "absorption.mu",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 2229.95263671875,
+      "cpp_by_compiler": {
+        "GNU": 4459.906793157443,
+        "MSVC": 4459.906793157442
+      },
+      "independent_decimal": "4459.906793157445492406541932945919239766269949954436760093679930928494598818066427",
+      "absolute_error_by_compiler": {
+        "GNU": "0.000000000002757596949566727352345235019949954436760093679930928494598818066427343414108048862",
+        "MSVC": "0.000000000003667091651339655590260274082449954436760093679930928494598818066427343414108048862"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "a0c8259ccb746b9bc42a33c1ec80ca527ba5cd6bcecbfaa2645f5c3317286ab9"
+    },
+    {
+      "case": 60,
+      "name": "g225-occ1",
+      "field": "composition.cell_mass",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 2696.256103515625,
+      "cpp_by_compiler": {
+        "GNU": 5392.512,
+        "MSVC": 5392.512
+      },
+      "independent_decimal": "5392.511999999999999999999999999999999999999999999999999999999999999999999999999998",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0000000000002837623469531536102294921874999999999999999999999999999999999999979964088952180888",
+        "MSVC": "0.0000000000002837623469531536102294921874999999999999999999999999999999999999979964088952180888"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "1c5d6c3a577e3604dd4600541f274046d4828dbf1f62c595ed2db7f9dafc883d"
+    },
+    {
+      "case": 60,
+      "name": "g225-occ1",
+      "field": "composition.density",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 35.81800842285156,
+      "cpp_by_compiler": {
+        "GNU": 71.63601808140288,
+        "MSVC": 71.63601808140287
+      },
+      "independent_decimal": "71.63601808140288000000000000000000000000000000000000000000000000000000000000000002",
+      "absolute_error_by_compiler": {
+        "GNU": "0.000000000000000852692760527133941650390624999999999999999999999999999999999999982530355936715413",
+        "MSVC": "0.00000000000001335816195467486977577209472656250000000000000000000000000000000001746964406328459"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "e0d78ba0a33ac6bb322038dd975d00bc4ca5707b51882d89f05842dfa0ab5a57"
+    },
+    {
+      "case": 60,
+      "name": "g225-occ1",
+      "field": "composition.z",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 96,
+      "cpp_by_compiler": {
+        "GNU": 192,
+        "MSVC": 192
+      },
+      "independent_decimal": "192",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": null,
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "f14d0bc8edcf15907891260e302ead3677e7d250aee4131dec9591db4067f055"
+    },
+    {
+      "case": 60,
+      "name": "g225-occ1",
+      "field": "rir.denominator",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 559656.375,
+      "cpp_by_compiler": {
+        "GNU": 1119312.7825219198,
+        "MSVC": 1119312.7825219198
+      },
+      "independent_decimal": "1119312.78252192",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0000000001869928836822509765624999999999999999999999999999999999999999999998995838386146603",
+        "MSVC": "0.0000000001869928836822509765624999999999999999999999999999999999999999999998995838386146603"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "9b633343cc46cf7ecb5d87b8416239a5b79e7fcdf88fac2f42ba5d5b58ac6beb"
+    },
+    {
+      "case": 60,
+      "name": "g225-occ1",
+      "field": "rir.rho_volume_ratio",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 0.46292537450790405,
+      "cpp_by_compiler": {
+        "GNU": 0.23146268377394,
+        "MSVC": 0.23146268377394
+      },
+      "independent_decimal": "0.2314626837739399603181742776799081358058701645025976695607896884562090579261654215",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000000003750403673445517704832122219694759764293921031154379094207383457853605019086927602",
+        "MSVC": "0.00000000000000003750403673445517704832122219694759764293921031154379094207383457853605019086927602"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "a65724f45a7a69e2b9f0556b66dc6797ad048e542ce44379e2651fa3bc75babf"
+    },
+    {
+      "case": 60,
+      "name": "g225-occ1",
+      "field": "rir.rir",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 1.358101417281432e-05,
+      "cpp_by_compiler": {
+        "GNU": 6.790506940411928e-06,
+        "MSVC": 6.790506940411928e-06
+      },
+      "independent_decimal": "0.00000679050694041192671467688861925129407221691728949736318992700406166632227675363775",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000000000000130237049684483761035540948575913716592384252718833367772324636225027913211819002",
+        "MSVC": "0.00000000000000000000130237049684483761035540948575913716592384252718833367772324636225027913211819002"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "1da5f3097938835c01f9d860d682033f887ccc732b5adb441a17e59b6f6f7f09"
+    },
+    {
+      "case": 60,
+      "name": "g225-occ1",
+      "field": "site.1.amount",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 96.0,
+      "cpp_by_compiler": {
+        "GNU": 192.0,
+        "MSVC": 192.0
+      },
+      "independent_decimal": "192.0",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "b472ce5b7a913fb7638bc860f1416d9ae7bafd4471d8818c6e166d172bd6c1c0"
+    },
+    {
+      "case": 60,
+      "name": "g225-occ1",
+      "field": "site.1.multiplicity",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 96,
+      "cpp_by_compiler": {
+        "GNU": 192.0,
+        "MSVC": 192.0
+      },
+      "independent_decimal": "192",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": null,
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "9269672425748b5fbc2b25408cea7b2376d8148210ff2b8e20aa753534dc0770"
+    },
+    {
+      "case": 60,
+      "name": "g225-occ1",
+      "field": "species.14.cell_amount",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 96.0,
+      "cpp_by_compiler": {
+        "GNU": 192.0,
+        "MSVC": 192.0
+      },
+      "independent_decimal": "192.0",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "6d96b67c2440019572e33d554e89dd3e907a70371cc17d188c79e25a2dba59c8"
+    },
+    {
+      "case": 60,
+      "name": "g225-occ1",
+      "field": "species.14.cell_mass",
+      "category": "exact_symmetry_vs_legacy_proximity",
+      "legacy": 2696.256103515625,
+      "cpp_by_compiler": {
+        "GNU": 5392.512,
+        "MSVC": 5392.512
+      },
+      "independent_decimal": "5392.511999999999999999999999999999999999999999999999999999999999999999999999999998",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0000000000002837623469531536102294921874999999999999999999999999999999999999979964088952180888",
+        "MSVC": "0.0000000000002837623469531536102294921874999999999999999999999999999999999999979964088952180888"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "0c4d1437a9e22cbd4f5a01963bfa5602008881c14c50b61b3cc04bf3422f068b"
+    },
+    {
+      "case": 93,
+      "name": "z-order-reversed",
+      "field": "composition.formula_mass",
+      "category": "canonical_formula_unit_order",
+      "legacy": 133.66799926757812,
+      "cpp_by_compiler": {
+        "GNU": 66.834,
+        "MSVC": 66.834
+      },
+      "independent_decimal": "66.83400000000000000000000000000000000000000000000000000000000000000000000000000001",
+      "absolute_error_by_compiler": {
+        "GNU": "0.000000000000003183231456205248832702636718749999999999999999999999999999999999991363831444905555",
+        "MSVC": "0.000000000000003183231456205248832702636718749999999999999999999999999999999999991363831444905555"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "9f8efba9deae64637bc010145233dd601bccf8e3d65b9c63012a1919f3e09d79"
+    },
+    {
+      "case": 93,
+      "name": "z-order-reversed",
+      "field": "composition.z",
+      "category": "canonical_formula_unit_order",
+      "legacy": 1,
+      "cpp_by_compiler": {
+        "GNU": 2,
+        "MSVC": 2
+      },
+      "independent_decimal": "2",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0",
+        "MSVC": "0.0"
+      },
+      "independent_check_passed": true,
+      "tolerance": null,
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "f519bafeffeff8d6e150620200d287798e01741baac095a68cd1aaf97bd44baf"
+    },
+    {
+      "case": 93,
+      "name": "z-order-reversed",
+      "field": "formula.display",
+      "category": "canonical_formula_unit_order",
+      "legacy": "Ge0.4 Zn1.6",
+      "cpp_by_compiler": {
+        "GNU": "Ge0.2 Zn0.8",
+        "MSVC": "Ge0.2 Zn0.8"
+      },
+      "independent_decimal": "Ge0.2 Zn0.8",
+      "absolute_error_by_compiler": {
+        "GNU": null,
+        "MSVC": null
+      },
+      "independent_check_passed": true,
+      "tolerance": null,
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "e5e4a011266824ad27f75b79a2eea09c1487d010704e6171ad05940d485ac90e"
+    },
+    {
+      "case": 93,
+      "name": "z-order-reversed",
+      "field": "species.30.formula_amount",
+      "category": "canonical_formula_unit_order",
+      "legacy": 1.600000023841858,
+      "cpp_by_compiler": {
+        "GNU": 0.8,
+        "MSVC": 0.8
+      },
+      "independent_decimal": "0.8000000000000000000000000000000000000000000000000000000000000000000000000000000004",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000000004440892098500626161694526672363281249999999999999999999999999999957831208227077907",
+        "MSVC": "0.00000000000000004440892098500626161694526672363281249999999999999999999999999999957831208227077907"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "2c2c7e804b0f0ca0952c5aaad0bc2148b547a7c8c053bddbefd95c9b38a68bb3"
+    },
+    {
+      "case": 93,
+      "name": "z-order-reversed",
+      "field": "species.32.formula_amount",
+      "category": "canonical_formula_unit_order",
+      "legacy": 0.4000000059604645,
+      "cpp_by_compiler": {
+        "GNU": 0.2,
+        "MSVC": 0.2
+      },
+      "independent_decimal": "0.2000000000000000000000000000000000000000000000000000000000000000000000000000000001",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000000001110223024625156540423631668090820312499999999999999999999999999989457802056769477",
+        "MSVC": "0.00000000000000001110223024625156540423631668090820312499999999999999999999999999989457802056769477"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 3e-06
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "02c7c30ccdc30519a6374de6df39e3918da8ee342117afe433b4d584d413fa66"
+    },
+    {
+      "case": 181,
+      "name": "registry-Eu",
+      "field": "absorption.63.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.08464165031909943,
+      "cpp_by_compiler": {
+        "GNU": 0.08462356779636648,
+        "MSVC": 0.08462356779636648
+      },
+      "independent_decimal": "0.08462356779634370549312336778730717998467263326888055514781177179616852698040636367",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0000000000000227779135769861657488574413222397779944448521882282038314730195936363282083946028",
+        "MSVC": "0.0000000000000227779135769861657488574413222397779944448521882282038314730195936363282083946028"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "b8ed578f2bee892941353969271222d46de3126beba36087c00a3d4b2a860927"
+    },
+    {
+      "case": 185,
+      "name": "registry-Ho",
+      "field": "absorption.67.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.5357643961906433,
+      "cpp_by_compiler": {
+        "GNU": 0.5357529041210363,
+        "MSVC": 0.5357529041210363
+      },
+      "independent_decimal": "0.5357529041209961518132477876696221932372680740234071402458541883470032196785588605",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000004011454728598529813360128787841035159285975414581165299678032144113945193233402",
+        "MSVC": "0.00000000000004011454728598529813360128787841035159285975414581165299678032144113945193233402"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "2c990d6d4417fd2c3227826830ed3bc3d48dad47421f5c5d7dcf35979e266a98"
+    },
+    {
+      "case": 193,
+      "name": "registry-Re",
+      "field": "absorption.75.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "0879564c4048b5db118234c48293020a05d8153f68df1fa53cb47aa7a3c5c862"
+    },
+    {
+      "case": 194,
+      "name": "registry-Os",
+      "field": "absorption.76.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "129f50d044964afd7591587e22c1b3e4be023a6b0fac7d84cef27e7fbe8d0e68"
+    },
+    {
+      "case": 195,
+      "name": "registry-Ir",
+      "field": "absorption.77.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "aa3dc3866fa0a3288ba664bf231913f8af4d6313a216e06b0f56a4ee9455befc"
+    },
+    {
+      "case": 196,
+      "name": "registry-Pt",
+      "field": "absorption.78.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "a2015c7dc21cef6aefc04ff117ad99e197ad7a2adce7719200e902ad30239da6"
+    },
+    {
+      "case": 197,
+      "name": "registry-Au",
+      "field": "absorption.79.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "057e166e97b2704c704a007efbb799c1207644478cd486baf3006ea6aa05c02e"
+    },
+    {
+      "case": 198,
+      "name": "registry-Hg",
+      "field": "absorption.80.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "dfd2bbe9fd7f1401fbf1736ba61157bf21aff0bd21a17d62d37020db77f813cb"
+    },
+    {
+      "case": 199,
+      "name": "registry-Tl",
+      "field": "absorption.81.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "046f0bbd7349fb1c5a6d4c6ad822e785a15ab8262fcb3eba96d414c3785c2ff7"
+    },
+    {
+      "case": 200,
+      "name": "registry-Pb",
+      "field": "absorption.82.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "3f3ef8408472ae3d79bf4bb59aaaecfc0b1f30174f7732668e80fb98b3343344"
+    },
+    {
+      "case": 201,
+      "name": "registry-Bi",
+      "field": "absorption.83.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "4da872681c330fd7a18bd93aeb485798f5b78bfe4e1995047c19e86cf8858852"
+    },
+    {
+      "case": 202,
+      "name": "registry-Po",
+      "field": "absorption.84.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "cb4683bd64ebe17a7fa8a3ab1c86de2944936563d417cc2e56d6e2ead6e13b9a"
+    },
+    {
+      "case": 203,
+      "name": "registry-At",
+      "field": "absorption.85.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "c88bd0e2b8d6180307a18ff9b4211cb583e82f325bf61c33631dc80658e462d2"
+    },
+    {
+      "case": 204,
+      "name": "registry-Rn",
+      "field": "absorption.86.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "9eca80d241b852fab0e0629d04ef6c7215e3a33d9aeef925a2dc9c543b2f0876"
+    },
+    {
+      "case": 205,
+      "name": "registry-Fr",
+      "field": "absorption.87.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "4a7041e684d22ae1fc256c1b113428262c7f54c8c4b3cff59d8457b3be7b789f"
+    },
+    {
+      "case": 206,
+      "name": "registry-Ra",
+      "field": "absorption.88.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "c3065d0ef2b8339075cd049ae4324687a1acd5eefda279f5306e51bef30166aa"
+    },
+    {
+      "case": 207,
+      "name": "registry-Ac",
+      "field": "absorption.89.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "2d5c7a466444547e72bab221ee01f04da9055dff19feca077257aff41b7356ae"
+    },
+    {
+      "case": 360,
+      "name": "registry-Eu2+",
+      "field": "absorption.242.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.08464165031909943,
+      "cpp_by_compiler": {
+        "GNU": 0.08462356779636648,
+        "MSVC": 0.08462356779636648
+      },
+      "independent_decimal": "0.08462356779634370549312336778730717998467263326888055514781177179616852698040636367",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0000000000000227779135769861657488574413222397779944448521882282038314730195936363282083946028",
+        "MSVC": "0.0000000000000227779135769861657488574413222397779944448521882282038314730195936363282083946028"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "ae90bd52c56a37fc69fe0b038fd4ea71fbd773dd81bdd50c48d07a6543509feb"
+    },
+    {
+      "case": 361,
+      "name": "registry-Eu3+",
+      "field": "absorption.243.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.08464165031909943,
+      "cpp_by_compiler": {
+        "GNU": 0.08462356779636648,
+        "MSVC": 0.08462356779636648
+      },
+      "independent_decimal": "0.08462356779634370549312336778730717998467263326888055514781177179616852698040636367",
+      "absolute_error_by_compiler": {
+        "GNU": "0.0000000000000227779135769861657488574413222397779944448521882282038314730195936363282083946028",
+        "MSVC": "0.0000000000000227779135769861657488574413222397779944448521882282038314730195936363282083946028"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "e35b41cb0180e1cf3a8223c1348d3289e0d1aa0ed5703f1daff2a7bdec71f3d2"
+    },
+    {
+      "case": 365,
+      "name": "registry-Ho3+",
+      "field": "absorption.247.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.5357643961906433,
+      "cpp_by_compiler": {
+        "GNU": 0.5357529041210363,
+        "MSVC": 0.5357529041210363
+      },
+      "independent_decimal": "0.5357529041209961518132477876696221932372680740234071402458541883470032196785588605",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000004011454728598529813360128787841035159285975414581165299678032144113945193233402",
+        "MSVC": "0.00000000000004011454728598529813360128787841035159285975414581165299678032144113945193233402"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "62669f1a580d8a6ddaaa9df74a236131b74e42465ed0cf379cb1572edda1a00a"
+    },
+    {
+      "case": 375,
+      "name": "registry-Re4+",
+      "field": "absorption.257.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "71efb7785c75f9366018a001143684e34edba7335ab3475dd4c2f00a0c573c5a"
+    },
+    {
+      "case": 376,
+      "name": "registry-Os4+",
+      "field": "absorption.258.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "fea0f4cb7dcc8f9b5714e82f153aee73005e0b9f04a2029436a5130d46de4ec7"
+    },
+    {
+      "case": 377,
+      "name": "registry-Ir3+",
+      "field": "absorption.259.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "94d737d038849fd884f040697e3d6e60ad94b492a03916538b56b6c7a53a844e"
+    },
+    {
+      "case": 378,
+      "name": "registry-Ir4+",
+      "field": "absorption.260.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "704b7b11ee13d255fe80ecda3cab981287240c7a0ffc7d0341d9f374d212c182"
+    },
+    {
+      "case": 379,
+      "name": "registry-Pt2+",
+      "field": "absorption.261.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "d8b1d887c6ee9522e124f18477bc8637a361c6949291cfaed884f0e50e69aef4"
+    },
+    {
+      "case": 380,
+      "name": "registry-Pt4+",
+      "field": "absorption.262.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "220e00ce08e9f4541f33d0b0e755d787a36bee5c629a539283eb0325e514caec"
+    },
+    {
+      "case": 381,
+      "name": "registry-Au1+",
+      "field": "absorption.263.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "55c651e25c957628d166c9520853f073b989a2ae622ad17605325d7ecfb58faa"
+    },
+    {
+      "case": 382,
+      "name": "registry-Au3+",
+      "field": "absorption.264.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "bd738143bf43a5fd5d215a64b1fd4947334fba8e74f65f82212946037c8f10c2"
+    },
+    {
+      "case": 383,
+      "name": "registry-Hg1+",
+      "field": "absorption.265.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "98d06295a46b5d7994b04300749e9bd83c43e460db25de58b58576b226883020"
+    },
+    {
+      "case": 384,
+      "name": "registry-Hg2+",
+      "field": "absorption.266.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "d2a3d0c968ccaacb11a90371a19f4c2bbd3f8e41ae54ad7ba3523160800b92c0"
+    },
+    {
+      "case": 385,
+      "name": "registry-Tl1+",
+      "field": "absorption.267.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "aae233e144892d933f126c1de6bb489518b097b250f7237ddc757266d0f39e60"
+    },
+    {
+      "case": 386,
+      "name": "registry-Tl3+",
+      "field": "absorption.268.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "c50ec4c242c6453ca25e579b7db34d4c5825521d603853170231e12079b03c76"
+    },
+    {
+      "case": 387,
+      "name": "registry-Pb2+",
+      "field": "absorption.269.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "f1451067389cb0aafad8cae0415314346210f2113e8500dee4d27c31cca8fb38"
+    },
+    {
+      "case": 388,
+      "name": "registry-Pb4+",
+      "field": "absorption.270.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "0c37c7c50654dc46e1819946f96b926dd2ce4f30374e9f69e272a4ce0c462abe"
+    },
+    {
+      "case": 389,
+      "name": "registry-Bi3+",
+      "field": "absorption.271.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "1a20b50dfb096d451a536db0c5a75c7415fc8009485bdf1aeaad04e1ed3f10ff"
+    },
+    {
+      "case": 390,
+      "name": "registry-Bi5+",
+      "field": "absorption.272.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "0504066200001976da7d66b6c43c829f4c800cdc24f100875602541455938e8e"
+    },
+    {
+      "case": 391,
+      "name": "registry-Po2+",
+      "field": "absorption.273.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "972ec06c267c4cec8b8c9165000c91f2e2d0a5d8aec348f0934fadb1cb2b13ba"
+    },
+    {
+      "case": 392,
+      "name": "registry-Po4+",
+      "field": "absorption.274.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "cb45e63009434312035baac36e9a4a28eb8211dd5b73f910254813553d111d41"
+    },
+    {
+      "case": 393,
+      "name": "registry-At1-",
+      "field": "absorption.275.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "a080d96e57d9f97538434281b4205fb162367d66000496e35bfa3c61f7afe7ff"
+    },
+    {
+      "case": 394,
+      "name": "registry-At1+",
+      "field": "absorption.276.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "17df82a3aaba0d569fc9bf534785f40a9acedccd2aaee3d640459b35f465fb11"
+    },
+    {
+      "case": 395,
+      "name": "registry-Rn2+",
+      "field": "absorption.277.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "a009ddacbde3f9d2863761487abba564a2795beb79d5145bf3b37a3b08169aaf"
+    },
+    {
+      "case": 396,
+      "name": "registry-Fr1+",
+      "field": "absorption.278.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "33874640639c651338e9902fb6da4c58c369044de5b563a5fc19e45a6d2cbe06"
+    },
+    {
+      "case": 397,
+      "name": "registry-Ra2+",
+      "field": "absorption.279.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "69450e1d25e16e9113dbeaddfbe7cd9e4b8d134aecc08c844195e4efc80e3bec"
+    },
+    {
+      "case": 398,
+      "name": "registry-Ac3+",
+      "field": "absorption.280.log_fraction",
+      "category": "binary32_log_interpolation",
+      "legacy": 0.10294158011674881,
+      "cpp_by_compiler": {
+        "GNU": 0.10291505762307204,
+        "MSVC": 0.10291505762307204
+      },
+      "independent_decimal": "0.1029150576230600463682973067054830671223412498757781452523071957699674279542263987",
+      "absolute_error_by_compiler": {
+        "GNU": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744",
+        "MSVC": "0.00000000000001199626798349172780726170813932568574529224769280423003257204577360129309843270744"
+      },
+      "independent_check_passed": true,
+      "tolerance": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "approval": "pending_explicit_user_acceptance",
+      "fingerprint": "64fbe07e444f8001fd8d08cbe634c803cbe387a1b7416b1e60b79ec6a03b50e9"
+    }
+  ],
+  "counts": {
+    "exact_symmetry_vs_legacy_proximity": 60,
+    "canonical_formula_unit_order": 5,
+    "binary32_log_interpolation": 44
+  },
+  "compiler_fingerprints": {
+    "GNU": {
+      "runner_sha256": "1099b0ab9a2b8024831344ff2211f30dd8bed9f8288a1efd713fdb178c697032"
+    },
+    "MSVC": {
+      "runner_sha256": "1fb8af7fa397d0793ac934fa0802d4d72a9f879cf59b532af34c9a3b4d207e26"
+    }
+  },
+  "proof_sha256": "8f3acf6123f55faf9c9bd2c2d2c796c00da8e2771ca2b2ce8b0eb7c2a84f7db8",
+  "script_sha256": "fb8deaf2bfe3def43144da8abdc04a27ced5a2c0df684e84af6e8801ab59ca19",
+  "frozen_reference_unchanged": true,
+  "frozen_tolerance_unchanged": true
+}

@@ -1,0 +1,20 @@
+from reference_paths import reference_path, provenance_path
+"""Current path transport for the unchanged frozen Pattern comparator.
+
+Frozen native transcripts contain Windows source paths. Their exact basename
+contract is independent of the OS running the comparator. All historical
+status, radiation, shape, error, numeric and source-identity assertions remain.
+"""
+from pathlib import Path, PureWindowsPath
+import pattern_differential as historical
+
+
+class TranscriptPath(type(Path())):
+    @property
+    def name(self):
+        return PureWindowsPath(str(self)).name
+
+
+if __name__ == '__main__':
+    historical.Path = TranscriptPath
+    raise SystemExit(historical.main())

@@ -1,0 +1,487 @@
+{
+  "sources": {
+    "share/qualx/files/AtomProperties.xen": "5062942c7d0b5a92fac7b864e046bcba77313f00764c2f941178cd2b4cc6996e",
+    "legacy/fortran/crystallography/nist_table.f90": "eaed0142962ebb40116486e134e0a8d9a468371d7e355a8619968a93b26654d3"
+  },
+  "generator_sha256": "aa5488fe1cd7306a3752eee4b44e88d095f419bb4f6798f1571b79e793d9ae69",
+  "output_sha256": "8e5e9186d8f025aa7aa679a58bd202cfcb5a163a33f1d7eb4d7c8bdcfc513397",
+  "species_masses": 299,
+  "attenuation_atomic_numbers": 92,
+  "attenuation_points": 40179,
+  "units": {
+    "mass": "dalton; numerically g/mol of atoms",
+    "energy": "keV",
+    "mass_attenuation": "cm^2/g"
+  },
+  "resource_semantics": "Original decimal resource values interpreted as binary64; no manual re-entry or modern-table substitution",
+  "nist_provenance": "Legacy nist_table.f90, generated from NIST FFAST; original URL and generation notes retained in source",
+  "omitted": [
+    "f1/f2 (already in Phase 16)",
+    "bond/valence tables",
+    "UI descriptions",
+    "obsolete mass-absorption spline table",
+    "CIF data"
+  ],
+  "ranges": [
+    {
+      "z": 1,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 2,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 3,
+      "minimum_energy": 0.0052332,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 4,
+      "minimum_energy": 0.0082516,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 5,
+      "minimum_energy": 0.004606,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 6,
+      "minimum_energy": 0.006272,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 7,
+      "minimum_energy": 0.009016,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 8,
+      "minimum_energy": 0.006958,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 9,
+      "minimum_energy": 0.008428,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 10,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 11,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 12,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 13,
+      "minimum_energy": 0.008208152,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 14,
+      "minimum_energy": 0.004981393,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 15,
+      "minimum_energy": 0.006209957,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 16,
+      "minimum_energy": 0.00758018,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 17,
+      "minimum_energy": 0.006664,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 18,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 19,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 20,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 21,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 22,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 23,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 24,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 25,
+      "minimum_energy": 0.007000906,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 26,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 27,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 28,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 29,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 30,
+      "minimum_energy": 0.007938,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 31,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 32,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 33,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 34,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 35,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 36,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 37,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 38,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 39,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 40,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 41,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 42,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 43,
+      "minimum_energy": 0.006594833,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 44,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 45,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 46,
+      "minimum_energy": 0.004918045,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 47,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 48,
+      "minimum_energy": 0.009114,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 49,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 50,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 51,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 52,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 53,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 54,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 55,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 56,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 57,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 58,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 59,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 60,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 61,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 62,
+      "minimum_energy": 0.00539,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 63,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 64,
+      "minimum_energy": 0.00835371,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 65,
+      "minimum_energy": 0.008428,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 66,
+      "minimum_energy": 0.004116,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 67,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 68,
+      "minimum_energy": 0.004214,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 69,
+      "minimum_energy": 0.005194,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 70,
+      "minimum_energy": 0.006174,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 71,
+      "minimum_energy": 0.006762,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 72,
+      "minimum_energy": 0.0049,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 73,
+      "minimum_energy": 0.005586,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 74,
+      "minimum_energy": 0.005978,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 75,
+      "minimum_energy": 0.005104943,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 76,
+      "minimum_energy": 0.005907383,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 77,
+      "minimum_energy": 0.006717466,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 78,
+      "minimum_energy": 0.006002872,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 79,
+      "minimum_energy": 0.00665451,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 80,
+      "minimum_energy": 0.006272,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 81,
+      "minimum_energy": 0.009471535,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 82,
+      "minimum_energy": 0.00481343,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 83,
+      "minimum_energy": 0.00604651,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 84,
+      "minimum_energy": 0.005286876,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 85,
+      "minimum_energy": 0.006119614,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 86,
+      "minimum_energy": 0.006983358,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 87,
+      "minimum_energy": 0.01040001,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 88,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 89,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 90,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 91,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    },
+    {
+      "z": 92,
+      "minimum_energy": 0.01069,
+      "maximum_energy": 432.9451
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "error": null,
+  "fields": {
+    "quality": [
+      1
+    ]
+  },
+  "discrete": {
+    "associations": [
+      "0"
+    ],
+    "remaining_ids": [],
+    "removed_ids": [
+      "1"
+    ]
+  }
+}

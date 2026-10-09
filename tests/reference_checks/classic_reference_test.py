@@ -1,0 +1,78 @@
+from reference_paths import reference_path
+"""Tests the replay protocol and evidence gates; no Legacy results are present."""
+import copy
+import importlib.util
+import pathlib
+import sys
+import unittest
+import tempfile
+import json
+
+sys.dont_write_bytecode = True
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+spec = importlib.util.spec_from_file_location("classic_reference", reference_path(ROOT / "support/classic_reference.py"))
+ref = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(ref)
+RUNNER = pathlib.Path(sys.argv.pop(1)).resolve()
+
+
+class ClassicReferenceContract(unittest.TestCase):
+    def setUp(self):
+        self.manifest = reference_path(ROOT / "data/classic-synthetic/manifest.json")
+        self.case = ref.load_json(self.manifest)["cases"][0]
+        self.expected = ref.artifact(self.manifest.parent, self.case["expected"])
+
+    def test_synthetic_cannot_pass_legacy_gate(self):
+        with self.assertRaises(ValueError):
+            ref.run_manifest(RUNNER, self.manifest)
+
+    def test_missing_reference_returns_pending_not_pass(self):
+        with tempfile.TemporaryDirectory() as folder:
+            self.assertEqual(ref.run_manifest(RUNNER, pathlib.Path(folder) / "absent.json"), 77)
+
+    def test_present_manifest_with_missing_child_is_failure(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = pathlib.Path(folder) / "present.json"
+            path.write_text(json.dumps({"schema_version": 1, "kind": "legacy_capture",
+                "source_manifests": [{"path": "missing-child.json", "sha256": "0" * 64}]}))
+            with self.assertRaises(OSError):
+                ref.run_manifest(RUNNER, path)
+
+    def test_aggregate_report_cannot_overwrite_child_manifest(self):
+        with self.assertRaisesRegex(ValueError, "must not overwrite"):
+            ref.run_manifest(RUNNER, reference_path(ROOT / "data/classic-reference-manifest.json"),
+                             report=reference_path(ROOT / "data/classic-workflow-fortran/manifest.json"))
+
+    def test_field_tolerance_discrete_order_and_nan_are_checked(self):
+        actual = copy.deepcopy(self.expected)
+        actual["fields"]["total"] = [0.99]
+        with self.assertRaises(ValueError):
+            ref.compare(self.expected, actual, self.case["tolerances"])
+        actual = copy.deepcopy(self.expected)
+        actual["discrete"]["experimental_indices"] = ["1"]
+        with self.assertRaises(ValueError):
+            ref.compare(self.expected, actual, self.case["tolerances"])
+        with self.assertRaises(ValueError):
+            ref.compare(self.expected, self.expected, {})
+        actual = copy.deepcopy(self.expected)
+        actual["fields"]["total"] = [float("nan")]
+        with self.assertRaises(ValueError):
+            ref.compare(self.expected, actual, self.case["tolerances"])
+
+    def test_artifact_hash_is_verified(self):
+        descriptor = dict(self.case["expected"], sha256="0"*64)
+        with self.assertRaises(ValueError):
+            ref.artifact(self.manifest.parent, descriptor)
+
+    def test_malformed_wire_protocol_is_rejected(self):
+        # Test executable protocol rejection without editing any evidence.
+        import subprocess
+        result = subprocess.run([str(RUNNER)],input="2 score\n",text=True,capture_output=True,timeout=10)
+        self.assertNotEqual(result.returncode,0)
+
+    def test_batch_and_residual_protocol_from_hand_derived_inputs(self):
+        self.assertEqual(ref.run_manifest(RUNNER,self.manifest,synthetic=True),0)
+
+
+if __name__ == "__main__":
+    unittest.main()

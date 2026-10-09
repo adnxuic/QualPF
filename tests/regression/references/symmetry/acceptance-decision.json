@@ -1,0 +1,10 @@
+{
+  "decision": "accepted_exact_source_fractions_keep_discrepancies",
+  "authority": "Explicit user reply in this Phase 14 task",
+  "user_reply": "批准精确分数并保留差异记录（推荐）",
+  "scope": "Only the 21 named settings and 374 scalar translation differences frozen in translation-qualification.json",
+  "setting_ids": [430, 431, 432, 435, 439, 440, 441, 442, 443, 449, 451, 457, 459, 462, 463, 464, 465, 471, 472, 473, 474],
+  "qualification_sha256": "845c330816876d7b265e7545698d9465b33d337928a008ad75bada39c9bec1df",
+  "preserve": ["Original Legacy archive and manifest", "All failed exact scalar comparisons", "Independent Fraction proofs", "All Phase 1-13 evidence and tolerances"],
+  "does_not_authorize": ["Calling these 374 components exact matches to Legacy REAL", "General tolerance exemptions", "Production reflection, CIF, structure-factor or Profile migration"]
+}

@@ -1,0 +1,192 @@
+"""Ensure damaged replay output cannot be mistaken for a passing comparison."""
+from copy import deepcopy
+import json
+from pathlib import Path
+import tempfile
+import unittest
+import zipfile
+
+from scattering_differential import validate_replay_shape
+from scattering_qualification import (PREFIX,apply_qualifications,approval_errors,
+                                      partition_failures,sha)
+
+ROOT=Path(__file__).resolve().parents[2]
+with zipfile.ZipFile(ROOT/'tests/data/scattering-reference.zip') as archive:
+    corpus=json.loads(archive.read('cases.json'))
+    native=json.loads(archive.read('expected.json'))
+cases=[next(c for c in corpus if c['mode']==mode) for mode in ('SCAT','ANOM','ADP','STRUCT')]
+ids={c['mode']:str(c['id']) for c in cases}
+expected={'cases':{str(c['id']):native['cases'][str(c['id'])] for c in cases}}
+
+
+class ReplayProtocolTest(unittest.TestCase):
+    def setUp(self):
+        self.actual=deepcopy(expected)
+
+    def validate(self,errors=None,referrors=None):
+        validate_replay_shape(cases,expected,self.actual,errors or {},referrors or {})
+
+    def test_complete_transcript(self):
+        self.validate()
+
+    def test_missing_case(self):
+        del self.actual['cases'][ids['ADP']]
+        with self.assertRaisesRegex(AssertionError,'replay case'):self.validate()
+
+    def test_truncated_adp(self):
+        self.actual['cases'][ids['ADP']]['values'].pop()
+        with self.assertRaisesRegex(AssertionError,'scalar fields'):self.validate()
+
+    def test_missing_site(self):
+        self.actual['cases'][ids['STRUCT']]['sites'].pop()
+        with self.assertRaisesRegex(AssertionError,'sites'):self.validate()
+
+    def test_truncated_site(self):
+        self.actual['cases'][ids['STRUCT']]['sites'][0].pop()
+        with self.assertRaisesRegex(AssertionError,'site fields'):self.validate()
+
+    def test_missing_reflection(self):
+        self.actual['cases'][ids['STRUCT']]['reflections'].pop()
+        with self.assertRaisesRegex(AssertionError,'reflections'):self.validate()
+
+    def test_duplicate_reflection(self):
+        row=self.actual['cases'][ids['STRUCT']]['reflections'][0]
+        self.actual['cases'][ids['STRUCT']]['reflections'].append(deepcopy(row))
+        with self.assertRaisesRegex(AssertionError,'duplicate reflection'):self.validate()
+
+    def test_wrong_hkl(self):
+        self.actual['cases'][ids['STRUCT']]['reflections'][0]['hkl'][0]+=1
+        with self.assertRaisesRegex(AssertionError,'hkl mismatch'):self.validate()
+
+    def test_missing_complex(self):
+        del self.actual['cases'][ids['STRUCT']]['reflections'][0]['complex']
+        with self.assertRaisesRegex(AssertionError,'complex components'):self.validate()
+
+    def test_wrong_species(self):
+        self.actual['cases'][ids['SCAT']]['values'][0]='299'
+        with self.assertRaisesRegex(AssertionError,'species/radiation mismatch'):self.validate()
+
+    def test_operation_count(self):
+        self.actual['cases'][ids['STRUCT']]['operations']+=1
+        with self.assertRaisesRegex(AssertionError,'operation count mismatch'):self.validate()
+
+    def test_explicit_case_error_is_complete(self):
+        del self.actual['cases'][ids['SCAT']]
+        self.validate({ids['SCAT']:{'reason':'unsupported_scattering_entry'}})
+
+    def test_explicit_reflection_error_is_complete(self):
+        ref=self.actual['cases'][ids['STRUCT']]['reflections'].pop()
+        self.validate(referrors={(ids['STRUCT'],ref['index']):{'reason':'nonfinite_result'}})
+
+    def test_orphan_reflection_error(self):
+        with self.assertRaisesRegex(AssertionError,'orphan reflection error'):
+            self.validate(referrors={(ids['ADP'],1):{'reason':'nonfinite_result'}})
+
+
+class QualificationBoundaryTest(unittest.TestCase):
+    def setUp(self):
+        directory=ROOT/PREFIX
+        self.records=json.loads((directory/'qualification-records.json').read_text(encoding='utf-8'))
+        self.decision=json.loads((directory/'acceptance-decision.json').read_text(encoding='utf-8'))
+        self.proof=json.loads((directory/'qualification-proof.json').read_text(encoding='utf-8'))
+        self.hashes=dict(self.decision['evidence_sha256'])
+        self.runner=self.records['compiler_fingerprints']['GNU']['runner_sha256']
+        self.failures=json.loads((directory/'test-results/approved-mingw-differential.json').read_text())['raw_failures']
+
+    def errors(self,compiler='GNU'):
+        return approval_errors(self.records,self.decision,self.proof,compiler,self.runner,self.hashes)
+
+    def assert_blocked(self):
+        errors=self.errors()
+        self.assertTrue(errors)
+        accepted,unresolved=partition_failures(self.failures,self.records,'GNU',errors)
+        self.assertEqual(accepted,[])
+        self.assertEqual(unresolved,self.failures)
+
+    def test_exact_approved_fields_both_compilers(self):
+        for compiler,name in (('GNU','mingw'),('MSVC','msvc')):
+            with self.subTest(compiler=compiler):
+                self.runner=self.records['compiler_fingerprints'][compiler]['runner_sha256']
+                failures=json.loads((ROOT/PREFIX/f'test-results/approved-{name}-differential.json').read_text())['raw_failures']
+                original=deepcopy(failures)
+                accepted,unresolved=partition_failures(failures,self.records,compiler,self.errors(compiler))
+                self.assertEqual(len(accepted),329)
+                self.assertEqual(unresolved,[])
+                self.assertEqual(failures,original)
+
+    def test_stale_compiler_binary(self):
+        self.runner='0'*64
+        self.assert_blocked()
+
+    def test_unknown_compiler(self):
+        self.assertIn('stale_compiler_fingerprint:unknown',self.errors('unknown'))
+
+    def test_each_changed_evidence_file_blocks_all_fields(self):
+        for name,digest in list(self.hashes.items()):
+            with self.subTest(path=name):
+                self.hashes[name]='0'*64
+                self.assert_blocked()
+                self.hashes[name]=digest
+
+    def test_missing_evidence_binding(self):
+        del self.decision['evidence_sha256'][PREFIX+'qualification-proof.json']
+        self.assert_blocked()
+
+    def test_pending_decision(self):
+        self.decision['status']='pending'
+        self.assert_blocked()
+
+    def test_changed_proof_precision(self):
+        self.proof['precision_decimal_digits']=50
+        self.assert_blocked()
+
+    def test_failed_proof(self):
+        self.proof['failures']=['failure']
+        self.assert_blocked()
+
+    def test_changed_independent_expected(self):
+        # Even fields outside the compact value fingerprint are bound by file SHA.
+        self.records['records'][0]['independent_expected']='changed'
+        self.hashes[PREFIX+'qualification-records.json']=sha(json.dumps(self.records).encode())
+        self.assert_blocked()
+
+    def test_changed_record_fingerprint(self):
+        self.records['records'][0]['fingerprint']='0'*64
+        self.assert_blocked()
+
+    def test_changed_compiler_report_binding(self):
+        self.records['compiler_fingerprints']['GNU']['report_sha256']='0'*64
+        self.assert_blocked()
+
+    def test_duplicate_record(self):
+        self.records['records'][1]=deepcopy(self.records['records'][0])
+        self.assert_blocked()
+
+    def test_non_equivalence_boundary_required(self):
+        self.decision['numerical_equivalence_to_legacy']=True
+        self.assert_blocked()
+
+    def test_new_or_changed_failure_cannot_be_qualified(self):
+        for field,value in (('case',-1),('field','new-field'),('legacy','changed-native'),('cpp','changed-cpp')):
+            with self.subTest(field=field):
+                failures=deepcopy(self.failures)
+                failures[0][field]=value
+                accepted,unresolved=partition_failures(failures,self.records,'GNU',self.errors())
+                self.assertEqual(len(accepted),328)
+                self.assertEqual(unresolved,[failures[0]])
+
+    def test_additional_failure_remains_unresolved(self):
+        new=dict(case=-1,field='new-field',legacy=1,cpp=2)
+        accepted,unresolved=partition_failures(self.failures+[new],self.records,'GNU',self.errors())
+        self.assertEqual(len(accepted),329)
+        self.assertEqual(unresolved,[new])
+
+    def test_missing_approval_file_fails_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            accepted,unresolved,approval=apply_qualifications(Path(directory),self.runner,'GNU',self.failures)
+        self.assertEqual(accepted,[])
+        self.assertEqual(unresolved,self.failures)
+        self.assertFalse(approval['valid'])
+
+
+if __name__=='__main__':unittest.main()

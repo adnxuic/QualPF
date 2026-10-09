@@ -1,0 +1,108 @@
+{
+  "schema": "qualpf.phase_successor_fields.v1",
+  "scope": "36D-PHASE-SINCOS-CONTRACT-P1",
+  "expected_from_CPP": false,
+  "new_tolerance": false,
+  "independent_methods": [
+    "Frozen independently certified phase sin/cos",
+    "Exact Fraction binary64 operation rounding",
+    "Source-order Neumaier reduction"
+  ],
+  "proof_origin": {
+    "path": ".evidence/raw/phase36d-phase-sincos-contract/batch-001/host-caller-proof001.json",
+    "sha256": "9cf7fde2a79c61315a9a7cdf7248f9e66c47a59e391bdffba2211730615f4a0d"
+  },
+  "reference_origin": {
+    "path": "tests/data/phase-sincos-reference.txt",
+    "sha256": "a17ea8b2c566ad5a094b058a5dabfbe1f38a353dffce3147886d824d535db921"
+  },
+  "previous_qualifications": {
+    "path": "docs/refactoring/phase-16/qualification-records.json",
+    "sha256": "80389609d870095fbb13ff2eb93d3956cffc09b43c621b9679c7d45a7f751c82"
+  },
+  "premise": "Unchanged previously qualified upstream amplitude/scale inputs; no new upstream authority",
+  "records": [
+    {
+      "case": 8074,
+      "field": "reflection.1.imaginary",
+      "compiler": "MSVC",
+      "old_bits": "bfbaeea6e84c5b0d",
+      "expected_bits": "bfbaeea6e84c5b4d",
+      "previous_record_fingerprint": "e1ad56a6572a2694a0a09cbbfb899fdc6415a08d416abdc7ab71895f232bfbf8",
+      "independent_input_basis": [
+        {
+          "phase": "3fedb264913d4e45",
+          "amplitude": [
+            "401dfd3a665e147b",
+            "3f789c56f959df5f"
+          ],
+          "scale": "3ff0000000000000"
+        },
+        {
+          "phase": "3ffae1c971460dd4",
+          "amplitude": [
+            "401dfd3a665e147b",
+            "3f789c56f959df5f"
+          ],
+          "scale": "3ff0000000000000"
+        },
+        {
+          "phase": "4004cf563e9ac0fc",
+          "amplitude": [
+            "401dfd3a665e147b",
+            "3f789c56f959df5f"
+          ],
+          "scale": "3ff0000000000000"
+        },
+        {
+          "phase": "c004ccc367a21970",
+          "amplitude": [
+            "401dfd3a665e147b",
+            "3f789c56f959df5f"
+          ],
+          "scale": "3ff0000000000000"
+        },
+        {
+          "phase": "bffac2e75d9e334b",
+          "amplitude": [
+            "401dfd3a665e147b",
+            "3f789c56f959df5f"
+          ],
+          "scale": "3ff0000000000000"
+        },
+        {
+          "phase": "bfed7eebc5d03764",
+          "amplitude": [
+            "401dfd3a665e147b",
+            "3f789c56f959df5f"
+          ],
+          "scale": "3ff0000000000000"
+        },
+        {
+          "phase": "0000000000000000",
+          "amplitude": [
+            "402395d6e538ea8b",
+            "3fb1c079514b7703"
+          ],
+          "scale": "3ff0000000000000"
+        },
+        {
+          "phase": "4007a284358aa8f9",
+          "amplitude": [
+            "402395d6e538ea8b",
+            "3fb1c079514b7703"
+          ],
+          "scale": "3ff0000000000000"
+        },
+        {
+          "phase": "c0079838d9a80acc",
+          "amplitude": [
+            "402395d6e538ea8b",
+            "3fb1c079514b7703"
+          ],
+          "scale": "3ff0000000000000"
+        }
+      ]
+    }
+  ]
+}

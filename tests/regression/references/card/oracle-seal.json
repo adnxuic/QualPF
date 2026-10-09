@@ -1,0 +1,23 @@
+{
+  "archive": "tests/data/theoretical-card-reference.zip",
+  "archive_sha256": "19312fffd4a1e4bec2630701d7f4088f1baf60a1953a7414da6e1ad833a02a0f",
+  "counts": {
+    "cases": 460,
+    "observed": 460,
+    "export_cases": 12,
+    "slots": 12714,
+    "card_rows": 8762
+  },
+  "protected_files_checked": 2601,
+  "production_changes_before_seal": [],
+  "allowed_test_registration_change": "tests/CMakeLists.txt",
+  "external_untracked_changes": [
+    {
+      "path": "tests/real_example_data/README.md",
+      "baseline_sha256": "033eef47b9e8924696757145b021ad2ecbd2bdf86f1954e04ef46e764477e48d",
+      "current_sha256": "dea32f908057d72c5bf36b6ccac7d118ef00f9083e019a13c8b9c9d517259aec",
+      "reason": "Concurrently edited untracked experimental-dataset notes; not used by Phase 18 or prior frozen references; preserved"
+    }
+  ],
+  "expected_origin": "Retained native functions and verbatim source-extracted arithmetic; no Phase 18 production implementation exists at seal"
+}

@@ -1,8 +1,8 @@
 [Desktop Entry]
-Name=QualX
+Name=QualPF
 Comment=Software for qualitative X-ray powder diffraction analysis
-Exec=qualx %f
+Exec=qualpf %f
 Terminal=false
-Icon=qualx
+Icon=qualpf
 Type=Application
 Categories=Education;Science;

@@ -1,0 +1,329 @@
+{
+  "schema_version": 1,
+  "kind": "hand_derived_synthetic",
+  "cases": [
+    {
+      "id": "perfect",
+      "input": {
+        "path": "perfect-input.json",
+        "sha256": "82143e3963650b27f5a4a267da178d8d1d06e57bea45a5d3323614ce4e0238cb"
+      },
+      "expected": {
+        "path": "perfect-expected.json",
+        "sha256": "62e8362f32132b911a4975802ad07c2719afe913b3a54ca775e1e1fe738232fe"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "position": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "intensity": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "scale": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "merged_intensities": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "scaled_intensities": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "position_difference_sum": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "degree",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "associated_sample_sum": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "associated_card_sum": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "total_sample_sum": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "total_card_sum": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "database_fraction": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "sample_fraction": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "sqrt_database": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "sqrt_sample": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        }
+      }
+    },
+    {
+      "id": "unassociated",
+      "input": {
+        "path": "unassociated-input.json",
+        "sha256": "192958dc42240c4fb4317d6d902376e500a962f9a02f05eac6ca0d01210c74f4"
+      },
+      "expected": {
+        "path": "unassociated-expected.json",
+        "sha256": "6faff168eb63aae7a17464587e329c1f585ab96c1334c4ea22e926f9d6644d4b"
+      },
+      "tolerances": {
+        "total": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "position": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "intensity": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "scale": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "merged_intensities": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "scaled_intensities": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "position_difference_sum": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "degree",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "associated_sample_sum": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "associated_card_sum": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "total_sample_sum": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "total_card_sum": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "database_fraction": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "sample_fraction": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "sqrt_database": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "sqrt_sample": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        }
+      }
+    },
+    {
+      "id": "residual-exhausted",
+      "input": {
+        "path": "residual-exhausted-input.json",
+        "sha256": "51cfdc75eaa686eb50f6acc657054a22d5949df03d8dff57a398ee7d326e3d3f"
+      },
+      "expected": {
+        "path": "residual-exhausted-expected.json",
+        "sha256": "77026dafb28e7e623f4b091bf6535c01b63a2095a660103168c203a5af805ca4"
+      },
+      "tolerances": {
+        "quality": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        }
+      }
+    },
+    {
+      "id": "initial-threshold",
+      "input": {
+        "path": "initial-threshold-input.json",
+        "sha256": "1d0eaaf579db6edae25c33529c16c93f0bb20da3d2b32d1e0f0ca64cad9b2b55"
+      },
+      "expected": {
+        "path": "initial-threshold-expected.json",
+        "sha256": "911f3d14e674b5c4008a203496b66275a41e227126013730baea3d1ded1b7c56"
+      },
+      "tolerances": {
+        "evaluated.0.total": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "evaluated.0.position": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "evaluated.0.intensity": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "evaluated.0.scale": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        }
+      }
+    },
+    {
+      "id": "rescore-threshold",
+      "input": {
+        "path": "rescore-threshold-input.json",
+        "sha256": "b578c09be3275dddcbfb120c1281f02815d9ed4495dcf6848fe931cb1c2995fa"
+      },
+      "expected": {
+        "path": "rescore-threshold-expected.json",
+        "sha256": "884d9730339a0037fb1c49943a58cef2f784c1326eb8176e6748932b525187a3"
+      },
+      "tolerances": {
+        "evaluated.0.total": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "evaluated.0.position": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "evaluated.0.intensity": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "evaluated.0.scale": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "retained.0.total": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "retained.0.position": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "retained.0.intensity": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        },
+        "retained.0.scale": {
+          "absolute": 0,
+          "relative": 0,
+          "unit": "declared intensity or dimensionless (see contracts)",
+          "approval_evidence": "Hand-derived exact single-peak synthetic case; not a Legacy capture"
+        }
+      }
+    }
+  ]
+}

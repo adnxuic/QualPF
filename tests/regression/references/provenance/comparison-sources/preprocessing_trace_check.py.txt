@@ -1,0 +1,89 @@
+"""Check keyed intermediate records and prove instrumentation is observational.
+
+Uses only phase 9's frozen tolerance values; indices and SG coefficients are
+exact. Keeps compact sample records and complete raw hashes; --raw-output
+optionally keeps full compressed traces outside the source tree.
+"""
+import argparse
+import gzip
+import hashlib
+import json
+import math
+from pathlib import Path
+import subprocess
+import preprocessing_compare as compare
+
+ROOT = Path(__file__).resolve().parents[2]
+
+def run(exe, wire):
+    p = subprocess.run([str(exe.resolve())],input=wire,text=True,capture_output=True,timeout=60)
+    if p.returncode: raise RuntimeError(f"{exe}: {p.returncode} {p.stderr[:200]}")
+    return p
+
+def records(text):
+    result=[]
+    for line in text.splitlines():
+        name,*values=line.split()
+        result.append((name,list(map(float,values))))
+    return result
+
+def evidence(output, name, traces, raw_output=None):
+    samples={};hashes={}
+    for label,data in traces.items():
+        raw=data.encode();hashes[label]=hashlib.sha256(raw).hexdigest()
+        first={}
+        for line in data.splitlines():
+            key,*values=line.split()
+            if key not in first:
+                first[key]=dict(count=len(values),first_values=values[:64],record_sha256=hashlib.sha256(line.encode()).hexdigest())
+        samples[label]=first
+        if raw_output:
+            raw_output.mkdir(parents=True,exist_ok=True)
+            (raw_output/(name+'.'+label+'.trace.gz')).write_bytes(gzip.compress(raw,mtime=0))
+    sample=output/(name+'.samples.json');sample.write_text(json.dumps(samples,indent=2))
+    return hashes,{sample.name:hashlib.sha256(sample.read_bytes()).hexdigest()}
+
+def main():
+    p=argparse.ArgumentParser()
+    p.add_argument('--trace',type=Path,required=True)
+    p.add_argument('--oracle',type=Path,required=True)
+    p.add_argument('--runner',type=Path,required=True)
+    p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--raw-output',type=Path)
+    args=p.parse_args();args.output.mkdir(parents=True,exist_ok=True)
+    policy=ROOT/'tests/compatibility/preprocessing_tolerances.json'
+    assert compare.sha(policy)==compare.POLICY_SHA256
+    absolute,relative=json.loads(policy.read_text())['coefficients']
+    ids=set()
+    for name in ('baseline-mingw.json','baseline-msvc.json'):
+        ids.update(c['id'] for c in json.loads((ROOT/'docs/refactoring/phase-9.1'/name).read_text())['cases'] if c['status']=='failed')
+    report=[]
+    for name in sorted(ids):
+        source=ROOT/'tests/data/preprocessing-fortran'
+        wire=(source/(name+'.wire')).read_text()
+        oracle=run(args.oracle,wire);actual=run(args.trace,wire);plain=run(args.runner,wire)
+        assert oracle.stdout.split()==(source/(name+'.out')).read_text().split(), name+' oracle changed'
+        assert actual.stdout.split()==plain.stdout.split(),name+' C++ trace changed output'
+        ref,got=records(oracle.stderr),records(actual.stderr)
+        assert len(ref)==len(got),(name,len(ref),len(got))
+        stats={}
+        for (key,rv),(label,av) in zip(ref,got):
+            assert key==label and len(rv)==len(av),(name,key,label,len(rv),len(av))
+            s=stats.setdefault(key,dict(values=0,different=0,maximum_absolute_error=0.,failures=0))
+            for i,(r,a) in enumerate(zip(rv,av)):
+                s['values']+=1
+                if math.isnan(r) and math.isnan(a):
+                    raise ValueError(f'{name} {key}: nonfinite intermediate requires explicit review')
+                d=abs(a-r);s['different']+=a!=r;s['maximum_absolute_error']=max(s['maximum_absolute_error'],d)
+                exact=key in ('gaussian.window','sg.coefficients') or (key=='integration' and i<2)
+                s['failures']+=not(math.isfinite(a) and math.isfinite(r)) or (d> (0 if exact else absolute+relative*abs(r)))
+        row=dict(id=name,status='failed' if any(s['failures'] for s in stats.values()) else 'passed',
+                 oracle_stdout_unchanged=True,cpp_stdout_unchanged=True,fields=stats,files={})
+        row['raw_trace_sha256'],row['files']=evidence(args.output,name,dict(fortran=oracle.stderr,cpp=actual.stderr),args.raw_output)
+        report.append(row)
+        print(name,row['status'],flush=True)
+    result=dict(cases=report,passed=sum(x['status']=='passed' for x in report),failed=sum(x['status']=='failed' for x in report))
+    (args.output/'report.json').write_text(json.dumps(result,indent=2))
+    return bool(result['failed'])
+
+if __name__=='__main__': raise SystemExit(main())

@@ -1,0 +1,4599 @@
+{
+  "schema_version": 1,
+  "status": "reviewed-before-cpp-implementation",
+  "source_commit": "0e53b6cb1d080d2e1a6741c6f87a81f968937a06",
+  "runner_sha256": "a2e021e0b8810b86ce5ce05076cf0744f24b749d11ee633c33bc71b1a314d990",
+  "compiler": "GNU Fortran 13.1.0, default REAL binary32; full retained product objects -O0; no table initialization",
+  "source_hashes": {
+    "legacy/bridge/fortran/back_interop.f90": "fbeb274590cc0535fe5d761f0fcf682ab9e664889ebb6cbe1c4216f83b1d56fe",
+    "legacy/bridge/fortran/data_interop.f90": "29b1eaf98755fa0b0452fc47ec00f225d920b41d502a646934f366fe6839cb60",
+    "legacy/bridge/fortran/peak_interop.f90": "0d6359ac387f1ac41e74abd14c76e7ecf033fef535a4c4f46cae79a77296ab68",
+    "legacy/bridge/fortran/qualx_interop.f90": "eddbb54f25ad88b35d9beb330b74ac07c97f4f3307a0531dc3e88f220aa8e6e7",
+    "legacy/bridge/fortran/range_interop.f90": "a588bef3d1a79a530065963a9587403525aa66b076122402c50beaf1b9b62f42",
+    "legacy/bridge/fortran/smooth_interop.f90": "ed39ab0ab4e00594d82e692bc50355bbd1c9c79aa4525a9f30ecb1ef68aec946",
+    "legacy/fortran/bootstrap/moduli.f90": "2aeeede2caaaa2e019c546cdef269fbee719fb5f9946c2eebf927398af2b7cfa",
+    "legacy/fortran/bootstrap/progtype.F90": "ddcacb4c01da9908829bfcff5add63fc78698847a19cffa8d7c224c41971e1e7",
+    "legacy/fortran/bootstrap/prog_names.F90": "d6c3c1d6f11177dd7e6f2f19d6a109261871975a23afb56ca5176108440253fc",
+    "legacy/fortran/bootstrap/qualx.f90": "d008bd56a406feb981435455fc6cccdad02c1a4ea0ac493cbe302ee403323f49",
+    "legacy/fortran/bootstrap/variables.f90": "16a09cffc0000cb5b54d9db7195ea58ae66fb579af8487d87e1e53f97848e82e",
+    "legacy/fortran/crystallography/abscorr.f90": "bbe98ff4a335a1803920936f88acfb1a6d43a4c500d5d664b193fb8fbf22c730",
+    "legacy/fortran/crystallography/atombasic.f90": "bcc0e0d8d7b952a3bf9aee3e54be88167ff9a56b32908e1a4f0f2084d3ccab28",
+    "legacy/fortran/crystallography/atomsutil.F90": "4c2e9eb9b87d6d568de586c9a5d7397c9979dd99771064ae4fd03bd715ba0226",
+    "legacy/fortran/crystallography/cgeom.f90": "30904b6a33f1e41a607f24d8b4df446a4140c555e0dacfabf7b296448f40b3d5",
+    "legacy/fortran/crystallography/counts.f90": "fdbd2d3d9f00dc3b82dc9292c70815b5d162c20c2f3e5e9089474ebbbaef97f7",
+    "legacy/fortran/crystallography/cryutil.f90": "04880afe70ea94ccce3f2ab45ee7df8414575cdb322383fb987bddb1b6d46443",
+    "legacy/fortran/crystallography/elements.f90": "961ce26b85afd9e74bcb7e5502c298ec72b364647cafebfe44db5a4adb301569",
+    "legacy/fortran/crystallography/fract.f90": "c624d326d43ffe312d9c2f2fe90e03574ec29b61e756d5d42e3e9db693928984",
+    "legacy/fortran/crystallography/goptutil.F90": "abd81ed3b471f5b95dfc15438d0352c65dac422ceb27d30e67481fd11e9ba9d3",
+    "legacy/fortran/crystallography/kspecmod.f90": "a361d455f6d0b74535ba9d2990ad91cd82dda42764b416249a5fcb048c62b228",
+    "legacy/fortran/crystallography/nist_table.f90": "eaed0142962ebb40116486e134e0a8d9a468371d7e355a8619968a93b26654d3",
+    "legacy/fortran/crystallography/reflectionsutil.f90": "5887788fd70db00b00156017c4c20f6000e9afb373dfc4e6a30f2f66279f839a",
+    "legacy/fortran/crystallography/scatt_params.F90": "fd267c16d52a7ebe39284dbe6be50b66d3e7efc55d32323ef1f922a116e6fe8f",
+    "legacy/fortran/crystallography/spginfo.f90": "364120f4afd0abd3d18ebd383d19ed3bbd5bda748719cf7173a233bd157f0e30",
+    "legacy/fortran/crystallography/sphase.f90": "99b7b7aff3b944769d7e2289a540207beba5dea94c5535047d2345d5ba9cd960",
+    "legacy/fortran/crystallography/symm_table.f90": "efe2001aaa265dd81984d39ef331ab93a1fdac92f1ebb14816ffd84ae80e198f",
+    "legacy/fortran/crystallography/unit_cell.f90": "6485821c8d2262b37a367147886292e6a00fe9805a7cea0859f65296b3d14180",
+    "legacy/fortran/crystal_io/cif_form.f90": "c21b66ae69a6a91db5385a4c453e48c00f5a41545e221d41e1b8e0af71bfd3cc",
+    "legacy/fortran/crystal_io/exportqualx.F90": "d5ec5960d54a283c25cdd0f2581b1624a0fbc539d0ea53f6a8e332a4eb322d4e",
+    "legacy/fortran/crystal_io/gen_form.F90": "d46fd237669969a34d977bb916c72689ae90c4622d5773b0b6e5254a5723ed11",
+    "legacy/fortran/crystal_io/import_data_structure.f90": "10ef520c3d849af534298797ff7a7fe1f7ba1b60320fe962978218a324cb584b",
+    "legacy/fortran/mpi_pending/mpi_util.F90": "e7117a37d864c42b874bb904dcf9765c6510e5d829adb1f0fe57cb55a556e123",
+    "legacy/fortran/numerics_support/arrayutil.f90": "ba29cbbe4124699a166f13010139d10e7506d10f5e38fdd8d6c8f4e49de5f9b4",
+    "legacy/fortran/numerics_support/constants.f90": "44af22714fc754d156fd6464262b2b599f5ade2ac97fefdc0b1832e4b3e58b6c",
+    "legacy/fortran/numerics_support/error.F90": "f06a443d07ed980a3cb0f02860030ea5118aad6f7acc24f4f4ed7ca7c1aaa519",
+    "legacy/fortran/numerics_support/fileutil.F90": "117b807b846c2a039f5a59f8b5215934bd645e77d3af7176d1ce05dd16797714",
+    "legacy/fortran/numerics_support/genlsq.f90": "223e1a3a8714799e46c63addd74c89e1d10276cd54127504d815b87666c01150",
+    "legacy/fortran/numerics_support/lib_array.f90": "4b785e0fe13e372b0256cac59531a6f837dde6f00e1dbdc8a5670ba5e48cc7b0",
+    "legacy/fortran/numerics_support/lsqnew.f90": "960a4ffebfc5f1841ca8916eb57e91ba636b9be2ce81e2961888309011dd2218",
+    "legacy/fortran/numerics_support/marquardt.f90": "1befffc6302e036d11b70fd3e24e51a4d2253a7e840ee39cfa251bcb2be78886",
+    "legacy/fortran/numerics_support/math_util.F90": "a3b93fc3fadc590e8b9face54e9d88ba4ced9e07bb6107288026dd1061f69935",
+    "legacy/fortran/numerics_support/mmpsi.f": "339f386fc6a724a67e7abf10416fb420f417c392496ec89ed343eb6d9000d37d",
+    "legacy/fortran/numerics_support/nl2sol.f90": "e1fed44621d7695996cf03d1e1ea0bebfae5d606e8c355f5637e5c1bd9d080c3",
+    "legacy/fortran/numerics_support/recipes.f90": "dc0f38215df2502793d31d4e25c5648cf74b3e06f922e7cb72e00cc9b12bfce4",
+    "legacy/fortran/numerics_support/stat.f90": "0b89a90a91100804aa4e44be7784130f90b19e32f291ab3363fbeae0473580cf",
+    "legacy/fortran/numerics_support/strutil.f90": "af40eec5104f1c7abaa93c0b25d353dcab3f760a83e2fa3d0ab1fdbfa6c8a974",
+    "legacy/fortran/numerics_support/util.f": "c2ec044495f3140a58a3c66777f593908b612967158772223462c23e26fbc6c7",
+    "legacy/fortran/numerics_support/utiln.f90": "51c46d0c90c89981783240531536eb2a752b7ab15f40a1b1f75e36b198a3ff1d",
+    "legacy/fortran/pattern_io/data.f90": "c78b5fdc3d98b8acf9c9433bc128af17acd8be2bc391989cfa191d0346bbf73b",
+    "legacy/fortran/pattern_io/dataset.f90": "20da6f4c1e66a7055608c92add324e1bb91ed0ffbcfee380dd2e8da24fc860dc",
+    "legacy/fortran/pattern_io/datautil.f90": "180fe598dea491851d80fda889116c24276a93377b9d4a4ce6407e4a3732af0d",
+    "legacy/fortran/pattern_io/filetype.f90": "f49fec7129edb312d93e21cf69c12fd34a2f42433e11efb8ff36243b0b89130a",
+    "legacy/fortran/pattern_io/indexing.f90": "e328a8b7f99480e440617ccd4f27a1460def4f18defb0246fad1307e525c3ac3",
+    "legacy/fortran/peaks_search/fom.f90": "e2d32e77c9b060c7905f94f060a2207537790c488fa63426a0a70ca88a28f6e8",
+    "legacy/fortran/peaks_search/peakutil.f90": "ed6357bc6155b61cdd12a59ce2abe4e428745b7946c54ef75885d411ed51d1b3",
+    "legacy/fortran/preprocessing/background.f90": "f71322b0b03e76e8b3a1768dd46a49d536b7bb5a8757d1456c9cf4db6ad53c6b",
+    "legacy/fortran/preprocessing/smooth.f90": "f6f9d5310ff512a889119e99c1ad48e6b08f00f4fcf3a6996eb24ef654a84741",
+    "legacy/fortran/preprocessing/strip_kalpha.f90": "4727b07160c1d5a2e706c964332b5aaa182b3ed9bdedc7b5c4bd684533337d1c",
+    "legacy/fortran/presentation_bridge/messages.f90": "3ac8a78fb7ac70041850420375360eed15df8f2cc8e5e58060d3d17c7316c173",
+    "legacy/fortran/presentation_bridge/plotstyle.f90": "9de6be560f67c239e0a22a59c661f8e79f2ed444337546615587b666fc572ac6",
+    "legacy/fortran/presentation_bridge/screen_new.f90": "f874c0fde592017dd592006bce49960be75ca1c2e700a7aa4995fec8d32c96d5",
+    "legacy/fortran/presentation_bridge/specif.f90": "7090cba0bbaf22da12834c59a14048bcfd27c850322408c9d8b25d2e19d955ff",
+    "legacy/fortran/presentation_bridge/vedi2005.f90": "4ad5f246a839e95ddab1232e7c457f3fc82ce2bfd799f3304dbb37a60152ecb8",
+    "legacy/fortran/presentation_bridge/winlist.f90": "12938b4b8a3f4829fe0f1d546b2b082b08b6efefa826f8df6ea4dee07ffd230c",
+    "legacy/fortran/profile_pdf_pending/asymfunc.f90": "74ff84b8502058100c75366daf49ade7329fc55e253b1861f6547f2214d24c4d",
+    "legacy/fortran/profile_pdf_pending/calcpdp.f90": "2a4d10f556c625fce2f91099ebad785d2269b38cfbfced0ee49be921a8ec0023",
+    "legacy/fortran/profile_pdf_pending/pdf.f90": "541e40a674a6d50603ebae71e06a030745364342f3c680ba8a3d7355fda4c8a6",
+    "legacy/fortran/profile_pdf_pending/pearsonfunc.f90": "911f1e67e76386081c36095e86df26726cfb940dc7d7df8aa721eef5105f041b",
+    "legacy/fortran/profile_pdf_pending/pfunction.f90": "cc1cc4b8e1d87c237c5c01bdea659a99d6b4b9258c9814d74bb0dac42098e6cb",
+    "legacy/fortran/profile_pdf_pending/psvoigtfunc.f90": "9e3ac079f962c711926642abd922b54401a758a7635d01c02462eafef2ff33c1",
+    "legacy/fortran/profile_pdf_pending/tchzfunc.f90": "feba3497fc5ba7baa2513e7cbe2d5d1d1f749640d7d18b69cbbe84391e4e2701",
+    "legacy/fortran/structure_formats_pending/abinit_form.f90": "679f91ea7a76378b707ae6cc4fa4bdee588b9028927ffe3056c927c074e7b22e",
+    "legacy/fortran/structure_formats_pending/crystal_form.f90": "63a19f21b3fe065b0a06d5326960166146d62efc5d0b56f24ec7ffe2f70eb548",
+    "legacy/fortran/structure_formats_pending/fra_form.f90": "55bb091b50a85b91f06e932cda3ec2ce6f5662c23150dd936b03c9c1d63dfd88",
+    "legacy/fortran/structure_formats_pending/gamess_form.f90": "bd643292586e9b81d89d666f4fc7d48452ed4d76eb551cc9f283974d58bf8c89",
+    "legacy/fortran/structure_formats_pending/mol2_form.f90": "f3a6b2dffd8df941b38f989c52d1ca1aabe17a552859a060f154ab72692d270a",
+    "legacy/fortran/structure_formats_pending/mop_form.f90": "a6df15ecf5853ef1b91c365fb8bd041d3a4d73f337e9bcf991c3fca6fb30394a",
+    "legacy/fortran/structure_formats_pending/nwchem_form.f90": "3109284306e1e72c384543104a51ee695881b46ec7dbed9999a321caa70b4450",
+    "legacy/fortran/structure_formats_pending/obmodule.f90": "2cbdcb1b9f4c78fbc3d833a33ceb48b0c139c3904260166443687cfd0a53f0df",
+    "legacy/fortran/structure_formats_pending/pdb_form.f90": "5a7439b5f795739e8145fa3e7202069b29b9397fc51a66b8048155803f9dc356",
+    "legacy/fortran/structure_formats_pending/povray_form.f90": "5995e625a8515dd3a9197939108ee793b945e0a1656861bf8fbd6162a2412bef",
+    "legacy/fortran/structure_formats_pending/qe_form.F90": "a94ecdc5a515b2a0993ced53137d6d10bbbbf26ea995a2fb9a51c92bee122a2f",
+    "legacy/fortran/structure_formats_pending/shelx_form.f90": "5ea53fc66a4cd50095ca997f885b51e76d25c67f0aa90056ce0471c976f05a61",
+    "legacy/fortran/structure_formats_pending/xyz_form.f90": "d9dacd58c212095e5948d8ec42553cdeaf44c4a5df1fca848e413021f3c48d9d",
+    "legacy/fortran/structure_formats_pending/zmt_form.f90": "be8da010aeace714cc3cb4416ba3aa0093ba6312a82c05788cc27c904dddc7a9",
+    "legacy/fortran/structure_support_pending/bond2014.f90": "19f75b9d5ede887209e66c98efb8a5340a39235a569c2586cbd9b9a01f1152fb",
+    "legacy/fortran/structure_support_pending/bondsutil.f90": "758433eb68768100df4c156ab65a1c632a3e4f891fb0e518027bd46488b61454",
+    "legacy/fortran/structure_support_pending/bump.f90": "a347135f0185e1dbe46c6531ce53558c269038d1e2f101e3f1b5133145a542f9",
+    "legacy/fortran/structure_support_pending/bvalence.f90": "6cbfee35c00cf887fc44fdf6c5069c600e1be3c1b64fb151e49b62932986557b",
+    "legacy/fortran/structure_support_pending/centroids.f90": "afda9c566409d6bfbebdcfed4f54811b088bda2765af99c084bc9d97b531d9d7",
+    "legacy/fortran/structure_support_pending/chem_files.f90": "547a45067d7b9c5627135685cda37df8f6c9522c83de8c211d044720639a0b9e",
+    "legacy/fortran/structure_support_pending/commands.f90": "b87e89a6ded707217daad1a9ce1bf0d0539eecf9ae34509cd2edeb669e7642d4",
+    "legacy/fortran/structure_support_pending/constraints.f90": "2de472c1fa0a55e1024e180fb6777950e86e9ab300f31a516eb9f7bb528c8936",
+    "legacy/fortran/structure_support_pending/contacts.F90": "d1f3ff549b4ac49de27eb39e6e413eba3080d62252d90952a7b2dc3d25ce8cd1",
+    "legacy/fortran/structure_support_pending/fragments.F90": "e5e92ea24741541da7a397eecb111e12d6d0eac30752b7588b6162729738d471",
+    "legacy/fortran/structure_support_pending/mapinfo.f90": "92724a4e12608a7337718198805bc2570185c1f7698562764af0ef0e222fce93",
+    "legacy/fortran/structure_support_pending/modeltype.f90": "4f0335ff3be664fa63fbc4203fa36686ff67fcebd2a34dd1213c0de966e7de2a",
+    "legacy/fortran/structure_support_pending/molgraph.f90": "bff789ccf2009dbc498c0bda0eaf3f6d4e3194499477b2eb36935173dc4c03cd",
+    "legacy/fortran/structure_support_pending/molpnew.f90": "8fdd0b1c91d58750b5df58e221b63ae027f0935bac2faca862af8c3b87679994",
+    "legacy/fortran/structure_support_pending/restraints.f90": "1fa19b3e297c8a674aed7fb91c02ad16ebb270bdc89c54afe3d95b845d7acd65",
+    "legacy/fortran/structure_support_pending/rigidb.f90": "2abe073deaa1abb839a843784fe57d5a9006127afef856fc88c642e56c7cb866",
+    "legacy/fortran/structure_support_pending/symmgrid.f90": "72f2ee8301bff07da2cbc0294c0c78f0300045a98fdc21e1e84ba6cabe89041a"
+  },
+  "capture_hashes": {
+    "tests/compatibility/crystallography_capture.f90": "c2476fd64856ca2cb4c74a6d3415eb6f202d3871b5ad87a44a779c156d3cf25c",
+    "tests/compatibility/crystallography_capture.py": "609699254c10d3fd1aa48552830472ba6f881985048b15f3205afd44f2c8c55a",
+    "tests/compatibility/crystallography_capture_main.cpp": "fe8ed8f926aac9d7724e6ae278f84528f3e6a325f298616543a9ef0919897481"
+  },
+  "contracts_sha256": "e53457f4a87dd8edbe7a5bc207eeec02e543b7b112667df4cc305b44b794cb1f",
+  "cases": [
+    {
+      "id": "cubic-0",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        0,
+        0
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "cubic-0.expected.json": "5e1e4dbcff6b66536f55a9a3ae568815210b80068f333c25a4639f27740e481c",
+        "cubic-0.input.json": "ab925ced2f751358d0115e7f3a30d8e2088254c159afd98b18e14e878a67f136",
+        "cubic-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "cubic-0.stdout.txt": "e02ba0067072d2764eca8e34717baee1aa5158bcd0b02e2fc4758bcd527006b4",
+        "cubic-0.wire": "84b85bb667de2910518f742de6d0495334ba6c07ea9bee4ab31a8765bc7cdeda"
+      }
+    },
+    {
+      "id": "cubic-1",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        0,
+        1,
+        0
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "cubic-1.expected.json": "5e1e4dbcff6b66536f55a9a3ae568815210b80068f333c25a4639f27740e481c",
+        "cubic-1.input.json": "fdd25e2c8f5530b8e0b4359b9a1a5abc5b52c1d7b8adb41edaa9b5d0e3fa0523",
+        "cubic-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "cubic-1.stdout.txt": "e02ba0067072d2764eca8e34717baee1aa5158bcd0b02e2fc4758bcd527006b4",
+        "cubic-1.wire": "2889c450413d0e33f3b64a0c0200df09cbddba5f60f2af452b23b5ad74b64e41"
+      }
+    },
+    {
+      "id": "cubic-2",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        0,
+        0,
+        1
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "cubic-2.expected.json": "5e1e4dbcff6b66536f55a9a3ae568815210b80068f333c25a4639f27740e481c",
+        "cubic-2.input.json": "5d19fc2fd034e84137d8125222ecadcdb437433423e0adc31727340d714e93ac",
+        "cubic-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "cubic-2.stdout.txt": "e02ba0067072d2764eca8e34717baee1aa5158bcd0b02e2fc4758bcd527006b4",
+        "cubic-2.wire": "32cf314f1c83ab1df36321338528fb3d9f8e21b593c40f75e41a1a05d02141e0"
+      }
+    },
+    {
+      "id": "cubic-3",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "cubic-3.expected.json": "0bd4ea65826f77f6817d156f762bf5445e91cb99009dcf7b064b318ca8d80416",
+        "cubic-3.input.json": "fdf8fa8a204186601077b7dfc6d644a7235eb40e4f534d4fd8c179586370f0c4",
+        "cubic-3.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "cubic-3.stdout.txt": "01eeb2ec971005e56099a87c95548793691354621149b95a0e968dd85d4acd14",
+        "cubic-3.wire": "9cc98af590d97d536a502d93e3d4880a75a13f330d959d3ec9cda1a6530f275c"
+      }
+    },
+    {
+      "id": "cubic-4",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        -1,
+        -2,
+        -3
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "cubic-4.expected.json": "0bd4ea65826f77f6817d156f762bf5445e91cb99009dcf7b064b318ca8d80416",
+        "cubic-4.input.json": "4f9bfbe2d521f64331eb8ec2e7b6f57f2fccc2ffcbba3dea8935c53573027432",
+        "cubic-4.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "cubic-4.stdout.txt": "01eeb2ec971005e56099a87c95548793691354621149b95a0e968dd85d4acd14",
+        "cubic-4.wire": "a21df6a0294a88f84026ac0517d665281999ca68da05b74a7c205c6eb260321b"
+      }
+    },
+    {
+      "id": "cubic-5",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        2,
+        -3,
+        5
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "cubic-5.expected.json": "b2d0007f09e81d622122a7f6b1a1d4964117c351a0cbb7570b91702325253288",
+        "cubic-5.input.json": "6d5f2725bcc96e1192ebd6d56dfd9f486574be5fe9ad8975e6501233d3e9b3d8",
+        "cubic-5.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "cubic-5.stdout.txt": "d02c0a24805cf4ec1a7f151207ee82e80ae75012ad1c5f92c58ddfc87a335fa4",
+        "cubic-5.wire": "dff9cd7052cc3065ad1e6bd2f10023b44ec5683c118da0237880987b89910a5a"
+      }
+    },
+    {
+      "id": "cubic-6",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1001,
+        -997,
+        991
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "cubic-6.expected.json": "bc2e24574346d2777b5678ea1142dbac60e0998ede447fe525ecdf20410d5ff6",
+        "cubic-6.input.json": "e1d7796cd4b38424e712c390c22acd5a7241f9166ca9bd4d58e15e11fc4f004e",
+        "cubic-6.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "cubic-6.stdout.txt": "20e0f1bbcf492e5ca09c7144a011f4def203c2e32cb2dbe1f09745faa43fd769",
+        "cubic-6.wire": "061e4f99fbd8b01e6536e968a5e27e3490f084724065f84352d3dd31c22fba90"
+      }
+    },
+    {
+      "id": "tetragonal-0",
+      "cell": [
+        4,
+        4,
+        9,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        0,
+        0
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "tetragonal-0.expected.json": "31b04bef7a8adee6e92b9f46c3829d66f06f86bf54414e3c9126b43ad62111ce",
+        "tetragonal-0.input.json": "7b2bfa1df6b655c32dfc08eea61b6919047320e8681b6fbd769e563b7519bc6b",
+        "tetragonal-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tetragonal-0.stdout.txt": "386d8d397b5439affd275dd2483f44abaea3dee376b64bbd56c5ca84109fa4b7",
+        "tetragonal-0.wire": "fc8f17539546491c2a825e2a1b63aff8b1c70145d800832e3ffd0439a8338422"
+      }
+    },
+    {
+      "id": "tetragonal-1",
+      "cell": [
+        4,
+        4,
+        9,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        0,
+        1,
+        0
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "tetragonal-1.expected.json": "31b04bef7a8adee6e92b9f46c3829d66f06f86bf54414e3c9126b43ad62111ce",
+        "tetragonal-1.input.json": "bd196af07898aaad0de1f76f56f951407609871279fb9a8d213c33a3a0b73f37",
+        "tetragonal-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tetragonal-1.stdout.txt": "386d8d397b5439affd275dd2483f44abaea3dee376b64bbd56c5ca84109fa4b7",
+        "tetragonal-1.wire": "21a323001a0c071b6fe696bf1b561ca59599dd4df20b34497c23359b899bb5ec"
+      }
+    },
+    {
+      "id": "tetragonal-2",
+      "cell": [
+        4,
+        4,
+        9,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        0,
+        0,
+        1
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "tetragonal-2.expected.json": "25d6966eafee856514d33243398fce95ec201a7c0e61da46fba22285aaffe7a9",
+        "tetragonal-2.input.json": "6b1a85312377898d2d576d7a8019c93a1b1d211ce222d884da48b75e795cc22f",
+        "tetragonal-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tetragonal-2.stdout.txt": "e805d02d488e65c413a0a0fa2a7767f76a1659ed45ce212e159b1b8e6ad85928",
+        "tetragonal-2.wire": "8ac2ab6bf56aef823678248a3108aa3c88c0d1e434762e90948415f53cb703b7"
+      }
+    },
+    {
+      "id": "tetragonal-3",
+      "cell": [
+        4,
+        4,
+        9,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "tetragonal-3.expected.json": "d80b1a68d1fadd12963e0c6d5aab73bb2ca06210c08ab2df6db3738dbbe76185",
+        "tetragonal-3.input.json": "20f2619d6705ba2f273b7268e77c62775485b6c2d52e552d164c20badd35f8ef",
+        "tetragonal-3.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tetragonal-3.stdout.txt": "e2756ec154a5b53aebc0172c490347ea05b1671ba1388919fc39561920a3664b",
+        "tetragonal-3.wire": "94ea769322964d86a38f1a0de9405e69139dce2b0e1a0663191f3d8b302fc763"
+      }
+    },
+    {
+      "id": "tetragonal-4",
+      "cell": [
+        4,
+        4,
+        9,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        -1,
+        -2,
+        -3
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "tetragonal-4.expected.json": "d80b1a68d1fadd12963e0c6d5aab73bb2ca06210c08ab2df6db3738dbbe76185",
+        "tetragonal-4.input.json": "17238fdc29076c0271977ababa03a9daa30a96d37232d7b9df32403e7e977ffb",
+        "tetragonal-4.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tetragonal-4.stdout.txt": "e2756ec154a5b53aebc0172c490347ea05b1671ba1388919fc39561920a3664b",
+        "tetragonal-4.wire": "551c52801de08098ad741f0009aab2f7bacc47dac8e63f519fe09d96d9b10963"
+      }
+    },
+    {
+      "id": "tetragonal-5",
+      "cell": [
+        4,
+        4,
+        9,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        2,
+        -3,
+        5
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "tetragonal-5.expected.json": "49353a41f46c7dc6b1577980e3e3b999fbd6d99f64dcb3e2a90f29f4c3d21b0c",
+        "tetragonal-5.input.json": "7650911bc03ce52518c248dc56df11bc7d4729e76dac61a7d49c3388aff7b9e2",
+        "tetragonal-5.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tetragonal-5.stdout.txt": "c6324832b05b08dbadd5b37bf5b756561e0c92096ea32a5748d2c6bfbccec01a",
+        "tetragonal-5.wire": "2e1f99e0b1f52d051ae36dc4fdaa5b7ae34942d952243f51ce16449010d3bf4b"
+      }
+    },
+    {
+      "id": "tetragonal-6",
+      "cell": [
+        4,
+        4,
+        9,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1001,
+        -997,
+        991
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "tetragonal-6.expected.json": "dddbdc59756ce6eb2d13909a54bbcefeeb2098f8a56236a40ef8862582e1775c",
+        "tetragonal-6.input.json": "13e5670818147f9362225fd6f13c2d4bfc83ab1d051589a61d9b366c1f8b833b",
+        "tetragonal-6.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tetragonal-6.stdout.txt": "b2e702f72694246a6cdbc8d354895772825531ca8ac6a596218e339c3593c38b",
+        "tetragonal-6.wire": "eb4590778e93cc72d99d6241394be42b1ce8f9fd50c4fb24f7c902104391e15a"
+      }
+    },
+    {
+      "id": "orthorhombic-0",
+      "cell": [
+        3,
+        7,
+        11,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        0,
+        0
+      ],
+      "wavelength": 3e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "orthorhombic-0.expected.json": "27eb267ac3e8099a30ca28ca8d7968ccd78cbf1f60843bc3aa9e5eb460a5c887",
+        "orthorhombic-0.input.json": "8fd1b4920336796f5168141c7e4fb5c4c706e1665ef88eb30dd35d1f026a7660",
+        "orthorhombic-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "orthorhombic-0.stdout.txt": "11ef3a0630ed759ed929a54882bef567c467e14aef1b470eb8da25b94c557d46",
+        "orthorhombic-0.wire": "eee9bd26383c8d134aa90160128564723ad140e51421a9124732fa457d523118"
+      }
+    },
+    {
+      "id": "orthorhombic-1",
+      "cell": [
+        3,
+        7,
+        11,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        0,
+        1,
+        0
+      ],
+      "wavelength": 3e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "orthorhombic-1.expected.json": "64b7e3d457b1027b92ce9d4c2ed47da764d60ecb6cc0bd49db028a35f0949ed3",
+        "orthorhombic-1.input.json": "5aa5baaa51eeb4bc3c4ff2ebf7f1c6ba898755016ecdd6c7d10ec9b88d062aa1",
+        "orthorhombic-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "orthorhombic-1.stdout.txt": "f10c4f1f8694cfd5052631c92c22d76c5ad066c808fb632a55fd41d33daa7151",
+        "orthorhombic-1.wire": "a854276dcf11dfa587e123ff5fc64bccdc54afc7217f9d64157b2ba44912365c"
+      }
+    },
+    {
+      "id": "orthorhombic-2",
+      "cell": [
+        3,
+        7,
+        11,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        0,
+        0,
+        1
+      ],
+      "wavelength": 3e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "orthorhombic-2.expected.json": "64016daa4bf82c25309439c58cf2a49999178d78c5e0faf86f4b51d7c7927cb2",
+        "orthorhombic-2.input.json": "62822bb1b919a45d49df8a2135a11379966dfd5bb2dc7efc463d80dd0243c44c",
+        "orthorhombic-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "orthorhombic-2.stdout.txt": "f1e0beef7d4328ac38cf7ad38b1f3ad18bd8ac708f482dd443b60d9f209929ae",
+        "orthorhombic-2.wire": "4d767284f76608cd9f8ff915f67f36bb963c0a3c045ad7379f9d17fca7317625"
+      }
+    },
+    {
+      "id": "orthorhombic-3",
+      "cell": [
+        3,
+        7,
+        11,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 3e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "orthorhombic-3.expected.json": "be554b137e95c2c12ed0bde5a806907f781f8438cbae4245ccb078f5ac29e5a3",
+        "orthorhombic-3.input.json": "63a960cbdb14f0511b9919add29a4f878190f459e1b22c4ca0d159109b2dc256",
+        "orthorhombic-3.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "orthorhombic-3.stdout.txt": "c43cf719998216d0b06966d3d7f0ec1d66380fb17c6f2c42e6cb65ed7ae56ec2",
+        "orthorhombic-3.wire": "bf94fce32b69996af687570ca88a74ff7a9e2c2be627f4ac4192fb2152ae857a"
+      }
+    },
+    {
+      "id": "orthorhombic-4",
+      "cell": [
+        3,
+        7,
+        11,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        -1,
+        -2,
+        -3
+      ],
+      "wavelength": 3e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "orthorhombic-4.expected.json": "be554b137e95c2c12ed0bde5a806907f781f8438cbae4245ccb078f5ac29e5a3",
+        "orthorhombic-4.input.json": "d71971d55968c4280b903e28c798843a4010dd28000abd452ad5ef93f167799c",
+        "orthorhombic-4.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "orthorhombic-4.stdout.txt": "c43cf719998216d0b06966d3d7f0ec1d66380fb17c6f2c42e6cb65ed7ae56ec2",
+        "orthorhombic-4.wire": "d00e204c693424cd450e7da05b7ab78a3cbc87a01dbe19bedd5795d757e646c2"
+      }
+    },
+    {
+      "id": "orthorhombic-5",
+      "cell": [
+        3,
+        7,
+        11,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        2,
+        -3,
+        5
+      ],
+      "wavelength": 3e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "orthorhombic-5.expected.json": "14c22684f10c6b36a3b0c08af91ad0eb4192e588eebad1a4d80b65db16abeeb5",
+        "orthorhombic-5.input.json": "7c5215b4685179f7b8975138a1e5606f12222163edf57d1b8509494d0817e548",
+        "orthorhombic-5.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "orthorhombic-5.stdout.txt": "998b74fc4887fb06b99efaad8e0c4c81aa19476bc769cfacd073164faa0aa36b",
+        "orthorhombic-5.wire": "ba751e3a82998c8fc1b91296e9329ec60e7766b0f55db4c2063863507129f8ba"
+      }
+    },
+    {
+      "id": "orthorhombic-6",
+      "cell": [
+        3,
+        7,
+        11,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1001,
+        -997,
+        991
+      ],
+      "wavelength": 3e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "orthorhombic-6.expected.json": "90180c5ce59aca2fdde183d6179a6cb06cd44ae8c43123acd3a60b1ffa0bedb6",
+        "orthorhombic-6.input.json": "80a682358f7c7bdd6ab2a8f0e140bf28142d249a10c981b242021b54f563f401",
+        "orthorhombic-6.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "orthorhombic-6.stdout.txt": "af68cb115e0eed57edddfb7de9c3183ac7e782d53acfe2518bd54a80bbfc13a0",
+        "orthorhombic-6.wire": "0107cb5ada5626050f3cc039c19130fbfd777ef6883bad4ad4eb5239c6f8426a"
+      }
+    },
+    {
+      "id": "hexagonal-0",
+      "cell": [
+        4,
+        4,
+        7,
+        90,
+        90,
+        120
+      ],
+      "hkl": [
+        1,
+        0,
+        0
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "hexagonal-0.expected.json": "6fdfe76163abb6bebc8e205f6a543c5933dd98e8fb6aa50178b0705cbdee6b6f",
+        "hexagonal-0.input.json": "d4d06c1b061bafd1804b53bcfcb9f8a646bea1f172623dbdfd1e25e52b48428f",
+        "hexagonal-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "hexagonal-0.stdout.txt": "597fdf3e157ab78d73874198cb6732432b82dc971426da2a0da5821eafae7e95",
+        "hexagonal-0.wire": "f3d21ea7be3d15a140b91504ea56385a953b59c57fbe4299d3343f0e05f76891"
+      }
+    },
+    {
+      "id": "hexagonal-1",
+      "cell": [
+        4,
+        4,
+        7,
+        90,
+        90,
+        120
+      ],
+      "hkl": [
+        0,
+        1,
+        0
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "hexagonal-1.expected.json": "6fdfe76163abb6bebc8e205f6a543c5933dd98e8fb6aa50178b0705cbdee6b6f",
+        "hexagonal-1.input.json": "8cc0b04f776284eeeb9bbcb0489aca861bd9623685c417cdea91960f4ef2e788",
+        "hexagonal-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "hexagonal-1.stdout.txt": "597fdf3e157ab78d73874198cb6732432b82dc971426da2a0da5821eafae7e95",
+        "hexagonal-1.wire": "124c28a240584f6d41d39094cdc60b9a6cfa29ed3b732abe9a935fb9c7595d85"
+      }
+    },
+    {
+      "id": "hexagonal-2",
+      "cell": [
+        4,
+        4,
+        7,
+        90,
+        90,
+        120
+      ],
+      "hkl": [
+        0,
+        0,
+        1
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "hexagonal-2.expected.json": "d129abb445665a4c7383ac470d18ee6735720ad23d0b91b3505073b4320e04f9",
+        "hexagonal-2.input.json": "3e97b8d1405034d9dfb1ce9c4519e0d626e77470038e44f43728fa1dda0988b5",
+        "hexagonal-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "hexagonal-2.stdout.txt": "4367095ae07bc5ffd9577a984cf733fd1dd2996953f2f3fd8e1c26de5152e867",
+        "hexagonal-2.wire": "fc5c36ee7c2f4d19992348080b70165efa25ee336862b98938c254b7fa6366b0"
+      }
+    },
+    {
+      "id": "hexagonal-3",
+      "cell": [
+        4,
+        4,
+        7,
+        90,
+        90,
+        120
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "hexagonal-3.expected.json": "14a312303b475f1d023b48e9a1fef1623aa057ea40d1b9f3bb83de65f5d4de2e",
+        "hexagonal-3.input.json": "72969d6217e7b0e3e0568ae4b471f60df905fbb93818512772f0d2fe9195fa28",
+        "hexagonal-3.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "hexagonal-3.stdout.txt": "9fdf3265ff5b5cd7d8b1458326c70d8ecd94d3c8811d4c9485ee4df3fe13d910",
+        "hexagonal-3.wire": "e3ab9324e8b4198bff0604d0bd8c8b0f40e2a3078565464a69be0242ca807b9f"
+      }
+    },
+    {
+      "id": "hexagonal-4",
+      "cell": [
+        4,
+        4,
+        7,
+        90,
+        90,
+        120
+      ],
+      "hkl": [
+        -1,
+        -2,
+        -3
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "hexagonal-4.expected.json": "14a312303b475f1d023b48e9a1fef1623aa057ea40d1b9f3bb83de65f5d4de2e",
+        "hexagonal-4.input.json": "1f6e90a1bce1fa9f430ed37f9377f8f4347ec4e395cd3cddf399b49136de252b",
+        "hexagonal-4.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "hexagonal-4.stdout.txt": "9fdf3265ff5b5cd7d8b1458326c70d8ecd94d3c8811d4c9485ee4df3fe13d910",
+        "hexagonal-4.wire": "b554cc5c2b967721d4de867e7a0daa23f0ff9b037a2c52e9d34653f8567ac9d7"
+      }
+    },
+    {
+      "id": "hexagonal-5",
+      "cell": [
+        4,
+        4,
+        7,
+        90,
+        90,
+        120
+      ],
+      "hkl": [
+        2,
+        -3,
+        5
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "hexagonal-5.expected.json": "3d423b6f8b680576523364e75be2ff698452dc62ea9c7613bc9034237f2ff56c",
+        "hexagonal-5.input.json": "b1f000a97d750803d12bf4bf75972ee194a0ea276220ed5d8d6691d11957ea80",
+        "hexagonal-5.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "hexagonal-5.stdout.txt": "3b9b65810955da6bb835ecee408df801b8e926417c31e04997f915b6f34e93b2",
+        "hexagonal-5.wire": "166f96f57a2c53f914bc1d617c779b78f82743afc9d9a9255d59feff5db86f45"
+      }
+    },
+    {
+      "id": "hexagonal-6",
+      "cell": [
+        4,
+        4,
+        7,
+        90,
+        90,
+        120
+      ],
+      "hkl": [
+        1001,
+        -997,
+        991
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "hexagonal-6.expected.json": "3195074b0edf1e417634ce914898b4b6a8559bcb102512127a08c30fd4832e7e",
+        "hexagonal-6.input.json": "792292943d64c3568be0d5c74483f508bdd17006287a294fcad2fedaa895878e",
+        "hexagonal-6.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "hexagonal-6.stdout.txt": "b06ed45bba37b33b3d185728c0cc0e5bc7f44e41f1b0598d35b434e2d23533e9",
+        "hexagonal-6.wire": "56a3ab970b60398217a2c38df959d37f72657663dc59e84b37a78f96fa139965"
+      }
+    },
+    {
+      "id": "rhombohedral-0",
+      "cell": [
+        5,
+        5,
+        5,
+        77,
+        77,
+        77
+      ],
+      "hkl": [
+        1,
+        0,
+        0
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "rhombohedral-0.expected.json": "97175daa1310b353f9aba615426097c518bed4bcdb8029435026c9279a88b4ab",
+        "rhombohedral-0.input.json": "7e1f396e00ad8afcade781b5bedf47f23e309f46db00b2341d57e1f004b15178",
+        "rhombohedral-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "rhombohedral-0.stdout.txt": "edab23ec317e86073551dfe1c9b9201011b55e0324dc4936a7c03133a2d978d8",
+        "rhombohedral-0.wire": "1e1e0d742edc16982af85272e4d8a9e3190aff40ea83f96c7016b8ec90dc16ee"
+      }
+    },
+    {
+      "id": "rhombohedral-1",
+      "cell": [
+        5,
+        5,
+        5,
+        77,
+        77,
+        77
+      ],
+      "hkl": [
+        0,
+        1,
+        0
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "rhombohedral-1.expected.json": "97175daa1310b353f9aba615426097c518bed4bcdb8029435026c9279a88b4ab",
+        "rhombohedral-1.input.json": "292b6f54766490ac4f7e21a5226c5c88b933a6c5545ad7cca30d97f4de92d706",
+        "rhombohedral-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "rhombohedral-1.stdout.txt": "edab23ec317e86073551dfe1c9b9201011b55e0324dc4936a7c03133a2d978d8",
+        "rhombohedral-1.wire": "93ab8df82c1a627ff238dd36478dd748c3dc5a6f711b042df0df0ddff87ed990"
+      }
+    },
+    {
+      "id": "rhombohedral-2",
+      "cell": [
+        5,
+        5,
+        5,
+        77,
+        77,
+        77
+      ],
+      "hkl": [
+        0,
+        0,
+        1
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "rhombohedral-2.expected.json": "97175daa1310b353f9aba615426097c518bed4bcdb8029435026c9279a88b4ab",
+        "rhombohedral-2.input.json": "96c2ccbe1494f7e967e45b1bcabebb4cd268687e656c53bb4adc175a737d1dc4",
+        "rhombohedral-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "rhombohedral-2.stdout.txt": "edab23ec317e86073551dfe1c9b9201011b55e0324dc4936a7c03133a2d978d8",
+        "rhombohedral-2.wire": "8ca72d7aa295e6724cb590d3e9bdfc34459fbc877953808142bd6688276b571b"
+      }
+    },
+    {
+      "id": "rhombohedral-3",
+      "cell": [
+        5,
+        5,
+        5,
+        77,
+        77,
+        77
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "rhombohedral-3.expected.json": "cf2f83ff06893ab5e6f2e248b899fe6033502619010c11732d10102ea6c9a1a2",
+        "rhombohedral-3.input.json": "3a4a9514d7ba0d8943fbce895ae50551cd51dea426dc41d0d611f887e3dcf9d0",
+        "rhombohedral-3.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "rhombohedral-3.stdout.txt": "690d649691fde1f188a5b534c1a02b5b9bb40f3f7145b9dfa9b3c4b9eb8f7dd3",
+        "rhombohedral-3.wire": "f094be74b722a0f0e6a49836bb469c17538900059054ef548df1c7dc9b268d1a"
+      }
+    },
+    {
+      "id": "rhombohedral-4",
+      "cell": [
+        5,
+        5,
+        5,
+        77,
+        77,
+        77
+      ],
+      "hkl": [
+        -1,
+        -2,
+        -3
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "rhombohedral-4.expected.json": "cf2f83ff06893ab5e6f2e248b899fe6033502619010c11732d10102ea6c9a1a2",
+        "rhombohedral-4.input.json": "906d032456f5265395c6af755b5d8d7cfe3a928c4549efc4f7ba1740d8d67725",
+        "rhombohedral-4.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "rhombohedral-4.stdout.txt": "690d649691fde1f188a5b534c1a02b5b9bb40f3f7145b9dfa9b3c4b9eb8f7dd3",
+        "rhombohedral-4.wire": "e1bb81462c8de760def3269c09be8f74c4f60a57a6d46aac5978cd1102917cf0"
+      }
+    },
+    {
+      "id": "rhombohedral-5",
+      "cell": [
+        5,
+        5,
+        5,
+        77,
+        77,
+        77
+      ],
+      "hkl": [
+        2,
+        -3,
+        5
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "rhombohedral-5.expected.json": "38d8608246da696f1ed732d39a7c95a1d30fd821ac6bada7eeb484f66af458b5",
+        "rhombohedral-5.input.json": "f78f52a5d035d901948bb89e8f0c5140dbd3c96ef320ae3e612617a22292130a",
+        "rhombohedral-5.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "rhombohedral-5.stdout.txt": "40367bc7aaad91b3baf2f6bf4be4b658fbe8d0a2901b69ca6812c48a4704309f",
+        "rhombohedral-5.wire": "f423b9d47dcdb8f38efa7fdd8615d30aaa3010af7aaa3a7386863da4e34909a9"
+      }
+    },
+    {
+      "id": "rhombohedral-6",
+      "cell": [
+        5,
+        5,
+        5,
+        77,
+        77,
+        77
+      ],
+      "hkl": [
+        1001,
+        -997,
+        991
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "rhombohedral-6.expected.json": "a9f89938bc4c6f1653e27708b10b0ffe20d905150fb0b6bd2be5bb8de48f10e1",
+        "rhombohedral-6.input.json": "ff8828d60186b4ba73f047b51d4eb672d1a4e58f78740e8f0f05cacde965b754",
+        "rhombohedral-6.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "rhombohedral-6.stdout.txt": "a8f3367e06283902a74ed24266618a2bf9806f9105d7051d8ea24c6c90a8c213",
+        "rhombohedral-6.wire": "84be2796ec8f2214b3846f2f60af03b1730c24484edb426e6dbf09978992419d"
+      }
+    },
+    {
+      "id": "monoclinic-0",
+      "cell": [
+        4,
+        6,
+        9,
+        90,
+        108,
+        90
+      ],
+      "hkl": [
+        1,
+        0,
+        0
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "monoclinic-0.expected.json": "f3f4b6d5d189b15985d7705d0c009f23db68bb7087bffed4044d8d3860dcc6f2",
+        "monoclinic-0.input.json": "43893d14290fa7e0232bd80e5e0173f7affe5509c373158aa235e8b314f5d834",
+        "monoclinic-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "monoclinic-0.stdout.txt": "f6d03ff33bc7be154a4a2d0f65be77a2029bb601befcfb3327ba683e44e90a32",
+        "monoclinic-0.wire": "8eb2d34799faade65d32f0022ee2c33b32f7961d32887bc461f51bb59203f5f3"
+      }
+    },
+    {
+      "id": "monoclinic-1",
+      "cell": [
+        4,
+        6,
+        9,
+        90,
+        108,
+        90
+      ],
+      "hkl": [
+        0,
+        1,
+        0
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "monoclinic-1.expected.json": "99a8187cde749ef51940cf3a873e504dff1f7d2e387b3e2b88199452f64f35d1",
+        "monoclinic-1.input.json": "7821915b3e2b39094b2a724d1fd0f4d3ed96b38f517aef2da6db100d29a95ab2",
+        "monoclinic-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "monoclinic-1.stdout.txt": "4fb5644b09397cfc325edd6c36d2c3dca8704d680908442a571327531807b3ef",
+        "monoclinic-1.wire": "5815111d3e7fe8441d536c1970288faefabedaac3a50a334a81971944847c014"
+      }
+    },
+    {
+      "id": "monoclinic-2",
+      "cell": [
+        4,
+        6,
+        9,
+        90,
+        108,
+        90
+      ],
+      "hkl": [
+        0,
+        0,
+        1
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "monoclinic-2.expected.json": "5f8a416f49ed8b12ce15eb11eae01ab97cb811fd12d5fa47ba2599cf9c854d66",
+        "monoclinic-2.input.json": "00700e6f29a460946130d5cc2bf7c8589ba56e2e0170e4e1b03372870dee0ce6",
+        "monoclinic-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "monoclinic-2.stdout.txt": "c7f89cf7127191caa8a04f8285b5e371ea2da952912d127beadf79277d7bbad7",
+        "monoclinic-2.wire": "6bed4cf479f56204c128db44d2e3da3ac3f08d3e7c427e0e3cbd1b08281e182d"
+      }
+    },
+    {
+      "id": "monoclinic-3",
+      "cell": [
+        4,
+        6,
+        9,
+        90,
+        108,
+        90
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "monoclinic-3.expected.json": "167e75cdc76fff720dc13e17a1be452d93b3f6404a007228fef928556cfb5841",
+        "monoclinic-3.input.json": "ffa1c4e761b76f772403f57999c4acc49e88af3533c78288d9329fcb52243424",
+        "monoclinic-3.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "monoclinic-3.stdout.txt": "529a2952525ae8a4ea05a6cce9a89f13e4b88edff51c44f5be5fe6c641e0e695",
+        "monoclinic-3.wire": "74be2ab775ea5dc9b577df981bac72396810eefd15229d39223be0b3f05ca980"
+      }
+    },
+    {
+      "id": "monoclinic-4",
+      "cell": [
+        4,
+        6,
+        9,
+        90,
+        108,
+        90
+      ],
+      "hkl": [
+        -1,
+        -2,
+        -3
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "monoclinic-4.expected.json": "167e75cdc76fff720dc13e17a1be452d93b3f6404a007228fef928556cfb5841",
+        "monoclinic-4.input.json": "53b5f320f2008b36b1a3b4adff8c31490391730649802f32f8f82ba682782161",
+        "monoclinic-4.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "monoclinic-4.stdout.txt": "529a2952525ae8a4ea05a6cce9a89f13e4b88edff51c44f5be5fe6c641e0e695",
+        "monoclinic-4.wire": "23d8147a7c0edfda80e779e13e3753df0299231892a1c7afe982c12bda830d3e"
+      }
+    },
+    {
+      "id": "monoclinic-5",
+      "cell": [
+        4,
+        6,
+        9,
+        90,
+        108,
+        90
+      ],
+      "hkl": [
+        2,
+        -3,
+        5
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "monoclinic-5.expected.json": "6898505dbe0ab8dec03620c6dc7cbfb115d16566ca546183f9285f45ee6861e5",
+        "monoclinic-5.input.json": "a661c48f75167fcdaadf5bfca1835e78799395dbefe81ec1a934d042ace81dcf",
+        "monoclinic-5.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "monoclinic-5.stdout.txt": "97fb893db893bded07eab2ccfab3c052ed9309fd082cf1717157482211a471d9",
+        "monoclinic-5.wire": "a4e2363b912243536c6dc870ff7530701b2bf1e1675430983a49b9de833161fb"
+      }
+    },
+    {
+      "id": "monoclinic-6",
+      "cell": [
+        4,
+        6,
+        9,
+        90,
+        108,
+        90
+      ],
+      "hkl": [
+        1001,
+        -997,
+        991
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "monoclinic-6.expected.json": "73527d935df174dfa4fc0b110d368cf9f7299b24a467ae92215d3039573e6558",
+        "monoclinic-6.input.json": "1e39cc069ffd05c7671863f16f74b3344b796757f3e66a7ae2da2256b5a8dd8c",
+        "monoclinic-6.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "monoclinic-6.stdout.txt": "7a23f183b8d777ada4a72b3c5bb21e8b27dcc76b7fbf2e03cc658c8c871a5ed5",
+        "monoclinic-6.wire": "261b9fb4877fdfd56b1d05960dcd195750364a576db5df655189e994544182ad"
+      }
+    },
+    {
+      "id": "triclinic-0",
+      "cell": [
+        4,
+        5,
+        6,
+        72,
+        83,
+        64
+      ],
+      "hkl": [
+        1,
+        0,
+        0
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "triclinic-0.expected.json": "168d4196732618e9953edcff66f270cd163911a068fe64538cc4c3238c1c3daf",
+        "triclinic-0.input.json": "80588061953d67ff06270d2b90905927bd93890e94ad25e603deec13ae929510",
+        "triclinic-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "triclinic-0.stdout.txt": "e8cb8d9dc56f62f76032193f06d54bae514db205aaf441ce20b97b7c57ee0ebc",
+        "triclinic-0.wire": "1602c6befaacb0dd07755d8b3ff3319baa9db7945f0f12aa6616e75d94b5df89"
+      }
+    },
+    {
+      "id": "triclinic-1",
+      "cell": [
+        4,
+        5,
+        6,
+        72,
+        83,
+        64
+      ],
+      "hkl": [
+        0,
+        1,
+        0
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "triclinic-1.expected.json": "7ffd9bfd848e5a94c56060ee93e1cbe53cc8d5945e6a973619a608208879b2bc",
+        "triclinic-1.input.json": "d86d163c8cf19907955d07202006aeec2733fbb931627b7fa66d7c859ec126f9",
+        "triclinic-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "triclinic-1.stdout.txt": "3b3e8d90400a7a763bccd8dd347d85c98fb3de0cb88854b3f52b8dda91474685",
+        "triclinic-1.wire": "4a2ec4938c23de5a2b4559389f54aea872f1aef6054cbd31f8b6a5c72c1cb729"
+      }
+    },
+    {
+      "id": "triclinic-2",
+      "cell": [
+        4,
+        5,
+        6,
+        72,
+        83,
+        64
+      ],
+      "hkl": [
+        0,
+        0,
+        1
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "triclinic-2.expected.json": "24d011cee19a2f628425fcdb117cf951533a2c10413e6b6cb45a064ef7f858ef",
+        "triclinic-2.input.json": "1ff23597179de37f0c017a7b117367296aef40d055b192e988d575119748ef07",
+        "triclinic-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "triclinic-2.stdout.txt": "a2a4701f9fdffe3ec781b07af84a428da554a04c6735e62d5290d83a51d15405",
+        "triclinic-2.wire": "e00eb6379fe75cf75aa6978c8e5ff22ddafe7c11c17762fc79e63542e9534a94"
+      }
+    },
+    {
+      "id": "triclinic-3",
+      "cell": [
+        4,
+        5,
+        6,
+        72,
+        83,
+        64
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "triclinic-3.expected.json": "0c9c3d9aa963f319f3b17e53b5dc6c8b43f80c384772d4be88712d2d5a99f5e5",
+        "triclinic-3.input.json": "a28f5b72d1fb7e9cbd9d16e9dacb951250f9c007e48a5c73362e875ee78080c7",
+        "triclinic-3.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "triclinic-3.stdout.txt": "0fa8a1a1bfaf4fc48cc2374b4f19efe8d6657bd46875dcdc3f78d3e9c9883af0",
+        "triclinic-3.wire": "fbefbef505e052fd61ee1b69343fb160fa18e7f5bb987a000d5a0d013db51b97"
+      }
+    },
+    {
+      "id": "triclinic-4",
+      "cell": [
+        4,
+        5,
+        6,
+        72,
+        83,
+        64
+      ],
+      "hkl": [
+        -1,
+        -2,
+        -3
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "triclinic-4.expected.json": "0c9c3d9aa963f319f3b17e53b5dc6c8b43f80c384772d4be88712d2d5a99f5e5",
+        "triclinic-4.input.json": "9e3006a436b0b88f56ef47488723582815bd3db51631e923eab1f3f01eb81d4d",
+        "triclinic-4.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "triclinic-4.stdout.txt": "0fa8a1a1bfaf4fc48cc2374b4f19efe8d6657bd46875dcdc3f78d3e9c9883af0",
+        "triclinic-4.wire": "cef1d5c830471af5c64b90bd3e2f6713391e28ea664603b7b0375e2e9ff51d71"
+      }
+    },
+    {
+      "id": "triclinic-5",
+      "cell": [
+        4,
+        5,
+        6,
+        72,
+        83,
+        64
+      ],
+      "hkl": [
+        2,
+        -3,
+        5
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "triclinic-5.expected.json": "e1da199680eae11559724743436200544b4ce9a74a620691ba93e94ea4e5f3c8",
+        "triclinic-5.input.json": "9d9c94cc8526978d4a522356caf6f3833f2d130e16b8144c7d98aa8b176901bd",
+        "triclinic-5.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "triclinic-5.stdout.txt": "01fa25db57812c31e256e88e2ce5b03f39e9c531e6456ac0fd9c184d5de9de9b",
+        "triclinic-5.wire": "0c82f60d6764bafbe9dcb8f300c3b9d8b7dbc67b9bf9965d3d8ca4bc58fc4ced"
+      }
+    },
+    {
+      "id": "triclinic-6",
+      "cell": [
+        4,
+        5,
+        6,
+        72,
+        83,
+        64
+      ],
+      "hkl": [
+        1001,
+        -997,
+        991
+      ],
+      "wavelength": 4e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "triclinic-6.expected.json": "7b68061427bd1ef48d9f5aeace7ff2eb81d9ce87540da94af8f4fc7a89929be5",
+        "triclinic-6.input.json": "4b9f1d354f02bf63654ad2fe4529c7ae2a622eccb94f59482ea02e9191de2927",
+        "triclinic-6.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "triclinic-6.stdout.txt": "d5f50585b79c791effe8427d0d9906cd84b4cee419d2a75a8f8ab383641f504c",
+        "triclinic-6.wire": "69b87caa3a3cac8cc12b682d44485c9a1a6972b46f2396dd5a99174e7de052ad"
+      }
+    },
+    {
+      "id": "anisotropic-0",
+      "cell": [
+        0.01,
+        10,
+        10000,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        0,
+        0
+      ],
+      "wavelength": 1e-08,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "anisotropic-0.expected.json": "22d867814faa370a751e72057f62944907d3eb844a822d65f37b7b42fffa6da3",
+        "anisotropic-0.input.json": "9f103edf8d6fcfb5a4dab9dd01f51fb7453d59d6c485491c32b3b77f21cd2dfb",
+        "anisotropic-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "anisotropic-0.stdout.txt": "eccadaabb8a9da53691a56cc7fe64a1bbba2e7ac6ae5c7c5327ff78c4768fa47",
+        "anisotropic-0.wire": "500734f469b8cdedff13def222624ceccc90bc9f56a4274d430c064296d29ab6"
+      }
+    },
+    {
+      "id": "anisotropic-1",
+      "cell": [
+        0.01,
+        10,
+        10000,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        0,
+        1,
+        0
+      ],
+      "wavelength": 1e-08,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "anisotropic-1.expected.json": "6e565995014ebb2e5b6e2ec8b3cd6a1bbf205ce22dbb6b1ccdcfd1f6a0b107b8",
+        "anisotropic-1.input.json": "ef0ecd67564c4708bb807871a73295cceb4851b3c4eea2acad59d23c6ae8c1a5",
+        "anisotropic-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "anisotropic-1.stdout.txt": "85571495cac91e0dc508463c0e7d0725d5cdbca1bacacda2a6c5ea59e80c9fc3",
+        "anisotropic-1.wire": "6302fe743aa82e97f71b29aded97fd43e383be745739911820afdf22dc585fb6"
+      }
+    },
+    {
+      "id": "anisotropic-2",
+      "cell": [
+        0.01,
+        10,
+        10000,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        0,
+        0,
+        1
+      ],
+      "wavelength": 1e-08,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "anisotropic-2.expected.json": "5570051f1c7e6649659ed41265da721a6442a1942accc31060f816cbf1dbc33d",
+        "anisotropic-2.input.json": "0e9aa2fd7f283bef234e3a5d101c06e37586623e97473d6c6e5b3b28479861b1",
+        "anisotropic-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "anisotropic-2.stdout.txt": "50a3a57593853876793677a8242662f00d61393aa41fb8a9bec644116fe31a96",
+        "anisotropic-2.wire": "ef85fd88bf4c8bdc2d9a2dc4c068cc1c7f96c4e016713dfe53979fe645340b74"
+      }
+    },
+    {
+      "id": "anisotropic-3",
+      "cell": [
+        0.01,
+        10,
+        10000,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 1e-08,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "anisotropic-3.expected.json": "01d10a0cdd3090fbb25dc56b0911d4d3911292cbb5aa102c1c3f570a44364614",
+        "anisotropic-3.input.json": "83126ef542a5396cd133f0f205e903500be4db6ad7c8f3d4b8d31096b45fcef4",
+        "anisotropic-3.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "anisotropic-3.stdout.txt": "3ba86d06fbf22f39cf30d8b26d0718d1d0480c5da1df85ee1c68cf8156021c5b",
+        "anisotropic-3.wire": "7b980ae5bd8a83aae7929427dc4b9bc6cc3127dbccba7b3d5b97fbe1878402f3"
+      }
+    },
+    {
+      "id": "anisotropic-4",
+      "cell": [
+        0.01,
+        10,
+        10000,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        -1,
+        -2,
+        -3
+      ],
+      "wavelength": 1e-08,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "anisotropic-4.expected.json": "01d10a0cdd3090fbb25dc56b0911d4d3911292cbb5aa102c1c3f570a44364614",
+        "anisotropic-4.input.json": "ec8ccc447e96cdb9209943fc8a746d4449e77230df2d71270a6c037fb3286ca0",
+        "anisotropic-4.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "anisotropic-4.stdout.txt": "3ba86d06fbf22f39cf30d8b26d0718d1d0480c5da1df85ee1c68cf8156021c5b",
+        "anisotropic-4.wire": "a57a587044d1a64141d694df5cc78185149ff82f85e045454915bf867e7d80d0"
+      }
+    },
+    {
+      "id": "anisotropic-5",
+      "cell": [
+        0.01,
+        10,
+        10000,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        2,
+        -3,
+        5
+      ],
+      "wavelength": 1e-08,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "anisotropic-5.expected.json": "543121046ae330025152b50f9192bcf2ed512299ce0f0731e735690e38ceac56",
+        "anisotropic-5.input.json": "9fe6ffa44f25d754d3eecc11dbf8402e0ccb97a20852e8e1b1cf640eb5401058",
+        "anisotropic-5.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "anisotropic-5.stdout.txt": "24412adc8992b4894bcfb25c83ae740bd3696e8acdfa242e4c16176c4a1089bd",
+        "anisotropic-5.wire": "a77e6e96c5ffc45538f4b38c60c9d00b2d0b1aca6cc452c63575e65d06924af8"
+      }
+    },
+    {
+      "id": "anisotropic-6",
+      "cell": [
+        0.01,
+        10,
+        10000,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1001,
+        -997,
+        991
+      ],
+      "wavelength": 1e-08,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "anisotropic-6.expected.json": "46d0384014efe56998da2f93cf8be1b65695d67a140225e538f6bd0de5f77823",
+        "anisotropic-6.input.json": "4a2f7a3285635e34735b4cdbf0d61e2b9378fa69ab3f43c7350c979e27b4c88c",
+        "anisotropic-6.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "anisotropic-6.stdout.txt": "d61849aed5a2b4ef424d7d44435b734c45aef511854bb3c770bf698ace97b46d",
+        "anisotropic-6.wire": "8f7a1b53b8ecc630c99ff1219acb351359241e6bb0f49a2de98530d5bf64e994"
+      }
+    },
+    {
+      "id": "small-0",
+      "cell": [
+        1e-05,
+        2e-05,
+        3e-05,
+        81,
+        93,
+        107
+      ],
+      "hkl": [
+        1,
+        0,
+        0
+      ],
+      "wavelength": 1.0000000000000001e-11,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "small-0.expected.json": "3667150db4180463102a8b9e52d5ed279f77198ddc6fa0b19153a8c3be7359c9",
+        "small-0.input.json": "65ebbee6e2e90300741bcdf2e37a8b479355938237bb0a4599eb04f21c0b02e1",
+        "small-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "small-0.stdout.txt": "5d5273e4aaf1b04df82c4596e9e64c0a9ccb6d08d828d8fa5091ba95a9441c41",
+        "small-0.wire": "a1de7fdad919c54b8817223483e62fedd022b374ecfdb80ad5ef103ba72910a5"
+      }
+    },
+    {
+      "id": "small-1",
+      "cell": [
+        1e-05,
+        2e-05,
+        3e-05,
+        81,
+        93,
+        107
+      ],
+      "hkl": [
+        0,
+        1,
+        0
+      ],
+      "wavelength": 1.0000000000000001e-11,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "small-1.expected.json": "70b4cdc1d5a74210880a0e4a715979192f67494258effd7ad3248944832dc277",
+        "small-1.input.json": "8f602541216ae27df90fb2d957ce6ef3defb3357b697203481321850c0fc1698",
+        "small-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "small-1.stdout.txt": "378142dab7cebde9623f063ec09ff663005979092d2bae900ff699c010d431ed",
+        "small-1.wire": "1d882126fd6f44fbbe85f9427ba2e4228ca8fd5662d56c7758b9fda86179ea77"
+      }
+    },
+    {
+      "id": "small-2",
+      "cell": [
+        1e-05,
+        2e-05,
+        3e-05,
+        81,
+        93,
+        107
+      ],
+      "hkl": [
+        0,
+        0,
+        1
+      ],
+      "wavelength": 1.0000000000000001e-11,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "small-2.expected.json": "c9077dcef4b9ad54bbfd7e5126513a37ea9067a846b284417518c10b75ebaf58",
+        "small-2.input.json": "d7ab01ce125369910fa0eb0f185be1e071d6a1b9958ea9c81305ca48500d7bc5",
+        "small-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "small-2.stdout.txt": "1186c3d60909f1184f6095be4cf92c200478d89062ba9ec16aeca63cd6710e15",
+        "small-2.wire": "b767bba2c60079a0d1eee9e3002daf1d0af6cb2a0719d757189ce1654c234fc7"
+      }
+    },
+    {
+      "id": "small-3",
+      "cell": [
+        1e-05,
+        2e-05,
+        3e-05,
+        81,
+        93,
+        107
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 1.0000000000000001e-11,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "small-3.expected.json": "3289e2445fd507190feb9945ae3fb47c895d3219eb6ae17c7bfcd59aa03ed206",
+        "small-3.input.json": "3256161c78ecbb235471bf339da57623a23ac0853908582056326dfee613b2a4",
+        "small-3.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "small-3.stdout.txt": "29b7bfba80934ec58ccf15711f729eabcd1f3a97e50bc23e8707331d685486a6",
+        "small-3.wire": "feccd52d7fbf59bfda45fe703d951a802322e55233782d29ea41fd4d98c99faf"
+      }
+    },
+    {
+      "id": "small-4",
+      "cell": [
+        1e-05,
+        2e-05,
+        3e-05,
+        81,
+        93,
+        107
+      ],
+      "hkl": [
+        -1,
+        -2,
+        -3
+      ],
+      "wavelength": 1.0000000000000001e-11,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "small-4.expected.json": "3289e2445fd507190feb9945ae3fb47c895d3219eb6ae17c7bfcd59aa03ed206",
+        "small-4.input.json": "03bcce6b61b18f7c9f2fb365c7760eb229624811bd28f298ce186489c6469347",
+        "small-4.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "small-4.stdout.txt": "29b7bfba80934ec58ccf15711f729eabcd1f3a97e50bc23e8707331d685486a6",
+        "small-4.wire": "e5d4b619b9c9c61c812bd97bf009c3c4d919c69891c41b6710bee0304220eac4"
+      }
+    },
+    {
+      "id": "small-5",
+      "cell": [
+        1e-05,
+        2e-05,
+        3e-05,
+        81,
+        93,
+        107
+      ],
+      "hkl": [
+        2,
+        -3,
+        5
+      ],
+      "wavelength": 1.0000000000000001e-11,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "small-5.expected.json": "8eb6d898bc62bffd42060fbbe5bdb5239cf64247ff92376f22cd1a26b6405634",
+        "small-5.input.json": "c5195e3bb8314d803952c4e217db7192d51415fcba428ded06974337d4b2ad25",
+        "small-5.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "small-5.stdout.txt": "53b280c4e02cd5544daee55e951681f93ab11d650cdc789716db6c9e3377acda",
+        "small-5.wire": "7aacb49f7b3594eaa02429084e479d77e993f2db9082c2cfcc7d728ea29a5c59"
+      }
+    },
+    {
+      "id": "small-6",
+      "cell": [
+        1e-05,
+        2e-05,
+        3e-05,
+        81,
+        93,
+        107
+      ],
+      "hkl": [
+        1001,
+        -997,
+        991
+      ],
+      "wavelength": 1.0000000000000001e-11,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "small-6.expected.json": "83f713f741e5ee0fc0c85833981a1b6f4e043db3d39bc619b8d894fdaea76717",
+        "small-6.input.json": "935a93d7f2e3d3bfba0ba8d3f52f3b89840c82a1f8742cb55e913d28ecfdac45",
+        "small-6.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "small-6.stdout.txt": "4205af91e236e75f81067c8564df01137f1ba608a2bb19605094203087fdceb0",
+        "small-6.wire": "0abfde0bde42ce41abb8730aa2cfee9518ca0ac76920e450f818c4788c145b32"
+      }
+    },
+    {
+      "id": "large-0",
+      "cell": [
+        100000.0,
+        200000.0,
+        300000.0,
+        81,
+        93,
+        107
+      ],
+      "hkl": [
+        1,
+        0,
+        0
+      ],
+      "wavelength": 0.09999999999999999,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "large-0.expected.json": "ce33eba48551b10bec5fc930cb5bb88628a8a5ef7b54a11e1eaca6e8e67bc1b7",
+        "large-0.input.json": "ce79592cf7352d439d18cae431e51badcd2f72a932e3dc9df112fe4da7909573",
+        "large-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "large-0.stdout.txt": "a2a92bf1cc8159b971a58cf7b4a12c0a9b195671931b7bbd9b41a7edfecabf0e",
+        "large-0.wire": "31b177745ace6ad7331f4fdcaf23ab2bc9cf84c6ebe7249394b571bbf89234c7"
+      }
+    },
+    {
+      "id": "large-1",
+      "cell": [
+        100000.0,
+        200000.0,
+        300000.0,
+        81,
+        93,
+        107
+      ],
+      "hkl": [
+        0,
+        1,
+        0
+      ],
+      "wavelength": 0.09999999999999999,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "large-1.expected.json": "8eebec83d74c04e73c6df97f673e8ac714e802d406d8c47abdfbec4f7d13ae6a",
+        "large-1.input.json": "84d2372efcef4797af818c6acf8af86e8905751d4af18b56c599a4ad9584a58d",
+        "large-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "large-1.stdout.txt": "1b9b086c801db8a9b9d731e605912d117a2d0c8ae233d6e612390d512a1b4139",
+        "large-1.wire": "68451bbfd9ac01da21d657912deeebe2c8a947327fdee7593c12f585277929bc"
+      }
+    },
+    {
+      "id": "large-2",
+      "cell": [
+        100000.0,
+        200000.0,
+        300000.0,
+        81,
+        93,
+        107
+      ],
+      "hkl": [
+        0,
+        0,
+        1
+      ],
+      "wavelength": 0.09999999999999999,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "large-2.expected.json": "284b0fb4281b0f993c4bd25130c16935e567e752e1c2cfa9539d55bc18861923",
+        "large-2.input.json": "098424f2e8d33ad9f05acbf9d48ac0e5a20de3713658467360cc44b8b59bdc25",
+        "large-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "large-2.stdout.txt": "8b71f2157cbbb003628ae355bd3f91db35c4a363c8cbae4b5cfc8faea4766e31",
+        "large-2.wire": "fdcf5602c0538391dc091913e731abe3bb2c5c13a9679a2966947f615a0eba0b"
+      }
+    },
+    {
+      "id": "large-3",
+      "cell": [
+        100000.0,
+        200000.0,
+        300000.0,
+        81,
+        93,
+        107
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 0.09999999999999999,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "large-3.expected.json": "affb81d59b14d613723de662e5549add941ed05b2009f9ae2f2c960ff9d0feed",
+        "large-3.input.json": "8c0e84ffa8eb5e6b1345a0c5504ab792ec1c4263b3afc55a16fbb11bc3a10038",
+        "large-3.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "large-3.stdout.txt": "0e7f5ee017655ae366bd5a4e06457c3c1eeb980d235480f071033b0e2c150a03",
+        "large-3.wire": "ddfcb288aab3fc2951e93e4033b92d65e3ceb64f5937c509e5f86b80603d8037"
+      }
+    },
+    {
+      "id": "large-4",
+      "cell": [
+        100000.0,
+        200000.0,
+        300000.0,
+        81,
+        93,
+        107
+      ],
+      "hkl": [
+        -1,
+        -2,
+        -3
+      ],
+      "wavelength": 0.09999999999999999,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "large-4.expected.json": "affb81d59b14d613723de662e5549add941ed05b2009f9ae2f2c960ff9d0feed",
+        "large-4.input.json": "c2b61a2179be74eba69cbf0182b25b816e38139b9c5c6e0736d1dbf9a4c277b8",
+        "large-4.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "large-4.stdout.txt": "0e7f5ee017655ae366bd5a4e06457c3c1eeb980d235480f071033b0e2c150a03",
+        "large-4.wire": "9a2af185f373dbe1a6eb56837b868d64ecaea447deb32065a7e5c736bb31b095"
+      }
+    },
+    {
+      "id": "large-5",
+      "cell": [
+        100000.0,
+        200000.0,
+        300000.0,
+        81,
+        93,
+        107
+      ],
+      "hkl": [
+        2,
+        -3,
+        5
+      ],
+      "wavelength": 0.09999999999999999,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "large-5.expected.json": "a157fed1c327b8fdd9a7d9bc2e63f3bb1fcf3b2cc2521f9eddfd3c0abd9523a7",
+        "large-5.input.json": "ee397921261ec168b5d93213e3d29a2dfe0ed2b0a361df054f85db9c8b3ba92a",
+        "large-5.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "large-5.stdout.txt": "36bf97422f8267e88b7aa396ef0c84bca8c31db03e8787d4ded7429b20453185",
+        "large-5.wire": "7eb4aa91b0eb4e0553ada65519ecb15cd7565e6d342654330dc43d6c41c362d7"
+      }
+    },
+    {
+      "id": "large-6",
+      "cell": [
+        100000.0,
+        200000.0,
+        300000.0,
+        81,
+        93,
+        107
+      ],
+      "hkl": [
+        1001,
+        -997,
+        991
+      ],
+      "wavelength": 0.09999999999999999,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "large-6.expected.json": "ab8fea72e2fb5007c291c4816169b057256543b0cc69e2c70e75f8ef7b1b99d2",
+        "large-6.input.json": "812c899e674d78a19637d295ccfbb3f35fe33102a757b4ca3c23f3e672fd96ae",
+        "large-6.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "large-6.stdout.txt": "ea50e6f2a9c168be0f08a77323cfa56f74511a16cbfdf96c6acef4611ddebea1",
+        "large-6.wire": "20dd6f9c81880660f970146e17cc6481b01f587185c755aad9429016a25481bb"
+      }
+    },
+    {
+      "id": "near_zero_angle-0",
+      "cell": [
+        5,
+        6,
+        7,
+        90,
+        90,
+        1
+      ],
+      "hkl": [
+        1,
+        0,
+        0
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_zero_angle-0.expected.json": "2c1cb79aabf742130c17c45a75ef00d38ff4c4e4ca05ff65aae594b36e756870",
+        "near_zero_angle-0.input.json": "b83015fd7fa5ef8430298c0251eba1477eae90451689863540070a58d0ab8c78",
+        "near_zero_angle-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_zero_angle-0.stdout.txt": "6e5767d6c750e7e514e7f0c8e7a61fa494236b3667d92ef7d5446c6a435b565b",
+        "near_zero_angle-0.wire": "fcd04e677324762e8b7feb9646b0b4678373d46765741509d92a8b841a3a74a3"
+      }
+    },
+    {
+      "id": "near_zero_angle-1",
+      "cell": [
+        5,
+        6,
+        7,
+        90,
+        90,
+        1
+      ],
+      "hkl": [
+        0,
+        1,
+        0
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_zero_angle-1.expected.json": "74eb6a0358278045bbf09d8f2bcb81b7a6b5a700ca0d7eca4e9d2ffd80b43bbb",
+        "near_zero_angle-1.input.json": "5c97038eeeb27aae1fe41aadea922677700896ea26d999a9236958e865d42b42",
+        "near_zero_angle-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_zero_angle-1.stdout.txt": "9db42b4fef18265f9e0dfccc25757a34271dcdbbe645ab3b94f5a44f0734b30b",
+        "near_zero_angle-1.wire": "c038a27097da5e7d67eb7c90710492f167ad602a82fb55d9689912e742dc1782"
+      }
+    },
+    {
+      "id": "near_zero_angle-2",
+      "cell": [
+        5,
+        6,
+        7,
+        90,
+        90,
+        1
+      ],
+      "hkl": [
+        0,
+        0,
+        1
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_zero_angle-2.expected.json": "f592ce7bab79b5b7a257f5126de7be56d8d728b2f5bd4a0a8945e5229c30983c",
+        "near_zero_angle-2.input.json": "0ae395a2c9a22ec3560b581fa9b1012827619a550bdf1974e36516ba93f45189",
+        "near_zero_angle-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_zero_angle-2.stdout.txt": "94c1d41052cfb22972e57a3bc11464588f0ff862b06b52a0f7283793e324efc1",
+        "near_zero_angle-2.wire": "9ee45c54705e0f28a99832a1f97aae456a89f7dfca6c600cc0a6ad9ae8efa476"
+      }
+    },
+    {
+      "id": "near_zero_angle-3",
+      "cell": [
+        5,
+        6,
+        7,
+        90,
+        90,
+        1
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_zero_angle-3.expected.json": "e7c9ba9a45847c314828dff1d1fe8b1c684de31c4def82f4a52b9f717cf4127b",
+        "near_zero_angle-3.input.json": "17197fd03adaa6a0850b0c42b60c77128a937eb9f97a117ad569ab9f73591a15",
+        "near_zero_angle-3.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_zero_angle-3.stdout.txt": "b251f7c2b626e821bb6e605e6951132ae9c21a8ac7e7a80ee9dcba09599ec024",
+        "near_zero_angle-3.wire": "6380d38be243442700850c2ec7b585cc247d04fd004ddc6c63e4ccabe768c39a"
+      }
+    },
+    {
+      "id": "near_zero_angle-4",
+      "cell": [
+        5,
+        6,
+        7,
+        90,
+        90,
+        1
+      ],
+      "hkl": [
+        -1,
+        -2,
+        -3
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_zero_angle-4.expected.json": "e7c9ba9a45847c314828dff1d1fe8b1c684de31c4def82f4a52b9f717cf4127b",
+        "near_zero_angle-4.input.json": "16b2a4105e904be4b2ec1d681d7d1ffbfdc6d6c0422694cfe620f56b2b51e49a",
+        "near_zero_angle-4.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_zero_angle-4.stdout.txt": "b251f7c2b626e821bb6e605e6951132ae9c21a8ac7e7a80ee9dcba09599ec024",
+        "near_zero_angle-4.wire": "c930c697d41cd4d20b07c6a53c93f0c793f94315bd77d1287f56614a80514166"
+      }
+    },
+    {
+      "id": "near_zero_angle-5",
+      "cell": [
+        5,
+        6,
+        7,
+        90,
+        90,
+        1
+      ],
+      "hkl": [
+        2,
+        -3,
+        5
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_zero_angle-5.expected.json": "6d1c5d5478880074bb8083333ee71758b0fffc7f53b9a7d326e1c4f60d1148d5",
+        "near_zero_angle-5.input.json": "61e9e29faf6339508f2a44c9074f3898969534d164d8f554b5abaac32cebdfd1",
+        "near_zero_angle-5.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_zero_angle-5.stdout.txt": "67ab46c9303cf04bbe53dcae4f644e68d4aa6a81bcd4805b47f5881c3318c890",
+        "near_zero_angle-5.wire": "828a942da3dc0b85868205afa7092244330273da6288c74d128d9d9f2914686c"
+      }
+    },
+    {
+      "id": "near_zero_angle-6",
+      "cell": [
+        5,
+        6,
+        7,
+        90,
+        90,
+        1
+      ],
+      "hkl": [
+        1001,
+        -997,
+        991
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_zero_angle-6.expected.json": "0a7899342e8b24cd0a4888340cf6f21fb91dedf0d6b74cf8a2f96f6a51b8b395",
+        "near_zero_angle-6.input.json": "fbbec82aa12f647ed412155cb236591ace1a1bc34aba32ab01bf6b13abc2fda3",
+        "near_zero_angle-6.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_zero_angle-6.stdout.txt": "c52e4ad103d1372ada8a37d27b79fd531bc8707d8633e3f96baa01d7f1947e71",
+        "near_zero_angle-6.wire": "aed8d2a409c04cc156df047fa7d335e9b311380a33b4dc9c935bfa867d41b45e"
+      }
+    },
+    {
+      "id": "near_pi_angle-0",
+      "cell": [
+        5,
+        6,
+        7,
+        90,
+        90,
+        179
+      ],
+      "hkl": [
+        1,
+        0,
+        0
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_pi_angle-0.expected.json": "08075f41803052081366d6e1b86280040ddd6d584bbb984b39b67934dcf2ee5b",
+        "near_pi_angle-0.input.json": "d571749a5fe1fefa48b7c758f7ed739adb9fed4d62938e14d562c312b5286d83",
+        "near_pi_angle-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_pi_angle-0.stdout.txt": "205e1a83625f1e71cb66c948835f7fd7c564f4d071fd5bf32459ac4cff7a5c8f",
+        "near_pi_angle-0.wire": "871f9da5f173cc9a41a4c1f7486298041933ffc6d3e66011895789460d60dcbc"
+      }
+    },
+    {
+      "id": "near_pi_angle-1",
+      "cell": [
+        5,
+        6,
+        7,
+        90,
+        90,
+        179
+      ],
+      "hkl": [
+        0,
+        1,
+        0
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_pi_angle-1.expected.json": "dbbe1e5d525a8c4ddb090a34e80200fee4686d45c5280db04b8c49057702c1e3",
+        "near_pi_angle-1.input.json": "c0ee9fb880676260f095094591d4e47432f8191ce8b564a8a959f9fa60720292",
+        "near_pi_angle-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_pi_angle-1.stdout.txt": "4d3920886575db6cd0e151dc5bc289529bc4a3e1617e0ed67a7c07709c7232c6",
+        "near_pi_angle-1.wire": "03d2c20326ea8966b75b2e47582fc0f679ef4b3cab20868c365447f04cc3c4b8"
+      }
+    },
+    {
+      "id": "near_pi_angle-2",
+      "cell": [
+        5,
+        6,
+        7,
+        90,
+        90,
+        179
+      ],
+      "hkl": [
+        0,
+        0,
+        1
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_pi_angle-2.expected.json": "6a7f3ce667bc934dcc00854bf5dcc86cc4fe1922745fc7e92827312fde194c1b",
+        "near_pi_angle-2.input.json": "f5c5251d18dc234a96f6cbdd1a1a364eb8d899f68ae01ed88c881a6d8a706ae7",
+        "near_pi_angle-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_pi_angle-2.stdout.txt": "7582ffef3918f178ecb64e77434dbe83aaefc604dd8abc59843212f33ee2cb07",
+        "near_pi_angle-2.wire": "0d58863ff6c504f404730ae5329bc75c2980489dc0d93227f30a34500a67ce1b"
+      }
+    },
+    {
+      "id": "near_pi_angle-3",
+      "cell": [
+        5,
+        6,
+        7,
+        90,
+        90,
+        179
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_pi_angle-3.expected.json": "c1fef61faca2fc65c3f2101544038d5568ce93c360b99c36234aa90db07a005f",
+        "near_pi_angle-3.input.json": "fdf0b299ba5d16831f5b4b4864dbd27114efd25cd3c4d1157a75053858cc43c6",
+        "near_pi_angle-3.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_pi_angle-3.stdout.txt": "68494a13574d96182a96f3b758c58cad0dc99d7b68521c3cb31a3bc152d6aecf",
+        "near_pi_angle-3.wire": "3e0f64a47fa5cb981e731cefc9279d3e59b888da3830d61257dd2afefcecfe48"
+      }
+    },
+    {
+      "id": "near_pi_angle-4",
+      "cell": [
+        5,
+        6,
+        7,
+        90,
+        90,
+        179
+      ],
+      "hkl": [
+        -1,
+        -2,
+        -3
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_pi_angle-4.expected.json": "c1fef61faca2fc65c3f2101544038d5568ce93c360b99c36234aa90db07a005f",
+        "near_pi_angle-4.input.json": "9f6274221f3801a5995f7ff0dbafe14949cad10eb098b9c44f5d664281cb7392",
+        "near_pi_angle-4.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_pi_angle-4.stdout.txt": "68494a13574d96182a96f3b758c58cad0dc99d7b68521c3cb31a3bc152d6aecf",
+        "near_pi_angle-4.wire": "85e854db24a346398559f173dc1b865dbd9eed1dc6f969a3355eeb89277d9b45"
+      }
+    },
+    {
+      "id": "near_pi_angle-5",
+      "cell": [
+        5,
+        6,
+        7,
+        90,
+        90,
+        179
+      ],
+      "hkl": [
+        2,
+        -3,
+        5
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_pi_angle-5.expected.json": "562b98de43e460f0a444a588664a755e72efeb9d70524f16169579640497eb0f",
+        "near_pi_angle-5.input.json": "0a563c6605c9e63fc462d6e23dad99730d7b8502214fc941f62bce1e0d6a9dcc",
+        "near_pi_angle-5.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_pi_angle-5.stdout.txt": "00c42da5801231134f32c50f7bd589138cdc88b648acb3f84cdfe8a88dcad1b8",
+        "near_pi_angle-5.wire": "be87337be02c45da7bad668c2c367ed16fa7c3d4f1a19a3ecf0295bb5715b03c"
+      }
+    },
+    {
+      "id": "near_pi_angle-6",
+      "cell": [
+        5,
+        6,
+        7,
+        90,
+        90,
+        179
+      ],
+      "hkl": [
+        1001,
+        -997,
+        991
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_pi_angle-6.expected.json": "7af40ba09dbd971f56e1bf33c201b2d5c4f402e8f4dca9903a6edb3cbc6405f8",
+        "near_pi_angle-6.input.json": "c527c81e099e5579319f61acc765486757f992b3fd4627fbc43120db4c574f47",
+        "near_pi_angle-6.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_pi_angle-6.stdout.txt": "1b280a6e8606cd192d7d1adc9d72fb094870a26f3e4cb9556d24c7e552166e76",
+        "near_pi_angle-6.wire": "ccb5a3e9e856c631070cb3627a94f0b57d024e07e3aedc4c7100e19a9c439db4"
+      }
+    },
+    {
+      "id": "near_triangle_limit-0",
+      "cell": [
+        5,
+        6,
+        7,
+        60,
+        60,
+        119
+      ],
+      "hkl": [
+        1,
+        0,
+        0
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_triangle_limit-0.expected.json": "175ff98d3a8f11ffd29e7d19bd839bbb1e24be3fca9202b310c07a395ad028b5",
+        "near_triangle_limit-0.input.json": "0dc5a244e2dd0b74ca806f6ff386c869d158b797433d647e3416a74ac63be86f",
+        "near_triangle_limit-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_triangle_limit-0.stdout.txt": "e6424fd451a4a577b23b5b37338018d04466412af8bfbb084f19fbf85497dcca",
+        "near_triangle_limit-0.wire": "a0a2a79764cf68bd2cc3772823f6cf9cb89900745f7a53be83904636a7bda13f"
+      }
+    },
+    {
+      "id": "near_triangle_limit-1",
+      "cell": [
+        5,
+        6,
+        7,
+        60,
+        60,
+        119
+      ],
+      "hkl": [
+        0,
+        1,
+        0
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_triangle_limit-1.expected.json": "e5849d4e068c3e1dde325a9ce32258f33bc059f412a5e6ff8e3e165c814f561b",
+        "near_triangle_limit-1.input.json": "22c75a649f616db7af72e1a3a88c5d5606b7cb444a16db07c3a51fdd26c7cb0f",
+        "near_triangle_limit-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_triangle_limit-1.stdout.txt": "1b96ccec8e7018706aeb1b667ae6c42e4a7ef008382ac74a5be02d68616a09e2",
+        "near_triangle_limit-1.wire": "b4920ff7d8f1e7882d94f119f6515a8e0f52d7df5a7a55e7378a6fad7a4e9ef3"
+      }
+    },
+    {
+      "id": "near_triangle_limit-2",
+      "cell": [
+        5,
+        6,
+        7,
+        60,
+        60,
+        119
+      ],
+      "hkl": [
+        0,
+        0,
+        1
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_triangle_limit-2.expected.json": "b5b3ffa8917c18cbfbe2837dba7b4b26705b47da20ff0a42353bb72f7712bc80",
+        "near_triangle_limit-2.input.json": "4dc87b20cf0f804dd9a38abb73930e67548caa078d3e7e85e39f5bee286de1a0",
+        "near_triangle_limit-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_triangle_limit-2.stdout.txt": "36d28785ce26f6254c94380cb5d2a46f77c504c32ad212cf57e4eb6fb89beb18",
+        "near_triangle_limit-2.wire": "2b09c8d59c7c0af44fae277d5936ec9410eb7d3aa4eb3c023e7332df38ef38aa"
+      }
+    },
+    {
+      "id": "near_triangle_limit-3",
+      "cell": [
+        5,
+        6,
+        7,
+        60,
+        60,
+        119
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_triangle_limit-3.expected.json": "49796fd364034ae55c9e4d6665f85fad0a3ecde880a0d676af23b275e71cf25b",
+        "near_triangle_limit-3.input.json": "74f297a1e79092fa32f614e65eb8ee6afd3e705914d37bdf786dc8e8b4a30471",
+        "near_triangle_limit-3.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_triangle_limit-3.stdout.txt": "eaeebf23eb25e7f4c07e2af655554cfe25f5b44c6b166813b807ea7dd2d97064",
+        "near_triangle_limit-3.wire": "328cf2ba3e91417fbc06be710ccf6b68f6369e3418e5c10f0ee85a33d4ad48b7"
+      }
+    },
+    {
+      "id": "near_triangle_limit-4",
+      "cell": [
+        5,
+        6,
+        7,
+        60,
+        60,
+        119
+      ],
+      "hkl": [
+        -1,
+        -2,
+        -3
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_triangle_limit-4.expected.json": "49796fd364034ae55c9e4d6665f85fad0a3ecde880a0d676af23b275e71cf25b",
+        "near_triangle_limit-4.input.json": "26649799fa69fe9eb27a292308480e2ad44f7df62ded26b9531917d85cda8a97",
+        "near_triangle_limit-4.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_triangle_limit-4.stdout.txt": "eaeebf23eb25e7f4c07e2af655554cfe25f5b44c6b166813b807ea7dd2d97064",
+        "near_triangle_limit-4.wire": "1abc55780152f818759c5947803d55674099f22486418135bd46de8c7e762180"
+      }
+    },
+    {
+      "id": "near_triangle_limit-5",
+      "cell": [
+        5,
+        6,
+        7,
+        60,
+        60,
+        119
+      ],
+      "hkl": [
+        2,
+        -3,
+        5
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_triangle_limit-5.expected.json": "f7179ea87eda5c6b67e944d38e1a54433789e7c0da8ae68353c39882e29703f3",
+        "near_triangle_limit-5.input.json": "3bd180ce4dd184780ba0f4fd6405ed076e50096c56188e9a7d5a65baedf7adf5",
+        "near_triangle_limit-5.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_triangle_limit-5.stdout.txt": "5fb5137298f62737732e2e8025698c172c4f8e4ac8c1fa3aa66e26903ad203d1",
+        "near_triangle_limit-5.wire": "7d2adf99540d8aaa20aeedbff2db0abf0a541f3f05cb079ca84c02a8911987d5"
+      }
+    },
+    {
+      "id": "near_triangle_limit-6",
+      "cell": [
+        5,
+        6,
+        7,
+        60,
+        60,
+        119
+      ],
+      "hkl": [
+        1001,
+        -997,
+        991
+      ],
+      "wavelength": 4.9999999999999996e-06,
+      "category": "limiting",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "near_triangle_limit-6.expected.json": "c7bcf304fa93280e68747e3dd52113994d113d12c112ae77d39a809fff818fad",
+        "near_triangle_limit-6.input.json": "e8cac51b0c9db8c4aa07644868ffa8d24bbf26a812458cb53ccbff091d250ec2",
+        "near_triangle_limit-6.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_triangle_limit-6.stdout.txt": "e358afe29018059e2b09ddb15f967e9774d676615fa42fbfbb2d66eaa2dd3374",
+        "near_triangle_limit-6.wire": "41fcdf5440539d251537f0a139256afcdfa60aa460aab89870c7d9b9621b332f"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_9013103-0",
+      "cell": [
+        5.436999797821045,
+        5.436999797821045,
+        5.436999797821045,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        1,
+        0,
+        0
+      ],
+      "wavelength": 5.436999797821045e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_9013103-0.expected.json": "ab74c8e6e7826602e25dcc1337bdacfebf4c4ba0dfa36f468ddc2072064fe81f",
+        "repository_workflow_cod_9013103-0.input.json": "a176ed4e15783c6bcbeaab81fa53bf8d752948d9ea3d47ed2bb4a44549d3f5b6",
+        "repository_workflow_cod_9013103-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_9013103-0.stdout.txt": "dbb01d74726d52251b5584f7402da4a90fef5094d650cf193ec4281c923afc5a",
+        "repository_workflow_cod_9013103-0.wire": "c9b0106fde3f5bfdaea4148e2e06d2e1045108fccb52c4a7555a4d4b998438b5"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_9013103-1",
+      "cell": [
+        5.436999797821045,
+        5.436999797821045,
+        5.436999797821045,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        0,
+        1,
+        0
+      ],
+      "wavelength": 5.436999797821045e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_9013103-1.expected.json": "ab74c8e6e7826602e25dcc1337bdacfebf4c4ba0dfa36f468ddc2072064fe81f",
+        "repository_workflow_cod_9013103-1.input.json": "952a1d6ef961064735282af9e5c27ce3b676a9b8f641cf7eb0d461c8eb6c834c",
+        "repository_workflow_cod_9013103-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_9013103-1.stdout.txt": "dbb01d74726d52251b5584f7402da4a90fef5094d650cf193ec4281c923afc5a",
+        "repository_workflow_cod_9013103-1.wire": "a158d2dfbd70fe64a436b44871388d75b1e6b2d3f06d042a57e0f6aeb3f48b49"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_9013103-2",
+      "cell": [
+        5.436999797821045,
+        5.436999797821045,
+        5.436999797821045,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        0,
+        0,
+        1
+      ],
+      "wavelength": 5.436999797821045e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_9013103-2.expected.json": "ab74c8e6e7826602e25dcc1337bdacfebf4c4ba0dfa36f468ddc2072064fe81f",
+        "repository_workflow_cod_9013103-2.input.json": "80eca77a8dbae5acacf2409bf57c108c4924002bf1f2b1883e9528558e034023",
+        "repository_workflow_cod_9013103-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_9013103-2.stdout.txt": "dbb01d74726d52251b5584f7402da4a90fef5094d650cf193ec4281c923afc5a",
+        "repository_workflow_cod_9013103-2.wire": "5afea18de8fe76994d8df98e027360ee067201d958681eae48097a51f23d2d28"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_9013103-3",
+      "cell": [
+        5.436999797821045,
+        5.436999797821045,
+        5.436999797821045,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 5.436999797821045e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_9013103-3.expected.json": "cef4d4ece6c2e0cc9edf0368637243a8e533da271c2400017949e7c5b1a11094",
+        "repository_workflow_cod_9013103-3.input.json": "5bb99d6226bae17af4789d023306cb8b653d35d83476cb12844c413827d4306d",
+        "repository_workflow_cod_9013103-3.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_9013103-3.stdout.txt": "be2919269919ecc931e8b68d3792559f0fd7cd6fb90340c6f407cedf527a8147",
+        "repository_workflow_cod_9013103-3.wire": "6e2182655291f798124b8141a0384ac2c6b22d6774de0ca726166f526f69890a"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_9013103-4",
+      "cell": [
+        5.436999797821045,
+        5.436999797821045,
+        5.436999797821045,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        -1,
+        -2,
+        -3
+      ],
+      "wavelength": 5.436999797821045e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_9013103-4.expected.json": "cef4d4ece6c2e0cc9edf0368637243a8e533da271c2400017949e7c5b1a11094",
+        "repository_workflow_cod_9013103-4.input.json": "b445e828030069acff78a19ce77c242010d742fabd4201debfe487d3cd9e36a2",
+        "repository_workflow_cod_9013103-4.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_9013103-4.stdout.txt": "be2919269919ecc931e8b68d3792559f0fd7cd6fb90340c6f407cedf527a8147",
+        "repository_workflow_cod_9013103-4.wire": "8b98e21ca92d0cede732993186fd281e3cea61a8ab45fb4a632c964fa17d686f"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_9013103-5",
+      "cell": [
+        5.436999797821045,
+        5.436999797821045,
+        5.436999797821045,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        2,
+        -3,
+        5
+      ],
+      "wavelength": 5.436999797821045e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_9013103-5.expected.json": "c4aca64597f68d47c17b7a033490131e03bbe8071d6e1ba5e1891bdff1c2d231",
+        "repository_workflow_cod_9013103-5.input.json": "1ccd7409e835c9864c9dea3bb7daa5e7178b9673e31fd3716366d36865e7ca69",
+        "repository_workflow_cod_9013103-5.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_9013103-5.stdout.txt": "829a8e7f37fbd7838a002cb6bed25040482f28291706437d6bf0f6a852710d34",
+        "repository_workflow_cod_9013103-5.wire": "d0c30053ce68f4520f7dd91d0342acf2c101a2d022a9fe5a3e48fb516764fdbe"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_9013103-6",
+      "cell": [
+        5.436999797821045,
+        5.436999797821045,
+        5.436999797821045,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        1001,
+        -997,
+        991
+      ],
+      "wavelength": 5.436999797821045e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_9013103-6.expected.json": "20d0e6cdcd537f5eacf39bb2073ef116b4f5c8996ac7241a22357833511db0a8",
+        "repository_workflow_cod_9013103-6.input.json": "f2cdd1f0e625b694f9377bbf9b788a1405469754a72d5cabfd01be396ce1bfaa",
+        "repository_workflow_cod_9013103-6.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_9013103-6.stdout.txt": "e4623b511d5610a9efa9e7b1f2c9d0c459f3a4cc50560e8d083d8a2c166da07e",
+        "repository_workflow_cod_9013103-6.wire": "ccc6bdfe5650e06f6d60f7db1d9b429180c736849b7b1cc6498b6b0d0209084b"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_1538052-0",
+      "cell": [
+        5.435999870300293,
+        5.435999870300293,
+        5.435999870300293,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        1,
+        0,
+        0
+      ],
+      "wavelength": 5.4359998703002925e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_1538052-0.expected.json": "3aac946538c7ff2b96231990f8ee641d88850c96e8f69149a7c8d7d21b2a1c64",
+        "repository_workflow_cod_1538052-0.input.json": "be424e2520807351ef77d164067fd426b250ab6c32d8a722a0049651657f8c6f",
+        "repository_workflow_cod_1538052-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_1538052-0.stdout.txt": "a4bd1158b7dcc9ad5411b358d096ea0d43356f1591dfc54699592050da074498",
+        "repository_workflow_cod_1538052-0.wire": "44090a3bd7d6a8cf78e55ea8ebdf5ff71afcfc2346725a4fe73473dbe3e54ffa"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_1538052-1",
+      "cell": [
+        5.435999870300293,
+        5.435999870300293,
+        5.435999870300293,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        0,
+        1,
+        0
+      ],
+      "wavelength": 5.4359998703002925e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_1538052-1.expected.json": "3aac946538c7ff2b96231990f8ee641d88850c96e8f69149a7c8d7d21b2a1c64",
+        "repository_workflow_cod_1538052-1.input.json": "18de85d5b83680ca2de54c2d6d69eb453d3e82471f652887943bbad5d2d9c69f",
+        "repository_workflow_cod_1538052-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_1538052-1.stdout.txt": "a4bd1158b7dcc9ad5411b358d096ea0d43356f1591dfc54699592050da074498",
+        "repository_workflow_cod_1538052-1.wire": "1f11e982e3a482a28639d7ce227f436eeb6ae1e89de30cb878923f3476895a9f"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_1538052-2",
+      "cell": [
+        5.435999870300293,
+        5.435999870300293,
+        5.435999870300293,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        0,
+        0,
+        1
+      ],
+      "wavelength": 5.4359998703002925e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_1538052-2.expected.json": "3aac946538c7ff2b96231990f8ee641d88850c96e8f69149a7c8d7d21b2a1c64",
+        "repository_workflow_cod_1538052-2.input.json": "643dd1852ed407505492f2484692361ae4a9191cf8e8e347b0d1bdf406242643",
+        "repository_workflow_cod_1538052-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_1538052-2.stdout.txt": "a4bd1158b7dcc9ad5411b358d096ea0d43356f1591dfc54699592050da074498",
+        "repository_workflow_cod_1538052-2.wire": "3821221ef4e363adaf9d1fdb7cc9b1136f1a4826b66d1d4e189796a969e78320"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_1538052-3",
+      "cell": [
+        5.435999870300293,
+        5.435999870300293,
+        5.435999870300293,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 5.4359998703002925e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_1538052-3.expected.json": "1ca4435c684586e972cc6cf8648e66f35fa886b6cb31830920dd7da830f0ec36",
+        "repository_workflow_cod_1538052-3.input.json": "e7425692d9d1d324ad66c6d72ab819b87d9b9d28c0c1b7fdf2c147b4a4d7ea2b",
+        "repository_workflow_cod_1538052-3.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_1538052-3.stdout.txt": "745ba6482f8972f1f4d6150c7d3831f30281f1ed09412ca0d02e9f72c5b04dfe",
+        "repository_workflow_cod_1538052-3.wire": "c595cb9dffff1c432b1d9abf0f95e604d18a31124b3e8ac0d0011c38459baf12"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_1538052-4",
+      "cell": [
+        5.435999870300293,
+        5.435999870300293,
+        5.435999870300293,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        -1,
+        -2,
+        -3
+      ],
+      "wavelength": 5.4359998703002925e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_1538052-4.expected.json": "1ca4435c684586e972cc6cf8648e66f35fa886b6cb31830920dd7da830f0ec36",
+        "repository_workflow_cod_1538052-4.input.json": "f849c215107ecba4e5900e6c629b1984b429bbe878fec6d1a163c4633dcff8d2",
+        "repository_workflow_cod_1538052-4.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_1538052-4.stdout.txt": "745ba6482f8972f1f4d6150c7d3831f30281f1ed09412ca0d02e9f72c5b04dfe",
+        "repository_workflow_cod_1538052-4.wire": "edb9d769e25682a72f0ac12a153dc4f0a490f650dd066c0ba8fe56921b3ca9fb"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_1538052-5",
+      "cell": [
+        5.435999870300293,
+        5.435999870300293,
+        5.435999870300293,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        2,
+        -3,
+        5
+      ],
+      "wavelength": 5.4359998703002925e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_1538052-5.expected.json": "4d34225f476fa196231905ea26d14300a17331776d362ff7bb57835f6fecc249",
+        "repository_workflow_cod_1538052-5.input.json": "0e692edc0ad9cd8a414c5437349122c91cb600186d1aa17c2f0cdc7030f82063",
+        "repository_workflow_cod_1538052-5.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_1538052-5.stdout.txt": "c19a09504ea8b4c583138024879f837bf8b452f323439f1f90c300872737afd6",
+        "repository_workflow_cod_1538052-5.wire": "23dc21445964d1720c2e8f8d1b9ac89a0eec8638340021737fbb479088b199c6"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_1538052-6",
+      "cell": [
+        5.435999870300293,
+        5.435999870300293,
+        5.435999870300293,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        1001,
+        -997,
+        991
+      ],
+      "wavelength": 5.4359998703002925e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_1538052-6.expected.json": "6b03599590860c448657ff8963981b632f3a783ca88710bde0a75a95e7dbf7c1",
+        "repository_workflow_cod_1538052-6.input.json": "d0482f4a8d7da0e4420a12299e0b120f84846b774df3c353f2ce00fa9bff2027",
+        "repository_workflow_cod_1538052-6.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_1538052-6.stdout.txt": "bbd61f3f85794e8eeeee214973b03fffa0e6206526d9c65c0cdaa162e4ae3d98",
+        "repository_workflow_cod_1538052-6.wire": "ce4303f52baa8539d7f0b02fe395f7a8968f30a45003bc9be04fc48ea4cff699"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_4343150-0",
+      "cell": [
+        5.4251298904418945,
+        5.4251298904418945,
+        5.4251298904418945,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        1,
+        0,
+        0
+      ],
+      "wavelength": 5.425129890441894e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_4343150-0.expected.json": "1903e7cc648feedf4b457aa5e69425d42463b86f56f708172b8c05626b4cb2de",
+        "repository_workflow_cod_4343150-0.input.json": "18bd16f9bf0f176961681bcbe7400f082360bf8818d8f27a87e498147e712b01",
+        "repository_workflow_cod_4343150-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_4343150-0.stdout.txt": "05f6be59ecaa92659e9033d5cf80f376376bad8586e494e43035cbac776cfc4f",
+        "repository_workflow_cod_4343150-0.wire": "98955cab45b8f833171299f056de238b0fc2bda9d7252513b78d6507e7811708"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_4343150-1",
+      "cell": [
+        5.4251298904418945,
+        5.4251298904418945,
+        5.4251298904418945,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        0,
+        1,
+        0
+      ],
+      "wavelength": 5.425129890441894e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_4343150-1.expected.json": "1903e7cc648feedf4b457aa5e69425d42463b86f56f708172b8c05626b4cb2de",
+        "repository_workflow_cod_4343150-1.input.json": "0ffcaeced5b418d6b73f09ffbff30733072617f5aae13521788cdd98fd417d57",
+        "repository_workflow_cod_4343150-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_4343150-1.stdout.txt": "05f6be59ecaa92659e9033d5cf80f376376bad8586e494e43035cbac776cfc4f",
+        "repository_workflow_cod_4343150-1.wire": "7fb77f4f8d2ea875b89c7ee658e46fec9c50754961e49ca82731c4b6f71ac5fe"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_4343150-2",
+      "cell": [
+        5.4251298904418945,
+        5.4251298904418945,
+        5.4251298904418945,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        0,
+        0,
+        1
+      ],
+      "wavelength": 5.425129890441894e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_4343150-2.expected.json": "1903e7cc648feedf4b457aa5e69425d42463b86f56f708172b8c05626b4cb2de",
+        "repository_workflow_cod_4343150-2.input.json": "4347c4a2682a2c55915452d60a4c7f9701181a68c969bcf859335c13a470a97b",
+        "repository_workflow_cod_4343150-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_4343150-2.stdout.txt": "05f6be59ecaa92659e9033d5cf80f376376bad8586e494e43035cbac776cfc4f",
+        "repository_workflow_cod_4343150-2.wire": "50c5559d8b6831ec4224a46864adf168301af899159ebbc9eb70a11168095896"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_4343150-3",
+      "cell": [
+        5.4251298904418945,
+        5.4251298904418945,
+        5.4251298904418945,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 5.425129890441894e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_4343150-3.expected.json": "a4080ef2af529823cb942ee491b638a470b7aefca172df02af87c584691ecaa0",
+        "repository_workflow_cod_4343150-3.input.json": "25386b0d648cbe267ed913ef51162aea0e1a0fd401bccbb8b431e67313ca1a3a",
+        "repository_workflow_cod_4343150-3.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_4343150-3.stdout.txt": "fe1ee42b0cd1b35ed90109dd07a30a2cd71db5f0b143c4fb715d3c4a688171bb",
+        "repository_workflow_cod_4343150-3.wire": "d634f15de1453e573ba93ae5ea503de21ae7308f465b1efcb421015856bae5a2"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_4343150-4",
+      "cell": [
+        5.4251298904418945,
+        5.4251298904418945,
+        5.4251298904418945,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        -1,
+        -2,
+        -3
+      ],
+      "wavelength": 5.425129890441894e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_4343150-4.expected.json": "a4080ef2af529823cb942ee491b638a470b7aefca172df02af87c584691ecaa0",
+        "repository_workflow_cod_4343150-4.input.json": "7ff75d5310c01ceefe751083d33d9f19047170e69a2c3866ed595bef7d6dc091",
+        "repository_workflow_cod_4343150-4.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_4343150-4.stdout.txt": "fe1ee42b0cd1b35ed90109dd07a30a2cd71db5f0b143c4fb715d3c4a688171bb",
+        "repository_workflow_cod_4343150-4.wire": "c956de345f030fbce1a3ff6d767583c4dca78b1621201b9fec1a6d9e5be972d3"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_4343150-5",
+      "cell": [
+        5.4251298904418945,
+        5.4251298904418945,
+        5.4251298904418945,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        2,
+        -3,
+        5
+      ],
+      "wavelength": 5.425129890441894e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_4343150-5.expected.json": "f7676f6e06cff9dfefd38a1c283a7d856533eff472e220046a606f1ad4559b54",
+        "repository_workflow_cod_4343150-5.input.json": "a838ef90b2303bffcf09d0afbbe38d4ff97fb5f5de64df232431b5aa032cc38c",
+        "repository_workflow_cod_4343150-5.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_4343150-5.stdout.txt": "79190948f70e56e9392ada680fd7682d34d8c1db6e3436da4c2b625d0e490cfe",
+        "repository_workflow_cod_4343150-5.wire": "027c63612e58468fdc3c3522db82e870d9c9b3f0dde5d135593ba55c5acb5eac"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_4343150-6",
+      "cell": [
+        5.4251298904418945,
+        5.4251298904418945,
+        5.4251298904418945,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "hkl": [
+        1001,
+        -997,
+        991
+      ],
+      "wavelength": 5.425129890441894e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_4343150-6.expected.json": "875d8f35633be416045c3228678223b4e48f86e636aa6642aad69ff619fe8181",
+        "repository_workflow_cod_4343150-6.input.json": "dc2b175ff2a4410625cbc102ba05afecb9140f00258a2cb94f3aa805a9cb86d5",
+        "repository_workflow_cod_4343150-6.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_4343150-6.stdout.txt": "ebe9e643933d161a4869dad4c1a2975093d0ff904facd8d0d77d4aac9613cb59",
+        "repository_workflow_cod_4343150-6.wire": "b0b2bec120a0ba65cbe538067e1e6ebcaa3ed4d999f70a08a9efcf4f24f22299"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_1536389-0",
+      "cell": [
+        4.915999889373779,
+        4.916999816894531,
+        5.4070000648498535,
+        90.0,
+        90.0,
+        120.0
+      ],
+      "hkl": [
+        1,
+        0,
+        0
+      ],
+      "wavelength": 4.9159998893737795e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_1536389-0.expected.json": "fb13069ce083fb8ab32b0169ca742f2b7fe3556ca4d9d1d61d9aedcd5a4d4940",
+        "repository_workflow_cod_1536389-0.input.json": "4e98631832efbd92c30f8f279dc262988bd861f44c1248dafd074eff2e1f4609",
+        "repository_workflow_cod_1536389-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_1536389-0.stdout.txt": "997b244b4aca18b72bc316f26e034d5bc7c16001da8a0ff85054b9d2dd061c8f",
+        "repository_workflow_cod_1536389-0.wire": "2e5bb95bf625bb8da361bb3ba1446a126ab3d8abaf59ae89738981fa46954e14"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_1536389-1",
+      "cell": [
+        4.915999889373779,
+        4.916999816894531,
+        5.4070000648498535,
+        90.0,
+        90.0,
+        120.0
+      ],
+      "hkl": [
+        0,
+        1,
+        0
+      ],
+      "wavelength": 4.9159998893737795e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_1536389-1.expected.json": "b019ccd03177c64150fcc4d9b8a2a5d33b386139db2df0bf1f27c17588064bbc",
+        "repository_workflow_cod_1536389-1.input.json": "b17a6afb510766f57718e2fbe7afe67bee7a9a9d4e4a3a40a6a4bdd44140d7e4",
+        "repository_workflow_cod_1536389-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_1536389-1.stdout.txt": "f0322ff6cda2592fab4d2e1d3bed1bc4f270e5e7080d39a7003b26e585859969",
+        "repository_workflow_cod_1536389-1.wire": "38032a73b1f47f717d5f7ddcbae9d73a79a427a62796b7daaa2f040d7b964e5d"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_1536389-2",
+      "cell": [
+        4.915999889373779,
+        4.916999816894531,
+        5.4070000648498535,
+        90.0,
+        90.0,
+        120.0
+      ],
+      "hkl": [
+        0,
+        0,
+        1
+      ],
+      "wavelength": 4.9159998893737795e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_1536389-2.expected.json": "ad199f125e66fb35f9f24d32e4e919030d70a9758ac961ff94b15f7f60179a7b",
+        "repository_workflow_cod_1536389-2.input.json": "28fce9f62c1c20505473821bba51cf3f667715cb4dd3b1bc7ffeea84291e1c0c",
+        "repository_workflow_cod_1536389-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_1536389-2.stdout.txt": "3aa9ce639121b048ca353cc8a23019d0e4ae16ef85b4133ffa52ac078750ffa6",
+        "repository_workflow_cod_1536389-2.wire": "edb46b998ba12be29eef1220bbcf9be7c734f44cecaef8e76e35cf7156a45d4b"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_1536389-3",
+      "cell": [
+        4.915999889373779,
+        4.916999816894531,
+        5.4070000648498535,
+        90.0,
+        90.0,
+        120.0
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 4.9159998893737795e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_1536389-3.expected.json": "fa11156c3a363a5292b9e4849bfc0dfd076314ae039eebbe7051bf45374602fa",
+        "repository_workflow_cod_1536389-3.input.json": "a658749eac83733c83b89ae3f80685b5dfbee85af1207a03959efc040fafef54",
+        "repository_workflow_cod_1536389-3.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_1536389-3.stdout.txt": "c0c3bcf6570463e8fc2752cb293c22dddfa941459bcf6b1a38e66a93f60ba804",
+        "repository_workflow_cod_1536389-3.wire": "f081385518b0ba793b2aea08901719db3d89f10c506cc30050fbffbd2dd91fb2"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_1536389-4",
+      "cell": [
+        4.915999889373779,
+        4.916999816894531,
+        5.4070000648498535,
+        90.0,
+        90.0,
+        120.0
+      ],
+      "hkl": [
+        -1,
+        -2,
+        -3
+      ],
+      "wavelength": 4.9159998893737795e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_1536389-4.expected.json": "fa11156c3a363a5292b9e4849bfc0dfd076314ae039eebbe7051bf45374602fa",
+        "repository_workflow_cod_1536389-4.input.json": "8bc4a7572d54e21f2cdca52bbf8f3f4e4f3290106f7715309bc0bc2adf70d767",
+        "repository_workflow_cod_1536389-4.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_1536389-4.stdout.txt": "c0c3bcf6570463e8fc2752cb293c22dddfa941459bcf6b1a38e66a93f60ba804",
+        "repository_workflow_cod_1536389-4.wire": "6479851c78b3dd1f611f117e255714e74c0367e60167468473bf601db6cf1f98"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_1536389-5",
+      "cell": [
+        4.915999889373779,
+        4.916999816894531,
+        5.4070000648498535,
+        90.0,
+        90.0,
+        120.0
+      ],
+      "hkl": [
+        2,
+        -3,
+        5
+      ],
+      "wavelength": 4.9159998893737795e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_1536389-5.expected.json": "53c2969125ecc5b0f2d6733d94be086816a9954b1f01df05cbcfdb1658bae40f",
+        "repository_workflow_cod_1536389-5.input.json": "0198421686d0002b7f562c608bed15df8b953b3c0170bee67d7ad28dab2896ff",
+        "repository_workflow_cod_1536389-5.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_1536389-5.stdout.txt": "d08c6f857663991f08efb4256a028924a2051968a5ea39d68e0e11ea0925cf29",
+        "repository_workflow_cod_1536389-5.wire": "5720261c538468949e928706cef76d8623571d1508bb71c7623929fa0b1cb0e0"
+      }
+    },
+    {
+      "id": "repository_workflow_cod_1536389-6",
+      "cell": [
+        4.915999889373779,
+        4.916999816894531,
+        5.4070000648498535,
+        90.0,
+        90.0,
+        120.0
+      ],
+      "hkl": [
+        1001,
+        -997,
+        991
+      ],
+      "wavelength": 4.9159998893737795e-06,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "repository_workflow_cod_1536389-6.expected.json": "153acc497520b20ab602238e51652098712eaff08ff6b9af4812f0da3162eef1",
+        "repository_workflow_cod_1536389-6.input.json": "7e721441b1679e4e7af9df5280259bf65a418a336ac8936e39c059805fb7e0fe",
+        "repository_workflow_cod_1536389-6.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "repository_workflow_cod_1536389-6.stdout.txt": "c51a300156b71ebe6537a1cad60c8eeb6c112f5ff914d56d4e41ac74528cb28b",
+        "repository_workflow_cod_1536389-6.wire": "91c2931b5c1a9c2c4cd126ba7412b211572db97e4f1439fba8a554dedd5e412e"
+      }
+    },
+    {
+      "id": "cubic-cu",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        1,
+        1
+      ],
+      "wavelength": 1.54059307,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "cubic-cu.expected.json": "ea911b2d1c3664841d3e7645587bd3596112fb851733120b7fefba9d092efe0c",
+        "cubic-cu.input.json": "00ce56df49d7e007b659d607c95d7c60e17bf042248c1ad821ff6bcb9470eef6",
+        "cubic-cu.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "cubic-cu.stdout.txt": "1a375df6ed506db8a7f06b1cfa9e5d78feb73de34760fe4b72f3562600c491fd",
+        "cubic-cu.wire": "e9a8ff3ceaaa2f05e5a1f27e2cca5833261963c38b0d781173e85f445cf01347"
+      }
+    },
+    {
+      "id": "cubic-mo",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        1,
+        1
+      ],
+      "wavelength": 0.71073,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "cubic-mo.expected.json": "525d2a251df2edf6737a3809bf16da0377852a7a629db8e39722586e27f5bba8",
+        "cubic-mo.input.json": "96ba9b4fbffe88c67c858b782506baedbe3f96d4efe112758c8d968a80840882",
+        "cubic-mo.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "cubic-mo.stdout.txt": "f18da1557e1891ff10ce7c54ccf1cdf84a36862424bc81fa673ec88b48ab7b5a",
+        "cubic-mo.wire": "42ba727948fd3eea6567a6814f4c89be6ac7478d0fcb292b33b8e8e1e646197b"
+      }
+    },
+    {
+      "id": "tetragonal-cu",
+      "cell": [
+        4,
+        4,
+        9,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        1,
+        1
+      ],
+      "wavelength": 1.54059307,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "tetragonal-cu.expected.json": "2cad3288c81f015ab4f2514cff6e4d4b5409e9029249e2e199964ab9ca743ecb",
+        "tetragonal-cu.input.json": "0e4ed663fd1f00c47e742179e5c6226389d1344bd93f95037b978df81a00ba23",
+        "tetragonal-cu.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tetragonal-cu.stdout.txt": "dcb660ff6f481dd1d0cea8642168d68e77612171f3b0a0e6a995944e809d8a6b",
+        "tetragonal-cu.wire": "a6d9b9834672eb8dda3cba0a0e09e07d5186d340fd0fecf7ed923f8bf045e4b6"
+      }
+    },
+    {
+      "id": "tetragonal-mo",
+      "cell": [
+        4,
+        4,
+        9,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        1,
+        1
+      ],
+      "wavelength": 0.71073,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "tetragonal-mo.expected.json": "1d0fae5427dc8c9a3dd12b247d9e6f35295307d1f141d58b0b9291835311a8b8",
+        "tetragonal-mo.input.json": "d47a58cae9d7bc374bb048ec5285a11c18f7ad1d02239461437767ec0f4908cb",
+        "tetragonal-mo.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tetragonal-mo.stdout.txt": "e23fa725bfa475a11450b5abc1c96b0e9231eee71ce16e2baf07173ed08d4798",
+        "tetragonal-mo.wire": "afc81fc0c90d9ad62898334050f3773da9710e91418f0d8ac1a1d4f654c8a834"
+      }
+    },
+    {
+      "id": "orthorhombic-cu",
+      "cell": [
+        3,
+        7,
+        11,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        1,
+        1
+      ],
+      "wavelength": 1.54059307,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "orthorhombic-cu.expected.json": "caefc02b624cf3a06bfb5b19891e16bc67c8831aa06bc09bb6dd7434fb6a03ca",
+        "orthorhombic-cu.input.json": "fa162fda2e3fa14f3b5fce5fed68796392cbce7a5b53db13040d2a3ecbedf3f1",
+        "orthorhombic-cu.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "orthorhombic-cu.stdout.txt": "5620d1b888db42fc9b178bc82e457f6e1dfd4061269e9add565d43c74cb4ea97",
+        "orthorhombic-cu.wire": "05dd6febdb99edf1bea721d18493c9d7fcbab84d8c7a143425a0b3578ef914c2"
+      }
+    },
+    {
+      "id": "orthorhombic-mo",
+      "cell": [
+        3,
+        7,
+        11,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        1,
+        1
+      ],
+      "wavelength": 0.71073,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "orthorhombic-mo.expected.json": "e49beb8b7f151203520cd77ac5cc80c198248e3fa2cd9877c52f2dd31b525239",
+        "orthorhombic-mo.input.json": "f6c6532cce149caf9e6bcc714b00092c98a7203dc980c48aec852916cd860449",
+        "orthorhombic-mo.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "orthorhombic-mo.stdout.txt": "da0d5329f9a086264764b9018d1186b852de19864522dfc877c84a466ea04616",
+        "orthorhombic-mo.wire": "66e7a6175a42d9b2220522a9fa6dd872c4c26a7e134616f4883f16064bd4e127"
+      }
+    },
+    {
+      "id": "hexagonal-cu",
+      "cell": [
+        4,
+        4,
+        7,
+        90,
+        90,
+        120
+      ],
+      "hkl": [
+        1,
+        1,
+        1
+      ],
+      "wavelength": 1.54059307,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "hexagonal-cu.expected.json": "cb888cb5532502055571e28dc7fa757d2e0cc20d3400b9806a5a2d85f19cf6c5",
+        "hexagonal-cu.input.json": "909f95fced2974a42e65ae5da68b40c3d3c0231da0c9a7e366877852a54a90cf",
+        "hexagonal-cu.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "hexagonal-cu.stdout.txt": "e87abfa506a36d694834c97618804d93b61ed8c63f0b91df21226d90670e8bbc",
+        "hexagonal-cu.wire": "66135746cc136b6ecb2e5c8852412918dee3f78969beb3e00e9dee48e61630e4"
+      }
+    },
+    {
+      "id": "hexagonal-mo",
+      "cell": [
+        4,
+        4,
+        7,
+        90,
+        90,
+        120
+      ],
+      "hkl": [
+        1,
+        1,
+        1
+      ],
+      "wavelength": 0.71073,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "hexagonal-mo.expected.json": "2b7d3532618c58bfcc132d004a1f78983fb1fef1dc83207934be065f56e41345",
+        "hexagonal-mo.input.json": "012791b99bfa005dd0e6a3d4a28b9ba72a4d230701b5d71a9805604df34f9cb5",
+        "hexagonal-mo.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "hexagonal-mo.stdout.txt": "f48bab4b3c3196b243de562481267abff2d194fb14b04bf8d769d0c587b49831",
+        "hexagonal-mo.wire": "7851b61ae8f20823f505b00658ad779b5d079483e564bc459d54cfb4cfbd40a2"
+      }
+    },
+    {
+      "id": "rhombohedral-cu",
+      "cell": [
+        5,
+        5,
+        5,
+        77,
+        77,
+        77
+      ],
+      "hkl": [
+        1,
+        1,
+        1
+      ],
+      "wavelength": 1.54059307,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "rhombohedral-cu.expected.json": "70c138a2db1f8723545cbaf93ac96687f7df5800ae275dc49c4908cbda165f59",
+        "rhombohedral-cu.input.json": "7e2293df635a9d7f5fbaa403e20376252a7e0c182ac18b312209b411c8d0a224",
+        "rhombohedral-cu.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "rhombohedral-cu.stdout.txt": "4d9f751c0760b6eb5da194dd8c7c946bba3ed26822c00350f57d83d246e193f0",
+        "rhombohedral-cu.wire": "0a28851537b9ac5cd9f5242440e10585ea2eff029e37789d14356ef507f86003"
+      }
+    },
+    {
+      "id": "rhombohedral-mo",
+      "cell": [
+        5,
+        5,
+        5,
+        77,
+        77,
+        77
+      ],
+      "hkl": [
+        1,
+        1,
+        1
+      ],
+      "wavelength": 0.71073,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "rhombohedral-mo.expected.json": "9c19aaf19b219fa3e22fc0313cc57a0b85747145efd75e05ec30f2afd7a948c1",
+        "rhombohedral-mo.input.json": "23d4f13de83caf8e155e3314749c473c2fd5f962036c5ba21ec638fd5f9554d6",
+        "rhombohedral-mo.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "rhombohedral-mo.stdout.txt": "1ebb679e23da9b3bef9b51a3a8bf228a99ed35e5c67da55f0744830c72e4f5da",
+        "rhombohedral-mo.wire": "3521d5bc7c0a72a1d1b1107df419d17d9b6e974274137e923c37d1290e3a37f6"
+      }
+    },
+    {
+      "id": "monoclinic-cu",
+      "cell": [
+        4,
+        6,
+        9,
+        90,
+        108,
+        90
+      ],
+      "hkl": [
+        1,
+        1,
+        1
+      ],
+      "wavelength": 1.54059307,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "monoclinic-cu.expected.json": "dc4d0d72b559c3810c0cb9ec69236dd41a97cf2e029c3be6b11bfbdd7f4fd691",
+        "monoclinic-cu.input.json": "a2f1dc5398b1947c8a951e80e3baa891a83e6ab247dc3965bcaa8e96fb72ec44",
+        "monoclinic-cu.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "monoclinic-cu.stdout.txt": "9ac207fb71a90cb2e80b7e27b1b6e468e82b60a8b0cbacc4e071c205cee2b47e",
+        "monoclinic-cu.wire": "2eda5fbd880387b54b5cd87fe0ce31afee2a22dcfed826e87ef9f0466ac546bf"
+      }
+    },
+    {
+      "id": "monoclinic-mo",
+      "cell": [
+        4,
+        6,
+        9,
+        90,
+        108,
+        90
+      ],
+      "hkl": [
+        1,
+        1,
+        1
+      ],
+      "wavelength": 0.71073,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "monoclinic-mo.expected.json": "b9517b50bf3db84795d2818be70f58ccf06c13333ed7a8589c4a9ddfa930c289",
+        "monoclinic-mo.input.json": "42a8791dc9e2b155bed4527ac18b0df60fc4195b83631c8f87462c5434663b00",
+        "monoclinic-mo.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "monoclinic-mo.stdout.txt": "ca5eeb12f6f5c959dfe34f1e3f1e22f487dbeecba8a3cd40df3423fe2b09d236",
+        "monoclinic-mo.wire": "972d328ea8e0a1300ab43ac9b7764031fed7cf5a9afa9ea7d3ad0b538fe396a5"
+      }
+    },
+    {
+      "id": "triclinic-cu",
+      "cell": [
+        4,
+        5,
+        6,
+        72,
+        83,
+        64
+      ],
+      "hkl": [
+        1,
+        1,
+        1
+      ],
+      "wavelength": 1.54059307,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "triclinic-cu.expected.json": "ccfa4cf273c35b6ac694973de1bbd98a98136055a2a40a66b3d64eb94d96b0ce",
+        "triclinic-cu.input.json": "4e0374a9ffab686034e1e3437809d17954d57575c52a199ba97e1adf405f4953",
+        "triclinic-cu.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "triclinic-cu.stdout.txt": "4bbbf8b5c808293de4d1f55e67328d0c463e207a4092ba8c54e73d9087fcbfd7",
+        "triclinic-cu.wire": "1d219aac8271ae5970a62c7c015540caa580fab2fba0c9583721fab386a7335d"
+      }
+    },
+    {
+      "id": "triclinic-mo",
+      "cell": [
+        4,
+        5,
+        6,
+        72,
+        83,
+        64
+      ],
+      "hkl": [
+        1,
+        1,
+        1
+      ],
+      "wavelength": 0.71073,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "triclinic-mo.expected.json": "3c5e083f3f668732161a3afe864de8f747a2848d5b1cd64cffc358f16511f890",
+        "triclinic-mo.input.json": "fd1fb4c29635618abd466bc5f8225cd4d4a2d82506fcf24eace5c1c50daed1cb",
+        "triclinic-mo.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "triclinic-mo.stdout.txt": "289a0ea30daaaf03e73ab11caf7058f4b48c48b1a8dd0a5a21828a38d7604fbc",
+        "triclinic-mo.wire": "bf7d380609fd92fc1f9f22e63f4ca17b9f35fbc899e6887a07e652b989b00cdf"
+      }
+    },
+    {
+      "id": "backscatter",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        0,
+        0
+      ],
+      "wavelength": 10,
+      "category": "normal",
+      "expected_error": null,
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "backscatter.expected.json": "57db91681984ab4e4a48fa823c4f30aaa8c4dcf1730cf10b202e544065314ad2",
+        "backscatter.input.json": "3208977082d18c8f7c598ece5bfb79d6b25e3f5b8fac63e73905c39d481c4afb",
+        "backscatter.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "backscatter.stdout.txt": "ffdab695b95d25528fe48e300f08b5227ccbb60e7672097127d5a821968b33fc",
+        "backscatter.wire": "796d5c5f3c7632bd31b4f95c832eacfff7871e79a978373cead453b13d5f77b9"
+      }
+    },
+    {
+      "id": "zero_length",
+      "cell": [
+        0,
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 1,
+      "category": "historical_edge",
+      "expected_error": "invalid_cell_length",
+      "returncode": 0,
+      "nonfinite_fields": [
+        "reciprocal_metric",
+        "reciprocal",
+        "back",
+        "reciprocal_volume",
+        "norm",
+        "d"
+      ],
+      "files": {
+        "zero_length.input.json": "14cd62b8771119b43ff8630ba17812dcf6562162672effe35e2ce876f410ad38",
+        "zero_length.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "zero_length.stdout.txt": "e4234b965f6781019c158bb095d5041f5c0f29775dd91d35468c9268c5498dbc",
+        "zero_length.wire": "ac131364bff7b44f9187016ac8b43462576dcb81f4ac8fb2036072bc7b0005e2"
+      }
+    },
+    {
+      "id": "negative_length",
+      "cell": [
+        -5,
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 1,
+      "category": "historical_edge",
+      "expected_error": "invalid_cell_length",
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "negative_length.input.json": "6d7d15321fc0ebd9b615502e495f80f401b27bc51fac954eb142cf37d947d151",
+        "negative_length.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "negative_length.stdout.txt": "10529054c5503de4076294df72e9d2f8e8f04e58227dcecb7ee812f48b5d1b39",
+        "negative_length.wire": "42d9ac63d18f8232032379221dbadbc97abd4270da65507950eefb05862b4aea"
+      }
+    },
+    {
+      "id": "nan_length",
+      "cell": [
+        "NaN",
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 1,
+      "category": "historical_edge",
+      "expected_error": "invalid_cell_length",
+      "returncode": 0,
+      "nonfinite_fields": [
+        "metric",
+        "reciprocal_metric",
+        "reciprocal",
+        "back",
+        "volume",
+        "reciprocal_volume",
+        "norm",
+        "d"
+      ],
+      "files": {
+        "nan_length.input.json": "1d173bec0f921f9af590586772c5617008093487079aaf402cac41ea9ad18131",
+        "nan_length.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "nan_length.stdout.txt": "8f114601a8fa2d531be7eebed723dcc2a5ba79d43b4b82b08ebc7f4d620f836b",
+        "nan_length.wire": "e02231926bd0fa137d9c194c82aa5d36f78854af2f5ce872bbf410b352af0667"
+      }
+    },
+    {
+      "id": "inf_length",
+      "cell": [
+        "Infinity",
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 1,
+      "category": "historical_edge",
+      "expected_error": "invalid_cell_length",
+      "returncode": 0,
+      "nonfinite_fields": [
+        "metric",
+        "reciprocal_metric",
+        "reciprocal",
+        "back",
+        "volume",
+        "reciprocal_volume",
+        "norm",
+        "d"
+      ],
+      "files": {
+        "inf_length.input.json": "24e4230c9e89ef97f7d2ac47990629b75cae0c1050617d4d02a5f2416d9fe483",
+        "inf_length.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "inf_length.stdout.txt": "b15817a7148b381ed747efe8f2b886c1cbf3665ddfe3c954ea016b404f76b41c",
+        "inf_length.wire": "e60a6bf568ba5a9f5d2e20bd6f52ba29c41a6b7ee2dee11142976fdf7cde5ccf"
+      }
+    },
+    {
+      "id": "zero_angle",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        0
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 1,
+      "category": "historical_edge",
+      "expected_error": "invalid_cell_angle",
+      "returncode": 0,
+      "nonfinite_fields": [
+        "reciprocal_metric",
+        "reciprocal",
+        "back",
+        "reciprocal_volume",
+        "norm",
+        "d"
+      ],
+      "files": {
+        "zero_angle.input.json": "bd80a8024a3cf2b59fc4879cb398fcf50474b3c39f85537e2862919e41b27a32",
+        "zero_angle.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "zero_angle.stdout.txt": "b6fb4374f6e85244d32aed21ddda048c8dfeb9b0df70c5d1ce0363df0710a9cc",
+        "zero_angle.wire": "ee19f671a0206ff3c1531346a038e8294423d4c2b472d04063d530c12bfcab80"
+      }
+    },
+    {
+      "id": "negative_angle",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        -1
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 1,
+      "category": "historical_edge",
+      "expected_error": "invalid_cell_angle",
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "negative_angle.input.json": "2172ec3ab901816b55a27d99b512785fb933f977f9503e27df7540b1e9f9fd0a",
+        "negative_angle.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "negative_angle.stdout.txt": "3ea7d457d11525ef6a1f48ba5137a91ca5a9cea289b7e94c45ca28859e6b290d",
+        "negative_angle.wire": "d415daa16eeaeaa6882f0ad443d97b00c8c775de09d49d43248a3dda67e8cff2"
+      }
+    },
+    {
+      "id": "straight_angle",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        180
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 1,
+      "category": "historical_edge",
+      "expected_error": "invalid_cell_angle",
+      "returncode": 0,
+      "nonfinite_fields": [
+        "reciprocal_metric",
+        "reciprocal",
+        "back",
+        "reciprocal_volume",
+        "norm"
+      ],
+      "files": {
+        "straight_angle.input.json": "abdf7fa27eb53e3807f57baf48d91a427b480f3359323cb486d98fc6ac96e7bb",
+        "straight_angle.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "straight_angle.stdout.txt": "725bb5673fccddd70e4b527bc8653ac602daa05d1179d1679e75fd694e06b674",
+        "straight_angle.wire": "c4cb65c935b0f3a258df742665a6da640e870593b74a3bfe3847512e63ba5b77"
+      }
+    },
+    {
+      "id": "large_angle",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        181
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 1,
+      "category": "historical_edge",
+      "expected_error": "invalid_cell_angle",
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "large_angle.input.json": "da9589f496e122bbda2f8fc6fd0cc028bcd82f98f2d68e9679038c32ece688ec",
+        "large_angle.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "large_angle.stdout.txt": "ce953e51663842a682ae6070649838158475e1b2226ebd91393ca4634eedfa75",
+        "large_angle.wire": "d5fd97a345dc8a31dfb9ed85e4303968e1e165bccc91df902744b11b83905b51"
+      }
+    },
+    {
+      "id": "nan_angle",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        "NaN"
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 1,
+      "category": "historical_edge",
+      "expected_error": "invalid_cell_angle",
+      "returncode": 0,
+      "nonfinite_fields": [
+        "metric",
+        "reciprocal_metric",
+        "reciprocal",
+        "back",
+        "volume",
+        "reciprocal_volume",
+        "norm",
+        "d"
+      ],
+      "files": {
+        "nan_angle.input.json": "0c3f366a4dc9c22a68de40feaf453323bebafd70160a3aaa8725bce26102774b",
+        "nan_angle.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "nan_angle.stdout.txt": "a97f3b3274c7aa7e59435b97409668d36ecbd514cd948c00f65d9b086e437467",
+        "nan_angle.wire": "52374101be92f8cd1ba4def02b7074ed022c71982749e681204ea475c7b6d947"
+      }
+    },
+    {
+      "id": "inf_angle",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        "Infinity"
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 1,
+      "category": "historical_edge",
+      "expected_error": "invalid_cell_angle",
+      "returncode": 0,
+      "nonfinite_fields": [
+        "metric",
+        "reciprocal_metric",
+        "reciprocal",
+        "back",
+        "volume",
+        "reciprocal_volume",
+        "norm",
+        "d"
+      ],
+      "files": {
+        "inf_angle.input.json": "f43262566d39a539c838c3a300987f8f488a9741a5d645d015c7d787e24300a9",
+        "inf_angle.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "inf_angle.stdout.txt": "a97f3b3274c7aa7e59435b97409668d36ecbd514cd948c00f65d9b086e437467",
+        "inf_angle.wire": "6cf625225d00e67ec923c5fa12c651bab1900227177e3f8e3347815bdf2facea"
+      }
+    },
+    {
+      "id": "singular",
+      "cell": [
+        5,
+        5,
+        5,
+        60,
+        60,
+        120
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 1,
+      "category": "historical_edge",
+      "expected_error": "degenerate_cell",
+      "returncode": 0,
+      "nonfinite_fields": [
+        "back",
+        "reciprocal_volume"
+      ],
+      "files": {
+        "singular.input.json": "48cba116150d7efd291031b1a586e20e9ea6cd7a9634853736111dd9918fa497",
+        "singular.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "singular.stdout.txt": "5a6696caf79fb20c1d16d4f975974948c8e08b2a65d8d27717c60773ab214f55",
+        "singular.wire": "be612580310ff9d64012ea7c7db2041cb42b5e1e2b6d13d340d38c420381c0a6"
+      }
+    },
+    {
+      "id": "impossible",
+      "cell": [
+        5,
+        5,
+        5,
+        30,
+        30,
+        100
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 1,
+      "category": "historical_edge",
+      "expected_error": "degenerate_cell",
+      "returncode": 0,
+      "nonfinite_fields": [
+        "reciprocal_metric",
+        "reciprocal",
+        "back",
+        "volume",
+        "reciprocal_volume",
+        "norm",
+        "d"
+      ],
+      "files": {
+        "impossible.input.json": "313dfc76baa4ebd5d3b743a496f07e8ca0aaeb8a50c19f7719ddf77cd2b0b99f",
+        "impossible.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "impossible.stdout.txt": "c90ec027a54e165da27c6482c8a5eab365c00f22c5ba30422eb65e8beee941dd",
+        "impossible.wire": "2cff7fc64b9168b51e66cd381baa09d9321671c0e7162864a51f2f893b37973d"
+      }
+    },
+    {
+      "id": "sum360",
+      "cell": [
+        5,
+        5,
+        5,
+        120,
+        120,
+        120
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 1,
+      "category": "historical_edge",
+      "expected_error": "degenerate_cell",
+      "returncode": 0,
+      "nonfinite_fields": [
+        "reciprocal_metric",
+        "reciprocal",
+        "back",
+        "volume",
+        "reciprocal_volume",
+        "norm",
+        "d"
+      ],
+      "files": {
+        "sum360.input.json": "6f5e9927369088be3e1488b05633dbf599a7ad1b500bf5c01a50342aee1fa522",
+        "sum360.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "sum360.stdout.txt": "8f1cf4df3210369815b7ecb431d7d62e7df03a5f33ccb85a4557b0c2832ec54e",
+        "sum360.wire": "fa4502572e7de163d19b8c1130d73741f13815faed14bfec6f3dff38effe8f9c"
+      }
+    },
+    {
+      "id": "near_singular",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        1e-06
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 1,
+      "category": "historical_edge",
+      "expected_error": "degenerate_cell",
+      "returncode": 0,
+      "nonfinite_fields": [
+        "reciprocal_metric",
+        "reciprocal",
+        "back",
+        "reciprocal_volume",
+        "norm",
+        "d"
+      ],
+      "files": {
+        "near_singular.input.json": "294b8579ab2b263e33b02b42a1a1e0ffd80e584898f44e7a46d10100c22e30dc",
+        "near_singular.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "near_singular.stdout.txt": "bdeec53e50ad5bbd21c8287e13ef59d85786b3752faa04e5fc2e1e7920d17aa0",
+        "near_singular.wire": "ac0172453348746c3749e297cb2fb1d9a9e2d56005caecd2e5d0b722807e3006"
+      }
+    },
+    {
+      "id": "overflow_cell",
+      "cell": [
+        1e+150,
+        1e+150,
+        1e+150,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 1,
+      "category": "historical_edge",
+      "expected_error": "cell_range",
+      "returncode": 0,
+      "nonfinite_fields": [
+        "metric",
+        "reciprocal_metric",
+        "reciprocal",
+        "back",
+        "volume",
+        "reciprocal_volume",
+        "norm",
+        "d"
+      ],
+      "files": {
+        "overflow_cell.input.json": "1df7c2765df55f5c985a76652efede1aa40b923efc7e9deff9d745cc90dd51ef",
+        "overflow_cell.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "overflow_cell.stdout.txt": "d189d71beebb1eeb60943b80ad85351f8f9197e32932cd8bf6db447346cbb041",
+        "overflow_cell.wire": "ce1a9766e73ba14f708bece56b48a80a4713ae4f223f1153c171e91d4439887f"
+      }
+    },
+    {
+      "id": "underflow_cell",
+      "cell": [
+        1e-150,
+        1e-150,
+        1e-150,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 1,
+      "category": "historical_edge",
+      "expected_error": "cell_range",
+      "returncode": 0,
+      "nonfinite_fields": [
+        "reciprocal_metric",
+        "reciprocal",
+        "back",
+        "reciprocal_volume",
+        "norm",
+        "d"
+      ],
+      "files": {
+        "underflow_cell.input.json": "21d78180ced93f7940ccf9544bbb3f58d3152657ddb0d129bb1a59bd978d7188",
+        "underflow_cell.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "underflow_cell.stdout.txt": "3f8e188e425e46d2c4dc3efbc4a2e5d3555d87ab7cc0bcf01c5e368896943566",
+        "underflow_cell.wire": "1e27910a346aa67cd7a6dc13ea6b2723f03c1fe4de8c5a698e11cb4a03f15ca2"
+      }
+    },
+    {
+      "id": "zero_hkl",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        0,
+        0,
+        0
+      ],
+      "wavelength": 1,
+      "category": "historical_edge",
+      "expected_error": "zero_hkl",
+      "returncode": 0,
+      "nonfinite_fields": [
+        "d",
+        "counts_d"
+      ],
+      "files": {
+        "zero_hkl.input.json": "f433e3dcd5c4d5be804c5e5c0d1d80e4e85978390d04998896dc201c4ed05391",
+        "zero_hkl.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "zero_hkl.stdout.txt": "018c883188d761b25f6b9d4497baee6de00c0bef30e104fc8219eca30ccc8248",
+        "zero_hkl.wire": "4da2d8c8274083d66b8c6fcb1fefff7e6f04a90315ea5148658347ca2e313398"
+      }
+    },
+    {
+      "id": "zero_wavelength",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 0,
+      "category": "historical_edge",
+      "expected_error": "invalid_wavelength",
+      "returncode": 0,
+      "nonfinite_fields": [
+        "counts_d"
+      ],
+      "files": {
+        "zero_wavelength.input.json": "878fcac30a6690eabaffe943afc4c02591e553a4c16311e28363b6369917015f",
+        "zero_wavelength.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "zero_wavelength.stdout.txt": "00cf145570d348c3d6f8dfa8d2133611e2216269e31017139b936971333c63af",
+        "zero_wavelength.wire": "68c31112f80edef62093c9f3d6eba963b6a34b9b881de2770d08a9996e22582f"
+      }
+    },
+    {
+      "id": "negative_wavelength",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": -1,
+      "category": "historical_edge",
+      "expected_error": "invalid_wavelength",
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "negative_wavelength.input.json": "9cda0404e01a9bb4067c31b511a53ad1393968ab1c227b246f637ab289e5cb44",
+        "negative_wavelength.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "negative_wavelength.stdout.txt": "dfd029191e196eeab3b34fa9c9082e250afe042053b383d8fe9af13c12dd34c1",
+        "negative_wavelength.wire": "6202865b1b612c1cb01d6a82c532e07c1c448c9f41e57a188a149fb9065f2d56"
+      }
+    },
+    {
+      "id": "nan_wavelength",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": "NaN",
+      "category": "historical_edge",
+      "expected_error": "invalid_wavelength",
+      "returncode": 0,
+      "nonfinite_fields": [
+        "counts_d"
+      ],
+      "files": {
+        "nan_wavelength.input.json": "062af465a3349403e0a9bd839a8e2d9b1357c26ba5d7aae1228763a9483482d3",
+        "nan_wavelength.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "nan_wavelength.stdout.txt": "df77bc511af97b65367f3b4613a29ab508ded76ecb211f7e508aae98ba25de99",
+        "nan_wavelength.wire": "eff043fe363845897f978168485983f9810ff64c4dabbec8166cb3b669fab4b4"
+      }
+    },
+    {
+      "id": "inf_wavelength",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": "Infinity",
+      "category": "historical_edge",
+      "expected_error": "invalid_wavelength",
+      "returncode": 0,
+      "nonfinite_fields": [
+        "counts_d"
+      ],
+      "files": {
+        "inf_wavelength.input.json": "104a6e17ca6c1512d51884314e82cf47ad5841f540366eef61b57631ee51c881",
+        "inf_wavelength.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "inf_wavelength.stdout.txt": "b9f028ca10dab157060d930fb36ce9099f95955a022f936c7075fae00dac0a95",
+        "inf_wavelength.wire": "1156b602c1de9726ceffea6188c3bedf40d6e4e248d11a42454758ab49164b01"
+      }
+    },
+    {
+      "id": "asin_overflow",
+      "cell": [
+        5,
+        5,
+        5,
+        90,
+        90,
+        90
+      ],
+      "hkl": [
+        1,
+        2,
+        3
+      ],
+      "wavelength": 10,
+      "category": "historical_edge",
+      "expected_error": "bragg_domain",
+      "returncode": 0,
+      "nonfinite_fields": [],
+      "files": {
+        "asin_overflow.input.json": "f520f83758c2276f5922feb4c27cca2c3e96cc736ce4768451bff25f2d635991",
+        "asin_overflow.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "asin_overflow.stdout.txt": "ebca1158acf190cc2fd1d1dbb8f3252fa439b485f725b27130a634320170b2ac",
+        "asin_overflow.wire": "a166271c9a537dcfb54d6b828483c88b5ac68280175812a4a9adc15b451b66c8"
+      }
+    }
+  ],
+  "tolerances": {
+    "normal": {
+      "normalized_metric_absolute": 2e-06,
+      "relative": 2e-05,
+      "cosine_absolute": 2e-06,
+      "two_theta_absolute": 0.0001,
+      "two_theta_relative": 2e-06
+    },
+    "limiting": {
+      "normalized_metric_absolute": 2e-06,
+      "relative": 0.001,
+      "cosine_absolute": 2e-06,
+      "two_theta_absolute": 0.01,
+      "two_theta_relative": 0.001
+    }
+  },
+  "review": {
+    "expected_origin": "Parsed Fortran stdout only; no C++ foundation existed at freeze.",
+    "invalid": "22 cases separately capture nonfinite, unphysical finite, sentinel or clamped behavior; deterministic C++ error is not Legacy equivalence.",
+    "startup": "No qualxmain/initializer/table loader called; directly initialized local cell and explicit hkl only.",
+    "real_structures": "Four actual COD cards used in repository workflows; six parameters extracted read-only. No tracked structure CIF exists. See crystallography-real-cells.json.",
+    "reciprocal_convention": "Legacy reciprocal[3:6] and back[3:6] are cosines, reciprocal lengths have no 2pi factor.",
+    "scope": "Mathematical foundation only; no space group, enumeration, multiplicity, atomic factors, CIF parser or profile migration."
+  },
+  "archive": "crystallography-foundation-reference.zip",
+  "archive_sha256": "683484dd82084b0f99efa68aac6d4b04be54125139541db922d4596437c780ed"
+}

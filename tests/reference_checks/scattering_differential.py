@@ -1,0 +1,154 @@
+from reference_paths import reference_path
+"""Replay immutable retained Fortran observations; never rewrites expectations."""
+import argparse
+import hashlib
+import json
+import math
+import os
+from pathlib import Path
+import subprocess
+import zipfile
+from scattering_capture import parse
+from scattering_qualification import apply_qualifications
+
+ROOT=Path(__file__).resolve().parents[2]
+
+
+def validate_replay_shape(cases, expected, actual, errors, referrors):
+    """Reject incomplete/mislabelled transcripts before numerical comparisons.
+
+    Native-invalid inputs may yield a structured C++ error. That is a complete
+    outcome, whereas a missing field/site/reflection is never a qualification.
+    """
+    ids={str(c['id']) for c in cases}
+    assert len(ids)==len(cases), 'duplicate input case id'
+    assert set(expected['cases'])==ids, 'incomplete frozen expected cases'
+    assert not (set(actual['cases']) & set(errors)), 'case emitted both result and error'
+    assert set(actual['cases']) | set(errors)==ids, 'missing or unexpected replay case'
+    struct_ids={str(c['id']) for c in cases if c['mode']=='STRUCT'}
+    assert all(cid in struct_ids and cid in actual['cases'] for cid,_ in referrors), 'orphan reflection error'
+    for c in cases:
+        cid=str(c['id']); observed=actual['cases'].get(cid)
+        if observed is None:
+            continue
+        old=expected['cases'][cid]
+        assert observed['mode']==c['mode'], f'case {cid}: wrong output kind'
+        if c['mode'] in ('SCAT','ANOM','ADP'):
+            size={'SCAT':4,'ANOM':6,'ADP':19}[c['mode']]
+            assert len(observed['values'])==size, f'case {cid}: missing or extra scalar fields'
+            if old['mode']==c['mode']:
+                if c['mode']=='SCAT':
+                    assert observed['values'][:2]==old['values'][:2], f'case {cid}: species/radiation mismatch'
+                elif c['mode']=='ANOM':
+                    assert observed['values'][0]==old['values'][0], f'case {cid}: atomic-number mismatch'
+        else:
+            assert len(observed['sites'])==len(old['sites'])==len(c['sites']), f'case {cid}: missing or extra sites'
+            assert all(len(s)==8 for s in observed['sites']), f'case {cid}: incomplete site fields'
+            assert observed['operations']==old['operations'], f'case {cid}: operation count mismatch'
+            refs={r['index']:r for r in observed['reflections']}
+            failed={i for key,i in referrors if key==cid}
+            expected_indices=set(range(1,len(c['reflections'])+1))
+            assert len(refs)==len(observed['reflections']), f'case {cid}: duplicate reflection'
+            assert not (set(refs)&failed), f'case {cid}: reflection emitted result and error'
+            assert set(refs)|failed==expected_indices, f'case {cid}: missing or extra reflections'
+            for index,r in refs.items():
+                assert r['hkl']==c['reflections'][index-1], f'case {cid}: reflection hkl mismatch'
+                assert len(r.get('complex',[]))==2, f'case {cid}: missing complex components'
+
+
+def run(runner,output,compiler):
+    manifest=json.loads((reference_path(ROOT/'tests/data/scattering-reference-manifest.json')).read_text(encoding='utf-8'))
+    archive=reference_path(ROOT/'tests/data'/manifest['archive'])
+    assert hashlib.sha256(archive.read_bytes()).hexdigest()==manifest['archive_sha256']
+    with zipfile.ZipFile(archive) as z:
+        inp=z.read('input.txt').decode(); cases=json.loads(z.read('cases.json')); expected=json.loads(z.read('expected.json'))
+    env=os.environ.copy()
+    result=subprocess.run([str(runner.resolve())],input=inp,text=True,capture_output=True,env=env,timeout=90)
+    output.parent.mkdir(parents=True,exist_ok=True)
+    output.with_suffix('.stdout.txt').write_text(result.stdout)
+    output.with_suffix('.stderr.txt').write_text(result.stderr)
+    assert result.returncode==0,result.stderr
+    actual=parse(result.stdout)
+    errors={}; referrors={}
+    for line in result.stdout.splitlines():
+        p=line.split()
+        if p and p[0]=='ERROR': errors[p[1]]=dict(field=p[2],reason=p[3])
+        if p and p[0]=='REFERROR': referrors[(p[1],int(p[2]))]=dict(field=p[3],reason=p[4])
+    validate_replay_shape(cases, expected, actual, errors, referrors)
+    failures=[]; observations=[]; counts={}; checks=0
+    def compare(cid,field,old,new,tolerance):
+        nonlocal checks
+        checks+=1
+        if isinstance(old,(int,float)) and isinstance(new,(int,float)):
+            absolute,relative=tolerance
+            equal=math.isfinite(old) and math.isfinite(new) and abs(old-new)<=absolute+relative*abs(old)
+        else: equal=old==new
+        if not equal: failures.append(dict(case=int(cid),field=field,legacy=old,cpp=new))
+    def tol(name):
+        t=manifest['tolerances'][name];return t['absolute'],t['relative']
+    for c in cases:
+        cid=str(c['id']); old=expected['cases'][cid]; new=actual['cases'].get(cid)
+        counts[c['mode']]=counts.get(c['mode'],0)+1
+        expected_error=None
+        if c['mode']=='SCAT':
+            table=next((t for t in expected['tables'] if t[1].lower()==c['species'].lower()),None)
+            if table is None: expected_error='unknown_species'
+            elif not math.isfinite(c['s2']) or c['s2']<0: expected_error='invalid_scattering_variable'
+            elif c['radiation']==0 and all(float(v)==0 for v in table[4:13]): expected_error='unsupported_scattering_entry'
+            elif c['radiation']==1 and float(table[-1])==0: expected_error='unsupported_scattering_entry'
+            elif c['radiation']==2 and int(table[2])>103: expected_error='unsupported_scattering_entry'
+            elif not math.isfinite(float(old['values'][-1])): expected_error='nonfinite_scattering_factor'
+        elif c['mode']=='ANOM':
+            if c['z']<1 or c['z']>111: expected_error='unsupported_anomalous_species'
+            elif not math.isfinite(c['wavelength']) or c['wavelength']<=0: expected_error='invalid_wavelength'
+            elif c['z']<1 or c['z']>92: expected_error='unsupported_anomalous_species'
+            elif old['values'][1]=='T': expected_error='wavelength_outside_table'
+            # Native binary32 boundary acceptance can differ. Preserve both,
+            # outside the normal interpolation corpus, for independent audit.
+            if c['category']=='boundary-observation':
+                observations.append(dict(case=c['id'],category=c['category'],legacy=old,cpp=new or errors.get(cid)))
+        elif c['mode']=='ADP' and c['category']=='invalid-observation':
+            expected_error='nonfinite_displacement' if not all(map(math.isfinite,c['tensor'])) else 'invalid_anisotropic_tensor'
+        if expected_error:
+            observations.append(dict(case=c['id'],category='error-contract',legacy=old,cpp=errors.get(cid)))
+            compare(cid,'error.reason',expected_error,errors.get(cid,{}).get('reason'),(0,0))
+            continue
+        if new is None:
+            failures.append(dict(case=c['id'],field='case.error',legacy='finite native result',cpp=errors.get(cid,'missing')));continue
+        if c['mode']=='SCAT': compare(cid,'amplitude',float(old['values'][-1]),float(new['values'][-1]),tol('scattering'))
+        elif c['mode']=='ANOM':
+            for i,label in [(3,'fprime'),(4,'fdoubleprime')]:
+                compare(cid,label,float(old['values'][i]),float(new['values'][i]),tol('anomalous'))
+        elif c['mode']=='ADP':
+            for i,(a,b) in enumerate(zip(old['values'],new['values'])):
+                compare(cid,f'adp.{i}',float(a),float(b),tol('adp'))
+        else:
+            compare(cid,'group_id',old['group_id'],new['group_id'],(0,0))
+            for i,(a,b) in enumerate(zip(old['sites'],new['sites'])):
+                compare(cid,f'site.{i}.occupancy_fraction',a[0],b[0],(0,0))
+            newrefs={r['index']:r for r in new['reflections']}
+            for a in old['reflections']:
+                prefix=f'reflection.{a["index"]}.'
+                b=newrefs.get(a['index'])
+                if b is None:
+                    failures.append(dict(case=c['id'],field=prefix+'error',legacy=a,cpp=referrors.get((cid,a['index']),'missing')));continue
+                for field,t in [('fc','magnitude'),('fc2','fc2')]: compare(cid,prefix+field,a[field],b[field],tol(t))
+                for j in range(2): compare(cid,prefix+('real' if j==0 else 'imaginary'),a['complex'][j],b['complex'][j],tol('complex'))
+                if a['fc']>2e-4 and b['fc']>2e-4: compare(cid,prefix+'rounded_phase',a['phase'],b['phase'],(0,0))
+    runner_sha256=hashlib.sha256(runner.read_bytes()).hexdigest()
+    accepted,unresolved,approval=apply_qualifications(ROOT,runner_sha256,compiler,failures)
+    report=dict(compiler=compiler,runner_sha256=runner_sha256,
+        archive_sha256=manifest['archive_sha256'],counts=counts,checks=checks,
+        raw_failures=failures,raw_failure_count=len(failures),qualified_count=len(accepted),
+        unresolved=unresolved,unresolved_count=len(unresolved),observations=observations,
+        qualification_approval=approval,success=not unresolved)
+    output.write_text(json.dumps(report,indent=2)+'\n')
+    print(json.dumps({k:v for k,v in report.items() if k not in ('raw_failures','unresolved','observations')}))
+    return report
+
+
+if __name__=='__main__':
+    ap=argparse.ArgumentParser();ap.add_argument('--runner',type=Path,required=True)
+    ap.add_argument('--output',type=Path,required=True);ap.add_argument('--compiler',required=True)
+    args=ap.parse_args();report=run(args.runner,args.output,args.compiler)
+    raise SystemExit(0 if report['success'] else 1)

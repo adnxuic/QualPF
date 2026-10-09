@@ -1,0 +1,3 @@
+# Preserve the approved Kalpha2 policy source bytes on checkout.
+/.gitattributes text eol=lf
+/preprocessing_edit.cpp text eol=lf

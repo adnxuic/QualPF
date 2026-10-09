@@ -1,0 +1,153 @@
+from reference_paths import reference_path, provenance_path
+"""Exact private transcendental successor over the intact earlier assertions.
+
+Actual reports remain raw. Only a private comparison copy can be projected onto
+previous values, and only after exact equality with independently proved fields.
+Historical source hashes are checked on sealed source bytes, current providers
+on their separately accepted identities. No tolerance or native execution.
+"""
+from contextlib import contextmanager
+from copy import deepcopy
+import json,struct,sys
+from unittest.mock import patch
+import current_cell_reference as cell
+from current_cell_reference import *
+
+TRANS_SUCCESSOR=reference_path(ROOT/'tests/data/current-transcendental-provider.json')
+TRANS_PROPOSAL='3c480998644bfc66d2e1e5866392d9221c7701426786e089e4708290062d04e0'
+_bundle=cell.verify_bundle
+_restore=cell.restore_superseded_field_for_original_checks
+_complete=cell.verify_complete_cell_output
+_project=cell.project_cell_output
+_cell_verify=cell.verify_cell_successor
+_environment_verify=cell.verify_scattering_environments
+_reflection_verify=cell.verify_reflection_successor
+
+def verify_transcendental_successor():
+    s=read(TRANS_SUCCESSOR)
+    require(s['schema']=='qualpf.current_transcendental_provider.v1' and
+            s['scope']=='36D-ATTENUATION-SCATTERING-RNE-PREREQUISITE' and
+            s['new_tolerance'] is False and s['expected_from_new_CPP'] is False,
+            'transcendental successor scope changed')
+    for b in (s['decision'],s['proposal'],s['value_successor'],s['primitive_reference']):
+        require(sha_file(reference_path(ROOT/b['path']))==b['sha256'],'transcendental authority/reference changed')
+    decision=read(reference_path(ROOT/s['decision']['path']))
+    require(decision['status']=='AI_APPROVED_WITH_BOUNDED_CONTRACT' and
+            decision['classification']=='AI_APPROVED_NUMERICAL_CORRECTION' and
+            decision['proposal_SHA256']==TRANS_PROPOSAL and decision['selected_option']=='B' and
+            decision['human_approved'] is False and decision['confidence']=='EVIDENCE_STRONG',
+            'bounded transcendental authority missing')
+    expected={'src/core/crystallography/chemistry.cpp','src/core/crystallography/scattering.cpp',
+              'src/core/crystallography/rounded_transcendentals.cpp',
+              'src/core/crystallography/rounded_transcendentals.h','tests/compatibility/scattering_replay.cpp'}
+    require(set(s['current_providers'])==expected,'transcendental provider closure incomplete')
+    for p,h in s['current_providers'].items():
+        require(sha_file(reference_path(ROOT/p))==h,'approved transcendental provider changed: '+p)
+    historical={'src/core/crystallography/chemistry.cpp','src/core/crystallography/scattering.cpp',
+                'tests/compatibility/scattering_replay.cpp'}
+    require(set(s['historical_sources'])==historical,'historical source closure incomplete')
+    for p,b in s['historical_sources'].items():
+        require(sha_file(reference_path(ROOT/b['path']))==b['sha256'],'sealed transcendental source changed: '+p)
+    fields=read(reference_path(ROOT/s['value_successor']['path']))
+    records=fields['records']
+    require(fields['schema']=='qualpf.transcendental_exact_successor_fields.v1' and
+            fields['scope']==s['scope'] and fields['expected_from_new_CPP'] is False and
+            fields['new_tolerance'] is False and fields['counts']=={'GNU_card':2,'GNU_scattering':44,
+            'MSVC_card':0,'MSVC_scattering':53} and len(records)==99 and
+            len({(r['compiler'],r['domain'],r['field']) for r in records})==99,
+            'independent transcendental field scope incomplete')
+    return s,records
+
+@contextmanager
+def historical_view():
+    """Earlier tests receive their original bytes, never today's live metadata."""
+    successor,_=verify_transcendental_successor()
+    def sealed(p):
+        relative=Path(p).relative_to(ROOT).as_posix() if Path(p).is_relative_to(ROOT) else None
+        b=successor['historical_sources'].get(relative)
+        return sha_file(reference_path(ROOT/b['path']) if b else Path(p))
+    with patch.object(cell,'sha_file',side_effect=sealed),patch.object(cell,'read',side_effect=read):
+        yield
+
+def verify_bundle(domain):
+    with historical_view():return _bundle(domain)
+
+def verify_cell_successor():
+    with historical_view():return _cell_verify()
+
+def verify_scattering_environments():
+    with historical_view():return _environment_verify()
+
+def verify_reflection_successor():
+    with historical_view():return _reflection_verify()
+
+def project_cell_output(actual,domain,compiler,original):
+    # Retained old-protocol tests explicitly exercise this historical view.
+    # Real current output first passes project_transcendental_output below.
+    with historical_view():return _project(actual,domain,compiler,original)
+
+def project_transcendental_output(actual,domain,compiler):
+    _,records=verify_transcendental_successor();projected=deepcopy(actual);mapped=[]
+    for r in records:
+        if (r['domain'],r['compiler'])!=(domain,compiler):continue
+        parent,key=point(projected,r['field'])
+        require(bits(parent[key])==r['expected_bits'] and bits(r['previous_value'])==r['old_bits'],
+                'value differs from independently exact transcendental successor: '+r['field'])
+        parent[key]=r['previous_value'];mapped.append(r['field'])
+    return projected,mapped
+
+def verify_complete_cell_output(domain,compiler,raw_path):
+    original,transcript=original_cell_output(domain,compiler)
+    if domain=='card':actual=read(raw_path.with_suffix('.actual.json'))
+    else:
+        text=raw_path.with_suffix('.stdout.txt').read_text()
+        actual=scattering_parse(text)
+        errors=lambda s:[line.split() for line in s.splitlines() if line.startswith(('ERROR ','REFERROR '))]
+        require(errors(text)==errors(transcript),'accepted Scattering error contract changed')
+    projected,mapped=project_transcendental_output(actual,domain,compiler)
+    with historical_view():result,_=_project(projected,domain,compiler,original)
+    return result,mapped
+
+def restore_superseded_field_for_original_checks(raw,domain,compiler,records):
+    # Earlier synthetic protocol cases exercise only their historical contract.
+    with historical_view():return _restore(raw,domain,compiler,records)
+
+def transcendental_qualification_key(record,original):
+    path=record['field'].split('.')[1:]
+    if record['domain']=='scattering' and len(path)==4 and path[2]=='values':
+        cid=int(path[1]);mode=original['cases'][str(cid)]['mode']
+        if mode=='SCAT' and path[3]=='3':return cid,'amplitude'
+        if mode=='ANOM' and path[3]=='4':return cid,'fdoubleprime'
+    return qualification_key(record,original)
+
+def restore_transcendental_failures(raw,domain,compiler,records):
+    projected=deepcopy(raw)
+    if domain in ('card','scattering'):
+        _,fields=verify_transcendental_successor();original,_=original_cell_output(domain,compiler)
+        changed={transcendental_qualification_key(r,original):r for r in fields
+                 if (r['domain'],r['compiler'])==(domain,compiler)}
+        for failure in projected['raw_failures']:
+            r=changed.get((failure['case'],failure['field']))
+            if r:
+                require(bits(failure['cpp'])==r['expected_bits'],'raw failure differs from transcendental successor')
+                failure['cpp']=struct.unpack('>d',bytes.fromhex(r['old_bits']))[0]
+    with historical_view():return _restore(projected,domain,compiler,records)
+
+def main():
+    verify_transcendental_successor();code=0
+    with historical_view(),patch.object(cell,'verify_bundle',side_effect=verify_bundle), \
+         patch.object(cell,'restore_superseded_field_for_original_checks',side_effect=restore_transcendental_failures), \
+         patch.object(cell,'verify_complete_cell_output',side_effect=verify_complete_cell_output):
+        try:cell.main()
+        except SystemExit as result:code=result.code
+    args=sys.argv[1:];output=Path(args[args.index('--output')+1]);domain=args[args.index('--domain')+1]
+    compiler=args[args.index('--compiler')+1]
+    if output.is_file():
+        report=read(output);report['current_transcendental_provider_sha256']=sha_file(TRANS_SUCCESSOR)
+        report['independently_proved_transcendental_successor_fields']=sum(
+            (r['domain'],r['compiler'])==(domain,compiler) for r in verify_transcendental_successor()[1])
+        report['expected_from_new_CPP']=False;report['original_value_error_shape_assertions_retained']=True
+        output.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+    raise SystemExit(code)
+
+if __name__=='__main__':main()

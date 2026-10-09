@@ -1,9 +1,9 @@
 [Desktop Entry]
-Name=QualX
+Name=@PROJECT_NAME@
 Comment=Software for qualitative X-ray powder diffraction analysis
-Exec=@CMAKE_INSTALL_PREFIX@/bin/qualx %f
+Exec=@CMAKE_INSTALL_PREFIX@/bin/@EXECUTABLE_NAME@ %f
 Terminal=false
-Icon=qualx
+Icon=@EXECUTABLE_NAME@
 Type=Application
 Categories=Education;Science;
 Version=@PROJECT_VERSION@

@@ -1,0 +1,93 @@
+{
+  "schema": "qualpf.deferred_defects.v1",
+  "discovered_phase": "31C expanded investigation",
+  "entry_baseline": "2542181234c3b0192eca631517374f85b74ad39f",
+  "rescue_commit": "fab332541e27fe40141384e09564c4d0e89c3d53",
+  "rescue_branch": "rescue/phase31c-overreach-20261004",
+  "raw_catalogs_on_rescue": [
+    "evidence/catalogs/phase31c-observed-ai.json",
+    "evidence/catalogs/phase31c-overreach-rescue-20261004.json"
+  ],
+  "findings": [
+    {
+      "defect_id": "DF-31C-NATIVE-CANCEL-001",
+      "classification": "DEFERRED_EXISTING_DEFECT",
+      "severity": "state integrity concern",
+      "reproduction": "Replay the frozen Phase27 S2 repeated native Cancel control. At P1, set_smooth action3 still recomputes smoothvec; the direct C++ wrapper imports native state for every nonzero action, including repeated Cancel.",
+      "source_anchors": [
+        "legacy/bridge/fortran/smooth_interop.f90:59 set_smooth case3",
+        "legacy/bridge/fortran_bridge.cpp:237 set_smooth",
+        "legacy/fortran/pattern_io/dataset.f90:895 smooth_calculate"
+      ],
+      "evidence": [
+        "docs/refactoring/phase-27/bridge-contract-closure/proposals/S2.json",
+        ".evidence/raw/phase27a1/review-001/S2.json",
+        "rescue:docs/refactoring/phase-31/observed-average-ai-decision/original-P2-rejection.json"
+      ],
+      "baseline_basis": "unchanged source-backed native recompute/import path; historical bounded native S2 observation",
+      "owning_future_phase": "32B smoothing compatibility state and consumer exit",
+      "blocks_current_phase": false,
+      "suggested_fix": "Specify terminal/error behavior in the owning bounded32B consumer transaction; reuse current canonical C++ state ownership. Do not add global Session lifecycle changes to31C."
+    },
+    {
+      "defect_id": "DF-31C-WINDOW-LIFETIME-002",
+      "classification": "DEFERRED_ARCHITECTURE_DEFECT",
+      "severity": "potential crash/re-entry",
+      "reproduction": "Preserved actual R3/R4 whole-window destruction and native preprocessing admission controls enter callbacks during teardown. Replay the exact archived objects/runners before establishing a fresh baseline reproduction.",
+      "source_anchors": [
+        "src/gui/mainwindow.cpp:MainWindow::~MainWindow",
+        "src/gui/dialogs/smoothingdialog.cpp:SmoothingDialog::reject/on_buttonBox_clicked",
+        "src/gui/dialogs/backgrounddialog.cpp",
+        "src/gui/dialogs/peaksearchdialog.cpp",
+        "src/gui/dialogs/rangedialog.cpp"
+      ],
+      "evidence_on_rescue": [
+        "docs/refactoring/phase-31/observed-average-ai-decision/cleanup-R3-implementation-rejection.json",
+        ".evidence/raw/phase31c-ai-observed/review-cleanup-R3-implementation-001/reviewer-implemented-R4.json"
+      ],
+      "baseline_reproduction": "not claimed by recovery; the preserved controls used an expanded implementation",
+      "owning_future_phase": "32F compatibility ownership audit; dedicated GUI lifecycle prerequisite if source-backed need remains",
+      "blocks_current_phase": false,
+      "suggested_fix": "Establish baseline causality and split a dedicated lifecycle unit if needed. Preserve the rescue fixes as investigation only."
+    },
+    {
+      "defect_id": "DF-31C-REVISION-EXTREME-003",
+      "classification": "DEFERRED_PROPERTY_CONCERN",
+      "severity": "low; adversarial unreachable-boundary concern",
+      "reproduction": "Archived reviewer manually places Session revision near UINT64_MAX. This is not an ordinary supported average execution path and recovery introduces no revision policy change.",
+      "source_anchors": [
+        "src/application/state/search_session.cpp:revision increment",
+        "src/application/state/search_session.h:revision state"
+      ],
+      "evidence_on_rescue": [
+        "docs/refactoring/phase-31/observed-average-ai-decision/window-close-R5-proposal.json",
+        "docs/refactoring/phase-31/observed-average-ai-decision/lifetime-R4-rejection.json"
+      ],
+      "owning_future_phase": "37 canonical Session architecture/revision policy",
+      "blocks_current_phase": false,
+      "suggested_fix": "Evaluate revision identity semantics in its owning architecture scope. Do not carry saturation changes back into a leaf numerical migration."
+    },
+    {
+      "defect_id": "DF-31C-EXPANDED-PATCH-004",
+      "classification": "DEFERRED_INVESTIGATION_SPECIFIC_DEFECT",
+      "severity": "state/GUI integrity in the expanded patch",
+      "reproduction": "Replay preserved R2 stale-preview/re-entry, R5/R6 closing-owner and late R7 Smoothing button controls with their exact source/object snapshots. Late R7 re-enabled27 QActions during closing; R8 added a guard only to that expanded closing contract.",
+      "source_anchors_on_rescue": [
+        "legacy/bridge/smoothing_edit.cpp",
+        "src/application/state/search_session.cpp",
+        "src/application/state/search_session_destruction.cpp",
+        "src/gui/mainwindow.cpp",
+        "src/gui/dialogs/smoothingdialog.cpp:on_buttonBox_clicked"
+      ],
+      "evidence_on_rescue": [
+        "docs/refactoring/phase-31/observed-average-ai-decision/publication-R2-implementation-rejection.json",
+        "docs/refactoring/phase-31/observed-average-ai-decision/late-R7-smoothing-button-rejection.json",
+        ".evidence/raw/phase31c-ai-doc-transport/extra-smoothing-button-001/summary.json"
+      ],
+      "baseline_reproduction": "not established; no claim these exact failures exist at P1",
+      "owning_future_phase": "32B or independently scoped GUI lifecycle unit if the future implementation exposes the same dependency",
+      "blocks_current_phase": false,
+      "suggested_fix": "Use as falsification evidence only when the future source/state contract matches. Do not transplant R1–R8 fixes or require their gate for31C."
+    }
+  ]
+}

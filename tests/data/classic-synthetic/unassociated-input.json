@@ -1,0 +1,59 @@
+{
+  "operation": "score",
+  "range": [
+    0,
+    60
+  ],
+  "pattern": [
+    [
+      0,
+      0
+    ],
+    [
+      10,
+      100
+    ],
+    [
+      60,
+      0
+    ]
+  ],
+  "peaks": [
+    {
+      "id": 1,
+      "two_theta": 10,
+      "intensity": 100,
+      "original_intensity": 100,
+      "d_spacing": 4,
+      "delta_d": 0.01,
+      "fwhm": 0.1,
+      "integrated_intensity": 10
+    }
+  ],
+  "parameters": {
+    "delta": 0.25,
+    "weight_position": 0.5,
+    "weight_intensity": 0.5,
+    "weight_phases": 0.5,
+    "minimum_score": 0,
+    "maximum_entries": 10,
+    "include_deleted": true,
+    "filter_strongest": false,
+    "strongest_count": 3
+  },
+  "cards": [
+    {
+      "database_id": "synthetic",
+      "card_id": "A",
+      "quality": "A",
+      "previous_scale": 7,
+      "reflections": [
+        {
+          "id": 1,
+          "two_theta": 20,
+          "intensity": 10
+        }
+      ]
+    }
+  ]
+}

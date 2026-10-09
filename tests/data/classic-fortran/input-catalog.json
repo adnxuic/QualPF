@@ -1,0 +1,233 @@
+{
+  "schema_version": 1,
+  "kind": "controlled_inputs_not_reference_outputs",
+  "cases": [
+    {
+      "id": "perfect",
+      "input": {
+        "path": "perfect.json",
+        "sha256": "05337c4ea0f6ed12b8a382ef42a466c39798c8fac7dfbc77563b69794539dc74"
+      }
+    },
+    {
+      "id": "single-associated",
+      "input": {
+        "path": "single-associated.json",
+        "sha256": "45a44e6da6fa04f363fc6bfe1bfffb4aa45086080cc93351bef9acfe3d47edc1"
+      }
+    },
+    {
+      "id": "intensity-mismatch",
+      "input": {
+        "path": "intensity-mismatch.json",
+        "sha256": "0de2b77302ee4a86119dd91690f3de92a5a5aa503f9b0a561bef135dfc5e32c4"
+      }
+    },
+    {
+      "id": "merged-reflections",
+      "input": {
+        "path": "merged-reflections.json",
+        "sha256": "598512941a048ff4175c324386659133983fd2cf3d264709103e7843ed9b407d"
+      }
+    },
+    {
+      "id": "offsets",
+      "input": {
+        "path": "offsets.json",
+        "sha256": "ac05b7b23f24d1825c94f41a9897c728ba62fdbce8bfd1e6a62351f1cca0009f"
+      }
+    },
+    {
+      "id": "observed-below",
+      "input": {
+        "path": "observed-below.json",
+        "sha256": "3e1abe8b812c2120d60faa19e87944705e3f5f07dd613a816ea5ea67307b65c5"
+      }
+    },
+    {
+      "id": "observed-equal",
+      "input": {
+        "path": "observed-equal.json",
+        "sha256": "217dc045865ef6ad9fd41669a7ab1a02aa2e8ea2b073fff9115e1ba60a7fc059"
+      }
+    },
+    {
+      "id": "observed-above",
+      "input": {
+        "path": "observed-above.json",
+        "sha256": "916697cc5e317747ec4f2ce4910f0dbbb8e2965cd179c5aace1a92d9f9c789f8"
+      }
+    },
+    {
+      "id": "observed-nearest-tie",
+      "input": {
+        "path": "observed-nearest-tie.json",
+        "sha256": "a415c42bf7a79751537f57eaaebce3f677ba05c43755df1d9c6237a6bf4c50f1"
+      }
+    },
+    {
+      "id": "delta-inside",
+      "input": {
+        "path": "delta-inside.json",
+        "sha256": "5fce9cb0ba43819141868ac5521153a802a00f28212ea22ce70dedd5ddb53a30"
+      }
+    },
+    {
+      "id": "delta-equal",
+      "input": {
+        "path": "delta-equal.json",
+        "sha256": "1ae5de3488904badd84460e090b7d36100595ac31f9a88255ab414f3b94cd555"
+      }
+    },
+    {
+      "id": "delta-outside",
+      "input": {
+        "path": "delta-outside.json",
+        "sha256": "e33e7ba4935b50a0d2d190119f1055b2560864dfede1e3b684e90055570007ae"
+      }
+    },
+    {
+      "id": "range-before-narrowing",
+      "input": {
+        "path": "range-before-narrowing.json",
+        "sha256": "bb982a0a8a0578464ee87ddf8b2a1e152126a3471151bb1af00eb57404a43d41"
+      }
+    },
+    {
+      "id": "nearest-tie",
+      "input": {
+        "path": "nearest-tie.json",
+        "sha256": "d084c2af7f5a577d802a535fefc797061f9d44a98fb8b06529c81d85ba65649e"
+      }
+    },
+    {
+      "id": "duplicate-first-endpoint",
+      "input": {
+        "path": "duplicate-first-endpoint.json",
+        "sha256": "34b40248a0b86bfa81c2a3f912187a799b2a7efcb4bf7c8a4cf35d72da889700"
+      }
+    },
+    {
+      "id": "duplicate-last-endpoint",
+      "input": {
+        "path": "duplicate-last-endpoint.json",
+        "sha256": "b3e8dcefe857c71f860a1fa95aafbc67b133d249907d4ee2763475d080855100"
+      }
+    },
+    {
+      "id": "float-collapsed-coordinate",
+      "input": {
+        "path": "float-collapsed-coordinate.json",
+        "sha256": "9759b5a175bd066407184dd01e9516050e9e18f8e742c3d29b6a331bdbfe2c89"
+      }
+    },
+    {
+      "id": "phase-weight-below",
+      "input": {
+        "path": "phase-weight-below.json",
+        "sha256": "6564ff0f6990c958e98e5ea83d888cb7aebc834b765330d4d76844f1dc1b584c"
+      }
+    },
+    {
+      "id": "phase-weight-half",
+      "input": {
+        "path": "phase-weight-half.json",
+        "sha256": "3a612dd7cbed555d79adefc5495f0ffd6721fed39bf9467cf641d6f7a9e3c0c0"
+      }
+    },
+    {
+      "id": "phase-weight-above",
+      "input": {
+        "path": "phase-weight-above.json",
+        "sha256": "341a96175cdd0c15bcba0985f7e22fdad76f30e161a0a0c7fa12593d7a67f14e"
+      }
+    },
+    {
+      "id": "phase-weight-one",
+      "input": {
+        "path": "phase-weight-one.json",
+        "sha256": "968c2a3611ec73033ed926172a05b1fe44a16aab12c5c50eb580c77f614ad712"
+      }
+    },
+    {
+      "id": "pattern-example1",
+      "input": {
+        "path": "pattern-example1.json",
+        "sha256": "a263dd1e214abd7daad1c03ed0ed2d6ab669675f9dbbbfa9fac0cf845620a2d0"
+      },
+      "pattern_source": "share/qualx/examples/example1.dat",
+      "pattern_sha256": "a14546157ee64fc5b25561c480a0f7c7d76cfcd7b16e449db78c03c5b9acdb7a",
+      "scope": "Full measured sample grid; controlled sampling positions/cards, not phase identification or upstream preprocessing"
+    },
+    {
+      "id": "pattern-CPD2",
+      "input": {
+        "path": "pattern-CPD2.json",
+        "sha256": "7fcfb475d8c228fd3696075edc1c5f0f78e5f92864f789481424362812535dca"
+      },
+      "pattern_source": "share/qualx/examples/CPD2.dat",
+      "pattern_sha256": "d50103d2a5efa2ace2652f2797af3db7fcc002dd3d2bef6b17a41b03b4b165ed",
+      "scope": "Full measured sample grid; controlled sampling positions/cards, not phase identification or upstream preprocessing"
+    },
+    {
+      "id": "pattern-MIXT_5",
+      "input": {
+        "path": "pattern-MIXT_5.json",
+        "sha256": "fd8ecb7f89621b67895f6dd46e53ee5bb157411e7947b669f37bfd3a73cb5d28"
+      },
+      "pattern_source": "share/qualx/examples/MIXT_5.dat",
+      "pattern_sha256": "3928a0d11b4e76d4c68fc189ff65153711c76b8e8969f523cb66cb36264ed75c",
+      "scope": "Full measured sample grid; controlled sampling positions/cards, not phase identification or upstream preprocessing"
+    },
+    {
+      "id": "perfect-after-large",
+      "input": {
+        "path": "perfect-after-large.json",
+        "sha256": "05337c4ea0f6ed12b8a382ef42a466c39798c8fac7dfbc77563b69794539dc74"
+      }
+    },
+    {
+      "id": "undefined-no-range",
+      "input": {
+        "path": "undefined-no-range.json",
+        "sha256": "2ac1fca52397a60ee63bfae623c0dc76aa5b545d932c54caeb35a2621c1af846"
+      },
+      "classification": "legacy_undefined",
+      "reason": "nd=0 returns without assigning ABI outputs"
+    },
+    {
+      "id": "undefined-no-association",
+      "input": {
+        "path": "undefined-no-association.json",
+        "sha256": "9009f5ac0596e4e107e213205b61d5454abca5a7361a81ace10240fc10243356"
+      },
+      "classification": "legacy_undefined",
+      "reason": "fomI uninitialized and crd_scale retains previous successful call"
+    },
+    {
+      "id": "undefined-zero-intensity",
+      "input": {
+        "path": "undefined-zero-intensity.json",
+        "sha256": "9af82e03166d2f17487752256247ce50259d5b21a52a982bf23d71120cceac88"
+      },
+      "classification": "legacy_undefined",
+      "reason": "zero scale and zero total intensities cause 0/0"
+    },
+    {
+      "id": "undefined-zero-weights",
+      "input": {
+        "path": "undefined-zero-weights.json",
+        "sha256": "d851dc3f0ec39ac23f51e2c1c9dc5cda15104faa2abcc09150f23b8a7106bb3f"
+      },
+      "classification": "legacy_undefined",
+      "reason": "zero final weight denominator"
+    },
+    {
+      "id": "perfect-after-undefined",
+      "input": {
+        "path": "perfect-after-undefined.json",
+        "sha256": "05337c4ea0f6ed12b8a382ef42a466c39798c8fac7dfbc77563b69794539dc74"
+      }
+    }
+  ]
+}

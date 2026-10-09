@@ -1,0 +1,4 @@
+# Native Phase 19 capture sources are fingerprinted by the oracle manifests.
+cif_capture.f90 -text
+cif_capture_main.cpp -text
+cif_writer_capture_main.cpp -text
