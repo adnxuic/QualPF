@@ -1,34 +1,5 @@
 {
   "schema": "qualpf.agent_task_state.v1",
   "baseline_ref": "docs/development/project-baseline.json",
-  "active_task": {
-    "id": "main-integration-20261010",
-    "goal": "Prepare the approved clean squash integration into local main; user performs the final push.",
-    "in_scope": [
-      ".gitignore",
-      ".gitattributes",
-      "apps/qualpf/CMakeLists.txt",
-      "src/gui/dialogs/backgrounddialog.cpp",
-      "src/gui/dialogs/peaksearchdialog.cpp",
-      "tests/product/export/product_capture.cpp",
-      "docs/development/main-integration-20261010.md"
-    ],
-    "out_of_scope": [
-      "Product behavior and numerics",
-      "PFSM",
-      "Untracked docs/maintenance user work",
-      "Remote publication",
-      "History rewriting and protected object pruning"
-    ],
-    "status": "in_progress",
-    "base_commit": "66aea023898c9fec964f8b7859eb6c607fab958f",
-    "checkpoint_commit": null,
-    "completed": [
-      "Fetched origin/main and fixed candidate 0881f6b71a9ebeeae7996536eb0c15bc938abaad.",
-      "Prepared isolated squash integration and bounded ignore/whitespace cleanup."
-    ],
-    "next_action": "Verify the integration tree, commit the bounded candidate and validate clean Windows/Linux builds before updating local main.",
-    "blockers": [],
-    "checks": []
-  }
+  "active_task": null
 }
