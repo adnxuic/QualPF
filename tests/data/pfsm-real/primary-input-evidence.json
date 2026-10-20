@@ -1,0 +1,844 @@
+{
+  "schema": "qualpf.pfsm.primary-input-evidence.v1",
+  "dara_supplement": {
+    "url": "https://doi.org/10.1021/acs.chemmater.5c02820.s001",
+    "download_url": "https://ndownloader.figshare.com/files/61413383",
+    "sha256": "99acdf588edfaa0749dce9542337595ce9bdb19a52fb050dc3264750975c9729",
+    "version": "2026-01-12",
+    "precursor_truth_table_page": 4,
+    "optics_page": 3,
+    "precursor_refinements_pages": [
+      12,
+      16
+    ],
+    "icsd": {
+      "Bi2O3": 15072,
+      "In2O3": 14387,
+      "La(OH)3": 31584,
+      "Li2CO3": 66941,
+      "MnCO3": 8433,
+      "NiO": 9866,
+      "TiO2": 9852,
+      "V2O5": 15798,
+      "ZnO": 26170,
+      "ZrO2": 18190
+    },
+    "corrections": [
+      "TiO2 is Anatase (SKU 232055 and ICSD 9852); the local ground_truth.yaml Rutile label is not used."
+    ],
+    "radiation": "Aeris Cu source with Ni beta filter; original XRDML supplies Kalpha1/Kalpha2 wavelengths and ratio.",
+    "reaction_truth_qualification": "Human TOPAS refinement, sometimes informed by Dara suggestions (SI S4.3). Independent of QualPF, but not a blinded independent comparison to Dara."
+  },
+  "cod_structures": {
+    "1010093": {
+      "url": "https://www.crystallography.net/cod/1010093.cif",
+      "sha256": "3ed7bcc3f5935677d626f5f5cc0fdabaac2f6ac1dc770ef7014edcc860ffbd17",
+      "formula": "Ni O",
+      "spacegroup": "F m -3 m",
+      "cell": [
+        4.1684,
+        4.1684,
+        4.1684,
+        90.0,
+        90.0,
+        90.0
+      ]
+    },
+    "2310009": {
+      "url": "https://www.crystallography.net/cod/2310009.cif",
+      "sha256": "9f37d9c40f126e548deb9a9be0992d1d6ac3be7ddfc64fffc216cc1e8589fcb2",
+      "formula": "In2 O3",
+      "spacegroup": "I a -3",
+      "cell": [
+        10.117,
+        10.117,
+        10.117,
+        90.0,
+        90.0,
+        90.0
+      ]
+    },
+    "9009641": {
+      "url": "https://www.crystallography.net/cod/9009641.cif",
+      "sha256": "8a2351e31953fd42cb0e47d4e271013539362c5842f3b2ae5fa84642dd48323f",
+      "formula": "C Li2 O3",
+      "spacegroup": "C 1 2/c 1",
+      "cell": [
+        8.35884,
+        4.97375,
+        6.19377,
+        90.0,
+        114.789,
+        90.0
+      ]
+    },
+    "1010942": {
+      "url": "https://www.crystallography.net/cod/1010942.cif",
+      "sha256": "39111d3e253daf62fbf04e2e46358aecccd32c1e73592e2779dacfba53f3489d",
+      "formula": "O2 Ti",
+      "spacegroup": "I 41/a m d",
+      "cell": [
+        3.73,
+        3.73,
+        9.37,
+        90.0,
+        90.0,
+        90.0
+      ]
+    },
+    "9000097": {
+      "url": "https://www.crystallography.net/cod/9000097.cif",
+      "sha256": "149cc3ed0bd7339097e036b3b98b5378fc0ebeef9677e72f0c3f0146a18a5eae",
+      "formula": "C Mn O3",
+      "spacegroup": "R -3 c",
+      "cell": [
+        4.7771,
+        4.7771,
+        15.664,
+        90.0,
+        90.0,
+        120.0
+      ]
+    },
+    "1010912": {
+      "url": "https://www.crystallography.net/cod/1010912.cif",
+      "sha256": "fa5c851bc73e099bfd7a7c1c02d028c5de1e4295d358db5d7a8b41637485ed3a",
+      "formula": "O2 Zr",
+      "spacegroup": "P 1 21/c 1",
+      "cell": [
+        5.21,
+        5.26,
+        5.37,
+        90.0,
+        80.53,
+        90.0
+      ]
+    },
+    "2020756": {
+      "url": "https://www.crystallography.net/cod/2020756.cif",
+      "sha256": "ec603e219ad860b0b62208b12f6c4482392e280251b91a4cdf743b72d7ef2709",
+      "formula": "O5 V2",
+      "spacegroup": "P m m n",
+      "cell": [
+        11.512,
+        3.564,
+        4.368,
+        90.0,
+        90.0,
+        90.0
+      ]
+    },
+    "4031381": {
+      "url": "https://www.crystallography.net/cod/4031381.cif",
+      "sha256": "b53cc7a48ae57d80de9eebcd848c2666c2569bb88669c870cfc7231eaecefd58",
+      "formula": "H3 La O3",
+      "spacegroup": "P 63/m",
+      "cell": [
+        6.547,
+        6.547,
+        3.854,
+        90.0,
+        90.0,
+        120.0
+      ]
+    }
+  },
+  "reaction_refinement": {
+    "workbook": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/pairwise_reactions_manual_rietveld_summary.xlsx",
+    "sha256": "e4d10f94dcdd99382bd19cec60511a525130fdb8327d40aafe1c70113865e9d8",
+    "sheet": "Phase_summary",
+    "basis": "Reported manual refined phase assignment and ORIGINAL structure cell (columns N:S), not QualPF output; missing symmetry-constrained cell entries are completed only by the stated crystal symmetry.",
+    "qualifications": [
+      "Four samples contain unidentified phases and cannot count as complete identification.",
+      "The detailed manual refinement assigns ZnCo2O4 in CoO-ZnO, while the shorter Human summary says Co3O4; this case stays truth_conflict until reconciled.",
+      "Cr0.11V2O5.16 and Fe0.95Nb1.03O4 retain their reported compositions; pure endmembers are not silently substituted."
+    ],
+    "rows": {
+      "3": {
+        "row": 3,
+        "phase_label": "Y2O3",
+        "structure_source": "Y2O3 Ia-3 PDF Card - 01-084-3897.str",
+        "spacegroup_as_reported": "Ia-3",
+        "original_cell_completed_by_symmetry": [
+          10.608,
+          10.608,
+          10.608,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "O3 Y2"
+      },
+      "4": {
+        "row": 4,
+        "phase_label": "Fe2O3",
+        "structure_source": "Fe2O3 R-3c primary PDF Card - 00-033-0664.str",
+        "spacegroup_as_reported": "R-3c",
+        "original_cell_completed_by_symmetry": [
+          5.035,
+          5.035,
+          13.754,
+          90,
+          90,
+          120
+        ],
+        "formula_for_mapping": "Fe2 O3"
+      },
+      "5": {
+        "row": 5,
+        "phase_label": "YFeO3",
+        "structure_source": "YFeO3 primary Pnma PDF Card - 04-016-8958.str",
+        "spacegroup_as_reported": "Pnma",
+        "original_cell_completed_by_symmetry": [
+          5.5877,
+          7.5951,
+          5.2743,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "Fe O3 Y"
+      },
+      "9": {
+        "row": 9,
+        "phase_label": "FeC2O4(H2O)2",
+        "structure_source": "FeC2O4(H2O)2 C2onc PDF Card - 01-091-0997.str",
+        "spacegroup_as_reported": "C2/c",
+        "original_cell_completed_by_symmetry": [
+          11.831,
+          5.5522,
+          9.645,
+          90,
+          126.4,
+          90
+        ],
+        "formula_for_mapping": "C2 H4 Fe O6",
+        "refined_cell": [
+          12.0161492,
+          5.5571615,
+          9.7148603,
+          90,
+          127.0415,
+          90
+        ],
+        "qualification": "large changes may have occurred to structure on heating / dehydration",
+        "mapping_note": "Original and independently refined cell both retained before PFSM evaluation; 3% length and 1 degree angle thresholds unchanged."
+      },
+      "10": {
+        "row": 10,
+        "phase_label": "Y2O3 Ia-3",
+        "structure_source": "Y2O3 Ia-3 PDF Card - 01-084-3897.str",
+        "spacegroup_as_reported": "Ia-3",
+        "original_cell_completed_by_symmetry": [
+          10.608,
+          10.608,
+          10.608,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "O3 Y2"
+      },
+      "14": {
+        "row": 14,
+        "phase_label": "Molybdite Pbnm ICSD",
+        "structure_source": "MoO3 Pbnm_62 293K 1atm ICSD_CollCode166362.cif",
+        "spacegroup_as_reported": "Pbnm",
+        "original_cell_completed_by_symmetry": [
+          3.9624,
+          13.86,
+          3.6971,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "Mo O3"
+      },
+      "15": {
+        "row": 15,
+        "phase_label": "Bismite P121/c1 ICSD",
+        "structure_source": "Bi2O3 P121onc1_14 RT 1atm ICSD_CollCode15072.cif",
+        "spacegroup_as_reported": "P121/c1",
+        "original_cell_completed_by_symmetry": [
+          5.8486,
+          8.1661,
+          7.5097,
+          90,
+          113,
+          90
+        ],
+        "formula_for_mapping": "Bi2 O3"
+      },
+      "16": {
+        "row": 16,
+        "phase_label": "Bi2(MoO4)3 P121/c1 ICSD",
+        "structure_source": "Bi2(MoO4)3 P121onc1_14 RT 1atm ICSD_CollCode2650.cif",
+        "spacegroup_as_reported": "P21/c",
+        "original_cell_completed_by_symmetry": [
+          7.685,
+          11.491,
+          11.929,
+          90,
+          115.4,
+          90
+        ],
+        "formula_for_mapping": "Bi2 Mo3 O12"
+      },
+      "20": {
+        "row": 20,
+        "phase_label": "Bismuth Oxide",
+        "structure_source": "Bi2O3 P12onc_14 PDF Card - 04-016-7495.str",
+        "spacegroup_as_reported": "P21/c",
+        "original_cell_completed_by_symmetry": [
+          5.8915,
+          8.1772,
+          7.5286,
+          90,
+          112.83,
+          90
+        ],
+        "formula_for_mapping": "Bi2 O3"
+      },
+      "21": {
+        "row": 21,
+        "phase_label": "Nb16.8 O42 ICSD",
+        "structure_source": "Nb16p8O42 Pbam_55 RT 1atm ICSD_CollCode1840.cif",
+        "spacegroup_as_reported": 55,
+        "original_cell_completed_by_symmetry": [
+          6.175,
+          29.175,
+          3.93,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "Nb16.8 O42"
+      },
+      "26": {
+        "row": 26,
+        "phase_label": "Bismuth Oxide",
+        "structure_source": "Bi2O3 P12onc_14 PDF Card - 04-016-7495.str",
+        "spacegroup_as_reported": "P21/c",
+        "original_cell_completed_by_symmetry": [
+          5.8915,
+          8.1772,
+          7.5286,
+          90,
+          112.83,
+          90
+        ],
+        "formula_for_mapping": "Bi2 O3"
+      },
+      "27": {
+        "row": 27,
+        "phase_label": "Bismuth Vanadate",
+        "structure_source": "BiVO4 I41ona_88 high pressure PDF Card - 04-008-8593.str",
+        "spacegroup_as_reported": "I41/a:2",
+        "original_cell_completed_by_symmetry": [
+          5.08,
+          5.08,
+          11.49,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "Bi O4 V"
+      },
+      "28": {
+        "row": 28,
+        "phase_label": "Shcherbinaite, syn",
+        "structure_source": "V2O5 Pnmm_59 or Pmmn_59 PDF Card - 00-041-1426.str",
+        "spacegroup_as_reported": "Pmmn:2",
+        "original_cell_completed_by_symmetry": [
+          11.512,
+          3.564,
+          4.368,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "O5 V2"
+      },
+      "32": {
+        "row": 32,
+        "phase_label": "Calcium Carbonate",
+        "structure_source": "CaCO3 R-3cH_167 PDF Card - 01-086-5298",
+        "spacegroup_as_reported": "R-3c",
+        "original_cell_completed_by_symmetry": [
+          4.9771,
+          4.9771,
+          17.0959,
+          90,
+          90,
+          120
+        ],
+        "formula_for_mapping": "C Ca O3"
+      },
+      "37": {
+        "row": 37,
+        "phase_label": "Cobalt Tungstate",
+        "structure_source": "CoWO4_P2onc_13_PDF Card - 01-072-0479.str",
+        "spacegroup_as_reported": "P2/c",
+        "original_cell_completed_by_symmetry": [
+          4.6698,
+          5.6873,
+          4.9515,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "Co O4 W"
+      },
+      "38": {
+        "row": 38,
+        "phase_label": "Liguowuite, syn",
+        "structure_source": "WO3_P21onn_14_PDF Card - 01-083-0950.str",
+        "spacegroup_as_reported": "P21/n",
+        "original_cell_completed_by_symmetry": [
+          7.30084,
+          7.53889,
+          7.68962,
+          90,
+          90.892,
+          90
+        ],
+        "formula_for_mapping": "O3 W"
+      },
+      "42": {
+        "row": 42,
+        "phase_label": "Zinc Oxide",
+        "structure_source": "ZnO_P63mc_186_PDF Card - 04-013-6608.str",
+        "spacegroup_as_reported": "P63mc",
+        "original_cell_completed_by_symmetry": [
+          3.2342,
+          3.2342,
+          5.1772,
+          90,
+          90,
+          120
+        ],
+        "formula_for_mapping": "O Zn"
+      },
+      "43": {
+        "row": 43,
+        "phase_label": "Zinc Cobalt Oxide",
+        "structure_source": "ZnCo2O4_Fd-3m_227_PDF Card - 00-023-1390.str",
+        "spacegroup_as_reported": "Fd-3m:2",
+        "original_cell_completed_by_symmetry": [
+          8.101,
+          8.101,
+          8.101,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "Co2 O4 Zn"
+      },
+      "47": {
+        "row": 47,
+        "phase_label": "Manganochromite, syn",
+        "structure_source": "Cr2MnO4_Fd-3m_227_PDF Card - 04-005-7231.str",
+        "spacegroup_as_reported": "Fd-3m:2",
+        "original_cell_completed_by_symmetry": [
+          8.414,
+          8.414,
+          8.414,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "Cr2 Mn O4"
+      },
+      "51": {
+        "row": 51,
+        "phase_label": "Lead Oxide Chromate",
+        "structure_source": "Pb2CrO5_C2onm_12_PDF Card - 04-010-3858.str",
+        "spacegroup_as_reported": "C2/m",
+        "original_cell_completed_by_symmetry": [
+          14.0076,
+          5.6445,
+          7.1028,
+          90,
+          115.33,
+          90
+        ],
+        "formula_for_mapping": "Cr O5 Pb2"
+      },
+      "52": {
+        "row": 52,
+        "phase_label": "PbCrO4 ",
+        "structure_source": "PbCrO4 P121onn1_14 298K 1atm ICSD_CollCode140083.cif",
+        "spacegroup_as_reported": 14,
+        "original_cell_completed_by_symmetry": [
+          6.796,
+          7.4321,
+          7.1227,
+          90,
+          102.444,
+          90
+        ],
+        "formula_for_mapping": "Cr O4 Pb"
+      },
+      "57": {
+        "row": 57,
+        "phase_label": "Zincochromite",
+        "structure_source": "ZnCr2O4_Fd-3mZ_sg227_296K_ICSD_CollCode50047.cif",
+        "spacegroup_as_reported": "Fd-3m:2",
+        "original_cell_completed_by_symmetry": [
+          8.294,
+          8.294,
+          8.294,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "Cr2 O4 Zn"
+      },
+      "58": {
+        "row": 58,
+        "phase_label": "Zinc Oxide",
+        "structure_source": "ZnO_P63mc_186_PDF Card - 04-013-6608.cif",
+        "spacegroup_as_reported": "P63mc",
+        "original_cell_completed_by_symmetry": [
+          3.2342,
+          3.2342,
+          5.1772,
+          90,
+          90,
+          120
+        ],
+        "formula_for_mapping": "O Zn"
+      },
+      "62": {
+        "row": 62,
+        "phase_label": "Vanadium Chromium Oxide",
+        "structure_source": "V2 Cr0p11 O5p16 Pnmm_59 PDF Card - 04-012-6937.str",
+        "spacegroup_as_reported": "Pmmn:2",
+        "original_cell_completed_by_symmetry": [
+          11.4849,
+          3.5635,
+          4.3817,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "Cr0.11 O5.16 V2"
+      },
+      "63": {
+        "row": 63,
+        "phase_label": "Chromium Oxide",
+        "structure_source": "Cr2O3 R-3c_167 PDF Card - 04-008-7629.str",
+        "spacegroup_as_reported": "R-3c",
+        "original_cell_completed_by_symmetry": [
+          4.9371,
+          4.9371,
+          13.53,
+          90,
+          90,
+          120
+        ],
+        "formula_for_mapping": "Cr2 O3"
+      },
+      "67": {
+        "row": 67,
+        "phase_label": "CuMn2O4",
+        "structure_source": "CuMn2O4 Fd-3m_227 PDF Card - 04-005-6874.str",
+        "spacegroup_as_reported": "Fd-3m:2",
+        "original_cell_completed_by_symmetry": [
+          8.327,
+          8.327,
+          8.327,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "Cu Mn2 O4"
+      },
+      "68": {
+        "row": 68,
+        "phase_label": "Tenorite, syn",
+        "structure_source": "CuO A2ona_15 PDF Card - 04-006-2679.str",
+        "spacegroup_as_reported": "C2/c",
+        "original_cell_completed_by_symmetry": [
+          4.7,
+          3.4,
+          5.1,
+          90,
+          99.54,
+          90
+        ],
+        "formula_for_mapping": "Cu O"
+      },
+      "69": {
+        "row": 69,
+        "phase_label": "Bixbyite-(Mn), C, syn",
+        "structure_source": "Mn2O3 Ia-3_206 PDF Card - 00-041-1442.str",
+        "spacegroup_as_reported": "Ia-3",
+        "original_cell_completed_by_symmetry": [
+          9.418,
+          9.418,
+          9.418,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "Mn2 O3"
+      },
+      "73": {
+        "row": 73,
+        "phase_label": "Pseudobrookite, syn",
+        "structure_source": "TiFe2O5 ccmm_63 PDF Card - 04-002-2494.str",
+        "spacegroup_as_reported": "Ccmm",
+        "original_cell_completed_by_symmetry": [
+          9.7,
+          3.72,
+          9.93,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "Fe2 O5 Ti"
+      },
+      "74": {
+        "row": 74,
+        "phase_label": "Rutile, syn",
+        "structure_source": "TiO2 P42onmnm_136 PDF Card - 04-005-4625.str",
+        "spacegroup_as_reported": "P42/mnm",
+        "original_cell_completed_by_symmetry": [
+          4.593696,
+          4.593696,
+          2.95869,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "O2 Ti"
+      },
+      "78": {
+        "row": 78,
+        "phase_label": "Hematite",
+        "structure_source": "Fe2O3_R-3cH_sg167_293K_ICSD_CollCode184766.cif",
+        "spacegroup_as_reported": "R-3cH",
+        "original_cell_completed_by_symmetry": [
+          5.0374,
+          5.0374,
+          13.7614,
+          90,
+          90,
+          120
+        ],
+        "formula_for_mapping": "Fe2 O3"
+      },
+      "79": {
+        "row": 79,
+        "phase_label": "Fe0p95Nb1p03O4_P12onc1_sg13_2103K_ICSD_CollCode6121.cif",
+        "structure_source": "Fe0p95Nb1p03O4_P12onc1_sg13_2103K_ICSD_CollCode6121.cif",
+        "spacegroup_as_reported": "P2/c",
+        "original_cell_completed_by_symmetry": [
+          4.65853,
+          5.6281,
+          5.00826,
+          90,
+          89.961,
+          90
+        ],
+        "formula_for_mapping": "Fe0.95 Nb1.03 O4"
+      },
+      "80": {
+        "row": 80,
+        "phase_label": "Nb12O29",
+        "structure_source": "Nb12O29_A1m1_sg8_2K_ICSD_CollCode155017.cif",
+        "spacegroup_as_reported": "Am",
+        "original_cell_completed_by_symmetry": [
+          15.692,
+          3.8303,
+          20.7171,
+          90,
+          113.112,
+          90
+        ],
+        "formula_for_mapping": "Nb12 O29"
+      },
+      "84": {
+        "row": 84,
+        "phase_label": "Strontianite",
+        "structure_source": "SrCO3 Pmcn_62 or Pnam_62 PDF Card - 04-019-1397.str",
+        "spacegroup_as_reported": "Pmcn",
+        "original_cell_completed_by_symmetry": [
+          5.0914,
+          8.3519,
+          5.9901,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "C O3 Sr"
+      },
+      "85": {
+        "row": 85,
+        "phase_label": "Strontium Iron Oxide",
+        "structure_source": "SrFeO2p6 P4onmmm_123 PDF Card - 00-072-0529.str",
+        "spacegroup_as_reported": "P4/mmm",
+        "original_cell_completed_by_symmetry": [
+          3.8689,
+          3.8689,
+          3.87147,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "Fe O2.6 Sr"
+      },
+      "90": {
+        "row": 90,
+        "phase_label": "Zinc Oxide",
+        "structure_source": "ZnO_P63mc_186_PDF Card - 04-013-6608.str",
+        "spacegroup_as_reported": "P63mc",
+        "original_cell_completed_by_symmetry": [
+          3.2342,
+          3.2342,
+          5.1772,
+          90,
+          90,
+          120
+        ],
+        "formula_for_mapping": "O Zn"
+      },
+      "91": {
+        "row": 91,
+        "phase_label": "Zinc Iron Oxide",
+        "structure_source": "ZnFe2O4 Fd-3m_227 PDF Card - 04-014-7767.str",
+        "spacegroup_as_reported": "Fd-3m:2",
+        "original_cell_completed_by_symmetry": [
+          8.3731,
+          8.3731,
+          8.3731,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "Fe2 O4 Zn"
+      },
+      "95": {
+        "row": 95,
+        "phase_label": "Zinc Oxide",
+        "structure_source": "ZnO_P63mc_186_PDF Card - 04-013-6608.cif",
+        "spacegroup_as_reported": "P63mc",
+        "original_cell_completed_by_symmetry": [
+          3.2342,
+          3.2342,
+          5.1772,
+          90,
+          90,
+          120
+        ],
+        "formula_for_mapping": "O Zn"
+      },
+      "96": {
+        "row": 96,
+        "phase_label": "Germanium Oxide",
+        "structure_source": "GeO2 P3121_152 PDF Card - 04-008-7663.str",
+        "spacegroup_as_reported": "P3121",
+        "original_cell_completed_by_symmetry": [
+          4.9467,
+          4.9467,
+          5.6249,
+          90,
+          90,
+          120
+        ],
+        "formula_for_mapping": "Ge O2"
+      },
+      "97": {
+        "row": 97,
+        "phase_label": "Zinc Germanium Oxide",
+        "structure_source": "Zn2GeO4 R-3_148 hexagonal PDF Card - 04-018-3891.str",
+        "spacegroup_as_reported": "R-3",
+        "original_cell_completed_by_symmetry": [
+          14.19,
+          14.19,
+          9.46,
+          90,
+          90,
+          120
+        ],
+        "formula_for_mapping": "Ge O4 Zn2"
+      },
+      "101": {
+        "row": 101,
+        "phase_label": "Nahpoite, syn",
+        "structure_source": "Na2HPO4 P21onc_14 PDF Card - 04-012-2107.str",
+        "spacegroup_as_reported": "P21/c",
+        "original_cell_completed_by_symmetry": [
+          5.45,
+          6.845,
+          10.944,
+          90,
+          116.35,
+          90
+        ],
+        "formula_for_mapping": "H Na2 O4 P"
+      },
+      "102": {
+        "row": 102,
+        "phase_label": "Na4P2O7",
+        "structure_source": "Na4P2O7_P212121_sg19_284K_ICSD_CollCode36479.cif",
+        "spacegroup_as_reported": "P212121",
+        "original_cell_completed_by_symmetry": [
+          5.3976,
+          9.3623,
+          13.4951,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "Na4 O7 P2"
+      },
+      "106": {
+        "row": 106,
+        "phase_label": "Zinc Oxide",
+        "structure_source": "ZnO_P63mc_186_PDF Card - 04-013-6608.cif",
+        "spacegroup_as_reported": "P63mc",
+        "original_cell_completed_by_symmetry": [
+          3.2342,
+          3.2342,
+          5.1772,
+          90,
+          90,
+          120
+        ],
+        "formula_for_mapping": "O Zn"
+      },
+      "107": {
+        "row": 107,
+        "phase_label": "V2O5",
+        "structure_source": "V2O5_PmmnZ_sg59_RT_ICSD_CollCode40488.cif",
+        "spacegroup_as_reported": "PmmnZ",
+        "original_cell_completed_by_symmetry": [
+          11.57,
+          3.57,
+          4.36,
+          90,
+          90,
+          90
+        ],
+        "formula_for_mapping": "O5 V2"
+      },
+      "108": {
+        "row": 108,
+        "phase_label": "Zn2V2O7",
+        "structure_source": "Zn2V2O7_C12onc1_sg15_RT_ICSD_CollCode2886.cif",
+        "spacegroup_as_reported": "C12/c1",
+        "original_cell_completed_by_symmetry": [
+          7.429,
+          8.34,
+          10.098,
+          90,
+          111.37,
+          90
+        ],
+        "formula_for_mapping": "O7 V2 Zn2"
+      }
+    }
+  }
+}

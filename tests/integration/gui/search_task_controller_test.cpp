@@ -51,11 +51,28 @@ class Factory final : public CandidateReaderFactory {
     std::shared_ptr<Gate> gate_;
 
   public:
+    int protectedCalls = 0;
     explicit Factory(std::shared_ptr<Gate> gate) : gate_(std::move(gate)) {}
+    Result<std::shared_ptr<const ReferenceReadGuard>> protect(const ReferenceDatabase &) override {
+        ++protectedCalls;
+        return Result<std::shared_ptr<const ReferenceReadGuard>>{std::shared_ptr<const ReferenceReadGuard>{}};
+    }
     Result<std::unique_ptr<CandidateReader>> open(const ReferenceDatabase &, std::uint64_t,
                                                   const ExecutionContext &) override {
         gate_->opened = std::this_thread::get_id();
         return Result<std::unique_ptr<CandidateReader>>{std::make_unique<Reader>(gate_)};
+    }
+};
+class WorkerMatcher final : public search::IClassicMatcher {
+  public:
+    mutable std::atomic<int> calls{0};
+    AlgorithmIdentity identity() const override { return {"test.worker.matcher", 1}; }
+    AlgorithmIdentity produces() const override { return search::classic_match_contract(); }
+    Result<search::ClassicMatch> match(const search::ClassicMatchInput &input, const ExecutionContext &context) const override {
+        ++calls;
+        auto result = search::ClassicMatcher{}.match(input, context);
+        if (result) result.value().position_difference_sum = .375f;
+        return result;
     }
 };
 static void waitFinished(SearchTaskController &controller) {
@@ -100,6 +117,49 @@ int main(int argc, char **argv) try {
     QCoreApplication app(argc, argv);
     const auto owner = std::this_thread::get_id();
     testing::ClassicFixture fixture;
+    {
+        auto unprepared = state(fixture); unprepared.peaks.clear();
+        ProductSearchSession session(unprepared);
+        SearchCoordinator coordinator(session);
+        auto gate = std::make_shared<Gate>();
+        auto factory = std::make_shared<Factory>(gate);
+        SearchTaskController controller(coordinator, factory);
+        const auto source = session.snapshot();
+        SearchInput input;
+        input.source = source;
+        input.method = SearchMethod::pfsm;
+        bool published = false;
+        auto refused = controller.start(input, {}, [&](auto) { published = true; });
+        check(!refused && refused.error().reason == "algorithm_provenance_mismatch" && !coordinator.running() &&
+                  factory->protectedCalls == 0 && gate->opened == std::thread::id{} && !published &&
+                  session.snapshot() == source,
+              "Method mismatch precedes protection, worker/SQL and scientific publication");
+    }
+    {
+        auto fom = std::make_shared<WorkerMatcher>();
+        AlgorithmSelections selections;
+        selections.matcher = fom->identity();
+        AlgorithmModules modules;
+        modules.matcher = fom;
+        auto algorithms = resolveAlgorithms(AlgorithmSpec{selections}, std::move(modules));
+        check(bool(algorithms), "worker algorithm assembly");
+        auto initial = state(fixture);
+        initial.algorithms = algorithms.value();
+        ProductSearchSession session(std::move(initial));
+        SearchCoordinator coordinator(session);
+        auto gate = std::make_shared<Gate>();
+        gate->block = false;
+        gate->cards = {card(fixture)};
+        SearchTaskController controller(coordinator, std::make_shared<Factory>(gate));
+        SearchInput input;
+        input.parameters = fixture.parameters;
+        check(bool(controller.start(input, {"injected-reference", 9})), "injected worker starts");
+        waitFinished(controller);
+        check(fom->calls == 1 && session.snapshot()->candidates.size() == 1 &&
+                  session.snapshot()->candidates[0].fomPeakPos == .5 && session.snapshot()->candidates[0].scale == 10 &&
+                  session.snapshot()->candidates[0].fom < 1,
+              "actual worker consumes frozen matching evidence through fixed Classical FOM");
+    }
     for (int mode = 0; mode < 8; ++mode) {
         ProductSearchSession session(state(fixture));
         SearchCoordinator coordinator(session);
@@ -109,7 +169,11 @@ int main(int argc, char **argv) try {
         SearchTaskController controller(coordinator, std::make_shared<Factory>(gate));
         SearchInput input;
         input.parameters = fixture.parameters;
-        int notices = 0, progress = 0;
+        int notices = 0, progress = 0, modules = 0;
+        QObject::connect(&controller, &SearchTaskController::workflowProgress, [&](auto id) {
+            check(id==controller.taskId() && std::this_thread::get_id()==owner && coordinator.activity() && !coordinator.activity()->detail.empty(), "foreign or empty module progress");
+            ++modules;
+        });
         std::optional<SearchTaskController::Outcome> outcome;
         auto subscription = session.subscribe([&](auto) {
             check(std::this_thread::get_id() == owner, "commit escaped owner thread");
@@ -160,7 +224,13 @@ int main(int argc, char **argv) try {
         check(gate->opened != owner && gate->opened == gate->read && gate->read == gate->destroyed,
               "reader open/use/remove thread ownership failed");
         check(!coordinator.running(), "admission not retired");
+        const auto timing = controller.lastTiming();
+        check(timing && timing->task != 0 && timing->queue_seconds >= 0 && timing->worker_seconds > 0 &&
+                  timing->delivery_seconds >= 0 && timing->publication_seconds >= 0 &&
+                  timing->presentation_seconds >= 0 && timing->total_seconds >= timing->worker_seconds &&
+                  timing->success == (mode == 0), "worker/publication/presentation timing scope failed");
         if (mode == 0) {
+            check(modules>=3,"search module stages were not delivered");
             check(outcome && bool(*outcome) && notices == 1, "successful result not atomically committed");
             check(session.snapshot()->candidates.front().fom == 1 &&
                       session.snapshot()->candidates.front().scale == 10,

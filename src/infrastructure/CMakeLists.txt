@@ -7,10 +7,12 @@ add_library(qualpf_infrastructure OBJECT
     platform/platform_services.cpp
     settings/database_catalog_store.cpp
     settings/preference_store.cpp
+    settings/default_settings.cpp
+    serialization/workflow_settings.cpp
     io/atomic_export_target.cpp
     io/atomic_export_target.h
-    serialization/project_codec.cpp
-    serialization/project_codec.h
+    serialization/qpf_project.cpp
+    serialization/qpf_value.cpp
     serialization/quantification.h
     database/qt_sql/candidate_reader_factory.cpp
     database/qt_sql/candidate_reader_factory.h
@@ -64,3 +66,5 @@ target_link_libraries(qualpf_update_provider PUBLIC qualpf_application)
 target_link_libraries(qualpf_infrastructure PUBLIC qualpf_update_provider)
 
 target_link_libraries(qualpf_infrastructure PUBLIC qualpf_cif_product)
+
+target_compile_definitions(qualpf_infrastructure PRIVATE QUALPF_PROJECT_WRITER_VERSION="${PROJECT_VERSION}")

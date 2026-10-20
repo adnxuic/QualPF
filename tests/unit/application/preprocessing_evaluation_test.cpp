@@ -66,7 +66,9 @@ static void kalpha2Selection() {
     const auto unchangedSource = overflow.snapshot();
     check(!stripKalpha2Operation(overflow, environment) && overflow.snapshot() == unchangedSource);
 }
+void peakRejectionContracts();
 int main() {
+    peakRejectionContracts();
     kalpha2Selection();
     testing::ClassicFixture f;
     ProductState state;

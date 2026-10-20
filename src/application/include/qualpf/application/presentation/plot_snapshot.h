@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+namespace qualpf::application { struct PfsmPlot; struct ProductState; }
+
 namespace qualpf::application::presentation {
 
 // Semantic identities match the established view layers. No pens/widgets/ABI
@@ -109,6 +111,9 @@ Result<PlotUpdate> project_compatibility_frame(const PlotInput &, PlotRequest = 
 // Existing direct C++ refresh: current residual intensities, then observed,
 // aligned background and points. No native peak-intensity sampling or clipping.
 Result<PlotUpdate> project_session_update(const PlotInput &, PlotRequest = {});
+bool can_subtract_background(const Pattern &) noexcept;
+bool can_subtract_background(const ProductState &) noexcept;
+Result<PlotUpdate> project_pfsm_update(const PfsmPlot &, const PresentationWorkspace::Snapshot &, PlotRequest = {});
 Result<PlotSeries> project_card_overlay(const CardOverlayInput &, Abscissa);
 Result<PlotSeries> project_preview(PlotSeries, Abscissa, PreviewGeometry = PreviewGeometry::curve);
 Status project_coordinates(PlotSeries &, Abscissa);

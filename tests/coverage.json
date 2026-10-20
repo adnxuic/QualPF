@@ -2,6 +2,26 @@
   "schema": "qualpf.current-test-coverage.v1",
   "preserved_entry_commit": "8fdf0a71d7eef8b6801e5336720c19b3c936e18f",
   "current_normal_tests": [
+    "qualpf.settings.workflows",
+    "qualpf.project.v3",
+    "qualpf.project.qpf",
+    "qualpf.project.qpf_protocol",
+    "qualpf.application.workflows",
+    "qualpf.gui.workflow_settings",
+    "qualpf.gui.workflow_settings.scale150",
+    "qualpf.gui.workflow_settings.scale200",
+    "qualpf.pfsm.fast_comparator",
+    "qualpf.algorithms.classic_contracts",
+    "qualpf.algorithms.core_modules",
+    "qualpf.algorithms.geometric_fwhm",
+    "qualpf.algorithms.geometric_fwhm_workflow",
+    "qualpf.algorithms.invalid_payloads",
+    "qualpf.algorithms.pfsm_application",
+    "qualpf.algorithms.pfsm_core",
+    "qualpf.algorithms.product_workflow",
+    "qualpf.algorithms.provenance",
+    "qualpf.application.configured_fwhm",
+    "qualpf.application.initial_peak_search",
     "qualpf.application.preprocessing_evaluation",
     "qualpf.application.product_session",
     "qualpf.application.product_values",
@@ -21,13 +41,19 @@
     "qualpf.classic.synthetic_replay",
     "qualpf.classic.undefined_product",
     "qualpf.cli.search_boundary",
+    "qualpf.cli.selection_policy",
+    "qualpf.cli.selection_process",
     "qualpf.cli.synchronous_boundaries",
     "qualpf.crystallography.properties",
     "qualpf.crystallography.reference",
     "qualpf.cutover.default.startup",
     "qualpf.database.candidate_reader",
+    "qualpf.database.density_query",
     "qualpf.database.threaded_reader",
     "qualpf.export.service.controls",
+    "qualpf.gui.fwhm_options",
+    "qualpf.gui.initial_peak_options",
+    "qualpf.gui.pfsm",
     "qualpf.gui.search_tasks",
     "qualpf.gui.window_child_close",
     "qualpf.gui.window_lifecycle",
@@ -40,6 +66,7 @@
     "qualpf.math.current_reference_protocol",
     "qualpf.math.rounded_transcendentals",
     "qualpf.numerics.reference",
+    "qualpf.numerics.runtime",
     "qualpf.pattern.abi_reference",
     "qualpf.pattern.canonical_projection",
     "qualpf.pattern.edge_reference",
@@ -64,6 +91,7 @@
     "qualpf.preprocessing.rounding",
     "qualpf.product.startup",
     "qualpf.profile.properties",
+    "qualpf.project.algorithm_source",
     "qualpf.project.boundaries",
     "qualpf.project.codec",
     "qualpf.reflection.properties",
@@ -87,7 +115,15 @@
     "qualpf_cif_syntax_properties",
     "qualpf_export_properties",
     "qualpf_export_schema_controls",
-    "qualpf_presentation_properties"
+    "qualpf_presentation_properties",
+    "qualpf.cli.pfsm_benchmark",
+    "qualpf.pfsm.input_adapters",
+    "qualpf.quantification.core",
+    "qualpf.quantification.application",
+    "qualpf.quantification.gui",
+    "qualpf.quantification.export",
+    "qualpf.pfsm.fast_validation",
+    "qualpf.gui.background_options"
   ],
   "original_normal_tests": [
     "qualpf.card.acceptance_gate",
@@ -158,6 +194,9 @@
     "qualpf_presentation_properties"
   ],
   "additional_tests": [
+    "qualpf.algorithms.classic_contracts",
+    "qualpf.algorithms.core_modules",
+    "qualpf.algorithms.product_workflow",
     "qualpf.application.preprocessing_evaluation",
     "qualpf.application.product_session",
     "qualpf.application.product_values",
@@ -171,7 +210,11 @@
     "qualpf.gui.window_queued_close",
     "qualpf.gui.workspace_context",
     "qualpf.io.memory_boundary",
-    "qualpf.project.boundaries"
+    "qualpf.project.boundaries",
+    "qualpf.algorithms.pfsm_core",
+    "qualpf.algorithms.pfsm_application",
+    "qualpf.cli.pfsm_benchmark",
+    "qualpf.pfsm.input_adapters"
   ],
   "successors": {
     "qualpf.card.acceptance_gate": "qualpf.card.acceptance_gate",
@@ -252,5 +295,147 @@
       "qualpf.plot.coordinates",
       "qualpf.architecture.strict"
     ]
+  },
+  "algorithm_modularization_additions": {
+    "baseline_normal_count": 86,
+    "contract": "docs/architecture/search-algorithms.md",
+    "tests": [
+      "qualpf.algorithms.classic_contracts",
+      "qualpf.algorithms.core_modules",
+      "qualpf.algorithms.product_workflow"
+    ],
+    "extended_product_tests": [
+      "qualpf.database.candidate_reader",
+      "qualpf.gui.search_tasks",
+      "qualpf.gui.workspace_context"
+    ],
+    "expected_values_changed": false
+  },
+  "configured_fwhm": {
+    "contract": "docs/architecture/fwhm-workflow.md",
+    "tests": [
+      "qualpf.application.configured_fwhm",
+      "qualpf.project.boundaries",
+      "qualpf.gui.fwhm_options",
+      "qualpf.gui.window_lifecycle",
+      "qualpf.gui.window_child_close"
+    ],
+    "classical_expected_values_changed": false
+  },
+  "search_workflow_migration": {
+    "entry_commit": "0f5b56eee139989d80df705c3a74e96bc4100bf7",
+    "contract": "docs/architecture/search-algorithms.md",
+    "replacement_points": [
+      "background",
+      "initial_peaks",
+      "fwhm",
+      "experimental_peaks",
+      "matcher"
+    ],
+    "fixed_operations": [
+      "common_query",
+      "stored_strongest",
+      "record_quality",
+      "classical_fom",
+      "classical_residual",
+      "ranking",
+      "phase_selection",
+      "rir"
+    ],
+    "retained_test_identities": true,
+    "frozen_expected_values_changed": false,
+    "coverage": {
+      "pfsm_rir_analytic_and_source_bound": [
+        "qualpf.quantification.core",
+        "qualpf.quantification.application"
+      ],
+      "standalone_common_formal_and_preparation": [
+        "qualpf.algorithms.product_workflow",
+        "application.qtfree"
+      ],
+      "width_and_fixed_mapping": [
+        "qualpf.algorithms.core_modules",
+        "qualpf.preprocessing.reference",
+        "qualpf.preprocessing.rounding"
+      ],
+      "classical_evidence_thresholds_residual": [
+        "qualpf.algorithms.classic_contracts",
+        "qualpf.algorithms.invalid_payloads",
+        "qualpf.application.search_engine"
+      ],
+      "sql_constraints_empty_ids_stored_order": [
+        "qualpf.database.candidate_reader",
+        "qualpf.database.density_query"
+      ],
+      "display_identity_stable_ties_qxp_rir": [
+        "qualpf.gui.workspace_context",
+        "qualpf.project.algorithm_source",
+        "qualpf.application.product_session"
+      ],
+      "real_cli_and_worker": [
+        "qualpf.cli.selection_policy",
+        "qualpf.cli.selection_process",
+        "qualpf.gui.search_tasks"
+      ],
+      "source_lifetime_and_atomic_failure": [
+        "qualpf.algorithms.provenance",
+        "qualpf.application.search_coordinator",
+        "qualpf.gui.window_lifecycle",
+        "qualpf.gui.window_queued_close",
+        "qualpf.gui.window_child_close"
+      ],
+      "initial_candidate_fwhm_boundary": [
+        "qualpf.algorithms.core_modules",
+        "qualpf.algorithms.product_workflow",
+        "qualpf.application.preprocessing_evaluation",
+        "qualpf.preprocessing.current_probe_state",
+        "application.qtfree"
+      ]
+    }
+  },
+  "candidate_recall_architecture": {
+    "implementation": "v2 only; GUI default on, CLI and low-level requests default off; validated analysis-frozen counts",
+    "current": [
+      "qualpf.algorithms.pfsm_core",
+      "qualpf.algorithms.pfsm_application",
+      "qualpf.cli.pfsm_benchmark",
+      "qualpf.pfsm.fast_comparator",
+      "qualpf.pfsm.fast_validation",
+      "qualpf.gui.pfsm",
+      "qualpf.architecture.strict"
+    ],
+    "independent_reference": "tools/validation/pfsm_candidate_recall_reference.py",
+    "retired_v1": {
+      "snapshot": "b59fff282bc0dc38f226ebea66d86aafdd93b1b4",
+      "scope": "v1 local solver/transport and v1-only subset replay expectations; reproduce in historical Git",
+      "retained_properties": "FFT correlation, exact analytic nonnegative-template properties, shared backprojection diagnostics, current v2 protection/replay and all formal evidence checks"
+    },
+    "compatibility": "Historical CTest identities, report schemas and frozen evidence retained; canonical and legacy CLI/report names checked."
+  },
+  "background_input_and_display": {
+    "contract": "docs/user/data-reduction/background.md",
+    "tests": [
+      "qualpf.gui.background_options",
+      "qualpf_presentation_properties",
+      "qualpf.algorithms.core_modules",
+      "qualpf.algorithms.product_workflow",
+      "qualpf.algorithms.pfsm_application",
+      "qualpf.gui.pfsm"
+    ],
+    "frozen_expected_values_changed": false
+  },
+  "qpf_project": {
+    "contract": "docs/architecture/project-format.md",
+    "tests": [
+      "qualpf.project.qpf",
+      "qualpf.project.qpf_protocol",
+      "qualpf.gui.workspace_context",
+      "qualpf.plot.sink.controls",
+      "qualpf.kalpha2.lifecycle.cpp",
+      "qualpf.kalpha2.lifecycle.legacy",
+      "qualpf.preprocessing.current_probe_state"
+    ],
+    "legacy_input": "QXP v1/v2/v3 rejected by product; frozen historical codecs remain test-only",
+    "frozen_expected_values_changed": false
   }
 }

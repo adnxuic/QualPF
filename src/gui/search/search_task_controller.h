@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QThreadPool>
 #include <memory>
+#include <optional>
 
 namespace qualpf::gui {
 // Qt scheduling only. Admission, cancellation and publication are Application
@@ -18,6 +19,12 @@ class SearchTaskController final : public QObject {
     // Diagnostic observer; worker events require a thread-safe callback.
     using Trace = std::function<void(TaskEvent, std::uint64_t, std::thread::id)>;
     using Finalize = std::function<Status(application::PreparedSearchResult &)>;
+    struct Timing {
+        std::uint64_t task = 0;
+        double queue_seconds = 0, worker_seconds = 0, delivery_seconds = 0;
+        double publication_seconds = 0, presentation_seconds = 0, total_seconds = 0;
+        bool success = false;
+    };
     SearchTaskController(application::SearchCoordinator &,
                          std::shared_ptr<application::CandidateReaderFactory>, QObject *parent = nullptr,
                          Trace = {});
@@ -25,16 +32,22 @@ class SearchTaskController final : public QObject {
     Status start(application::SearchInput, application::ReferenceDatabase, Completion = {}, Finalize = {});
     Status submit(application::ReferenceDatabase, Work, Completion = {}, Finalize = {},
                   application::SearchPublication = application::SearchPublication::commit,
-                  std::shared_ptr<const application::ReferenceReadGuard> = {});
+                  std::shared_ptr<const application::ReferenceReadGuard> = {},
+                  std::optional<application::WorkflowTarget> = {});
     void cancel();
     void close();
     bool busy() const noexcept { return bool(active_); }
     bool closing() const noexcept { return coordinator_.closing(); }
     std::uint64_t taskId() const noexcept;
+    // Owner-thread diagnostics only; presentation is the synchronous callback,
+    // not a claim about a subsequent native paint or asynchronous plot preview.
+    std::optional<Timing> lastTiming() const { return lastTiming_; }
   signals:
     void started(quint64 task);
     void progress(quint64 task, quint64 current, quint64 total);
+    void workflowProgress(quint64 task);
     void finished(quint64 task, bool success);
+    void timingReady(quint64 task);
     void drained();
 
   private:
@@ -46,5 +59,6 @@ class SearchTaskController final : public QObject {
     Trace trace_;
     QThreadPool pool_;
     std::shared_ptr<Delivery> active_;
+    std::optional<Timing> lastTiming_;
 };
 } // namespace qualpf::gui

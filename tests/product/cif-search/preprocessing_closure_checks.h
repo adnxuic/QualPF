@@ -20,11 +20,11 @@ void phase94ProductChecks(MainWindow &window, const QString &output, qualpf::gui
         require(bool(isolated.commit(isolated.snapshot(), *raw)), "Raw fixture failed");
         const auto before = isolated.snapshot();
         auto status = applyPreprocessing(isolated, action);
-        require(!status && status.error().code == ErrorCode::undefined_preprocessing &&
-                    status.error().reason == "coincident_baseline_endpoints" && isolated.snapshot() == before,
-                "Undefined product chain published output or changed reason");
+        require(bool(status) && isolated.snapshot() != before && isolated.snapshot()->peaks.valid &&
+                    !isolated.snapshot()->preprocessing.rejected_candidates.empty(),
+                "Default product chain lost measurable peaks or diagnostics");
     }
-    passed("undefined_default_chains_zero_publication");
+    passed("default_chains_measurable_candidates");
     restore(reference);
     PreprocessingRequest request;
     request.wavelength = WavelengthAngstrom{reference->peaks.wave};
@@ -232,8 +232,8 @@ void phase94ProductChecks(MainWindow &window, const QString &output, qualpf::gui
           "Partial export coordinate");
     close(columns[1].toDouble(), partial.pattern.background->values.front(), 1e-7, 1e-7,
           "Partial export intensity");
-    auto subtracted = applyPreprocessing(session, PreprocessingAction::subtract_background);
-    require(!subtracted && session.snapshot() == beforePartial,
+    window.setBackgroundSubtractionDisplay(true);
+    require(!window.context().presentation().snapshot().subtract_background && session.snapshot() == beforePartial,
             "Partial subtraction invented outside values");
     PreprocessingRequest crop;
     crop.crop_range = AngularRange{partial.pattern.two_theta[200], partial.pattern.two_theta[400]};

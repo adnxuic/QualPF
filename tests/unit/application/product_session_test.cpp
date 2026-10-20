@@ -54,6 +54,22 @@ int main() {
     const int unsubscribed = calls;
     session.reset();
     check(calls == unsubscribed);
+    ProductCard a, b, c; a.id = "A"; b.id = "B"; c.id = "C";
+    current = session.snapshot();
+    check(bool(session.mergeCandidates(current, {b,a,b,c})));
+    auto merged = session.snapshot();
+    check(merged->candidates.size() == 3 && merged->candidates[0].id == "B" && merged->candidates[1].id == "A");
+    check(!session.mergeCandidates(current, {}) && !session.removeCandidates(current, {}));
+    check(bool(session.mergeCandidates(merged, {a,b})) && session.snapshot() == merged);
+    const std::vector<std::string> ids{"A"};
+    check(bool(session.removeCandidates(merged, ids)) && session.snapshot()->candidates.size() == 2 &&
+          session.snapshot()->candidates[0].id == "B" && session.snapshot()->candidates[1].id == "C");
+    current = session.snapshot();
+    check(bool(session.removeCandidates(current, ids)) && session.snapshot() == current);
+    std::thread mutationWorker([&] {
+        threadRejected = !session.mergeCandidates(current, {}) && !session.removeCandidates(current, {});
+    });
+    mutationWorker.join(); check(threadRejected && session.snapshot() == current);
     ProductState exhausted;
     exhausted.revision = std::numeric_limits<std::uint64_t>::max();
     ProductSearchSession maximum(exhausted);

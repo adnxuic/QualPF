@@ -19,6 +19,7 @@ using namespace application;
 // canonical values and every transaction barrier. No writable state escapes.
 struct SessionStateView {
     ProductHandle canonical; // Derived view identity; never a second owner.
+    std::optional<ProjectSettings> projectSettings;
     SearchBackend backend = SearchBackend::cpp;
     bool editing = false;
     std::uint64_t revision = 0;
@@ -27,6 +28,7 @@ struct SessionStateView {
     MetadataValue searchOptions{MetadataObject{}};
     MetadataValue restraints{MetadataObject{}};
     Pattern pattern;
+    std::optional<OriginalSignalProvenance> original_signal_provenance;
     std::shared_ptr<const PowderCifProvenance> powderCifProvenance;
     std::vector<Pattern> comparisonPatterns; // Imported overlays; first pattern alone drives search.
     ExperimentalPeaks peaks;
@@ -35,6 +37,7 @@ struct SessionStateView {
     MetadataValue projectMetadata{MetadataObject{}};
     MetadataValue projectEnvelope{MetadataObject{}};
     PreprocessingConfiguration preprocessing;
+    std::shared_ptr<const PfsmAnalysis> pfsm;
 };
 using SessionViewHandle = std::shared_ptr<const SessionStateView>;
 
@@ -48,7 +51,7 @@ class SessionView : public QObject {
     void replacePeaks(ExperimentalPeaks peaks);
     void replacePattern(Pattern pattern);
     Status openPattern(SessionViewHandle source, Pattern pattern, std::vector<Pattern> comparisons = {},
-                       bool synchrotron = false);
+                       bool synchrotron = false, std::optional<OriginalSignalProvenance> = {});
     void replaceCandidates(QVector<CardType> cards);
     void replacePhases(QVector<CardType> cards);
     void reset();

@@ -1,7 +1,6 @@
 #include "infrastructure/settings/preference_store.h"
 #include "search_settings.h"
 #include "infrastructure/serialization/metadata_values.h"
-#include <QSettings>
 namespace qualpf::infrastructure::settings {
 application::PreferencePayload SearchSettings::option(application::ProductHandle source,const std::string &key,const application::PreferencePayload &fallback) const {
     return QtPreferenceStore::encode(value(*source,key.c_str(),QtPreferenceStore::decode(fallback)));
@@ -11,7 +10,7 @@ QVariant SearchSettings::value(const application::ProductState &source, const ch
     const auto options = jsonValue(application::MetadataValue{source.searchOptions}).toObject();
     if (options.contains(key))
         return options.value(key).toVariant();
-    return QSettings().value(key, fallback);
+    return fallback;
 }
 Result<application::SearchSettingsSnapshot> SearchSettings::load(application::ProductHandle source) const {
     if (!source)

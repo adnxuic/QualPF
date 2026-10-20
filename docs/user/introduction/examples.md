@@ -56,9 +56,9 @@ too large to inspect by hand.
 ## Suggested workflow
 
 1. Import one of the example patterns (**File → Import Diffraction Pattern**).
-2. Run background subtraction and peak search as described in
+2. Generate the background and run peak search as described in
    [Getting Started](getting-started.md).
-3. Run **Search → Search & Match** against a reference database containing
+3. Run **S&M → CSM (Classical SM)** against a reference database containing
    the expected phases (e.g. corundum, silicon, zincite, fluorite, brucite,
    calcite, lanthanum hexaboride).
 4. Accept the matching phases one by one and compare the RIR weight

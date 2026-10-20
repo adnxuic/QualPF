@@ -99,6 +99,9 @@ Status prepareManualPeaks(ProductState &next, const ManualPeakChange &change, Wa
     }
     next.peakTolerance = tolerance.value;
     next.preprocessing.peak_candidates.reset();
+    next.preprocessing.peak_calibration.reset();
+    next.preprocessing.fwhm_estimate.reset();
+    next.preprocessing.rejected_candidates.clear();
     next.preprocessing.candidate_failure.reset();
     next.preprocessing.selection.reset();
     next.projectMetadata["peak_snapshot_origin"] = "manual";

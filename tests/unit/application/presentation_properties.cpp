@@ -1,4 +1,5 @@
 #include "qualpf/application/presentation/plot_snapshot.h"
+#include "qualpf/application/pfsm.h"
 #include <bit>
 #include <cmath>
 #include <iostream>
@@ -148,6 +149,27 @@ int main() {
                     overlay.value().style_identity == "accepted_card:card1",
                 "card identity and style key");
         require(overlay.value().x == std::vector<double>({2, 4}), "card input not rewritten");
+        in = input();
+        auto &rawPattern = in.patterns.front().pattern;
+        rawPattern.processing.background_subtracted = false;
+        rawPattern.background = SampledSignal{{2,3,4},SampleWindow{0}};
+        const auto originalY = rawPattern.observed;
+        in.presentation.subtract_background = true;
+        auto net = project_session_update(in);
+        require(net && net.value().snapshot.series[1].y == std::vector<double>({-2,4,-7}), "signed net display without normalization");
+        require(rawPattern.observed == originalY && rawPattern.background->values == std::vector<double>({2,3,4}), "display input remains untouched");
+        require(net.value().snapshot.series[2].update == UpdatePolicy::erase && net.value().snapshot.series[3].update == UpdatePolicy::erase, "net hides background and points");
+        PfsmPlot fitted; fitted.pattern = rawPattern;
+        fitted.pattern.calculated = SampledSignal{{3,5,7},SampleWindow{0}};
+        fitted.residual = {-3,2,-10}; fitted.candidate_id = "trial";
+        auto fullFit = project_pfsm_update(fitted, {}, {});
+        auto netFit = project_pfsm_update(fitted, in.presentation, {});
+        require(fullFit && netFit && fullFit.value().snapshot.series[1].y == std::vector<double>({3,5,7}) &&
+            netFit.value().snapshot.series[1].y == std::vector<double>({1,2,3}), "PFSM total and net fit use the same parameters");
+        require(fullFit.value().snapshot.series[2].y == fitted.residual && netFit.value().snapshot.series[2].y == fitted.residual,
+            "PFSM residual is frozen across display modes");
+        rawPattern.background->window->first = 1;
+        require(!project_session_update(in), "partial subtraction refused before sink dispatch");
         std::cout << "PASS " << checks
                   << " independent ownership/dispatch/transport/coordinate/error checks\n";
         return 0;

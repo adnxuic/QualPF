@@ -70,11 +70,28 @@ def source_manifest(root=ROOT):
                                         cwd=root, text=True, encoding='utf-8', stderr=subprocess.DEVNULL).splitlines()
     except (OSError, subprocess.CalledProcessError):
         # Source archives have no .git directory but still run the live gate.
+        # Python imports can create bytecode during testing. Git excludes these
+        # through .gitignore; archive discovery must not treat runtime caches as
+        # newly added source inputs. Real source/reference files remain bound.
         names = [path.relative_to(root).as_posix() for prefix in prefixes
-                 for path in (root / prefix).rglob('*') if path.is_file()]
+                 for path in (root / prefix).rglob('*')
+                 if path.is_file() and path.suffix not in ('.pyc', '.pyo')]
         names += [name for name in exact if (root / name).is_file()]
     return {name: sha(root / name) for name in sorted(set(names))
             if (name.startswith(prefixes) or name in exact) and (root / name).is_file()}
+
+def combined_preprocessing_call(code):
+    return bool(re.search(r'\b(?:extract_experimental_peaks|find_peaks)\s*\(', strip_comments(code)))
+
+
+def algorithm_assembly_fields(code):
+    fields = {}
+    for name, pattern in [('AlgorithmSelections', r'AlgorithmIdentity\s+(\w+)\s*\{'),
+                          ('AlgorithmModules', r'shared_ptr<[^;]+>\s+(\w+)\s*;')]:
+        body = re.search(r'struct\s+' + name + r'\s*\{(.*?)\n\};', code, re.S)
+        fields[name] = set(re.findall(pattern, body[1])) if body else set()
+    return fields
+
 
 def observe(root=ROOT):
     failures, edges, dependencies, qt_files, owners, engines = [], set(), [], [], [], []
@@ -106,12 +123,21 @@ def observe(root=ROOT):
                 failures.append('Static product owner/context: ' + name)
             if 'AppState::' in code or 'gui/state/appstate.h' in code:
                 failures.append('Production AppState facade: ' + name)
-            if 'SearchEngine{}.run' in code:
+            if re.search(r'\bSearchEngine\s*\{[^{}]*\}\s*\.\s*run\s*\(', code):
                 engines.append(name)
             if origin == 'Infrastructure' and re.search(r'\b(?:SessionView|ProductSearchSession|stop_source|setMinFom|setWeightPhases|classicScore)\b', code):
                 failures.append('State/scoring/cancellation owner in Infrastructure: ' + name)
+            if origin == 'Application' and combined_preprocessing_call(code):
+                failures.append('Combined preprocessing orchestration in Application: ' + name)
             if origin in ('Core', 'Application') and re.search(r'\b(?:ifstream|ofstream|std::filesystem|QSqlDatabase)\b', code):
                 failures.append('Concrete IO in pure layer: ' + name)
+    assembly = root / 'src/application/include/qualpf/application/algorithms.h'
+    if assembly.is_file():
+        expected_modules = {'background', 'initial_peaks', 'fwhm', 'experimental_peaks', 'matcher',
+                            'profile_expander', 'profile_fitter'}
+        for owner, fields in algorithm_assembly_fields(assembly.read_text(encoding='utf-8')).items():
+            if fields != expected_modules:
+                failures.append('Unexpected scientific replacement points in ' + owner + ': ' + repr(sorted(fields)))
     search_files = ['src/gui/mainwindow.cpp', 'src/gui/mainwindow.h'] + [
         path.relative_to(root).as_posix() for path in (root / 'src/gui/search').glob('*')
         if path.suffix in ('.cpp', '.h')]
@@ -139,12 +165,44 @@ def observe(root=ROOT):
                 search_event_pumps=pumps, source_sha256=source_manifest(root))
 
 def self_test():
+    import tempfile
+    from unittest.mock import patch
+    with tempfile.TemporaryDirectory() as temporary:
+        archive = Path(temporary)
+        source_names = {'src/owned.cpp', 'tools/check.py', 'tests/data/reference.cif'}
+        cache_names = {'tools/__pycache__/check.cpython-314.pyc', 'tools/check.pyc', 'tools/check.pyo'}
+        for name in source_names | cache_names:
+            path = archive / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b'original')
+        # Force the archive path even if the test temporary directory happens
+        # to be inside an unrelated Git checkout.
+        with patch.object(subprocess, 'check_output', side_effect=OSError('No Git metadata')):
+            initial = source_manifest(archive)
+            assert set(initial) == source_names
+            (archive / 'tests/data/reference.cif').write_bytes(b'changed')
+            changed = source_manifest(archive)
+            assert changed['tests/data/reference.cif'] != initial['tests/data/reference.cif']
+            (archive / 'src/added.cpp').write_bytes(b'new source')
+            assert 'src/added.cpp' in source_manifest(archive)
+            (archive / 'src/owned.cpp').unlink()
+            assert 'src/owned.cpp' not in source_manifest(archive)
+    engine_call = r'\bSearchEngine\s*\{[^{}]*\}\s*\.\s*run\s*\('
+    assert re.search(engine_call, 'SearchEngine{}.run(input, reader, context)')
+    assert re.search(engine_call, 'SearchEngine{task.algorithms}.run(input, reader, context)')
+    assert not re.search(engine_call, 'SearchEngine{}.score(state, card, parameters, context)')
     assert include_layer('gui/state/workspace_context.h') not in ALLOWED['Infrastructure']
     assert include_layer('infrastructure/settings/search_settings.h') not in ALLOWED['Application']
     assert include_layer('qualpf/domain/result.h') in ALLOWED['Application']
     assert not acyclic({('Application', 'Core'), ('Core', 'Application')})
     assert acyclic({('GUI', 'Infrastructure'), ('Infrastructure', 'Application'), ('Application', 'Core')})
-    print('PASS: forbidden reverse dependencies and cycle detection negative controls')
+    assert combined_preprocessing_call('qualpf::preprocessing::find_peaks(pattern, options, wave, tolerance)')
+    assert combined_preprocessing_call('preprocessing::extract_experimental_peaks(pattern, options, wave, tolerance)')
+    assert not combined_preprocessing_call('evaluateFormalPeakExtraction(source, request, context)')
+    assert not combined_preprocessing_call('// find_peaks(pattern)')
+    fields = algorithm_assembly_fields('struct AlgorithmModules {\n std::shared_ptr<const search::IRirQuantifier> rir;\n};')
+    assert fields['AlgorithmModules'] == {'rir'}
+    print('PASS: archive source/cache distinction, forbidden dependencies and cycle negative controls')
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)

@@ -1,7 +1,9 @@
 #include "qualpf/application/presentation/plot_snapshot.h"
+#include "qualpf/application/pfsm.h"
 #include <algorithm>
 #include <cmath>
 #include <utility>
+#include <tuple>
 
 namespace qualpf::application::presentation {
 namespace {
@@ -134,7 +136,40 @@ Status project_coordinates(PlotSeries &s, Abscissa axis) {
     return Status{std::monostate{}};
 }
 
-Result<PlotUpdate> project_compatibility_frame(const PlotInput &in, PlotRequest request) {
+bool can_subtract_background(const Pattern &p) noexcept {
+    return !p.observed.empty() && p.processing.background_subtracted == false && p.background &&
+        p.background->window && p.background->window->first == 0 &&
+        p.background->values.size() == p.observed.size() && p.two_theta.size() == p.observed.size() &&
+        std::all_of(p.background->values.begin(), p.background->values.end(), [](double v) { return std::isfinite(v); });
+}
+bool can_subtract_background(const ProductState &source) noexcept {
+    if (!source.pfsm) return can_subtract_background(source.pattern);
+    if (!source.pfsm->problem || !source.pfsm->problem->observations) return false;
+    const auto &data = *source.pfsm->problem->observations;
+    return !data.observed.empty() && data.observed.size() == data.background.size() &&
+        data.observed.size() == data.coordinates.size();
+}
+static Result<PlotInput> display_input(const PlotInput &raw) {
+    auto in = raw;
+    if (!in.presentation.subtract_background || in.mode == PresentationMode::headless || in.patterns.empty())
+        return Result<PlotInput>{std::move(in)};
+    auto &layer = in.patterns.front(); auto &p = layer.pattern;
+    if (!can_subtract_background(p)) return Result<PlotInput>{invalid("background_alignment_unknown")};
+    for (std::size_t i = 0; i < p.observed.size(); ++i) p.observed[i] -= p.background->values[i];
+    // Compatibility calculated arrays already contain the phase contribution.
+    // Keep that convention in this temporary display buffer only.
+    p.background->values.assign(p.observed.size(), 0);
+    p.processing.background_subtracted = true;
+    layer.background_enabled = false;
+    layer.background_points_x.clear(); layer.background_points_y.clear();
+    in.presentation.layers[std::size_t(PlotLayer::background)] = Visibility::hidden;
+    in.presentation.layers[std::size_t(PlotLayer::background_points)] = Visibility::hidden;
+    return Result<PlotInput>{std::move(in)};
+}
+Result<PlotUpdate> project_compatibility_frame(const PlotInput &raw, PlotRequest request) {
+    auto projected = display_input(raw);
+    if (!projected) return Result<PlotUpdate>{projected.error()};
+    const auto &in = projected.value();
     PlotUpdate out;
     out.snapshot.abscissa = request.abscissa;
     out.snapshot.reverse_axis = request.abscissa == Abscissa::d_spacing;
@@ -237,18 +272,19 @@ Result<PlotUpdate> project_compatibility_frame(const PlotInput &in, PlotRequest 
                           span(pattern.background->values, first, count, Precision::binary32_transport));
         if (!r)
             return Result<PlotUpdate>{r.error()};
-        if (visible(PlotLayer::background_points) && !p.background_points_x.empty()) {
+    }
+    if (visible(PlotLayer::background_points) && has_background && p.background_enabled &&
+        !pattern.processing.background_subtracted.value_or(false) && !p.background_points_x.empty()) {
             auto s = series(SeriesKind::background_points, "background_points", p.background_points_x,
                             p.background_points_y, wave, Precision::binary32_transport);
             for (auto &v : s.x)
                 v = float(v);
             for (auto &v : s.y)
                 v = float(v);
-            r = append(out, std::move(s), request.abscissa);
+            auto r = append(out, std::move(s), request.abscissa);
             if (!r)
                 return Result<PlotUpdate>{r.error()};
         }
-    }
     if (draw_diff) {
         auto r = add_span(SeriesKind::difference, std::move(diff));
         if (!r)
@@ -301,7 +337,10 @@ Result<PlotUpdate> project_compatibility_frame(const PlotInput &in, PlotRequest 
     return Result<PlotUpdate>{std::move(out)};
 }
 
-Result<PlotUpdate> project_session_update(const PlotInput &in, PlotRequest request) {
+Result<PlotUpdate> project_session_update(const PlotInput &raw, PlotRequest request) {
+    auto projected = display_input(raw);
+    if (!projected) return Result<PlotUpdate>{projected.error()};
+    const auto &in = projected.value();
     PlotUpdate out;
     out.snapshot.abscissa = request.abscissa;
     out.snapshot.reverse_axis = request.abscissa == Abscissa::d_spacing;
@@ -339,14 +378,14 @@ Result<PlotUpdate> project_session_update(const PlotInput &in, PlotRequest reque
     }
     auto background =
         series(SeriesKind::background, "background", std::move(bx), std::move(by), wave, Precision::binary64);
-    if (background.x.empty())
+    if (background.x.empty() || in.presentation.layers[std::size_t(PlotLayer::background)] != Visibility::visible)
         background.update = UpdatePolicy::erase;
     status = append(out, std::move(background), request.abscissa);
     if (!status)
         return Result<PlotUpdate>{status.error()};
     auto points = series(SeriesKind::background_points, "background_points", p.background_points_x,
                          p.background_points_y, wave, Precision::binary64);
-    if (points.x.empty())
+    if (points.x.empty() || in.presentation.layers[std::size_t(PlotLayer::background_points)] != Visibility::visible)
         points.update = UpdatePolicy::erase;
     status = append(out, std::move(points), request.abscissa);
     if (!status)
@@ -357,6 +396,41 @@ Result<PlotUpdate> project_session_update(const PlotInput &in, PlotRequest reque
             return Result<PlotUpdate>{s.error()};
         out.snapshot.overlays.push_back(std::move(s).value());
     }
+    return Result<PlotUpdate>{std::move(out)};
+}
+
+Result<PlotUpdate> project_pfsm_update(const PfsmPlot &plot, const PresentationWorkspace::Snapshot &view, PlotRequest request) {
+    const auto &p = plot.pattern;
+    if (!can_subtract_background(p) || !p.calculated || !p.calculated->window ||
+        p.calculated->window->first != 0 || p.calculated->values.size() != p.observed.size() ||
+        plot.residual.size() != p.observed.size() || p.radiation.lines.empty())
+        return Result<PlotUpdate>{invalid("invalid_pfsm_plot")};
+    PlotUpdate out; out.snapshot.abscissa = request.abscissa;
+    out.snapshot.reverse_axis = request.abscissa == Abscissa::d_spacing;
+    out.commands = {{CommandKind::rescale, request.rescale, {}}, {CommandKind::replace_canvas, 1, {}}};
+    auto observed = p.observed; auto calculated = p.calculated->values;
+    if (view.subtract_background)
+        for (std::size_t i = 0; i < observed.size(); ++i) {
+            observed[i] -= p.background->values[i]; calculated[i] -= p.background->values[i];
+        }
+    const auto x = coordinates(p); const auto wave = p.radiation.lines.front().wavelength.value;
+    for (auto [kind, id, values] : std::vector<std::tuple<SeriesKind, std::string, std::vector<double>>>{
+            {SeriesKind::observed, "observed", std::move(observed)},
+            {SeriesKind::calculated, "calculated", std::move(calculated)},
+            {SeriesKind::difference, "difference", plot.residual}}) {
+        auto item = series(kind, id, x, std::move(values), wave, Precision::binary64);
+        item.label = kind == SeriesKind::observed ? "Observed" : kind == SeriesKind::difference ? "Residual" :
+            plot.candidate_id.empty() ? "Calculated · selected phases" : "Calculated · joint trial " + plot.candidate_id;
+        auto status = append(out, std::move(item), request.abscissa);
+        if (!status) return Result<PlotUpdate>{status.error()};
+    }
+    if (!view.subtract_background && !plot.background_points.empty()) {
+        std::vector<double> bx, by;
+        for (auto point : plot.background_points) { bx.push_back(point.x); by.push_back(point.y); }
+        auto status = append(out, series(SeriesKind::background_points, "background_points", std::move(bx), std::move(by), wave, Precision::binary64), request.abscissa);
+        if (!status) return Result<PlotUpdate>{status.error()};
+    }
+    out.commands.push_back({CommandKind::redraw, 1, {}});
     return Result<PlotUpdate>{std::move(out)};
 }
 

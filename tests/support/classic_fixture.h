@@ -17,6 +17,9 @@ struct ClassicFixture {
                              TwoThetaDegrees{30}, TwoThetaDegrees{40}, TwoThetaDegrees{50},
                              TwoThetaDegrees{60}};
         pattern.observed = {0, 100, 200, 100, 0, 0, 0};
+        // Independent synthetic observation with a known zero background.
+        pattern.background = SampledSignal{std::vector<double>(7, 0), SampleWindow{0}};
+        pattern.processing = {false, false, false};
         pattern.calculation_range = AngularRange{TwoThetaDegrees{0}, TwoThetaDegrees{60}};
         peaks.dataset = pattern.id;
         card.database_id = "synthetic";

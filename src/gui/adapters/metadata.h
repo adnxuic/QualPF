@@ -7,6 +7,7 @@ inline QVariant metadataVariant(const application::MetadataValue &value) {
         using T=std::decay_t<decltype(v)>;
         if constexpr(std::is_same_v<T,std::string>) return QString::fromStdString(v);
         else if constexpr(std::is_same_v<T,std::int64_t>) return QVariant::fromValue(qlonglong(v));
+        else if constexpr(std::is_same_v<T,std::uint64_t>) return QVariant::fromValue(qulonglong(v));
         else if constexpr(std::is_same_v<T,bool> || std::is_same_v<T,double>) return v;
         else if constexpr(std::is_same_v<T,application::MetadataArray>) {
             QVariantList out; for(const auto &e:v) out.append(metadataVariant(e)); return out;

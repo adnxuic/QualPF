@@ -6,6 +6,8 @@
 #include "gui/plotting/plotsettings.h"
 #include "gui/plotting/reflectionbar.h"
 #include "qualpf/application/plot_coordinates.h"
+#include "qualpf/application/project_document.h"
+#include <QPointer>
 
 class CardType;
 namespace qualpf::gui { class QtPlotSink; }
@@ -42,6 +44,8 @@ public:
     explicit XpdViewWidget(QWidget *parent = nullptr);
     void hideGraphicArea();
     void setGraphicArea();
+    // Release project data and overlays while retaining presentation styles.
+    void clearProjectPlot();
     void addPlot(const QVector<double> &xvet0, const QVector<double> &yvet0, graphItem::ItemType type,
                  int visible, float wave, const QString &name);
     void addPlot(const QVector<double> &xvet0, graphItem::ItemType type,
@@ -81,6 +85,8 @@ public:
     void connectSelectionChanged();
     PlotSettings pSettings() const;
     void setPlotSettings(const PlotSettings &newPlotSettings);
+    qualpf::application::ProjectViewState captureProjectView(qualpf::application::ProjectViewState) const;
+    void applyProjectView(const qualpf::application::ProjectViewState &);
     bool updateMinMax() override;
     void convertAbscissa(xpdutils::xAbscissaType from, xpdutils::xAbscissaType to);
     void drawGraphicItem(graphItem &item, const QVector<double> &xvet, const QVector<double> &yvet, double wave);
@@ -152,8 +158,8 @@ private:
     bool rescalePlotEnabled() const;
     void makeReflections(const QVector<double> &xvet);
     int findRefLocation(const QVector<refInfo> &ref, double xval);
-    QLabel *labelWidget1, *labelWidget2, *labelWidget3;
-    QScrollBar *horizontalScrollBar;
+    QPointer<QLabel> labelWidget1, labelWidget2, labelWidget3;
+    QScrollBar *horizontalScrollBar = nullptr;
 
     QVector<CardPeakData> m_cardPeaks;
     QVector<QCPGraph *>   m_cardPeakGraphs;

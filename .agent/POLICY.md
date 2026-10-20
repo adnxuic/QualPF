@@ -18,7 +18,7 @@ and configured-target gates enforce the [current architecture](../docs/architect
 Keep source/revision-checked atomic publication, owned worker inputs, cooperative
 cancellation, execution-thread SQLite connections, queued owner-thread delivery,
 safe close/drain and subscription lifetimes. Do not introduce writable canonical
-mirrors, search event pumps or forced thread termination. Preserve QXP, SQL, CLI,
+mirrors, search event pumps or forced thread termination. Preserve the current QPF, SQL, CLI,
 settings, export and retained [compatibility contracts](../docs/architecture/compatibility-allowlist.json).
 Keep unknown fields and values at persistence/settings boundaries unchanged.
 
@@ -46,6 +46,12 @@ no scheduling or numerical change follows from maintenance. GoogleTest/Benchmark
 and clang-format/clang-tidy remain optional development tools.
 
 ## Git and documentation
+
+Maintain [CHANGELOG.md](../CHANGELOG.md) as the ongoing change record. Add notable
+completed changes under Unreleased and update affected current guides. Phase and
+Milestone identifiers belong to retained refactoring history; new work needs no
+numbered phase, phase gate or separate completion report. Existing scientific
+evidence and acceptance contracts retain their scope and preservation rules.
 
 Use bounded batches and proportional verification under [WORKFLOW](WORKFLOW.md).
 Inspect diff, run the required checks and git diff --check, explicitly stage only

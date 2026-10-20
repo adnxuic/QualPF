@@ -72,6 +72,7 @@ private:
     QVector<double> dValues, dTol;
     double wave;
     bool decodeReflections_ = false;
+    int minimumSpecies_ = 0, maximumSpecies_ = 0;
 
     QString buildQueryNameString();
     QString buildQuerySubfilesString();

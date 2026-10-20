@@ -4,7 +4,7 @@
 #include "qualpf/application/search_engine.h"
 #include "qualpf/application/kalpha2.h"
 namespace qualpf::application {
-enum class PreprocessingAction { subtract_background, automatic_peaks, prepare_search };
+enum class PreprocessingAction { generate_background, automatic_peaks, prepare_search };
 enum class PeakOperation { redetect, reselect, restore_snapshot };
 // Manual values are user measurements, never estimates of undefined detection
 // output. Row indices are scoped to the edit's immutable source snapshot.
@@ -22,6 +22,9 @@ struct TablePeakChange {
     bool infer_width = false;
 };
 struct PreprocessingRequest {
+    std::optional<WorkflowId> workflow;
+    std::optional<InitialPeakConfiguration> initial_peaks;
+    std::optional<FwhmUsage> supplied_width;
     bool strip_kalpha2 = false;
     std::optional<ManualPeakChange> manual;
     std::optional<TablePeakChange> table;
@@ -32,18 +35,19 @@ struct PreprocessingRequest {
     std::optional<preprocessing::BackgroundOptions> background;
     std::optional<preprocessing::SmoothingOptions> smoothing;
     std::optional<preprocessing::PeakOptions> peaks;
+    std::optional<FwhmConfiguration> fwhm;
     std::optional<PeakSelection> selection;
     std::optional<std::vector<preprocessing::BackgroundPoint>> background_points;
     std::vector<preprocessing::BackgroundFilter> background_filters;
     PeakOperation peak_operation = PeakOperation::redetect;
-    bool subtract_background = false;
-    bool use_background_for_peaks = false;
+    AnalysisPurpose purpose = AnalysisPurpose::peak_measurement;
     // A peak root may prepare its missing background in the same transaction;
     // its final Search decision still belongs to P1/P2, not a background edit.
     bool peak_product_operation = false;
     bool restore_automatic_window = false; // Legacy sensitivity action's post-detection state.
     WavelengthAngstrom wavelength;
     AngularWidthDegrees tolerance;
+    AlgorithmHandle algorithms; // Frozen at preparation; defaults to the owned source's selection.
 };
 
 // Private evaluation workspace: no Session, Qt, settings, SQL or publication.
@@ -57,10 +61,17 @@ class PreprocessingEvaluation {
     Status previewRange(const PreprocessingRequest &, std::stop_token = {});
     const ProductState *preview() const { return draft_ ? &*draft_ : nullptr; }
     std::size_t candidateCount() const { return candidateCount_; }
+    std::shared_ptr<const ConfiguredFwhmEvaluation> fwhmEvaluation() const { return fwhmEvaluation_; }
     void clear() { draft_.reset(); }
 
   private:
-    Status evaluate(const PreprocessingRequest &);
+    void invalidateDetection() {
+        detected_.reset();
+        detectedOptions_.reset();
+        detectionInput_.reset();
+        detectionFailed_ = true;
+    }
+    Status evaluate(const PreprocessingRequest &, const ExecutionContext &);
     Stripper stripper_;
     ProductHandle source_;
     std::optional<ProductState> draft_;
@@ -69,6 +80,7 @@ class PreprocessingEvaluation {
     std::optional<preprocessing::PeakOptions> detectedOptions_;
     std::optional<ProductState> detectionInput_;
     bool detectionFailed_ = false;
+    std::shared_ptr<const ConfiguredFwhmEvaluation> fwhmEvaluation_;
 };
 
 // Owner-side editor admission and publication, independent of evaluation.
@@ -92,6 +104,7 @@ class ProductPreprocessingEdit {
     ProductSearchSession &session_;
     ProductHandle source_;
     std::unique_ptr<PreprocessingEvaluation> evaluation_;
+    std::optional<PreprocessingRequest> lastRequest_;
     bool closed_ = false, interactive_ = false, stale_ = false;
 };
 enum class PeakEditOrigin { detected, manual, inferred_graph, table, imported };
@@ -100,10 +113,13 @@ bool peakEditorEquivalent(const ProductState &, const ProductState &);
 Status finalizePeakEdit(ProductState &, const ProductState &, PeakEditOrigin);
 Status prepareManualPeaks(ProductState &, const ManualPeakChange &, WavelengthAngstrom, AngularWidthDegrees);
 Result<Pattern> preparePeakMeasurementContext(const ProductState &, WavelengthAngstrom);
+Result<Pattern> preparePeakMeasurementContext(const ProductState &, WavelengthAngstrom, const ExecutionContext &);
 Status preparePeakOperation(ProductState &, const PreprocessingRequest &);
+Status preparePeakOperation(ProductState &, const PreprocessingRequest &, const ExecutionContext &);
 bool rangeNumericalEquivalent(const Pattern &, const Pattern &);
 void finalizeRangeState(ProductState &, const ProductState &);
 bool hasActiveBackground(const Pattern &);
-Result<PreprocessingRequest> automaticPreprocessingRequest(ProductHandle, PreprocessingAction);
+Result<PreprocessingRequest> automaticPreprocessingRequest(ProductHandle, PreprocessingAction,
+                                                           SearchMethod = SearchMethod::classic_sm);
 Result<PreprocessingRequest> backgroundPointRequest(ProductHandle, bool add, double x, double y, bool redetect);
 } // namespace qualpf::application

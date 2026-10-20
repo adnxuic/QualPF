@@ -7,6 +7,8 @@ add_library(qualpf_gui OBJECT
     platform/external_program.cpp
     platform/external_program.h
     search/window_search.cpp
+    search/fwhm_actions.cpp
+    search/initial_peak_actions.cpp
     search/search_task_controller.cpp
     search/search_task_controller.h
     search/search_request.h
@@ -27,6 +29,7 @@ add_library(qualpf_gui OBJECT
     model/experimentalpeaks.h
     presentation/search_plot_input.cpp
     presentation/search_plot_input.h
+    presentation/project_view.cpp
     presentation/product_plot_refresh.cpp
     presentation/product_plot_refresh.h
     search/peakassoc.cpp
@@ -57,6 +60,19 @@ add_library(qualpf_gui OBJECT
     dialogs/manual_peak_dialog.h
     dialogs/preprocessing_dialog.cpp
     dialogs/preprocessing_dialog.h
+    dialogs/workflow_settings_dialog.cpp
+    dialogs/workflow_settings_dialog.h
+    widgets/workflow_dock.cpp
+    widgets/workflow_dock.h
+    search/workflow_actions.cpp
+    dialogs/fwhm_options_dialog.cpp
+    dialogs/fwhm_options_dialog.h
+    dialogs/initial_peak_options_dialog.cpp
+    dialogs/initial_peak_options_dialog.h
+    widgets/initial_peak_candidates_widget.cpp
+    widgets/initial_peak_candidates_widget.h
+    dialogs/pfsm_options_dialog.cpp
+    dialogs/pfsm_options_dialog.h
     dialogs/aboutdialog.cpp
     dialogs/aboutdialog.h
     dialogs/aboutdialog.ui
@@ -126,6 +142,8 @@ add_library(qualpf_gui OBJECT
     support/scopedtimer.h
     support/qt_utils.cpp
     support/qt_utils.h
+    support/workflow_confirmation.cpp
+    support/workflow_confirmation.h
     widgets/backgroundcoefwidget.cpp
     widgets/backgroundcoefwidget.h
     widgets/backgroundcoefwidget.ui
@@ -198,4 +216,4 @@ else()
 endif()
 
 # MainWindow owns the generated UI; the split search presenter consumes it.
-set_source_files_properties(search/window_search.cpp PROPERTIES SKIP_AUTOUIC ON)
+set_source_files_properties(search/window_search.cpp search/fwhm_actions.cpp search/initial_peak_actions.cpp search/workflow_actions.cpp PROPERTIES SKIP_AUTOUIC ON)

@@ -237,6 +237,35 @@ def source_failures(root, targets):
     return sorted(set(failures)), dependencies, len(operations)
 
 
+def workflow_failures(root, dependencies):
+    """Formal numerics cannot depend, even transitively, on recall diagnostics."""
+    failures, edges = [], {}
+    for source, _, destination in dependencies:
+        edges.setdefault(source, set()).add(destination)
+    protected = ('src/core/profile/pfsm_expansion.cpp', 'src/core/profile/pfsm_fitting.cpp',
+                 'src/core/profile/pfsm_nnls.cpp', 'src/core/profile/pfsm_trf.cpp',
+                 'src/application/session/pfsm_formal_fit.cpp',
+                 'src/application/session/pfsm_formal_fit.h')
+    for source in protected:
+        pending, seen = list(edges.get(source, ())), set()
+        while pending:
+            destination = pending.pop()
+            if destination in seen:
+                continue
+            seen.add(destination)
+            if 'pfsm_candidate_recall' in destination:
+                failures.append(f'Formal fitting depends on candidate recall: {source} -> {destination}')
+            pending.extend(edges.get(destination, ()))
+    for path in (root / 'src/application/session').glob('pfsm_candidate_recall*'):
+        if path.suffix in ('.h', '.cpp') and re.search(r'\bPfsmAnalysis\b', strip_comments(path.read_text(encoding='utf-8'))):
+            failures.append(f'Candidate recall accesses whole analysis: {relative(path, root)}')
+    api = root / 'src/application/include/qualpf/application/pfsm.h'
+    if api.exists() and re.search(r'enum class PfsmCandidateRecallVersion\s*\{[^}]*\bv1\b',
+                                  strip_comments(api.read_text(encoding='utf-8'))):
+        failures.append('Retired v1 candidate recall is executable')
+    return failures
+
+
 def self_test():
     with tempfile.TemporaryDirectory() as temporary:
         root = Path(temporary)
@@ -285,6 +314,14 @@ def self_test():
         assert not graph_failures(valid, root)
         valid['app']['INTERFACE_INCLUDE_DIRECTORIES'] = str(root / 'src')
         assert graph_failures(valid, root)
+        formal = 'src/application/session/pfsm_formal_fit.cpp'
+        recall = 'src/core/include/qualpf/profile/pfsm_candidate_recall.h'
+        assert workflow_failures(root, [[formal, 'bridge.h', 'bridge.h'], ['bridge.h', recall, recall]])
+        assert not workflow_failures(root, [[formal, 'pfsm.h', 'src/core/include/qualpf/profile/pfsm.h']])
+        path = root / 'src/application/session/pfsm_candidate_recall.cpp'
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text('void recall(PfsmAnalysis &state);', encoding='utf-8')
+        assert workflow_failures(root, [])
     print('PASS: header, operation, SQL inheritance, transitive link and include-export negative controls')
 
 
@@ -299,6 +336,7 @@ def main():
         self_test()
     targets = json.loads(args.graph.read_text(encoding='utf-8-sig'))['targets']
     failures, headers, operations = source_failures(ROOT, targets)
+    failures += workflow_failures(ROOT, headers)
     failures += graph_failures(targets, ROOT)
     failures += observe()['failures']
     result = dict(schema='qualpf.strict-boundaries.v1', status='FAIL' if failures else 'PASS',

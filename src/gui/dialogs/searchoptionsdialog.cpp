@@ -1,6 +1,9 @@
 #include "gui/adapters/metadata.h"
 #include "gui/state/workspace_context.h"
 #include "gui/dialogs/searchoptionsdialog.h"
+#include "gui/mainwindow.h"
+#include <QIntValidator>
+#include <limits>
 #include "ui_searchoptionsdialog.h"
 #include "qualpf/application/settings_keys.h"
 
@@ -39,6 +42,9 @@ SearchOptionsDialog::SearchOptionsDialog(QWidget *parent)
     , ui(new Ui::SearchOptionsDialog)
 {
     ui->setupUi(this);
+    source_ = qualpf::gui::workspaceContext(this).workspace().session().snapshot();
+    ui->lineEditMaxEntries->setValidator(new QIntValidator(1, std::numeric_limits<int>::max(), this));
+    setToolTip(tr("These options apply only to the current project."));
 
     wireSliderSpin(ui->sliderFom,       ui->spinFom);
     wireSliderSpin(ui->sliderTwothetaD, ui->spinTwothetaD);
@@ -50,8 +56,7 @@ SearchOptionsDialog::SearchOptionsDialog(QWidget *parent)
             this, &SearchOptionsDialog::onAutoToggled);
 
     connect(ui->buttonBox, &QDialogButtonBox::accepted, this, [this]() {
-        saveSettings();
-        accept();
+        if (saveSettings()) accept();
     });
     connect(ui->buttonBox, &QDialogButtonBox::rejected,
             this, &QDialog::reject);
@@ -68,7 +73,6 @@ SearchOptionsDialog::SearchOptionsDialog(QWidget *parent)
             this, &SearchOptionsDialog::onButtonClicked);
 
     loadSettings();
-    onAutoToggled(ui->checkAuto->isChecked());
 }
 
 SearchOptionsDialog::~SearchOptionsDialog()
@@ -82,7 +86,10 @@ SearchOptionsDialog::~SearchOptionsDialog()
 
 void SearchOptionsDialog::onAutoToggled(bool checked)
 {
-    if (checked)
+    if (source_->projectSettings) {
+        if (checked && !loading_ && ui->spinDelta->isEnabled()) manualDelta_ = ui->spinDelta->value();
+        ui->spinDelta->setValue(checked ? source_->automaticDelta : manualDelta_);
+    } else if (checked)
         ui->spinDelta->setValue(qualpf::gui::workspaceContext(this).searchSession().snapshot()->automaticDelta);
     ui->sliderDelta->setDisabled(checked);
     ui->spinDelta->setDisabled(checked);
@@ -100,21 +107,26 @@ void SearchOptionsDialog::onButtonClicked(QAbstractButton *button)
 
 void SearchOptionsDialog::resetToDefaults()
 {
+    loading_ = true;
     ui->spinFom->setValue(0.35);
     ui->spinTwothetaD->setValue(0.50);
     ui->spinIntensity->setValue(0.50);
     ui->spinPhases->setValue(0.50);
+    manualDelta_ = .08;
     ui->checkAuto->setChecked(true);
     ui->checkResidual->setChecked(true);
     ui->checkStrongest->setChecked(true);
     ui->checkDeleted->setChecked(true);
     ui->lineEditMaxEntries->setText(QStringLiteral("3000"));
     onAutoToggled(true);
+    loading_ = false;
 }
 
 void SearchOptionsDialog::loadSettings()
 {
-    const auto source = qualpf::gui::workspaceContext(this).workspace().session().snapshot();
+    loading_ = true;
+    const auto source = source_;
+    manualDelta_ = source->projectSettings ? source->projectSettings->profile(qualpf::application::WorkflowId::csm).csm.delta : .08;
     ui->spinFom->setValue(      searchSetting(qualpf::gui::workspaceContext(this).settings(), source, SK_FOM,       0.35).toDouble());
     ui->spinTwothetaD->setValue(searchSetting(qualpf::gui::workspaceContext(this).settings(), source, SK_2THETA,    0.50).toDouble());
     ui->spinIntensity->setValue(searchSetting(qualpf::gui::workspaceContext(this).settings(), source, SK_INT,       0.50).toDouble());
@@ -125,29 +137,48 @@ void SearchOptionsDialog::loadSettings()
     ui->checkStrongest->setChecked(searchSetting(qualpf::gui::workspaceContext(this).settings(), source, SK_STRONGEST, true).toBool());
     ui->checkDeleted->setChecked(  searchSetting(qualpf::gui::workspaceContext(this).settings(), source, SK_DELETED,   true).toBool());
     ui->lineEditMaxEntries->setText(searchSetting(qualpf::gui::workspaceContext(this).settings(), source, SK_MAXENT, 3000).toString());
+    onAutoToggled(ui->checkAuto->isChecked());
+    loading_ = false;
 }
 
-void SearchOptionsDialog::saveSettings()
+bool SearchOptionsDialog::saveSettings()
 {
-    if (qualpf::gui::workspaceContext(this).workspace().searches().running() || qualpf::gui::workspaceContext(this).workspace().searches().closing()) return;
+    if (qualpf::gui::workspaceContext(this).workspace().searches().running() || qualpf::gui::workspaceContext(this).workspace().searches().closing()) return false;
+    if (!ui->lineEditMaxEntries->hasAcceptableInput()) {
+        QMessageBox::warning(this,tr("Invalid options"),tr("Enter a positive maximum number of entries."));
+        return false;
+    }
     const auto input = qualpf::gui::workspaceContext(this).searchSession().snapshot();
     auto next = *input;
-    next.searchOptions = {{SK_FOM, ui->spinFom->value()}, {SK_2THETA, ui->spinTwothetaD->value()},
+    const qualpf::application::MetadataObject options = {{SK_FOM, ui->spinFom->value()}, {SK_2THETA, ui->spinTwothetaD->value()},
         {SK_INT, ui->spinIntensity->value()}, {SK_PHASES, ui->spinPhases->value()}, {SK_DELTA, ui->spinDelta->value()},
         {SK_AUTO, ui->checkAuto->isChecked()}, {SK_RESIDUAL, ui->checkResidual->isChecked()},
         {SK_STRONGEST, ui->checkStrongest->isChecked()}, {SK_DELETED, ui->checkDeleted->isChecked()},
         {SK_MAXENT, ui->lineEditMaxEntries->text().toInt()}};
+    if (source_->projectSettings) {
+        auto settings = *source_->projectSettings;
+        auto &csm = settings.profile(qualpf::application::WorkflowId::csm).csm;
+        csm = qualpf::application::csmSettings(options);
+        if (csm.automatic_delta) csm.delta = manualDelta_;
+        auto *owner=qobject_cast<MainWindow *>(parentWidget());
+        if (!owner) return false;
+        auto status=owner->applyProjectOptions(source_,settings);
+        if (!status && status.error().code!=qualpf::ErrorCode::cancelled)
+            QMessageBox::warning(this,tr("Options unavailable"),QString::fromStdString(status.error().message));
+        return bool(status);
+    }
+    for (const auto &[key, value] : options) next.searchOptions[key] = value;
+    if (next.projectSettings)
+        next.projectSettings->profile(qualpf::application::WorkflowId::csm).csm = qualpf::application::csmSettings(options);
     const double delta = ui->checkAuto->isChecked() ? next.automaticDelta : ui->spinDelta->value();
     auto peaks = qualpf::gui::peaksWithTolerance(next.peaks, delta);
-    if (!peaks) { qWarning("Search tolerance update failed"); return; }
+    if (!peaks) { qWarning("Search tolerance update failed"); return false; }
     next.peaks = std::move(peaks).value();
     next.peakTolerance = delta;
-    for (auto &card : next.candidates) card.invalidateFom();
+    if (!input->pfsm) for (auto &card : next.candidates) card.invalidateFom();
     auto committed = qualpf::gui::workspaceContext(this).searchSession().commit(input, std::move(next));
-    if (!committed) { qWarning("Search settings were not published"); return; }
-    qualpf::gui::Preferences preferences(qualpf::gui::workspaceContext(this).preferences());
-    const auto applied = qualpf::gui::workspaceContext(this).searchSession().snapshot()->searchOptions;
-    for (const auto &[key, value] : applied.toObject()) preferences.setValue(QString::fromStdString(key), qualpf::gui::metadataVariant(value));
+    if (!committed) { qWarning("Search settings were not published"); return false; }
+    return true;
 }
 
 // ---------------------------------------------------------------------------

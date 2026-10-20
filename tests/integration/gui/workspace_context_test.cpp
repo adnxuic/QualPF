@@ -9,12 +9,20 @@
 #include "infrastructure/database/qt_sql/sql_reference_repository.h"
 #include "infrastructure/settings/database_catalog_store.h"
 #include "gui/mainwindow.h"
+#include "gui/widgets/quantwidget.h"
+#include "gui/widgets/dbresultswidget.h"
 #include "gui/presentation/product_plot_refresh.h"
 #include "gui/search/search_request.h"
 #include "infrastructure/database/qt_sql/candidate_reader_factory.h"
 #include "infrastructure/settings/database_settings.h"
 #include "infrastructure/settings/progkeysettings.h"
 #include <QApplication>
+#include <QTableView>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include "classic_fixture.h"
+#include "qualpf/application/result_management.h"
+#include "infrastructure/serialization/quantification.h"
 #include <QFileInfo>
 #include <QSettings>
 #include <QTemporaryDir>
@@ -59,13 +67,121 @@ void isolation() {
         check(left.searchSession().snapshot()->canonical == first.session().snapshot() &&
                   right.searchSession().snapshot()->canonical == beforeRight,
               "Qt views must derive from their own canonical state");
+        auto *results = one.findChild<DbResultsWidget *>();
+        check(results, "real candidate widget");
         check(bool(qualpf::gui::presentation::request_product_plot_refresh(left)) &&
                   bool(qualpf::gui::presentation::request_product_plot_refresh(right)),
               "instance presentation binding");
+        testing::ClassicFixture fixture;
+        auto scientific = *first.session().snapshot();
+        scientific.pattern = fixture.pattern;
+        scientific.pattern.radiation.lines = {{WavelengthAngstrom{1.54}, 1}};
+        auto peaks = fixture.peaks;
+        peaks.effective_wavelength = WavelengthAngstrom{1.54};
+        scientific.peaks = productMeasuredPeaks(peaks).value();
+        check(bool(first.session().commit(first.session().snapshot(), scientific)), "real scoring inputs");
+        ProductCard low, high;
+        low.id = "low"; low.fom = .25; low.fomCalculated = true; low.scale = 5;
+        for (const auto &reflection : fixture.card.reflections) {
+            low.tth.push_back(reflection.two_theta->value);
+            low.intensity.push_back(reflection.intensity);
+        }
+        low.d = scientific.peaks.d;
+        high = low; high.id = "high"; high.fom = .75; high.scale = 3;
+        first.session().replaceCandidates({low, high});
+        results->refresh();
+        const auto rankingSource = first.session().snapshot();
+        check(QMetaObject::invokeMethod(results, "onHeaderSectionClicked", Q_ARG(int, 8)) &&
+                  QMetaObject::invokeMethod(results, "onHeaderSectionClicked", Q_ARG(int, 8)),
+              "exercise FOM header sorting");
+        check(first.session().snapshot() == rankingSource &&
+                  first.session().snapshot()->candidates.front().id == "low" &&
+                  results->displayCards().front().getId() == "high",
+              "header sorting changes only display, preserving snapshot, revision and formal order");
+        auto rescored = SearchEngine{}.rescore(*rankingSource, fixture.parameters, fixture.context);
+        check(rescored && rescored.value().size() == 2 && rescored.value()[0].id == "low" &&
+              rescored.value()[1].id == "high" && rescored.value()[0].scale == 5,
+              "display sorting cannot change stable ties or previous scales in a later rescore");
+        QTemporaryDir projectDirectory;check(projectDirectory.isValid(),"project directory");
+        const auto projectPath=(projectDirectory.path()+"/ranking.qpf").toStdString();
+        auto project=saveProjectInput(first,files.projectWriter,projectPath);
+        check(bool(project),"QPF formal candidate order save");
+        auto restored=files.projects.read(projectPath,SearchBackend::cpp);
+        check(restored && restored.value().state.candidates.size()==2 && restored.value().state.candidates[0].id=="low" && restored.value().state.candidates[1].id=="high","QPF saves formal candidate order");
+        QObject::disconnect(results, nullptr, &one, nullptr);
+        QVector<CardType> accepted;
+        QObject::connect(results, &DbResultsWidget::phasesAccepted, results, [&](const auto &cards) { accepted = cards; });
+        auto *table = results->findChild<QTableView *>();
+        check(table, "result table"); table->selectAll(); results->acceptSelectedCards();
+        check(accepted.size() == 2 && accepted[0].getId() == "high" && accepted[1].getId() == "low" &&
+              first.session().snapshot() == rankingSource, "batch acceptance preserves the explicit selected display order");
+        auto intent = phaseAcceptanceInput(rankingSource, accepted[0].productValue().id, fixture.parameters, true);
+        check(intent && intent.value() && intent.value()->phase->id == "high" && intent.value()->phase->scale == 3,
+              "phase selection resolves canonical identity and scale");
+        auto duplicateSource = *rankingSource; duplicateSource.phases = {high};
+        auto duplicate = phaseAcceptanceInput(std::make_shared<const ProductState>(duplicateSource), "high", fixture.parameters, true);
+        check(duplicate && !duplicate.value(), "duplicate identity creates no acceptance intent");
+        auto middle = low; middle.id = "middle"; middle.fom = .5;
+        results->mergeResults({CardType(high), CardType(middle), CardType(middle)});
+        auto tail = low; tail.id = "tail"; tail.fom = .1; results->addCard(CardType(tail));
+        auto canonical = first.session().snapshot();
+        check(canonical->candidates.size() == 4 && canonical->candidates[0].id == "low" &&
+              canonical->candidates[1].id == "high" && canonical->candidates[2].id == "middle" &&
+              canonical->candidates[3].id == "tail", "merge and add retain canonical order and reject duplicate identities");
+        results->selectCard("high"); results->deleteSelectedCards();
+        canonical = first.session().snapshot();
+        check(canonical->candidates.size() == 3 && canonical->candidates[0].id == "low" &&
+              canonical->candidates[1].id == "middle" && canonical->candidates[2].id == "tail",
+              "sorted selection deletes the right identity without reordering survivors");
+        ProductCard phase;
+        phase.id = "A";
+        phase.intensity = {100};
+        phase.d = {2};
+        phase.scale = 2;
+        phase.rir = "2";
+        phase.fomCalculated = true;
+        auto other = phase;
+        other.id = "B";
+        other.scale = 3; other.rir = "1";
+        first.session().replacePhases({phase, other});
+        auto *quantification = one.findChild<QuantWidget *>();
+        check(quantification, "real quantification widget");
+        quantification->refresh();
+        check(quantification->quantPercentages() == QVector<double>({25, 75}) &&
+                  second.session().snapshot() == beforeRight,
+              "widget consumes fixed RIR from its canonical snapshot");
+        auto saved=saveProjectInput(first,files.projectWriter,projectPath);
+        auto quantitativeSource = first.session().snapshot();
+        auto prepared = prepareProjectSerialization(quantitativeSource, infrastructure::quantificationInputs(quantitativeSource->phases));
+        check(saved && prepared && prepared.value().source() == quantitativeSource && prepared.value().percentages() == std::vector<double>({25,75}),"Widget and QPF share quantitative results");
+        restored=files.projects.read(projectPath,SearchBackend::cpp);
+        check(restored && prepareQuantification(std::make_shared<const ProductState>(restored.value().state),infrastructure::quantificationInputs(restored.value().state.phases)).percentages()==std::vector<double>({25,75}),"QPF preserves fixed quantitative output");
+
+        auto graphView=one.xpdViewer()->captureProjectView(*first.projectView());
+        graphView.axis="inverse_d_squared";graphView.bounds=std::array{.01,1.,.5,200.};
+        graphView.curves["observed/0"].pen.rgba=0x123456ff;graphView.curves["observed/0"].pen.width=2.5;
+        graphView.card_colors["A"]=0xabcdef80;graphView.result_order={"tail","middle","low"};
+        check(bool(first.updateProjectView(graphView)),"project graph intent");
+        check(bool(saveProjectInput(first,files.projectWriter,projectPath)),"save graph project");
+        check(one.loadProject(QString::fromStdString(projectPath)),"load graph project through real window");
+        check(one.xpdViewer()->pSettings().getAbscissa()==xpdutils::ONE_OVER_DVALUE2 && one.xpdViewer()->xAxis->range().lower==.01 && one.xpdViewer()->xAxis->range().upper==1. && one.xpdViewer()->yAxis->range().lower==.5,"restore axis and viewport");
+        check(!one.xpdViewer()->obs.empty() && one.xpdViewer()->obs.front().getPen().color()==QColor(0x12,0x34,0x56) && one.xpdViewer()->obs.front().getPen().widthF()==2.5,"restore graph styles");
+        check(cardColor("A",&one)==QColor(0xab,0xcd,0xef,0x80) && cardColor("A",&two)!=cardColor("A",&one),"card colors belong to one project");
+        check(results->displayCards().front().getId()=="tail" && first.session().snapshot()->candidates.front().id=="low","restore display order without changing scientific order");
+        const auto graphSource=first.session().snapshot();const auto viewSource=first.projectView();const auto projectTitle=one.windowTitle();
+        const auto legacyPath=projectDirectory.path()+"/legacy.qxp";QFile old(legacyPath);check(old.open(QIODevice::WriteOnly),"write old format input");old.write("{\"version\":3}");old.close();
+        check(!one.loadProject(legacyPath) && first.session().snapshot()==graphSource && first.projectView()==viewSource && one.windowTitle()==projectTitle,"old QXP rejection is atomic in the real window");
+
     }
     check(!qualpf::gui::presentation::request_product_plot_refresh(left) &&
               !qualpf::gui::presentation::request_product_plot_refresh(right),
           "window destruction unbinds presentation");
+    auto persisted=*first.session().snapshot();persisted.analysis_database="stable-database";persisted.restored_project=true;
+    persisted.projectStateExtensions=MetadataObject{{"unknown",std::int64_t{9007199254740993LL}}};
+    const auto projection=searchView(std::make_shared<const ProductState>(persisted));
+    const auto converted=productState(projection);
+    check(converted.analysis_database==persisted.analysis_database && converted.restored_project &&
+          converted.projectStateExtensions==persisted.projectStateExtensions,"GUI projections preserve persistence admission and unknown fields");
     int observed = 0;
     {
         SessionView extra(first.session());

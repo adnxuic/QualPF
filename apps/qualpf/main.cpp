@@ -3,6 +3,7 @@
 #include "infrastructure/platform/platform_services.h"
 #include "infrastructure/settings/preference_store.h"
 #include "infrastructure/settings/search_settings.h"
+#include "infrastructure/settings/default_settings.h"
 #include "infrastructure/database/qt_sql/sql_reference_repository.h"
 #include "infrastructure/settings/database_catalog_store.h"
 #include "infrastructure/io/product_files.h"
@@ -110,24 +111,13 @@ bool runSearchMatchCli(qualpf::gui::WorkspaceContext &context, const SearchOptio
         }
     };
 
-    QVector<CardType> acceptedCards;
-    if (SearchOptionsDialog::savedCheckStrongest(context.workspace().session().snapshot(), context.settings()))
-        context.searches().makeQueryStrongest(builder, acceptedCards, progress);
-    else
-        context.searches().makeQueryWithoutStrongest(builder, acceptedCards, progress);
+    const int maxEntries = SearchOptionsDialog::savedMaxEntries(context.workspace().session().snapshot(), context.settings());
+    const auto acceptedCards = context.searches().makeMatch(builder, std::size_t(maxEntries),
+        SearchOptionsDialog::savedCheckStrongest(context.workspace().session().snapshot(), context.settings()), progress);
 
     if (context.searches().isCanceled() || !context.searches().searchError().isEmpty()) {
         fprintf(stderr, "Search failed: %s\n", qPrintable(context.searches().searchError()));
         return false;
-    }
-
-    const int maxEntries = SearchOptionsDialog::savedMaxEntries(context.workspace().session().snapshot(), context.settings());
-    if (acceptedCards.size() > maxEntries) {
-        std::stable_sort(acceptedCards.begin(), acceptedCards.end(),
-                  [](const CardType &a, const CardType &b) {
-                      return a.getFom() > b.getFom();
-                  });
-        acceptedCards.resize(maxEntries);
     }
 
     context.searchSession().replaceCandidates(acceptedCards);
@@ -219,14 +209,22 @@ int runApplication(int argc, char *argv[])
 
     qualpf::infrastructure::QtPreferenceStore preferences;
     qualpf::infrastructure::settings::SearchSettings searchSettings;
+    qualpf::infrastructure::QtDefaultSettingsStore workflowDefaults;
+    const auto defaultsMigration = workflowDefaults.migrate();
+    if (!defaultsMigration) {
+        fprintf(stderr, "%s\n", defaultsMigration.error().message.c_str());
+        return EXIT_FAILURE;
+    }
     qualpf::infrastructure::QtDatabaseBuildProvider databaseBuildProvider;
     qualpf::application::DatabaseBuildUseCases databaseBuild{databaseBuildProvider};
     qualpf::infrastructure::QtUpdateServiceProvider updates;
     qualpf::infrastructure::ProductFileProviders files;
     qualpf::infrastructure::DatabaseCatalogSettings catalogSettings;
     qualpf::infrastructure::SqlReferenceRepository referenceRepository;
+    const auto algorithms = qualpf::application::defaultAlgorithms();
     qualpf::application::Workspace workspace(qEnvironmentVariable("QUALPF_SEARCH_BACKEND") == "legacy"
-        ? qualpf::application::SearchBackend::legacy_fallback : qualpf::application::SearchBackend::cpp);
+        ? qualpf::application::SearchBackend::legacy_fallback : qualpf::application::SearchBackend::cpp,
+        algorithms, &workflowDefaults);
     qualpf::application::DatabaseCatalog catalog(workspace.searches(), catalogSettings, referenceRepository);
     qualpf::gui::WorkspaceContext context(workspace, catalog, files.ports, preferences, searchSettings, platform, updates, databaseBuild, std::make_shared<qualpf::infrastructure::SqlCandidateReaderFactory>());
     qualpf::application::ApplicationInitializationService initialization;
@@ -299,8 +297,10 @@ int runApplication(int argc, char *argv[])
         return 0;
     } else if (opt.nogui) {
         if (!filein.isEmpty()) {
-            auto loaded = qualpf::gui::openPatternFile(context.searchSession(), files.patterns,
-                std::filesystem::path(filein.toStdWString()));
+            const auto suffix=QFileInfo(filein).suffix().toLower();
+            auto loaded = (suffix=="qpf" || suffix=="qxp") ?
+                qualpf::application::openProjectInput(context.workspace(),files.projects,filein.toStdString()) :
+                qualpf::gui::openPatternFile(context.searchSession(), files.patterns,std::filesystem::path(filein.toStdWString()));
             if (!loaded) {
                 fprintf(stderr, "Cannot open pattern: %s\n", loaded.error().message.c_str());
                 return EXIT_FAILURE;
@@ -350,8 +350,10 @@ int runApplication(int argc, char *argv[])
     } else {
         MainWindow w(context);
         w.show();
-        if (!ier && !filein.isEmpty() && !w.loadDiffractionPatterns({filein}, !opt.autom))
-            ier = 1;
+        if (!ier && !filein.isEmpty()) {
+            const auto suffix=QFileInfo(filein).suffix().toLower();
+            if((suffix=="qpf" || suffix=="qxp") ? !w.loadProject(filein) : !w.loadDiffractionPatterns({filein},!opt.autom)) ier=1;
+        }
         if (!filein.isEmpty() && !ier)
             w.enableActions(MainWindow::PatternAction);
         if (searchopt.enabled) {

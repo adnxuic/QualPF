@@ -1,6 +1,32 @@
 #include "qualpf/application/product_files.h"
 #include "qualpf/application/preprocessing_evaluation.h"
+#include <algorithm>
+#include <cmath>
 namespace qualpf::application {
+bool hasDerivedProjectData(const ProductState &s) {
+    return s.peaks.valid || s.preprocessing.peak_candidates || s.pattern.background ||
+        s.pattern.processing.background_subtracted == true || !s.candidates.empty() || !s.phases.empty() ||
+        (s.preprocessing.fwhm_usage && s.preprocessing.fwhm_usage->origin != FwhmOrigin::fixed);
+}
+Result<ProjectSerializationInput> prepareProjectSerialization(ProductHandle source, std::span<const QuantificationInput> inputs) {
+    auto valid = validateProjectSaveSource(source);
+    if (!valid) return Result<ProjectSerializationInput>{valid.error()};
+    if (inputs.size() != source->phases.size()) return Result<ProjectSerializationInput>{Error{ErrorCode::invalid_input,
+        "project.quantification", "Quantification inputs disagree with the frozen phases", "invalid_project"}};
+    for (std::size_t i = 0; i < inputs.size(); ++i) {
+        const auto &phase = source->phases[i]; const auto &input = inputs[i];
+        if (input.calculated != phase.fomCalculated || input.scale != phase.scale ||
+            !std::ranges::equal(input.intensity, phase.intensity)) return Result<ProjectSerializationInput>{Error{ErrorCode::stale_snapshot,
+                "project.quantification", "Quantification inputs disagree with the frozen phases", "invalid_project"}};
+    }
+    auto percentages = quantifyProduct(*source, inputs);
+    // Preserve ordered binary64 normalization: 100*rap/sum can round one ULP
+    // above 100 even for a valid single phase. Do not clamp or reject that value.
+    if ((!percentages.empty() && percentages.size() != inputs.size()) ||
+        std::any_of(percentages.begin(), percentages.end(), [](double value) { return !std::isfinite(value) || value < 0; }))
+        return Result<ProjectSerializationInput>{Error{ErrorCode::invalid_input, "algorithm.output.rir", "Invalid quantitative output", "invalid_algorithm_output"}};
+    return Result<ProjectSerializationInput>{ProjectSerializationInput{std::move(source), std::move(percentages)}};
+}
 std::vector<Pattern> prepareComparisonPatterns(std::vector<Pattern> patterns) {
     for(auto &p:patterns) {
         p.observed=*p.original_observed;
@@ -22,14 +48,6 @@ Status importPeakFile(ProductSearchSession &session,const TextFileStore &files,c
     request.wavelength=source->pattern.radiation.lines.front().wavelength;
     auto status=edit.preview(request);
     return status ? edit.commit() : status;
-}
-Status saveProjectInput(ProductHandle source, const ProjectTargetWriter &writer, const std::string &path,
-                        const MetadataObject &defaults, const std::string &created) {
-    if (!source) return Status{Error{ErrorCode::missing_data,"project.source","Missing project source"}};
-    if (source->editing) return Status{Error{ErrorCode::invalid_input,"session.edit","Finish the preprocessing edit before saving a project."}};
-    auto bytes=writer.prepare(std::move(source),defaults,created);
-    if (!bytes) return Status{bytes.error()};
-    return writer.commit(path,bytes.value());
 }
 Result<std::string> preparePeakExport(const ProductState &source, preprocessing::PeakTextFormat format) {
     auto peaks=productSearchPeaks(source.peaks);

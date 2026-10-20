@@ -31,12 +31,16 @@ Result<std::vector<ProductPlotFrame>> project_product_refresh(
     auto append = [&](int action, int rescale) -> Status {
         presentation.applyPlotAction(action);
         input.presentation = presentation.snapshot();
+        input.presentation.layers[std::size_t(PlotLayer::background)] = Visibility::hidden;
+        input.presentation.layers[std::size_t(PlotLayer::background_points)] = Visibility::visible;
         auto projected = project_compatibility_frame(input, {rescale, request.abscissa});
         if (!projected) return Status{projected.error()};
         frames.push_back({action, std::move(projected).value()});
         return Status{std::monostate{}};
     };
     auto status = append(8, request.rescale);
+    input.patterns.front().background_points_x = patterns.front().background_points_x;
+    input.patterns.front().background_points_y = patterns.front().background_points_y;
     if (status) status = append(5, 0);
     if (!status) return Result<std::vector<ProductPlotFrame>>{status.error()};
     input.patterns.front().background_points_x = patterns.front().background_points_x;

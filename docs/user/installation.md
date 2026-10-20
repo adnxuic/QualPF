@@ -119,7 +119,7 @@ QualPF requires at least one crystallographic reference database.
 | COD (Crystallography Open Database) | COD/CIF | Free — download separately, not bundled with QualPF |
 | PDF-2 | PDF-2 DAT | Commercial — ICDD license required |
 
-Database files are managed through **Search → Manage Databases**.
+Database files are managed through **S&M → Manage Databases**.
 
 For instructions on installing a database, see [Database Installation](database-installation.md).
 

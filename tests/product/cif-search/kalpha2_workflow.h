@@ -25,13 +25,19 @@ void kalpha2Workflow12(MainWindow &window, const QString &output) {
     require(bool(edit.commit()), "Poststrip preprocessing commit");
     const auto beforePeaks = session.snapshot();
     ProductWorkflowProbe::automaticPeaks(window);
-    require(session.snapshot() == beforePeaks, "Undefined poststrip automatic peaks publish nothing");
+    require(session.snapshot() != beforePeaks && session.snapshot()->peaks.valid &&
+                !session.snapshot()->preprocessing.rejected_candidates.empty(), "Poststrip measurable automatic peaks");
+    const auto rejectedCount = int(session.snapshot()->preprocessing.rejected_candidates.size());
     auto diagnostic = applyPreprocessing(session, PreprocessingAction::automatic_peaks);
-    require(!diagnostic && diagnostic.error().reason == "coincident_baseline_endpoints" &&
-                session.snapshot() == beforePeaks,
-            "Preserve existing deterministic local-baseline rejection");
-    // Separate explicitly supplied manual measurements, as in Phase 9.6.
-    // Never fill, filter or repair the rejected automatic candidate pool.
+    require(bool(diagnostic) && session.snapshot()->peaks.valid, "Repeat poststrip automatic peaks");
+    // Keep the separate independent manual measurements for search continuation.
+    PreprocessingRequest clear;
+    clear.manual = ManualPeakChange{};
+    clear.manual->operation = ManualPeakChange::Operation::clear;
+    clear.wavelength = request.wavelength;
+    clear.tolerance = request.tolerance;
+    PreprocessingEdit clearEdit(session);
+    require(bool(clearEdit.preview(clear)) && bool(clearEdit.commit()), "Clear detected peaks before manual fixture");
     const double positions[] = {20.86, 26.64, 36.54}, heights[] = {20, 100, 10};
     for (int i = 0; i < 3; ++i) {
         PreprocessingRequest manual;
@@ -66,10 +72,10 @@ void kalpha2Workflow12(MainWindow &window, const QString &output) {
 #endif
     write96(output + ".json", {{"passed", true},
                                {"workflow", "C++ import -> Kalpha2 -> None background -> SG(4,5) -> "
-                                            "atomic automatic-peak rejection; separate explicit manual "
+                                            "measurable automatic peaks; separate explicit manual "
                                             "peaks -> GUI Search-Match -> save/load -> same search"},
-                               {"automatic_peak_result", "coincident_baseline_endpoints"},
-                               {"automatic_rejection_atomic", true},
+                               {"automatic_peak_result", "measurable_candidates"},
+                               {"rejected_candidates", rejectedCount},
                                {"selected_peaks", finite->peaks.tth.size()},
                                {"candidate_pool", "unavailable; never reconstructed"},
                                {"direct_search", direct},

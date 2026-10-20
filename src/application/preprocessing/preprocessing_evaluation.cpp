@@ -1,5 +1,8 @@
 #include "qualpf/preprocessing/kalpha2.h"
 #include "qualpf/application/preprocessing_evaluation.h"
+#include "qualpf/application/preprocessing_workflows.h"
+#include "qualpf/application/configured_fwhm.h"
+#include "qualpf/application/workflow.h"
 #include <algorithm>
 #include <cmath>
 #include <stdexcept>
@@ -16,17 +19,33 @@ bool hasActiveBackground(const Pattern &pattern) {
     return !subtractedZero;
 }
 
-Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
+Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request, const ExecutionContext &context) {
     if (!source_)
         return Status{Error{ErrorCode::missing_data, "preprocessing.source", "Missing source"}};
+    const auto algorithms = request.algorithms ? request.algorithms : source_->algorithms;
+    if (algorithms != source_->algorithms)
+        return Status{Error{ErrorCode::stale_snapshot, "algorithms", "Preprocessing algorithm selection changed"}};
     auto previousPeaks = draft_ ? draft_->peaks : source_->peaks;
     auto previousParameters = draft_ ? draft_->preprocessing.peaks : source_->preprocessing.peaks;
     candidateCount_ = 0;
+    fwhmEvaluation_.reset();
     draft_.reset(); // A failed/new parameter request invalidates the previous
                     // preview.
     auto next = *source_;
+    // Inspection and selection operate on the saved measurements. Preparing
+    // upstream workflow steps here would replace the pool they are selecting.
+    const bool frozenPeaks = request.peak_product_operation && request.peak_operation != PeakOperation::redetect;
+    if (source_->projectSettings && request.workflow && !frozenPeaks) {
+        auto preparation = prepareWorkflow(source_, *request.workflow,
+            request.peaks ? WorkflowStep::peaks : WorkflowStep::background);
+        if (!preparation) return Status{preparation.error()};
+        next = std::move(preparation).value().next;
+        next.workflow.configuration_transition = false;
+    }
+    next.workflow.active = request.workflow.value_or(WorkflowId::preprocessing);
+    if (request.initial_peaks) next.preprocessing.initial_peaks = request.initial_peaks;
     if (request.peak_product_operation &&
-        (!request.peaks || request.smoothing || request.subtract_background || request.background_points ||
+        (!request.peaks || request.smoothing || request.background_points ||
          !request.background_filters.empty() || request.crop_range || request.strip_kalpha2 ||
          request.restart_from_original))
         return Status{Error{ErrorCode::invalid_input, "peaks.operation",
@@ -37,12 +56,17 @@ Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
         if (peakChanges != 1 || request.strip_kalpha2 || request.restart_from_original ||
             request.crop_range || request.background || request.smoothing || request.peaks ||
             request.selection || request.background_points || !request.background_filters.empty() ||
-            request.subtract_background || request.peak_operation != PeakOperation::redetect)
+            request.peak_operation != PeakOperation::redetect)
             return Status{Error{ErrorCode::invalid_input, "preprocessing",
                                 "Peak editing must be a separate operation"}};
-        auto status = preparePeakOperation(next, request);
+        auto status = preparePeakOperation(next, request, context);
         if (!status)
             return status;
+        if (!peakMatchingEquivalent(next, *source_) || next.peaks.integratedIntensity != source_->peaks.integratedIntensity) {
+            if (next.provenance.peakSource) next.provenance.retainedPeakSources.push_back(*next.provenance.peakSource);
+            next.provenance.peakSource = AlgorithmRunSource{algorithms, SearchParameters{AngularWidthDegrees{0}}, source_, source_->revision};
+        }
+        if (next.projectSettings && next.peaks != source_->peaks) next.workflow.completed_target = WorkflowStep::peaks;
         detected_.reset();
         detectedOptions_.reset();
         detectionInput_.reset();
@@ -52,8 +76,7 @@ Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
     if (request.strip_kalpha2) {
         if (request.manual || request.restart_from_original || request.crop_range || request.background ||
             request.smoothing || request.peaks || request.selection || request.background_points ||
-            !request.background_filters.empty() || request.subtract_background ||
-            request.use_background_for_peaks || request.restore_automatic_window ||
+            !request.background_filters.empty() || request.restore_automatic_window ||
             request.peak_operation != PeakOperation::redetect)
             return Status{Error{ErrorCode::invalid_input, "preprocessing",
                                 "Stripping must be a separate operation", "kalpha2_mixed_request"}};
@@ -81,6 +104,8 @@ Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
         // Preserve the opening representation and dependent state for an exact
         // numerical no-op, including numerically equal signed zeros.
         if (!unchanged) {
+            invalidateAutomaticFwhm(next.preprocessing);
+            next.preprocessing.peak_fwhm_usage.reset();
             next.pattern.observed = std::move(result).value();
             next.pattern.background.reset();
             next.pattern.calculated.reset();
@@ -89,6 +114,9 @@ Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
             next.preprocessing.background_points.reset();
             next.preprocessing.background_filters.clear();
             next.preprocessing.peak_candidates.reset();
+            next.preprocessing.peak_calibration.reset();
+            next.preprocessing.fwhm_estimate.reset();
+            next.preprocessing.rejected_candidates.clear();
             next.preprocessing.candidate_failure.reset();
             next.preprocessing.selection.reset();
             next.peaks.clear();
@@ -113,8 +141,7 @@ Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
                  int(request.crop_range.has_value()) !=
              1) ||
             request.background || request.smoothing || request.peaks || request.selection ||
-            request.background_points || !request.background_filters.empty() || request.subtract_background ||
-            request.peak_operation != PeakOperation::redetect)
+            request.background_points || !request.background_filters.empty() || request.peak_operation != PeakOperation::redetect)
             return Status{Error{ErrorCode::invalid_input, "preprocessing",
                                 "Recovery/manual edit must be a separate operation"}};
         if (request.manual) {
@@ -122,6 +149,8 @@ Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
             if (!status)
                 return status;
         } else if (request.crop_range) {
+            invalidateAutomaticFwhm(next.preprocessing);
+            next.preprocessing.peak_fwhm_usage.reset();
             auto &p = next.pattern;
             const auto range = *request.crop_range;
             if (p.two_theta.empty() || !std::isfinite(range.minimum.value) ||
@@ -181,6 +210,9 @@ Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
                     return status;
             }
             next.preprocessing.peak_candidates.reset();
+            next.preprocessing.peak_calibration.reset();
+            next.preprocessing.fwhm_estimate.reset();
+            next.preprocessing.rejected_candidates.clear();
             next.preprocessing.candidate_failure.reset();
             next.preprocessing.background_points.reset();
             next.preprocessing.background_filters.clear();
@@ -202,7 +234,16 @@ Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
             next.pattern.processing.background_subtracted = false;
             next.pattern.processing.intensity_scaled = false;
             next.pattern.processing.kalpha2_subtracted = next.pattern.original_kalpha2_subtracted;
+            const auto fwhm = next.preprocessing.fwhm;
+            const auto usage = next.preprocessing.fwhm_usage;
+            const auto initial = next.preprocessing.initial_peaks;
+            const auto extensions = next.preprocessing.extensions;
             next.preprocessing = {};
+            next.preprocessing.fwhm = fwhm;
+            next.preprocessing.fwhm_usage = usage;
+            next.preprocessing.initial_peaks = initial;
+            next.preprocessing.extensions = extensions;
+            invalidateAutomaticFwhm(next.preprocessing);
             next.preprocessing.smoothing_applied = false;
             next.peaks.clear();
             next.candidates.clear();
@@ -210,6 +251,7 @@ Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
             next.peakTolerance.reset();
             next.automaticDelta = .5;
             next.projectMetadata["preprocessing_recovery"] = "restart_from_stored_original";
+            next.provenance = {}; // Explicit controlled restart, after restoring the stored original signal.
             next.projectMetadata["has_back"] = false;
         }
         auto status = validateProductState(next);
@@ -222,8 +264,7 @@ Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
         return Status{std::monostate{}};
     }
     if (request.peak_operation == PeakOperation::restore_snapshot) {
-        if (request.background || request.smoothing || request.subtract_background ||
-            !request.background_filters.empty() || request.selection)
+        if (request.background || request.smoothing || !request.background_filters.empty() || request.selection)
             return Status{
                 Error{ErrorCode::invalid_input, "preprocessing", "Restore must be a separate operation"}};
         auto valid = validateProductState(next);
@@ -234,8 +275,7 @@ Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
         draft_ = std::move(next);
         return Status{std::monostate{}};
     }
-    const bool patternChanged = request.background || request.smoothing || request.subtract_background ||
-                                !request.background_filters.empty();
+    const bool patternChanged = request.background || request.smoothing || !request.background_filters.empty();
     if (patternChanged) {
         detected_.reset();
         detectedOptions_.reset();
@@ -243,60 +283,57 @@ Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
             return Status{Error{ErrorCode::invalid_input, "peaks.operation",
                                 "Changed intensity requires redetection", "redetection_required"}};
     }
-    if (request.background) {
-        if (request.background_points &&
-            (request.background->method == preprocessing::BackgroundMethod::spline ||
-             request.background->method == preprocessing::BackgroundMethod::bezier ||
-             request.background->method == preprocessing::BackgroundMethod::bruckner))
-            return Status{Error{ErrorCode::invalid_input, "background.points",
-                                "This method does not consume manual background points",
-                                "manual_points_not_consumed_by_method"}};
-        auto result =
-            request.background_points
-                ? preprocessing::background_from_points(next.pattern, *request.background, request.wavelength,
-                                                        *request.background_points)
-                : preprocessing::background(next.pattern, *request.background, request.wavelength);
-        if (!result)
-            return Status{result.error()};
-        next.preprocessing.background_points = result.value().points;
-        next.preprocessing.background_filters.clear();
-        next.pattern.background = SampledSignal{std::move(result).value().values, SampleWindow{0}};
-        next.preprocessing.background = request.background;
-        if (request.background->automatic && !result.value().coefficients.empty())
-            next.preprocessing.background->coefficients = int(result.value().coefficients.size());
-        next.projectMetadata["has_back"] = true;
-    }
     if (request.background_points && !request.background)
         return Status{Error{ErrorCode::invalid_input, "background.points",
                             "Manual points require explicit background parameters"}};
-    for (const auto &filter : request.background_filters) {
-        auto result = preprocessing::filter_background(next.pattern, filter);
-        if (!result)
-            return Status{result.error()};
-        next.pattern.background = std::move(result).value();
-        next.preprocessing.background_filters.push_back(filter);
+    if (request.peaks && request.peak_operation == PeakOperation::redetect) {
+        // A failure in any preparation stage invalidates the previous detection,
+        // just as a failure in the formal extractor does.
+        invalidateDetection();
     }
-    if (request.subtract_background) {
-        auto result = preprocessing::subtract_background(next.pattern);
-        if (!result)
-            return Status{result.error()};
-        next.pattern = std::move(result).value();
-        next.preprocessing.background_points.reset();
+    std::optional<CommonPreprocessingResult> common;
+    if (patternChanged || (request.peaks && request.peak_operation == PeakOperation::redetect)) {
+        CommonPreprocessingRequest stages;
+        stages.background = request.background;
+        if (request.initial_peaks) stages.initial_peaks = request.initial_peaks->options;
+        stages.background_points = request.background_points;
+        stages.background_filters = request.background_filters;
+        stages.smoothing = request.smoothing;
+        stages.wavelength = request.wavelength;
+        stages.estimate_fwhm = !request.fwhm;
+        stages.purpose = request.purpose;
+        if (request.peak_operation == PeakOperation::redetect) {
+            stages.peaks = request.peaks;
+            if (stages.peaks && request.selection) {
+                stages.peaks->threshold_percent = request.selection->threshold_percent;
+                stages.peaks->detection_range = AngularRange{TwoThetaDegrees{request.selection->minimum},
+                                                           TwoThetaDegrees{request.selection->maximum}};
+            }
+        }
+        auto evaluated = evaluateCommonPreprocessing(source_, next.pattern, stages, context);
+        if (!evaluated) return Status{evaluated.error()};
+        common = std::move(evaluated).value();
+        next.pattern = common->working_pattern;
+    }
+    if (request.background) {
+        const auto &background = *common->background;
+        next.preprocessing.background_points = background.points;
         next.preprocessing.background_filters.clear();
+        next.preprocessing.background = request.background;
+        next.provenance.backgroundSource = AlgorithmRunSource{algorithms, SearchParameters{AngularWidthDegrees{0}}, source_, source_->revision};
+        next.provenance.backgroundSource->background = request.background;
+        if (request.background->automatic && !background.coefficients.empty())
+            next.preprocessing.background->coefficients = int(background.coefficients.size());
+        next.projectMetadata["has_back"] = true;
     }
+    next.preprocessing.background_filters.insert(next.preprocessing.background_filters.end(),
+        request.background_filters.begin(), request.background_filters.end());
     if (request.smoothing) {
-        if (request.smoothing->derivative != 0)
-            return Status{Error{ErrorCode::invalid_input, "preprocessing.derivative",
-                                "Derivative preview cannot replace the working intensity"}};
-        auto result = preprocessing::smooth(next.pattern.observed, *request.smoothing);
-        if (!result)
-            return Status{result.error()};
-        next.pattern.observed = std::move(result).value();
         next.preprocessing.smoothing = request.smoothing;
         next.preprocessing.smoothing_applied = true;
     }
     if (!request.background && !request.smoothing && !request.peaks && !request.selection &&
-        !request.subtract_background && request.background_filters.empty())
+        request.background_filters.empty())
         return Status{Error{ErrorCode::invalid_input, "preprocessing", "Empty request"}};
     const auto &oldBackground = source_->pattern.background;
     const auto &newBackground = next.pattern.background;
@@ -308,8 +345,13 @@ Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
     const bool inputChanged = next.pattern.observed != source_->pattern.observed ||
                               next.pattern.two_theta != source_->pattern.two_theta || !sameBackground;
     if (inputChanged) {
+        invalidateAutomaticFwhm(next.preprocessing);
+        next.preprocessing.peak_fwhm_usage.reset();
         next.peaks = {};
         next.preprocessing.peak_candidates.reset();
+        next.preprocessing.peak_calibration.reset();
+        next.preprocessing.fwhm_estimate.reset();
+        next.preprocessing.rejected_candidates.clear();
         next.preprocessing.candidate_failure.reset();
         next.peakTolerance.reset();
         next.automaticDelta = .5;
@@ -344,6 +386,7 @@ Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
                                     "Reselection requires selection parameters"}};
             r.candidates = *pool;
             r.peaks = *pool;
+            r.rejected_candidates = next.preprocessing.rejected_candidates;
             r.applied = request.peaks.value_or(
                 previousParameters.value_or(detectedOptions_.value_or(preprocessing::PeakOptions{})));
         } else {
@@ -353,35 +396,60 @@ Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
             detected_.reset();
             detectedOptions_.reset();
             detectionFailed_ = true;
-            auto signal = next.pattern;
-            if (request.use_background_for_peaks) {
-                if (!signal.background || !signal.background->window ||
-                    signal.background->window->first != 0 ||
-                    signal.background->values.size() != signal.observed.size())
-                    return Status{Error{ErrorCode::missing_data, "peaks.background",
-                                        "Detection requires a complete aligned background",
-                                        "background_alignment_unknown"}};
-                // run_peaksearch uses y-yb even on a previously subtracted
-                // pattern (where yb is normally zero). No clipping/rescaling.
-                for (std::size_t i = 0; i < signal.observed.size(); ++i)
-                    signal.observed[i] = float(signal.observed[i]) - float(signal.background->values[i]);
-            }
             auto options = *request.peaks;
             if (request.selection) {
                 options.threshold_percent = request.selection->threshold_percent;
                 options.detection_range = AngularRange{TwoThetaDegrees{request.selection->minimum},
                                                        TwoThetaDegrees{request.selection->maximum}};
             }
-            auto result = preprocessing::find_peaks(signal, options, request.wavelength, request.tolerance);
-            if (!result)
-                return Status{result.error()};
+            if (request.fwhm) {
+                auto estimated = request.supplied_width ?
+                    Result<ConfiguredFwhmEvaluation>{ConfiguredFwhmEvaluation{source_, *request.fwhm, request.supplied_width, {}, {}}} :
+                    evaluateConfiguredFwhm(source_,
+                        {common->working_pattern, *request.fwhm, common->spectrum, false,
+                         request.initial_peaks ? std::optional{request.initial_peaks->options} : std::nullopt,
+                         request.workflow}, context);
+                if (!estimated) return Status{estimated.error()};
+                fwhmEvaluation_ = std::make_shared<const ConfiguredFwhmEvaluation>(std::move(estimated).value());
+                auto applied = applyConfiguredFwhm(next, *fwhmEvaluation_);
+                if (!applied) return applied;
+                next.workflow.completed_target.reset();
+                next.preprocessing.peak_fwhm_usage = fwhmEvaluation_->usage;
+            }
+            auto parameters = request.fwhm ? prepareConfiguredPeakParameters(options,
+                *fwhmEvaluation_->usage, request.wavelength, context) :
+                preprocessing::prepare_classic_peak_parameters(options,
+                    common->fwhm ? common->fwhm->estimate : preprocessing::FwhmEstimate{}, request.wavelength, context);
+            if (!parameters) return Status{parameters.error()};
+            auto result = evaluateFormalPeakExtraction(source_,
+                {common->spectrum, parameters.value(), request.wavelength, request.tolerance}, context);
+            if (!result) return Status{result.error()};
             r = std::move(result).value();
+            if (common->fwhm) {
+                r.fwhm = common->fwhm->estimate;
+                const auto &initial = common->fwhm->rejected_candidates;
+                r.rejected_candidates.insert(r.rejected_candidates.begin(), initial.begin(), initial.end());
+            }
+            if (fwhmEvaluation_ && fwhmEvaluation_->gaussian) {
+                r.fwhm = fwhmEvaluation_->gaussian->estimate;
+                const auto &rejected = fwhmEvaluation_->gaussian->rejected_candidates;
+                r.rejected_candidates.insert(r.rejected_candidates.begin(), rejected.begin(), rejected.end());
+            }
             detectionFailed_ = false;
             detected_ = r.candidates;
             detectedOptions_ = r.applied;
             detectionInput_ = next;
+            detectionInput_->preprocessing.peak_calibration = r.calibration;
+            detectionInput_->preprocessing.fwhm_estimate = r.fwhm;
+            detectionInput_->preprocessing.peak_candidates = r.candidates;
+            detectionInput_->preprocessing.rejected_candidates = r.rejected_candidates;
         }
         next.preprocessing.peak_candidates = r.candidates;
+        next.preprocessing.rejected_candidates = r.rejected_candidates;
+        if (r.calibration) {
+            next.preprocessing.peak_calibration = r.calibration;
+            next.preprocessing.fwhm_estimate = r.fwhm;
+        }
         next.preprocessing.candidate_failure.reset();
         candidateCount_ = r.candidates.peaks.size();
         next.preprocessing.selection.reset();
@@ -435,23 +503,16 @@ Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
             r.automatic_tolerance = automatic.value();
             next.preprocessing.selection = selection;
         }
-        ProductPeaks ep;
-        ep.valid = true;
-        ep.wave = r.peaks.effective_wavelength->value;
-        if (std::all_of(r.peaks.peaks.begin(), r.peaks.peaks.end(),
-                        [](const auto &p) { return p.integrated_intensity.has_value(); }))
-            ep.integratedIntensity.emplace();
-        for (const auto &p : r.peaks.peaks) {
-            ep.tth.push_back(p.two_theta.value);
-            ep.d.push_back(p.d_spacing->value);
-            ep.deltaD.push_back(p.delta_d->value);
-            ep.intensity.push_back(p.intensity);
-            ep.intensityOrig.push_back(*p.original_intensity);
-            ep.fwhm.push_back(p.fwhm->value);
-            if (ep.integratedIntensity)
-                ep.integratedIntensity->push_back(*p.integrated_intensity);
-        }
-        next.peaks = std::move(ep);
+        auto ep = productMeasuredPeaks(r.peaks);
+        if (!ep) return Status{ep.error()};
+        next.peaks = std::move(ep).value();
+        if (request.selection && request.selection->append && next.provenance.peakSource)
+            next.provenance.retainedPeakSources.push_back(*next.provenance.peakSource);
+        else if (request.peak_operation == PeakOperation::redetect)
+            next.provenance.retainedPeakSources.clear();
+        next.provenance.peakSource = AlgorithmRunSource{algorithms, SearchParameters{AngularWidthDegrees{0}}, source_, source_->revision};
+        next.provenance.peakSource->peaks = r.applied;
+        next.provenance.peakSource->fwhm = next.preprocessing.peak_fwhm_usage;
         // Peak-only operations apply P1/P2 after all final fields are prepared.
         if (patternChanged && !request.peak_product_operation) {
             next.projectMetadata["peak_snapshot_origin"] = "detected";
@@ -459,6 +520,7 @@ Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
         }
         next.automaticDelta = r.automatic_tolerance;
         next.peakTolerance = request.tolerance.value;
+        if (next.projectSettings) next.workflow.completed_target = WorkflowStep::peaks;
         if (request.peak_operation == PeakOperation::redetect || detectedOptions_ || previousParameters)
             next.preprocessing.peaks = r.applied;
         if (next.preprocessing.peaks) {
@@ -492,6 +554,7 @@ Status PreprocessingEvaluation::evaluate(const PreprocessingRequest &request) {
 Status PreprocessingEvaluation::preview(const PreprocessingRequest &request, std::stop_token token) {
     if (token.stop_requested()) {
         draft_.reset();
+        invalidateDetection();
         return Status{Error{ErrorCode::cancelled, "preprocessing", "Preprocessing canceled"}};
     }
     if (!source_)
@@ -505,9 +568,10 @@ Status PreprocessingEvaluation::preview(const PreprocessingRequest &request, std
         draft_.reset();
         return Status{Error{ErrorCode::invalid_input, "preprocessing.evaluator", "Missing evaluator"}};
     }
-    auto status = evaluate(request);
+    auto status = evaluate(request, {token, NumericalPolicy::legacy_mixed_precision, "product-preprocessing"});
     if (token.stop_requested()) {
         draft_.reset();
+        invalidateDetection();
         return Status{Error{ErrorCode::cancelled, "preprocessing", "Preprocessing canceled"}};
     }
     return status;

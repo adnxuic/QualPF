@@ -8,13 +8,18 @@
 #include "gui/plotting/xpdutils.h"
 #include "gui/reference/nr.h"
 
+#include <algorithm>
 #include <cfloat>
+#include <cmath>
 #include <QLabel>
 #include <QHash>
+#include <QSignalBlocker>
 
 XpdViewWidget::XpdViewWidget(QWidget *parent)
     : CustomPlotZoom(parent)
     , nObserved(0)
+    , nReflections(0)
+    , nProfCurves(0)
     , yLowerRange(DBL_MAX)
     , yUpperRange(-DBL_MAX)
     , yLowerRangeNoRef(0.0)
@@ -89,6 +94,50 @@ XpdViewWidget::XpdViewWidget(QWidget *parent)
 void XpdViewWidget::hideGraphicArea()
 {
     axisRect(0)->setVisible(false);
+}
+
+void XpdViewWidget::clearProjectPlot()
+{
+    deleteDoubleCursor();
+    setGraphicArea();
+    // Ordinary canvas replacement keeps accepted cards and observed styles.
+    // An empty project must also release every retained data/selection buffer.
+    obs.clear();
+    profCurves.clear();
+    refSet.clear();
+    m_cardPeaks.clear();
+    for (auto *item : {&calc, &back, &bpoints, &diff, &cdiff, &peaks, &smooth,
+                       &undpeaks, &sysAbs, &selectedRef, &selectedPeak, &intervalLimit}) {
+        item->setData({}, {});
+        item->setX(QVector<int>{});
+        item->wave = -1;
+        item->visible = false;
+        item->min = DBL_MAX;
+        item->max = -DBL_MAX;
+        item->yPos = item->lengthRef = 0;
+        item->itemIndexStart = item->itemIndexEnd = -1;
+    }
+    yLowerRange = DBL_MAX;
+    yUpperRange = -DBL_MAX;
+    yLowerRangeNoRef = mLastYOffset = 0;
+    rescalePlot = true;
+    setDataBounds(0, 5);
+    {
+        const QSignalBlocker xBlocker(xAxis), yBlocker(yAxis);
+        xAxis->setRange(0, 5);
+        yAxis->setRange(0, 5);
+    }
+    if (horizontalScrollBar) {
+        const QSignalBlocker blocker(horizontalScrollBar);
+        horizontalScrollBar->setRange(0, 0);
+        horizontalScrollBar->setValue(0);
+        horizontalScrollBar->setPageStep(scrollBarLen);
+        horizontalScrollBar->hide();
+    }
+    for (const auto &label : {labelWidget1, labelWidget2, labelWidget3})
+        if (label) label->clear();
+    hideGraphicArea();
+    replot();
 }
 
 void XpdViewWidget::setGraphicArea()
@@ -701,145 +750,83 @@ void XpdViewWidget::connectLabels(QLabel *newLabel1, QLabel *newLabel2, QLabel *
     labelWidget1 = newLabel1;
     labelWidget2 = newLabel2;
     labelWidget3 = newLabel3;
-    connect(this, &CustomPlotZoom::mouseMove, this, &XpdViewWidget::myMoveEvent);
+    connect(this, &CustomPlotZoom::mouseMove, this, &XpdViewWidget::myMoveEvent, Qt::UniqueConnection);
 }
 
 void XpdViewWidget::myMoveEvent(QMouseEvent *event)
 {
-    double x_val = xAxis->pixelToCoord(event->pos().x());
-    double y_val = yAxis->pixelToCoord(event->pos().y());
+    if (!event || property("workspaceClosing").toBool() ||
+        !labelWidget1 || !labelWidget2 || !labelWidget3) return;
 
-    double x_end = xAxis->range().upper;
-
-    int graphIndex = -1;
-    int indexMin = 0;
-    double distMin = DBL_MAX;
-
-    //Traverse each curve, finding the closest point to the cursor point and the corresponding curve index
-    for (int i = 0; i < xAxis->graphs().count(); i++) {
-        if (!graph(i)->data()->isEmpty()) {
-            //Find a key value index closest to the curve by x value
-            int index = 0;
-            if (x_val > x_end) {
-                index = graph(i)->data()->size() - 1;
-            } else {
-                int index_left = graph(i)->findBegin(x_val, true);
-                int index_right = index_left + 1; //ui->plot->graph(0)->findEnd(x_val, true);
-                double dif_left = abs(graph(i)->data()->at(index_left)->key - x_val);
-                double dif_right = abs(graph(i)->data()->at(index_right)->key - x_val);
-                if (dif_left < dif_right)
-                    index = index_left;
-                else
-                    index = index_right;
-            }
-
-            //Compute distance from the cursor position
-            double dx = graph(i)->data()->at(index)->key - x_val;
-            double dy = graph(i)->data()->at(index)->value - y_val;
-            double dist = dx*dx + dy*dy;
-            if (dist < distMin) {
-                distMin = dist;
-                indexMin = index;
-                graphIndex = i;
-            }
-        }
-    }
-
+    const double x = xAxis->pixelToCoord(event->position().x());
+    const double y = yAxis->pixelToCoord(event->position().y());
+    labelWidget1->clear();
+    labelWidget2->clear();
+    labelWidget3->clear();
+    if (!std::isfinite(x) || !std::isfinite(y)) return;
+    const auto setLabel = [this](QLabel *label, const QString &text) {
+        label->setText(fontMetrics().elidedText(text, Qt::ElideRight, label->width() - 10));
+    };
+    const auto axis = plotSettings.getAbscissa();
     const QString twoTheta = xpdutils::abscissaString(xpdutils::TTHETA);
-    double wave = -1;
-    if (graphIndex >= 0) {
-        double xp_val = graph(graphIndex)->data()->at(indexMin)->key;
-        double yp_val = graph(graphIndex)->data()->at(indexMin)->value;
+    setLabel(labelWidget1, QString("%1: %2 I: %3").arg(xpdutils::abscissaString(axis)).arg(x).arg(y));
 
-        wave = plotWave.at(graphIndex);
-        if (wave > 0) {
-            QString xString1 = xpdutils::abscissaString(plotSettings.getAbscissa());
-            QString xString2;
-            double xp2_val;
-            if (plotSettings.getAbscissa() == xpdutils::TTHETA) {
-                xString2 = "d";
-                xp2_val = xpdutils::dvalue(xp_val, wave);
-            } else {
-                xString2 = twoTheta;
-                xp2_val = xpdutils::tthvalue(xp_val, wave, plotSettings.getAbscissa());
-            }
-            //xString2 = (plotSettings.getAbscissa() == xpdutils::TTHETA) ? twoTheta : "d";
-            //xp2_val = xpdutils::tthvalue(xp_val, wave, plotSettings.getAbscissa());
-            QString label1 = QString("%1: %2 I: %3").arg(xString1).arg(x_val).arg(y_val);
-            labelWidget1->setText(fontMetrics().elidedText(label1,Qt::ElideRight,labelWidget1->size().width()-10));
-
-
-            QString label2 = QString("Count: #%1 (%2, %3) %4: %5 Graph: %6").
-                             arg(indexMin+1).
-                             arg(xp_val).
-                             arg(yp_val).
-                             arg(xString2).
-                             arg(xp2_val).
-                             arg(graph(graphIndex)->name());
-            labelWidget2->setText(fontMetrics().elidedText(label2,Qt::ElideRight,labelWidget2->size().width()-10));
-            //ui->plotLabel1->setText(QString("%1: %2 I: %3").arg(xString1).arg(x_val).arg(y_val));
-            // ui->plotLabel2->setText(QString("Count: #%1 (%2, %3) %4: %5 Graph: %6").
-            //                         arg(indexMin+1).
-            //                         arg(xp_val).
-            //                         arg(yp_val).
-            //                         arg(xString2).
-            //                         arg(xp2_val).
-            //                         arg(ui->plot->graph(graphIndex)->name()));
+    int graphIndex = -1, sampleIndex = 0;
+    double distance = DBL_MAX;
+    for (int i = 0; i < graphCount(); ++i) {
+        const auto *curve = graph(i);
+        if (!curve->visible() || curve->keyAxis() != xAxis || curve->valueAxis() != yAxis ||
+            curve->data()->isEmpty()) continue;
+        const int last = curve->data()->size() - 1;
+        const int left = std::clamp(curve->findBegin(x, true), 0, last);
+        const int right = std::min(left + 1, last);
+        const int index = std::abs(curve->data()->at(left)->key - x) <
+                          std::abs(curve->data()->at(right)->key - x) ? left : right;
+        const auto point = curve->data()->at(index);
+        const double dx = point->key - x, dy = point->value - y;
+        const double candidateDistance = dx * dx + dy * dy;
+        if (candidateDistance < distance) {
+            distance = candidateDistance;
+            sampleIndex = index;
+            graphIndex = i;
+        }
+    }
+    if (graphIndex >= 0 && graphIndex < plotWave.size()) {
+        const double wave = plotWave[graphIndex];
+        if (std::isfinite(wave) && wave > 0) {
+            const auto point = graph(graphIndex)->data()->at(sampleIndex);
+            const QString otherAxis = axis == xpdutils::TTHETA ? QStringLiteral("d") : twoTheta;
+            const double otherX = axis == xpdutils::TTHETA ? xpdutils::dvalue(point->key, wave) :
+                xpdutils::tthvalue(point->key, wave, axis);
+            setLabel(labelWidget2, QString("Count: #%1 (%2, %3) %4: %5 Graph: %6")
+                .arg(sampleIndex + 1).arg(point->key).arg(point->value).arg(otherAxis).arg(otherX)
+                .arg(graph(graphIndex)->name()));
         }
     }
 
-    //Find the closest reflection and the corrisponding phase
-    int refIndex = -1;
+    // ReflectionBar coordinates have already been projected to the current
+    // display axis. Empty and hidden bars are never interaction targets.
     int phaseIndex = -1;
-    if (refSet.count() > 0) {
-        QVector<double> yPos(refSet.count());
-        for (int i = 0; i < refSet.count(); i++) yPos[i] = refSet[i].yPos;
-
-        phaseIndex = NR::locateClosest(yPos, y_val);
-
-        if (plotSettings.getAbscissa() == xpdutils::TTHETA) {
-            //refIndex = refl[phaseIndex].findLocation(x_val);
-            refIndex = findRefLocation(refSet[phaseIndex].ref, x_val);
-            //qInfo() << "REFTT: " << refIndex << findRefLocation(refSet[phaseIndex].ref, x_val);
-        } else {
-            if (wave > 0) {
-                double x_val2 = xpdutils::tthvalue(x_val, wave, plotSettings.getAbscissa());
-                //It works because refl[i].x should be in 2theta
-                //refIndex = refl[phaseIndex].findLocation(x_val2);
-                refIndex = findRefLocation(refSet[phaseIndex].ref, x_val2);
-                //qInfo() << "REFDD: " << refIndex << findRefLocation(refSet[phaseIndex].ref, x_val2);
-            }
+    distance = DBL_MAX;
+    for (int i = 0; i < refSet.size(); ++i) {
+        const auto &bar = refSet[i];
+        if (!bar.visible || bar.ref.isEmpty() || !std::isfinite(bar.yPos)) continue;
+        const double candidateDistance = std::abs(bar.yPos - y);
+        if (candidateDistance <= distance) {
+            distance = candidateDistance;
+            phaseIndex = i;
         }
     }
-
-    if (refIndex >= 0) {
-        int hkl[3];
-        //int err;
-        float tth, dval;
-        for (int i = 0; i < 3; i++) hkl[i] = refSet[phaseIndex].ref[refIndex].hkl[i];
-        tth = refSet[phaseIndex].ref[refIndex].x;
-        dval = xpdutils::dvalue(tth, wave);
-        // qInfo() << "REF: " << refSet[phaseIndex].ref[refIndex].hkl[0] << refSet[phaseIndex].ref[refIndex].hkl[1] << refSet[phaseIndex].ref[refIndex].hkl[2] <<
-        //     refSet[phaseIndex].ref[refIndex].x << xpdutils::dvalue(refSet[phaseIndex].ref[refIndex].x, wave);
-        // phaseIndex++;
-        // refIndex++;
-        // get_reflection_info(phaseIndex, refIndex, hkl, &tth, &dval, &err);
-        // qInfo() << "REF: " << hkl[0] << hkl[1] << hkl[2] << tth << dval;
-
-        QString label3 = QString("Refl: #%1 H: %2 K: %3 L: %4 %5: %6 d: %7 Phase: %8").
-                         arg(refIndex+1).
-                         arg(hkl[0]).arg(hkl[1]).arg(hkl[2]).
-                         arg(twoTheta).
-                         arg(tth).arg(dval).
-                         arg(phaseIndex);
-        labelWidget3->setText(fontMetrics().elidedText(label3,Qt::ElideRight,labelWidget3->size().width()-10));
-        // ui->plotLabel3->setText(QString("Refl: #%1 H: %2 K: %3 L: %4 %5: %6 d: %7 Phase: %8").
-        //                         arg(refIndex).
-        //                         arg(hkl[0]).arg(hkl[1]).arg(hkl[2]).
-        //                         arg(twoTheta).
-        //                         arg(tth).arg(dval).
-        //                         arg(phaseIndex));
-    }
+    if (phaseIndex < 0) return;
+    const auto &bar = refSet[phaseIndex];
+    const int index = findRefLocation(bar.ref, x);
+    if (index < 0 || index >= bar.ref.size() || !std::isfinite(bar.wave) || bar.wave <= 0) return;
+    const auto &reflection = bar.ref[index];
+    const double tth = xpdutils::tthvalue(reflection.x, bar.wave, axis);
+    const double d = xpdutils::dvalue(tth, bar.wave);
+    setLabel(labelWidget3, QString("Refl: #%1 H: %2 K: %3 L: %4 %5: %6 d: %7 Phase: %8")
+        .arg(index + 1).arg(reflection.hkl[0]).arg(reflection.hkl[1]).arg(reflection.hkl[2])
+        .arg(twoTheta).arg(tth).arg(d).arg(phaseIndex));
 }
 
 void XpdViewWidget::xAxisChanged(QCPRange range)
@@ -1314,51 +1301,21 @@ bool XpdViewWidget::rescalePlotEnabled() const
 
 int XpdViewWidget::findRefLocation(const QVector<refInfo> &ref, double xval)
 {
-    // int ju,jm,jl;
-    // bool ascnd;
-
-    // int n=xx.size();
-    // jl=-1;
-    // ju=n;
-    // ascnd=(xx[n-1] >= xx[0]);
-    // while (ju-jl > 1) {
-    //     jm=(ju+jl) >> 1;
-    //     if ((x >= xx[jm]) == ascnd)
-    //         jl=jm;
-    //     else
-    //         ju=jm;
-    // }
-    // if (x == xx[0]) j=0;
-    // else if (x == xx[n-1]) j=n-2;
-    // else j=jl;
-
-    // if (j == -1) return 0; // out of range to the left
-    // if (j == xx.count() - 1) return j; // out of range to the right
-    // if (abs(x - xx[j]) < abs(x - xx[j+1])) return j;   // xx[j] < x < xx[j+1]
-    // return ++j;
-
-    int j,ju,jm,jl;
-    bool ascnd;
-
-    int n = ref.size();
-    jl = -1;
-    ju = n;
-    ascnd = (ref[n-1].x >= ref[0].x);
-    while (ju-jl > 1) {
-        jm = (ju+jl) >> 1;
-        if ((xval >= ref[jm].x) == ascnd)
-            jl = jm;
-        else
-            ju = jm;
+    const int n = ref.size();
+    if (n == 0 || !std::isfinite(xval)) return -1;
+    if (n == 1) return 0;
+    int lower = -1, upper = n;
+    const bool ascending = ref.back().x >= ref.front().x;
+    while (upper - lower > 1) {
+        const int middle = lower + (upper - lower) / 2;
+        if ((xval >= ref[middle].x) == ascending) lower = middle;
+        else upper = middle;
     }
-    if (xval == ref[0].x) j = 0;
-    else if (xval == ref[n-1].x) j = n-2;
-    else j = jl;
-
-    if (j == -1) return 0; // out of range to the left
-    if (j == n - 1) return j; // out of range to the right
-    if (abs(xval - ref[j].x) < abs(xval - ref[j+1].x)) return j;   // xx[j] < x < xx[j+1]
-    return ++j;
+    if (xval == ref.front().x) return 0;
+    if (xval == ref.back().x) return n - 1;
+    if (lower < 0) return 0;
+    if (lower >= n - 1) return n - 1;
+    return std::abs(xval - ref[lower].x) < std::abs(xval - ref[lower + 1].x) ? lower : lower + 1;
 }
 
 // void XpdViewWidget::makeReflections(const QVector<double> &xvet)
@@ -1591,6 +1548,10 @@ qualpf::Status XpdViewWidget::presentPhaseReflections(const CardType &card, cons
 void XpdViewWidget::applyProjectedCard(const qualpf::application::presentation::PlotSeries &series, const QColor &color)
 {
     const QString id = QString::fromStdString(series.identity);
+    if (series.x.empty()) {
+        removePhaseReflections(id);
+        return;
+    }
 
     ReflectionBar rb;
     rb.id      = id;
@@ -1612,9 +1573,16 @@ void XpdViewWidget::applyProjectedCard(const qualpf::application::presentation::
     for (auto &existing : refSet) {
         if (existing.id != id) continue;
         if (existing.ref.size() == rb.ref.size() && std::equal(existing.ref.begin(), existing.ref.end(),
-                rb.ref.begin(), [](const auto &a, const auto &b) { return a.x == b.x; })) return;
+                rb.ref.begin(), [](const auto &a, const auto &b) { return a.x == b.x; }) &&
+                existing.visible == rb.visible && existing.wave == rb.wave &&
+                existing.pen == rb.pen && existing.name == rb.name) return;
         clearReflectionItems();
         existing.ref = rb.ref;
+        existing.visible = rb.visible;
+        existing.wave = rb.wave;
+        existing.pen = rb.pen;
+        existing.name = rb.name;
+        if (labelWidget3) labelWidget3->clear();
         refreshAcceptedPhaseBars();
         return;
     }
@@ -1626,6 +1594,7 @@ void XpdViewWidget::applyProjectedCard(const qualpf::application::presentation::
 
 void XpdViewWidget::removePhaseReflections(const QString &id)
 {
+    if (labelWidget3) labelWidget3->clear();
     for (int k = refSet.size() - 1; k >= 0; k--) {
         if (refSet[k].id == id) {
             clearReflectionItems();

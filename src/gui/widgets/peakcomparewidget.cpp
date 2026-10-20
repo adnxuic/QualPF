@@ -243,12 +243,12 @@ void PeakCompareWidget::rebuild()
     struct PhaseColor { float h = 0, s = 0, v = 1; };
     QVector<PhaseColor> accColors(nAcc);
     for (int j = 0; j < nAcc; ++j)
-        cardColor(m_acceptedPhases[j].getId()).getHsvF(
+        cardColor(m_acceptedPhases[j].getId(), this).getHsvF(
             &accColors[j].h, &accColors[j].s, &accColors[j].v);
 
     PhaseColor selColor;
     if (m_hasCard)
-        cardColor(m_cardId).getHsvF(&selColor.h, &selColor.s, &selColor.v);
+        cardColor(m_cardId, this).getHsvF(&selColor.h, &selColor.s, &selColor.v);
 
     auto assocColor = [](const PhaseColor &pc, double q) -> QColor {
         return QColor::fromHsvF(pc.h, float(pc.s * q), float(1.0f - (1.0f - pc.v) * q));
@@ -334,11 +334,11 @@ void PeakCompareWidget::emitSelectedComparePoints()
         const int nAcc = m_acceptedPhases.size();
         const int selectedBase = 2 + 2 * nAcc;
         if (m_hasCard && pairTthCol >= selectedBase)
-            return cardColor(m_cardId);
+            return cardColor(m_cardId, this);
 
         const int phaseIndex = (pairTthCol - 2) / 2;
         if (phaseIndex >= 0 && phaseIndex < nAcc)
-            return cardColor(m_acceptedPhases[phaseIndex].getId());
+            return cardColor(m_acceptedPhases[phaseIndex].getId(), this);
 
         return QColor();
     };

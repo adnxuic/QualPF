@@ -1,8 +1,11 @@
 #include "gui/search/search_task_controller.h"
+#include "qualpf/application/project_reference_operation.h"
 #include <QPointer>
+#include <QLoggingCategory>
 #include <QRunnable>
 #include <QTimer>
 #include <cfenv>
+#include <chrono>
 #include <exception>
 #include <mutex>
 #if defined(__SSE__) || defined(_M_X64)
@@ -10,8 +13,13 @@
 #endif
 
 namespace qualpf::gui {
+Q_LOGGING_CATEGORY(searchTimingLog, "qualpf.search.timings", QtWarningMsg)
 using namespace application;
 namespace {
+using Clock = std::chrono::steady_clock;
+double duration(Clock::time_point a, Clock::time_point b) {
+    return std::chrono::duration<double>(b - a).count();
+}
 Error unexpected(const char *message) {
     return {ErrorCode::numerical_failure, "search.worker", message, "unexpected_exception"};
 }
@@ -41,6 +49,7 @@ class UnusedReader final : public CandidateReader {
 };
 } // namespace
 struct SearchTaskController::Delivery {
+    Clock::time_point submitted = Clock::now(), workerStarted, workerFinished;
     SearchTask task;
     std::shared_ptr<const ReferenceReadGuard> referenceGuard;
     Completion completion;
@@ -72,17 +81,24 @@ void SearchTaskController::close() {
 }
 Status SearchTaskController::start(SearchInput input, ReferenceDatabase database, Completion completion,
                                    Finalize finalize) {
+    auto available = preflightSearchMethod(input.method);
+    if (!available) return available;
+    if (input.source && (!input.source->algorithms || input.method != input.source->algorithms->spec.method()))
+        return Status{Error{ErrorCode::stale_snapshot,"search.method","Search method disagrees with the source","algorithm_provenance_mismatch"}};
     auto factory = factory_;
     std::shared_ptr<const ReferenceReadGuard> referenceGuard;
-    const bool reads =
-        input.operation == SearchOperation::initial || input.operation == SearchOperation::scored_browse ||
-        input.operation == SearchOperation::metadata_browse || input.operation == SearchOperation::load_card;
+    const bool reads = projectOperationReadsReferences(input.operation);
+    database = projectOperationDatabase(input, std::move(database));
     if (reads && factory) {
         auto protectedRead = factory->protect(database);
         if (!protectedRead)
             return Status{protectedRead.error()};
         referenceGuard = std::move(protectedRead).value();
     }
+    const auto workflow = input.operation == SearchOperation::metadata_browse ? std::optional<WorkflowTarget>{} :
+        std::optional<WorkflowTarget>{{input.method == SearchMethod::pfsm ? WorkflowId::pfsm : WorkflowId::csm,
+            input.operation == SearchOperation::accept_phase || input.operation == SearchOperation::remove_phase || input.operation == SearchOperation::residual ?
+                WorkflowStep::phases : WorkflowStep::search}};
     return submit(
         std::move(database),
         [input = std::move(input), factory = std::move(factory)](const SearchTask &task,
@@ -92,15 +108,14 @@ Status SearchTaskController::start(SearchInput input, ReferenceDatabase database
             input.source = task.source;
             input.taskId = task.id;
             input.databaseVersion = task.database.selectionVersion;
+            input.databaseIdentity = task.database.identity;
+            input.workflowProgress = task.workflowProgress;
             if (task.context.cancellation.stop_requested())
                 return Outcome{Error{ErrorCode::cancelled, "search", "Search canceled"}};
-            const bool reads = input.operation == SearchOperation::initial ||
-                               input.operation == SearchOperation::scored_browse ||
-                               input.operation == SearchOperation::metadata_browse ||
-                               input.operation == SearchOperation::load_card;
+            const bool reads = projectOperationReadsReferences(input.operation);
             if (!reads) {
                 UnusedReader reader;
-                return SearchEngine{}.run(input, reader, task.context, std::move(progress));
+                return SearchEngine{task.algorithms}.run(input, reader, task.context, std::move(progress));
             }
             if (!factory)
                 return Outcome{Error{ErrorCode::missing_data, "search.reader", "Missing reader factory"}};
@@ -110,13 +125,13 @@ Status SearchTaskController::start(SearchInput input, ReferenceDatabase database
             if (!opened.value())
                 return Outcome{Error{ErrorCode::missing_data, "search.reader", "Missing reader"}};
             // The reader and every SQL handle are destroyed here, on this worker.
-            return SearchEngine{}.run(input, *opened.value(), task.context, std::move(progress));
+            return SearchEngine{task.algorithms}.run(input, *opened.value(), task.context, std::move(progress));
         },
-        std::move(completion), std::move(finalize), SearchPublication::commit, std::move(referenceGuard));
+        std::move(completion), std::move(finalize), SearchPublication::commit, std::move(referenceGuard), workflow);
 }
 Status SearchTaskController::submit(ReferenceDatabase database, Work work, Completion completion,
                                     Finalize finalize, SearchPublication publication,
-                                    std::shared_ptr<const ReferenceReadGuard> referenceGuard) {
+                                    std::shared_ptr<const ReferenceReadGuard> referenceGuard, std::optional<WorkflowTarget> workflow) {
     if (QThread::currentThread() != thread())
         return Status{
             Error{ErrorCode::invalid_input, "search.thread", "Scheduling requires the owner thread"}};
@@ -132,7 +147,7 @@ Status SearchTaskController::submit(ReferenceDatabase database, Work work, Compl
     delivery->referenceGuard = std::move(referenceGuard);
     delivery->endpoint =
         std::shared_ptr<QObject>(new QObject, [](QObject *object) { object->deleteLater(); });
-    auto admission = coordinator_.begin(std::move(database));
+    auto admission = coordinator_.begin(std::move(database), workflow);
     if (!admission)
         return Status{admission.error()};
     delivery->task = std::move(admission).value();
@@ -140,9 +155,18 @@ Status SearchTaskController::submit(ReferenceDatabase database, Work work, Compl
     const FloatingEnvironment environment;
     const QPointer<SearchTaskController> guard(this);
     const auto trace = trace_;
+    // A weak capture avoids a Delivery -> task -> callback ownership cycle.
+    delivery->task.workflowProgress = [weak = std::weak_ptr<Delivery>(delivery), guard](std::string detail) {
+        if(auto current=weak.lock()) QMetaObject::invokeMethod(current->endpoint.get(),
+            [current, guard, detail=std::move(detail)]() mutable {
+                if(guard && guard->active_==current && guard->coordinator_.reportWorkflowProgress(current->task.id,std::move(detail)))
+                    emit guard->workflowProgress(current->task.id);
+            }, Qt::QueuedConnection);
+    };
     try {
         pool_.start(
             QRunnable::create([delivery, work = std::move(work), environment, guard, trace]() mutable {
+                delivery->workerStarted = Clock::now();
                 RestoreEnvironment restore;
                 environment.apply();
                 auto progress = [delivery, guard](std::size_t current, std::size_t total) {
@@ -179,6 +203,7 @@ Status SearchTaskController::submit(ReferenceDatabase database, Work work, Compl
                 }
                 {
                     std::lock_guard lock(delivery->mutex);
+                    delivery->workerFinished = Clock::now();
                     delivery->result.emplace(std::move(result));
                 }
                 QMetaObject::invokeMethod(
@@ -228,6 +253,7 @@ void SearchTaskController::deliver(const std::shared_ptr<Delivery> &delivery) {
         return;
     }
     Outcome result{unexpected("Missing completion")};
+    const auto deliveryStarted = Clock::now();
     {
         std::lock_guard lock(delivery->mutex);
         if (delivery->result)
@@ -250,7 +276,9 @@ void SearchTaskController::deliver(const std::shared_ptr<Delivery> &delivery) {
         } catch (...) {
         }
     }
+    const auto publicationStarted = Clock::now();
     result = coordinator_.complete(delivery->task.id, std::move(result), delivery->publication);
+    const auto publicationFinished = Clock::now();
     active_.reset();
     const bool success = bool(result);
     const QPointer<SearchTaskController> guard(this);
@@ -263,6 +291,19 @@ void SearchTaskController::deliver(const std::shared_ptr<Delivery> &delivery) {
             qWarning("Search presentation failed");
         }
     }
+    if (!guard)
+        return;
+    const auto presented = Clock::now();
+    lastTiming_ = Timing{delivery->task.id, duration(delivery->submitted, delivery->workerStarted),
+        duration(delivery->workerStarted, delivery->workerFinished),
+        duration(delivery->workerFinished, deliveryStarted),
+        duration(publicationStarted, publicationFinished), duration(publicationFinished, presented),
+        duration(delivery->submitted, presented), success};
+    qCDebug(searchTimingLog) << "task" << lastTiming_->task << "success" << success
+        << "queue_s" << lastTiming_->queue_seconds << "worker_s" << lastTiming_->worker_seconds
+        << "delivery_s" << lastTiming_->delivery_seconds << "publication_s" << lastTiming_->publication_seconds
+        << "presentation_callback_s" << lastTiming_->presentation_seconds << "total_s" << lastTiming_->total_seconds;
+    emit timingReady(delivery->task.id);
     if (!guard)
         return;
     emit finished(delivery->task.id, success);

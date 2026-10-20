@@ -765,10 +765,10 @@ void archivalProject(MainWindow &window, const QString &source, const QString &o
 }
 } // namespace
 
-#include "current_preprocessing_product_checks.h"
+#include "../workflow/measurable_preprocessing_checks.h"
 #include "preprocessing_closure_checks.h"
 #include "preprocessing_format_checks.h"
-#include "preprocessing_signoff_checks.h"
+#include "../workflow/measurable_signoff_checks.h"
 #include "kalpha2_workflow.h"
 #include "manual_acceptance_checks.h"
 
@@ -848,17 +848,10 @@ void cppPreprocessingDialogs(MainWindow &window, const QString &output,
         dialog.setOptions();
         require(dialog.property("preprocessingBackend") == "cpp", "Peak search did not use C++");
         const auto before = session.snapshot();
-        if (output.contains("CPD2")) {
-            require(dialog.property("preprocessingReason") == "coincident_baseline_endpoints",
-                    "CPD2 GUI reason differs");
-            auto *button = dialog.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok);
-            require(!button->isEnabled(), "Undefined preview allowed Apply");
-            button->click();
-            require(session.snapshot() == before && !session.snapshot()->peaks.valid,
-                    "Undefined GUI preview published");
-            rejected = true;
-            cancel(dialog);
-        } else {
+        require(dialog.property("preprocessingReason").toString().isEmpty() &&
+                    dialog.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->isEnabled(),
+                "Measurable GUI preview cannot be applied");
+        {
             dialog.findChild<QDoubleSpinBox *>("intensitySpinBox")->setValue(4);
             dialog.findChild<QDoubleSpinBox *>("intensitySpinBox")->setValue(1.5);
             require(session.snapshot() == before, "Peak preview published");
@@ -1052,14 +1045,12 @@ void preprocessingWorkflow(MainWindow& window,const QString& output,
         const auto before=isolated.snapshot();
         PreprocessingEdit peaksEdit(isolated);
         auto prepared=peaksEdit.preview(request);
-        // These exact three subtracted/averaged inputs are archived in phase 9:
-        // Fortran emits nonfinite local-baseline candidates. Keep them as an
-        // explicit rejection contract; never filter the undefined candidates.
-        require(!prepared && prepared.error().code == ErrorCode::undefined_preprocessing &&
-                    prepared.error().reason == "coincident_baseline_endpoints",
-                "Registered undefined pipeline changed");
-        require(!peaksEdit.preview()&&!peaksEdit.commit()&&isolated.snapshot()==before,
-                "Undefined peak preview published partial state");
+        // Version 2 explicitly rejects the formerly undefined candidates.
+        require(bool(prepared) && peaksEdit.preview() && isolated.snapshot() == before &&
+                    !peaksEdit.preview()->preprocessing.rejected_candidates.empty(),
+                "Subtracted/averaged input did not retain valid candidates");
+        require(bool(peaksEdit.commit()) && isolated.snapshot()->peaks.valid,
+                "Measurable peak preview did not publish atomically");
     }
     // A separate defined chain on the original measured counts (background
     // estimation, default SG, automatic range, complete snapshot). This does
@@ -1078,14 +1069,8 @@ void preprocessingWorkflow(MainWindow& window,const QString& output,
         const auto before=normal.snapshot();
         PreprocessingEdit peaksEdit(normal);
         auto prepared=peaksEdit.preview(request);
-        if (!prepared) {
-            require(output.contains("CPD2") && prepared.error().code == ErrorCode::undefined_preprocessing &&
-                        prepared.error().reason == "coincident_baseline_endpoints",
-                    "Unexpected workflow rejection");
-            require(!peaksEdit.preview() && !peaksEdit.commit() && normal.snapshot() == before,
-                    "Rejected workflow published state");
-            rejected = true;
-        } else {
+        require(bool(prepared), "Unexpected measurable workflow failure");
+        {
             require(normal.snapshot() == before, "C++ peak preview changed owner");
             const auto preview = qualpf::gui::encode_project_peaks(peaksEdit.preview()->peaks);
             const double automatic = peaksEdit.preview()->automaticDelta;
@@ -1131,7 +1116,7 @@ void preprocessingWorkflow(MainWindow& window,const QString& output,
                 {"cpp_transaction", true},
                 {"project_peak_tolerance_roundtrip", true},
                 {"cpp_product_switch", false},
-                {"legacy_undefined_rejected_without_publication", true},
+                {"explicit_candidate_rejection_with_valid_publication", true},
                 {"expected_atomic_rejection", rejected},
                 {"workflow_searchmatch", workflowCards},
                 {"preprocessing_configuration", qualpf::infrastructure::encodePreprocessing(normal.snapshot()->preprocessing)},

@@ -1,4 +1,4 @@
-#include "qualpf/search/classic.h"
+#include "qualpf/search/algorithms.h"
 
 #include "qualpf/domain/validation.h"
 
@@ -103,5 +103,11 @@ Result<ResidualResult> subtract_phase(const PeakSet &peaks, const ReferenceCard 
             out.removed.push_back(peak.id);
     }
     return Result<ResidualResult>{std::move(out)};
+}
+Result<ResidualResult> update_classic_residual(const PeakSet &peaks, const ReferenceCard &card, double scale,
+    const SearchParameters &parameters, const ExecutionContext &context) {
+    if (context.cancellation.stop_requested())
+        return Result<ResidualResult>{Error{ErrorCode::cancelled, "search", "Search canceled"}};
+    return subtract_phase(peaks, card, scale, parameters);
 }
 } // namespace qualpf::search

@@ -195,4 +195,12 @@ message(STATUS \"  Plugins: \${CMAKE_INSTALL_PREFIX}/plugins\")
     install(SCRIPT ${CMAKE_BINARY_DIR}/install_qtconf.cmake)
 endif()
 
+# Install after Qt deployment so a runtime found on another MinGW's PATH cannot
+# replace the compiler-bound files. MSVC and Linux have no such target property.
+get_target_property(_qualpf_mingw_runtime ${EXECUTABLE_NAME} QUALPF_MINGW_RUNTIME_FILES)
+if(_qualpf_mingw_runtime)
+    install(FILES ${_qualpf_mingw_runtime}
+        DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT "${COMPONENT_NAME_MAIN}")
+endif()
+
 message("Qt6_VERSION: ${Qt6_VERSION}")

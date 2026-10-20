@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Verify the small normal-test reference set without historical materialization."""
+"""Verify all frozen normal references, including separately restored ZIPs."""
 import hashlib
 import json
 from pathlib import Path
+from restore_reference_archives import archive_entries, restore
 
 ROOT = Path(__file__).resolve().parents[2]
 
 
 def main():
+    restore(ROOT, archive_entries(ROOT), verify_only=True)
     manifest = json.loads((ROOT / "tests/reference/manifest.json").read_bytes())
     if manifest.get("expected_from_product") is not False:
         raise ValueError("Reference provenance must be independent of product output")

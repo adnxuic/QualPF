@@ -1,4 +1,5 @@
 #include "gui/dialogs/peaksearchdialog.h"
+#include "qualpf/application/workflow.h"
 #include "gui/state/workspace_context.h"
 #include "gui/state/preprocessing_product.h"
 #include "gui/dialogs/preprocessing_dialog.h"
@@ -139,7 +140,7 @@ void PeakSearchDialog::onButtonBoxClicked(QAbstractButton *button)
     QDialogButtonBox::StandardButton stdButton = ui->buttonBox->standardButton(button);
 
     if(stdButton == QDialogButtonBox::Ok) {
-        mWindow->restoreEnabledActions();
+        if (!cpp_) mWindow->restoreEnabledActions();
 
     } else if (stdButton == QDialogButtonBox::Cancel) {
         //restoreSavedSettings();
@@ -211,8 +212,9 @@ void PeakSearchDialog::preprocessingAction(int action) {
     if (action == 1) {
         cpp_.reset();
         auto state = qualpf::gui::workspaceContext(this).searchSession().snapshot();
-        auto o = state->preprocessing.peaks.value_or(preprocessing::PeakOptions{});
-        if (!state->preprocessing.peaks)
+        auto o = state->projectSettings ? state->projectSettings->profile(application::WorkflowId::peak_search).peaks :
+            state->preprocessing.peaks.value_or(preprocessing::PeakOptions{});
+        if (!state->projectSettings && !state->preprocessing.peaks)
             o.search_range = -1;
         pkSettings.minRange = pkSettings.minSearch = state->pattern.two_theta.front().value;
         pkSettings.maxRange = pkSettings.maxSearch = state->pattern.two_theta.back().value;
@@ -221,8 +223,9 @@ void PeakSearchDialog::preprocessingAction(int action) {
         pkSettings.sensitivity = int(std::round(float(o.half_window) * (-100.f / float(50 - mostSensitive)) +
                                                 100.f * 50.f / float(50 - mostSensitive)));
         pkSettings.append = false;
-        if (state->preprocessing.selection) {
-            const auto &v = *state->preprocessing.selection;
+        const auto selection = state->projectSettings ? std::optional<application::PeakSelection>{state->projectSettings->profile(application::WorkflowId::peak_search).selection} : state->preprocessing.selection;
+        if (selection) {
+            const auto &v = *selection;
             pkSettings.minSearch = v.minimum;
             pkSettings.maxSearch = v.maximum;
             pkSettings.threshold = v.maximum_peaks >= 0 && v.append ? o.threshold_percent : v.threshold_percent;
@@ -232,10 +235,16 @@ void PeakSearchDialog::preprocessingAction(int action) {
         pkSettings.numPeaks = state->peaks.tth.size();
         pkSettings.numPeaksTot = 0;
         cpp_ = std::make_unique<gui::PreprocessingDialog>(*this, mWindow);
-        cpp_->request.use_background_for_peaks = true;
+
         cpp_->request.peak_product_operation = true;
         cpp_->request.peaks = o;
-        cpp_->request.selection = state->preprocessing.selection;
+        cpp_->request.selection = selection;
+        if (state->projectSettings) {
+            const auto &profile = state->projectSettings->profile(application::WorkflowId::peak_search);
+            cpp_->request.workflow = application::WorkflowId::peak_search;
+            cpp_->request.fwhm = profile.fwhm;
+            cpp_->request.initial_peaks = profile.initial_peaks;
+        }
     }
     if (!cpp_) return;
     if (initializing_)
@@ -247,7 +256,10 @@ void PeakSearchDialog::preprocessingAction(int action) {
     cpp_->request.restore_automatic_window = action==7;
     cpp_->request.peak_operation = application::PeakOperation::reselect;
     if (action == 1) {
-        if (qualpf::gui::workspaceContext(this).searchSession().snapshot()->peaks.valid) {
+        const auto source = qualpf::gui::workspaceContext(this).workspace().session().snapshot();
+        // Inspect stored unverified measurements without silently redetecting them.
+        // Scientific search still requires its existing provenance/restart checks.
+        if (source->peaks.valid && (source->provenance.legacyUnverified || !source->projectSettings || application::reusableWorkflowStep(*source, application::WorkflowId::peak_search, application::WorkflowStep::peaks))) {
             cpp_->request.peak_operation = application::PeakOperation::restore_snapshot;
             cpp_->request.selection.reset();
             if (cpp_->preview()) pkSettings.numPeaksTot = int(cpp_->candidateCount());
@@ -281,14 +293,17 @@ void PeakSearchDialog::preprocessingAction(int action) {
             int(std::round(float(pkSettings.sensitivity) * (float(mostSensitive - 50) / 100.f) + 50.f));
     }
     cpp_->request.background.reset();
-    if(cpp_->request.use_background_for_peaks && cpp_->request.peak_operation==application::PeakOperation::redetect &&
+    if(cpp_->request.peak_operation==application::PeakOperation::redetect &&
        !qualpf::gui::workspaceContext(this).searchSession().snapshot()->pattern.processing.background_subtracted) {
         cpp_->rejectPreview("subtraction_state_unknown");return;
     }
-    if (cpp_->request.use_background_for_peaks &&
-        cpp_->request.peak_operation == application::PeakOperation::redetect &&
+    if (cpp_->request.peak_operation == application::PeakOperation::redetect &&
         !qualpf::gui::workspaceContext(this).searchSession().snapshot()->pattern.background)
-        cpp_->request.background = qualpf::gui::workspaceContext(this).searchSession().snapshot()->preprocessing.background.value_or(preprocessing::BackgroundOptions{});
+        {
+            const auto source = qualpf::gui::workspaceContext(this).searchSession().snapshot();
+            cpp_->request.background = source->projectSettings ? source->projectSettings->profile(application::WorkflowId::peak_search).background :
+                source->preprocessing.background.value_or(preprocessing::BackgroundOptions{});
+        }
     if (cpp_->preview()) {
         if(cpp_->state()->preprocessing.peaks) o=*cpp_->state()->preprocessing.peaks;
         pkSettings.numPeaksTot = int(cpp_->candidateCount());

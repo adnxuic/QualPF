@@ -17,12 +17,13 @@ diffraction patterns against reference databases.
 - Search/Match against crystallographic databases (COD, PDF-2)
 - Figure of Merit (FOM) scoring for phase identification
 - Quantitative phase analysis (RIR method)
-- Project save/load (.qxp format)
+- Project save/load (.qpf format)
 
 ## Quick Links
 
 - [Installation](installation.md)
 - [Database Installation](database-installation.md)
+- [Settings and workflow history](settings.md)
 - [Getting Started](introduction/getting-started.md)
 - [Search & Match](search-match/search-match.md)
 

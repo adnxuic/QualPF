@@ -8,6 +8,7 @@
 #include <QStringList>
 #include "gui/model/experimentalpeaks.h"
 #include "gui/model/cardtype.h"
+#include "qualpf/application/presentation/quantification.h"
 #include "gui/dialogs/peaksearchdialog.h"
 
 class QPrinter;
@@ -27,8 +28,7 @@ public:
     void updateReport(const ExperimentalPeaks &ep,
                       const QVector<CardType> &resultCards,
                       int maxCards = 100);
-    void updateQuantitative(const QVector<CardType> &phases,
-                            const QVector<double> &percentages);
+    void updateQuantitative(const qualpf::application::QuantificationResult &);
     void clearQuantitative();
     void clear();
     void print(QPrinter *printer);
@@ -45,8 +45,7 @@ private:
     ExperimentalPeaks   m_ep;
     QVector<CardType>   m_cards;
     int                 m_maxCards = 100;
-    QVector<CardType>   m_phases;
-    QVector<double>     m_quant;
+    qualpf::application::QuantificationResult m_quantification;
     qualpf::gui::PeakSearchPresentationOptions  m_pkSettings  = {};
     bool                m_hasRestraints = false;
     QStringList         m_activeRestraints;

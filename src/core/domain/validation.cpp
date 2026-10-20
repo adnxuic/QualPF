@@ -1,10 +1,29 @@
 #include "qualpf/domain/validation.h"
+#include "qualpf/domain/analysis_spectrum.h"
 
 #include <cmath>
 #include <set>
 #include <utility>
 
 namespace qualpf {
+Result<AnalysisSpectrum> AnalysisSpectrum::create(Pattern pattern, AnalysisPurpose purpose) {
+    if (pattern.processing.background_subtracted != false)
+        return Result<AnalysisSpectrum>{Error{ErrorCode::missing_data, "background.state",
+            "An explicitly unsubtracted signal is required; restart preprocessing or reimport.",
+            pattern.processing.background_subtracted ? "subtracted_input_refused" : "subtraction_state_unknown"}};
+    if (!pattern.background || !pattern.background->window || pattern.background->window->first != 0 ||
+        pattern.background->values.size() != pattern.observed.size())
+        return Result<AnalysisSpectrum>{Error{ErrorCode::missing_data, "background.alignment",
+            "A complete background on the observation grid and in its units is required", "background_alignment_unknown"}};
+    if (pattern.observed.empty() || pattern.observed.size() != pattern.two_theta.size())
+        return Result<AnalysisSpectrum>{Error{ErrorCode::missing_data, "analysis.pattern", "A continuous spectrum is required"}};
+    if (purpose != AnalysisPurpose::peak_measurement && purpose != AnalysisPurpose::classical_search)
+        return Result<AnalysisSpectrum>{Error{ErrorCode::invalid_input, "analysis.purpose", "Unknown analysis purpose"}};
+    const auto issues = validate(pattern);
+    if (!issues.empty()) return Result<AnalysisSpectrum>{issues.front()};
+    return Result<AnalysisSpectrum>{AnalysisSpectrum{std::move(pattern), purpose}};
+}
+
 namespace {
 void check(ValidationIssues& issues, bool condition, std::string field, std::string message)
 {

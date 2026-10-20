@@ -2,6 +2,7 @@
 #include "infrastructure/settings/database_settings.h"
 #include "infrastructure/database/database_access.h"
 #include <QFile>
+#include "database_identity.h"
 namespace qualpf::infrastructure {
 namespace {
 class QtDatabaseRemoval final : public application::DatabaseRemoval {
@@ -45,6 +46,7 @@ std::unique_ptr<application::DatabaseRemoval> DatabaseCatalogSettings::prepareRe
     auto lease = DatabaseLease::write(path);
     return lease ? std::make_unique<QtDatabaseRemoval>(path, std::move(lease)) : nullptr;
 }
+std::string DatabaseCatalogSettings::identity(const std::string &path) const { return databaseFileIdentity(path); }
 std::pair<int, std::string> DatabaseCatalogSettings::describe(const std::string &s) const {
     const auto path = QString::fromStdString(s);
     return {ReferenceDatabaseInfo::queryEntries(path), ReferenceDatabaseInfo::queryContentType(path).toStdString()};

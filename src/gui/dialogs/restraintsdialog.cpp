@@ -6,6 +6,7 @@
 #include "gui/widgets/periodictablewidget.h"
 
 #include <QCheckBox>
+#include <QButtonGroup>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QGridLayout>
@@ -15,6 +16,8 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QPlainTextEdit>
+#include <QDoubleSpinBox>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QRadioButton>
@@ -38,7 +41,7 @@ RestraintsDialog::RestraintsDialog(QWidget *parent)
     connect(ui->loadMergeButton,        &QPushButton::clicked,
             this, &RestraintsDialog::loadAndMergeCardsRequested);
     connect(ui->searchButton,           &QPushButton::clicked,
-            this, &RestraintsDialog::searchWithRestraintsRequested);
+            this, [this] { if (!m_busy && m_continuous && hasRestraints()) emit searchWithRestraintsRequested(selectedSearchMethod()); });
     connect(ui->clearEntryIdsButton,     &QPushButton::clicked,
             this, [this]() { ui->entryIdsEdit->clear(); });
     connect(ui->cancelRestraintsButton, &QPushButton::clicked,
@@ -48,6 +51,17 @@ RestraintsDialog::RestraintsDialog(QWidget *parent)
 
     setupCompositionTab();
     setupSubfilesTab();
+    for (auto *edit : findChildren<QLineEdit *>())
+        connect(edit, &QLineEdit::textChanged, this, &RestraintsDialog::updateSearchAdmission);
+    for (auto *edit : findChildren<QPlainTextEdit *>())
+        connect(edit, &QPlainTextEdit::textChanged, this, &RestraintsDialog::updateSearchAdmission);
+    for (auto *spin : findChildren<QSpinBox *>())
+        connect(spin, &QSpinBox::valueChanged, this, &RestraintsDialog::updateSearchAdmission);
+    for (auto *spin : findChildren<QDoubleSpinBox *>())
+        connect(spin, &QDoubleSpinBox::valueChanged, this, &RestraintsDialog::updateSearchAdmission);
+    for (auto *check : findChildren<QCheckBox *>())
+        connect(check, &QCheckBox::toggled, this, &RestraintsDialog::updateSearchAdmission);
+    updateSearchAdmission();
 
     // Symmetry tab — Clear All / Select All
     const QList<QCheckBox*> csysChecks = {
@@ -85,6 +99,7 @@ void RestraintsDialog::setupCompositionTab()
 
     // 2. Formula line edit
     m_formulaEdit = new QLineEdit(tab);
+    m_formulaEdit->setObjectName("compositionFormula");
     m_formulaEdit->setPlaceholderText(tr("e.g.  Sc AND Ti OR Pm OR Sm"));
     layout->addWidget(m_formulaEdit);
 
@@ -109,7 +124,7 @@ void RestraintsDialog::setupCompositionTab()
 
     layout->addWidget(opBox);
 
-    // 4. Bottom row: Clear + min/max species
+    // 4. Bottom row: Clear, draft method, then min/max species.
     QHBoxLayout *bottomLayout = new QHBoxLayout();
 
     m_clearButton = new QPushButton(tr("Clear"), tab);
@@ -117,22 +132,40 @@ void RestraintsDialog::setupCompositionTab()
     bottomLayout->addWidget(m_clearButton);
     bottomLayout->addStretch();
 
+    bottomLayout->addWidget(new QLabel(tr("SM:"), tab));
+    auto *methods = new QButtonGroup(this);
+    methods->setExclusive(true);
+    m_csm = new QPushButton(tr("CSM"), tab);
+    m_pfsm = new QPushButton(tr("PFSM"), tab);
+    m_csm->setObjectName("csmMethodButton");
+    m_pfsm->setObjectName("pfsmMethodButton");
+    for (auto *button : {m_csm, m_pfsm}) {
+        button->setCheckable(true);
+        button->setFixedWidth(58);
+        methods->addButton(button);
+        bottomLayout->addWidget(button);
+    }
+    m_csm->setChecked(true);
+    bottomLayout->addSpacing(12);
+
     bottomLayout->addWidget(new QLabel(tr("Min species:"), tab));
     m_minSpecies = new QSpinBox(tab);
+    m_minSpecies->setObjectName("minSpecies");
     m_minSpecies->setRange(0, 99);
     m_minSpecies->setValue(0);
     m_minSpecies->setSpecialValueText(tr("any"));
-    m_minSpecies->setFixedWidth(60);
+    m_minSpecies->setFixedWidth(76);
     bottomLayout->addWidget(m_minSpecies);
 
     bottomLayout->addSpacing(12);
 
     bottomLayout->addWidget(new QLabel(tr("Max species:"), tab));
     m_maxSpecies = new QSpinBox(tab);
+    m_maxSpecies->setObjectName("maxSpecies");
     m_maxSpecies->setRange(0, 99);
     m_maxSpecies->setValue(0);
     m_maxSpecies->setSpecialValueText(tr("any"));
-    m_maxSpecies->setFixedWidth(60);
+    m_maxSpecies->setFixedWidth(76);
     bottomLayout->addWidget(m_maxSpecies);
 
     layout->addLayout(bottomLayout);
@@ -483,16 +516,39 @@ void RestraintsDialog::setupSubfilesTab()
 
 void RestraintsDialog::setMergeEnabled(bool enabled)
 {
-    ui->loadMergeButton->setEnabled(enabled);
+    m_mergeEnabled = enabled;
+    updateSearchAdmission();
 }
 
 void RestraintsDialog::setSearchEnabled(bool enabled)
 {
-    ui->searchButton->setEnabled(enabled);
+    m_continuous = enabled;
+    updateSearchAdmission();
+}
+qualpf::application::SearchMethod RestraintsDialog::selectedSearchMethod() const {
+    return m_pfsm->isChecked() ? qualpf::application::SearchMethod::pfsm : qualpf::application::SearchMethod::classic_sm;
+}
+void RestraintsDialog::setSelectedSearchMethod(qualpf::application::SearchMethod method) {
+    (method == qualpf::application::SearchMethod::pfsm ? m_pfsm : m_csm)->setChecked(true);
+}
+void RestraintsDialog::setBusy(bool busy) {
+    m_busy = busy;
+    m_csm->setEnabled(!busy); m_pfsm->setEnabled(!busy);
+    ui->tabWidget->setEnabled(!busy);
+    ui->cancelRestraintsButton->setEnabled(!busy);
+    updateSearchAdmission();
+}
+void RestraintsDialog::setBrowseEnabled(bool enabled) { m_browseEnabled = enabled; updateSearchAdmission(); }
+void RestraintsDialog::updateSearchAdmission() {
+    ui->searchButton->setEnabled(!m_busy && m_continuous && hasRestraints());
+    ui->loadCardsButton->setEnabled(!m_busy && m_browseEnabled);
+    ui->loadMergeButton->setEnabled(!m_busy && m_browseEnabled && m_mergeEnabled);
 }
 
 bool RestraintsDialog::hasRestraints() const
 {
+    if (compositionMinSpecies() > 0 || compositionMaxSpecies() > 0 ||
+        !colorStrings().isEmpty() || densityCalc() > 0 || densityMeas() > 0) return true;
     if (!compositionFormula().isEmpty()) return true;
     if (!chemicalName().isEmpty())       return true;
     if (!subfilesCodes().isEmpty())      return true;
@@ -612,10 +668,7 @@ void RestraintsDialog::onAvailableColorsClicked()
 void RestraintsDialog::onCancelAllRestraintsClicked()
 {
     onCompositionClearClicked();
-    onSubfilesClearAll();
-    ui->entryIdsEdit->clear();
-    ui->chemicalNameEdit->clear();
-    ui->colorEdit->clear();
+    restore(qualpf::application::MetadataObject{});
     emit cancelAllRestraintsRequested();
 }
 
@@ -636,6 +689,8 @@ qualpf::application::MetadataValue RestraintsDialog::snapshot() const
     state["formula"] = compositionFormula().toStdString();
     state["exact"] = isExactComposition();
     state["contains_any"] = isContainsAny();
+    state["min_species"] = compositionMinSpecies();
+    state["max_species"] = compositionMaxSpecies();
     state["ids"] = ui->entryIdsEdit->toPlainText().toStdString();
     state["name"] = ui->chemicalNameEdit->text().toStdString();
     state["colors"] = ui->colorEdit->text().toStdString();
@@ -659,6 +714,8 @@ qualpf::application::MetadataValue RestraintsDialog::snapshot() const
 
 void RestraintsDialog::restore(const qualpf::application::MetadataValue &state)
 {
+    m_minSpecies->setValue(state["min_species"].toInt());
+    m_maxSpecies->setValue(state["max_species"].toInt());
     m_radioAnd->setChecked(true);
     if (state["exact"].toBool()) m_radioExact->setChecked(true);
     if (state["contains_any"].toBool()) m_radioContainsAny->setChecked(true);

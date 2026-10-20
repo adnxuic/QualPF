@@ -1,4 +1,5 @@
 #include "qualpf/application/preprocessing_evaluation.h"
+#include "qualpf/application/configured_fwhm.h"
 
 namespace qualpf::application {
 namespace {
@@ -44,6 +45,11 @@ void finalizeRangeState(ProductState &next, const ProductState &opening) {
     next.preprocessing.background_filters.clear();
     next.peaks.clear();
     next.preprocessing.peak_candidates.reset();
+    next.preprocessing.peak_calibration.reset();
+    next.preprocessing.fwhm_estimate.reset();
+    next.preprocessing.peak_fwhm_usage.reset();
+    invalidateAutomaticFwhm(next.preprocessing);
+    next.preprocessing.rejected_candidates.clear();
     next.preprocessing.candidate_failure.reset();
     next.preprocessing.selection.reset();
     next.peakTolerance.reset();

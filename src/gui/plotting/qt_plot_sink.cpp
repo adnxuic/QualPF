@@ -92,6 +92,7 @@ void QtPlotSink::accept(const PlotCommand &command) {
     if (replacing_ && !erase) {
         view.addProjectedPlot(values(s.x), values(s.y), kind, int(s.visibility), s.wavelength,
                               QString::fromStdString(s.label));
+        if (!s.label.empty()) view.graph()->setName(QString::fromStdString(s.label));
         return;
     }
     graphItem *item = nullptr;
@@ -108,7 +109,12 @@ void QtPlotSink::accept(const PlotCommand &command) {
     case SeriesKind::unindexed_peaks: item = &view.undpeaks; break;
     default: throw PlotSinkFailure(invalid("unsupported_layer"));
     }
-    if (item) view.applyProjectedSessionItem(*item, erase ? QVector<double>{} : values(s.x),
-                                             erase ? QVector<double>{} : values(s.y), s.wavelength);
+    if (item) {
+        item->visible = !erase && s.visibility == application::Visibility::visible;
+        view.applyProjectedSessionItem(*item, erase ? QVector<double>{} : values(s.x),
+                                       erase ? QVector<double>{} : values(s.y), s.wavelength);
+        if (item->graphIndex >= 0 && item->graphIndex < view.graphCount())
+            view.graph(item->graphIndex)->setVisible(item->visible);
+    }
 }
 } // namespace qualpf::gui

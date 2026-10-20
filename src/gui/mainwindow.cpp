@@ -5,13 +5,23 @@
 #include "qualpf/application/domain_inputs.h"
 #include "gui/state/pattern_input.h"
 #include "gui/presentation/product_plot_refresh.h"
+#include "gui/presentation/project_view_values.h"
 #include "gui/plotting/qt_plot_sink.h"
 #include "gui/dialogs/wavedialog.h"
 #include "gui/state/preprocessing_product.h"
 #include "gui/dialogs/manual_peak_dialog.h"
+#include "gui/dialogs/fwhm_options_dialog.h"
+#include "gui/dialogs/initial_peak_options_dialog.h"
+#include "gui/dialogs/pfsm_options_dialog.h"
+#include "qualpf/application/pfsm.h"
 #include "qualpf/application/kalpha2.h"
 #include "gui/mainwindow.h"
+#include <QScopedValueRollback>
+#include <QTableView>
+#include <QHeaderView>
+#include "gui/widgets/workflow_dock.h"
 #include "ui_mainwindow.h"
+#include <QSignalBlocker>
 #include "config.h"
 #include "gui/state/workspace_context.h"
 #include "gui/export/pattern_export_service.h"
@@ -105,9 +115,12 @@ MainWindow::MainWindow(qualpf::gui::WorkspaceContext &workspaceContext, QWidget 
         if (closingRequested_) return;
         searchUiTask_ = id;
         if (!searchUiActive_) {
-            searchUiActive_ = true; enableActions(SaveAction); QApplication::setOverrideCursor(Qt::WaitCursor);
+            searchUiActive_ = true;
+            if (!(fwhmDialog_ && fwhmDialog_->isVisible()) && !(initialPeakDialog_ && initialPeakDialog_->isVisible())) enableActions(SaveAction);
+            QApplication::setOverrideCursor(Qt::WaitCursor);
         }
         enableActions(RunAction); ui->resultsWidget->setEnabled(false); ui->quantWidget->setEnabled(false);
+        m_restraintsDialog->setBusy(true);
         statusProgressBar->setRange(0,100); statusProgressBar->setValue(0); statusProgressBar->show();
         setProperty("searchState", "running");
     });
@@ -117,10 +130,19 @@ MainWindow::MainWindow(qualpf::gui::WorkspaceContext &workspaceContext, QWidget 
     });
     connect(searchTasks_, &qualpf::gui::SearchTaskController::finished, this, [this](quint64 id, bool) {
         if (closingRequested_) return;
+        if (!searchTasks_->busy() && pfsmPreviewPending_) {
+            pfsmPreviewPending_ = false;
+            previewPfsmCandidate(pfsmPreviewCandidate_);
+        }
         if (id != searchUiTask_ || closingRequested_ || searchTasks_->busy()) return;
-        if (searchUiActive_) { searchUiActive_=false; QApplication::restoreOverrideCursor(); enableActions(RestoreAction); }
+        if (searchUiActive_) {
+            searchUiActive_=false; QApplication::restoreOverrideCursor();
+            if (!(fwhmDialog_ && fwhmDialog_->isVisible()) && !(initialPeakDialog_ && initialPeakDialog_->isVisible())) enableActions(RestoreAction);
+        }
         statusProgressBar->hide(); ui->resultsWidget->setEnabled(true); ui->quantWidget->setEnabled(true);
         setProperty("searchState", "idle");
+        m_restraintsDialog->setBusy(false);
+        updateSearchActions();
     });
     connect(searchTasks_, &qualpf::gui::SearchTaskController::drained, this, [this] {
         if (closingRequested_) QTimer::singleShot(0,this,[this] { close(); });
@@ -159,6 +181,7 @@ MainWindow::MainWindow(qualpf::gui::WorkspaceContext &workspaceContext, QWidget 
 
     createActionGroup();
     createDialogs();
+    createWorkflowUi();
     actionsSetup();
     readAction();
 
@@ -183,6 +206,25 @@ MainWindow::MainWindow(qualpf::gui::WorkspaceContext &workspaceContext, QWidget 
     readSettings();
     createRecentActions();
     enableActions(InitAction);
+    connect(xpdViewer(), &QCustomPlot::afterReplot, this, &MainWindow::captureProjectView);
+    connect(ui->resultsWidget, &DbResultsWidget::selectedCardsChanged, this, [this] { captureProjectView(); });
+    connect(ui->resultsWidget->sourceModel, &QAbstractItemModel::layoutChanged, this, [this] { captureProjectView(); });
+
+    auto dragStart=std::make_shared<std::shared_ptr<const qualpf::application::ProjectViewState>>();
+    connect(xpdViewer(), &QCustomPlot::mousePress, this, [this,dragStart](QMouseEvent *) { *dragStart=context().workspace().projectView(); });
+    connect(xpdViewer(), &QCustomPlot::mouseRelease, this, [this,dragStart](QMouseEvent *) {
+        captureProjectView();
+        if(*dragStart && **dragStart!=*context().workspace().projectView()) markProjectModified();
+        dragStart->reset();
+    });
+    auto rememberQueuedView=[this] {
+        const auto before=context().workspace().projectView();
+        QTimer::singleShot(0,this,[this,before] { captureProjectView(); if(*before!=*context().workspace().projectView()) markProjectModified(); });
+    };
+    connect(xpdViewer(), &QCustomPlot::mouseWheel, this, [rememberQueuedView](QWheelEvent *) { rememberQueuedView(); });
+    connect(xpdViewer(), &QCustomPlot::mouseDoubleClick, this, [rememberQueuedView](QMouseEvent *) { rememberQueuedView(); });
+    if(auto *table=ui->resultsWidget->findChild<QTableView *>())
+        connect(table->horizontalHeader(), &QHeaderView::sectionClicked, this, [this] { captureProjectView(); markProjectModified(); });
 
     qualpf::gui::presentation::bind_product_plot_refresh(context(), this, [this]() -> qualpf::Status {
         if (refreshPatternPresentation()) return qualpf::Status{std::monostate{}};
@@ -212,6 +254,11 @@ MainWindow::~MainWindow()
     // Finish the background draft while its presentation owner is alive.
     delete backgroundDialog;
     backgroundDialog = nullptr;
+    delete initialPeakDialog_; initialPeakDialog_ = nullptr;
+    delete fwhmDialog_;
+    fwhmDialog_ = nullptr;
+    // Retire the observer and selection callbacks while their workspace and controls live.
+    delete workflowDock_; workflowDock_ = nullptr;
     delete ui;
 }
 
@@ -220,6 +267,18 @@ void MainWindow::createDialogs()
     if (closingRequested_) return;
     peakSearchDialog   = new PeakSearchDialog(this);
     backgroundDialog   = new BackgroundDialog(this);
+    fwhmDialog_ = new FwhmOptionsDialog(this);
+    initialPeakDialog_ = new InitialPeakOptionsDialog(this);
+    connect(initialPeakDialog_, &QDialog::finished, this, [this] {
+        if (!closingRequested_) { restoreEnabledActions(); updateInitialPeakActions(); }
+    });
+    pfsmDialog_ = new PfsmOptionsDialog(this);
+    connect(pfsmDialog_, &PfsmOptionsDialog::settingsApplied, this, [this] {
+        ui->resultsWidget->refresh(); markProjectModified();
+    });
+    connect(fwhmDialog_, &QDialog::finished, this, [this] {
+        if (!closingRequested_) { restoreEnabledActions(); updateFwhmActions(); }
+    });
     m_restraintsDialog = new RestraintsDialog(this);
     smoothingDialog    = new SmoothingDialog(this);
     plotStyleDialog    = new PlotStyleDialog(this);
@@ -232,6 +291,26 @@ void MainWindow::createDialogs()
             [this, previous = context().searchSession().snapshot()]() mutable {
         if (closingRequested_) return;
         const auto state = context().searchSession().snapshot();
+        if (previous->pattern.id != state->pattern.id || previous->pattern.source_id != state->pattern.source_id)
+            context().presentation().setBackgroundSubtraction(false);
+        updateBackgroundActions();
+        // Checked RIR revisions retain the frozen problem and fit generation.
+        // Detect this canonical change for every caller without resetting candidates.
+        const auto &oldPfsm = previous->pfsm;
+        const auto &newPfsm = state->pfsm;
+        if (displayedPfsmPlot_ && oldPfsm && oldPfsm == newPfsm)
+            displayedPfsmSource_ = context().workspace().session().snapshot();
+        if (oldPfsm && newPfsm && oldPfsm->problem == newPfsm->problem &&
+            oldPfsm->universe == newPfsm->universe &&
+            oldPfsm->quantification_library == newPfsm->quantification_library &&
+            oldPfsm->generation == newPfsm->generation &&
+            oldPfsm->rir_revisions != newPfsm->rir_revisions) {
+            // Quantification-only revisions retain the displayed joint trial.
+            if (displayedPfsmPlot_) displayedPfsmSource_ = context().workspace().session().snapshot();
+            previous = state;
+            ui->quantWidget->refresh();
+            return;
+        }
         const auto &oldBackground = previous->pattern.background;
         const auto &newBackground = state->pattern.background;
         const bool sameBackground = (!oldBackground && !newBackground) ||
@@ -253,6 +332,11 @@ void MainWindow::createDialogs()
             markProjectModified();
         if (!state->editing && !qualpf::gui::peakEditorEquivalent(*previous,*state))
             markProjectModified();
+        if (!state->editing && previous->projectSettings && state->projectSettings) {
+            const auto &before=previous->projectSettings->profile(qualpf::application::WorkflowId::preprocessing).range;
+            const auto &after=state->projectSettings->profile(qualpf::application::WorkflowId::preprocessing).range;
+            if (bool(before)!=bool(after) || (before && after && (before->minimum!=after->minimum || before->maximum!=after->maximum))) markProjectModified();
+        }
         if ((!previous->candidates.empty() && state->candidates.empty()) ||
             (!previous->phases.empty() && state->phases.empty())) {
             ui->peakCompareWidget->clearCard();
@@ -261,30 +345,33 @@ void MainWindow::createDialogs()
         previous = state;
         const auto bars = xpdViewer()->refSet;
         for (const auto &bar : bars)
-            if (!bar.id.isEmpty() && std::none_of(state->phases.begin(), state->phases.end(),
-                    [&](const auto &card) { return card.getId() == bar.id; }))
+            if (!bar.id.isEmpty() && (state->pfsm || std::none_of(state->phases.begin(), state->phases.end(),
+                    [&](const auto &card) { return card.getId() == bar.id; })))
                 xpdViewer()->removePhaseReflections(bar.id);
-        for (const auto &card : state->phases)
-            xpdViewer()->addPhaseReflections(card, cardColor(card.getId()));
+        // PFSM publishes exact joint curves. Its discrete d/I library does not
+        // carry the Classical display-angle arrays used by reflection bars.
+        if (!state->pfsm)
+            for (const auto &card : state->phases)
+                xpdViewer()->addPhaseReflections(card, cardColor(card.getId(), this));
         refreshPreprocessingDisplay();
+        updateInitialPeakActions();
         ui->resultsWidget->refresh();
         ui->quantWidget->refresh();
         ui->peakCompareWidget->refresh();
-        ui->reportWidget->updateQuantitative(ui->quantWidget->phases(), ui->quantWidget->quantPercentages());
+        ui->reportWidget->updateQuantitative(ui->quantWidget->quantificationResult());
         updateReport();
     });
 
-    auto *recovery = ui->menuPattern->addAction(tr("Restart preprocessing..."));
-    recovery->setObjectName("actionRestartPreprocessing");
+    auto *recovery = ui->actionRestartPreprocessing;
     connect(recovery, &QAction::triggered, this, [this] {
         if (qualpf::gui::cppPreprocessingProduct()) qualpf::gui::recoverPreprocessing(*this);
         else setStatusMessage(tr("Restart preprocessing is available with the C++ preprocessing backend."));
     });
-    auto *clearPeaks = ui->menuPattern->addAction(tr("Delete all peaks"));
-    clearPeaks->setObjectName("actionDeleteAllPeaks");
+    auto *clearPeaks = ui->actionDeleteAllPeaks;
     connect(clearPeaks, &QAction::triggered, this, [this] {
         auto allowed = qualpf::gui::peakEditEntryStatus(qualpf::gui::workspaceContext(this));
         if (!allowed) {setStatusMessage(QString::fromStdString(allowed.error().reason));return;}
+        if (!confirmWorkflowReplacement(qualpf::application::WorkflowStep::peaks)) return;
         qualpf::gui::PreprocessingEdit edit(context().searchSession());
         qualpf::application::PreprocessingRequest request;
         request.manual = qualpf::application::ManualPeakChange{};
@@ -317,6 +404,7 @@ void MainWindow::createDialogs()
     connect(ui->resultsWidget, &DbResultsWidget::cardDataSelected,
             this, [this](const CardType &card) {
         if (closingRequested_) return;
+        if (context().workspace().session().snapshot()->pfsm) return;
                 ui->peakCompareWidget->setSelectedCard(
                     card, card.getId(), SearchOptionsDialog::savedDelta2theta(qualpf::gui::workspaceContext(this).workspace().session().snapshot(), qualpf::gui::workspaceContext(this).settings()));
             });
@@ -340,10 +428,17 @@ void MainWindow::createDialogs()
         if (closingRequested_) return;
                 ui->resultsWidget->addCard(card);
                 ui->peakCompareWidget->removeAcceptedPhase(card.getId());
-                ui->reportWidget->updateQuantitative(
-                    ui->quantWidget->phases(), ui->quantWidget->quantPercentages());
+                ui->reportWidget->updateQuantitative(ui->quantWidget->quantificationResult());
                 xpdViewer()->removePhaseReflections(card.getId());
             });
+    connect(ui->quantWidget, &QuantWidget::phaseRemovalRequested, this, &MainWindow::removePfsmPhase);
+    connect(ui->quantWidget, &QuantWidget::quantificationChanged, this, [this] {
+        if (closingRequested_) return;
+        const auto &result = ui->quantWidget->quantificationResult();
+        ui->reportWidget->updateQuantitative(result);
+        ui->dockWidgetQuant->setWindowTitle(result.method == qualpf::application::QuantificationMethod::pfsm_rir
+            ? tr("Quantitative analysis · PFSM/RIR") : tr("Quantitative analysis"));
+    });
 
     connect(ui->peakCompareWidget, &PeakCompareWidget::selectedComparePointsChanged,
             this, [this](const QVector<double> &tth,
@@ -380,9 +475,10 @@ void MainWindow::actionsSetup()
         if (!file.isEmpty()) loadPowderCif(file);
     });
 
-    //Pattern menu
+    //Preprocessing and independent Peak Search menus
     connect(ui->actionRange, &QAction::triggered, this, &MainWindow::onActionRangeTriggered);
     connect(ui->actionBackground, &QAction::triggered, this, &MainWindow::onActionBackgroundTriggered);
+    connect(ui->actionBackgroundOptions, &QAction::triggered, this, &MainWindow::onActionBackgroundOptionsTriggered);
     connect(ui->actionExport_Background, &QAction::triggered, this, &MainWindow::onActionBackgroundExportTriggered);
     connect(ui->actionSubtract_Background, &QAction::triggered, this, &MainWindow::onActionSubtractBackgroundTriggered);
     connect(ui->actionSmoothing, &QAction::triggered, this, &MainWindow::onActionSmoothingTriggered);
@@ -391,6 +487,10 @@ void MainWindow::actionsSetup()
     connect(ui->actionLoad_Peaks, &QAction::triggered, this, &MainWindow::onActionLoadPeaksTriggered);
     connect(ui->actionSave_Peaks, &QAction::triggered, this, &MainWindow::onActionSavePeaksTriggered);
     connect(ui->actionPeak_Search_Conditions, &QAction::triggered, this, &MainWindow::onActionPeakSearchConditionsTriggered);
+    connect(ui->actionInitialPeakSearchOptions, &QAction::triggered, this, &MainWindow::onActionInitialPeakOptionsTriggered);
+    connect(ui->actionInitialPeakSearch, &QAction::triggered, this, &MainWindow::onActionInitialPeakSearchTriggered);
+    connect(ui->actionFwhmEstimationOptions, &QAction::triggered, this, &MainWindow::onActionFwhmOptionsTriggered);
+    connect(ui->actionFwhmEstimation, &QAction::triggered, this, &MainWindow::onActionFwhmEstimationTriggered);
 
     //View menu
     connect(ui->actionPlot_Style, &QAction::triggered, this, &MainWindow::onActionPlotStyleTriggered);
@@ -398,6 +498,7 @@ void MainWindow::actionsSetup()
     connect(ui->actionAutoscale, &QAction::triggered, this, &MainWindow::onActionAutoscaleTriggered);
     connect(ui->actionLegend, &QAction::triggered, this, [=](bool state){
         xpdViewer()->setLegendVisible(state);
+        captureProjectView(); markProjectModified();
     });
     connect(plotStyleDialog, &PlotStyleDialog::dialogClosed, this, &MainWindow::plotStyleClosed);
     connect(plotStyleDialog, &PlotStyleDialog::applyOffsetRequested, this, [this](double offset){
@@ -405,9 +506,15 @@ void MainWindow::actionsSetup()
     connect(plotStyleDialog, &PlotStyleDialog::redrawRequested, this, [this](){
         if (closingRequested_) return; xpdViewer()->redrawPlot(); });
 
-    //Search menu
+    //S&M menu
     connect(ui->actionSearch_Match, &QAction::triggered, this, &MainWindow::onActionSearchMatchTriggered);
     connect(ui->actionSearch_Match_Options, &QAction::triggered, this, &MainWindow::onActionSearchMatchOptionsTriggered);
+    connect(ui->actionPFSMOptions, &QAction::triggered, this, [this] {
+        if (closingRequested_ || searchTasks_->busy() || context().searchSession().snapshot()->editing) return;
+        if (pfsmDialog_->isVisible()) { pfsmDialog_->raise(); return; }
+        if (pfsmDialog_->setOptions()) pfsmDialog_->show();
+    });
+    connect(ui->actionPFSM, &QAction::triggered, this, [this] { requestMatch(qualpf::application::SearchMethod::pfsm); });
     connect(ui->actionRestraints, &QAction::triggered, this, &MainWindow::actionRestraintsTriggered);
     connect(ui->actionTestDatabase, &QAction::triggered, this, &MainWindow::onActionTestDatabaseTriggered);
     connect(ui->actionCancel_Search, &QAction::triggered, this, &MainWindow::onActionCancelSearchTriggered);
@@ -464,6 +571,7 @@ void MainWindow::actionsSetup()
             this, [this](const QString &id) {
         if (closingRequested_) return;
                 onCardSelected(id);
+                markProjectModified();
                 if (ui->dockWidgetCompare->isVisible())
                     ui->peakCompareWidget->refresh();
             });
@@ -475,6 +583,11 @@ void MainWindow::actionsSetup()
 
     auto buildAndShowPeaks = [this](const QVector<CardType> &cards) {
         if (closingRequested_) return;
+        if (context().workspace().session().snapshot()->pfsm) {
+            xpdViewer()->setCardPeaks({});
+            previewPfsmCandidate(cards.isEmpty() ? QString() : cards.front().getId());
+            return;
+        }
         QVector<CardPeakData> peaks;
         peaks.reserve(cards.size());
         for (const CardType &card : cards) {
@@ -482,7 +595,7 @@ void MainWindow::actionsSetup()
             CardPeakData cpd;
             const QVector<double> &pw = xpdViewer()->plotWave;
             cpd.id        = card.getId();
-            cpd.color     = cardColor(card.getId());
+            cpd.color     = cardColor(card.getId(), this);
             cpd.tth       = card.getTth();
             cpd.d         = card.getD();
             cpd.intensityAbsolute = (card.getScale() > 0.0);
@@ -541,31 +654,41 @@ void MainWindow::enableActions(EnabledActions action, bool state)
     //qInfo() << "Enable Actions: " << action << " State: " << state;
     switch (action) {
     case InitAction:  //Init
+        ui->actionPFSM->setEnabled(false);
         ui->actionSave_Project->setEnabled(false);
         ui->actionSave_Project_As->setEnabled(false);
         ui->actionExport_Diffraction_Pattern->setEnabled(false);
         ui->actionImage_Powder_Pattern->setEnabled(false);
         ui->actionSearch_Match->setEnabled(false);
         enableMenu(ui->menuPattern, false);
+        enableMenu(ui->menuPeakSearch, false);
         enableMenu(ui->menuView, false);
         break;
     case PatternAction:   //Only Pattern
+        ui->actionPFSM->setEnabled(true);
         ui->actionSave_Project->setEnabled(true);
         ui->actionSave_Project_As->setEnabled(true);
         ui->actionExport_Diffraction_Pattern->setEnabled(true);
         ui->actionImage_Powder_Pattern->setEnabled(true);
         ui->actionSearch_Match->setEnabled(true);
         enableMenu(ui->menuPattern, true);
+        enableMenu(ui->menuPeakSearch, true);
         enableMenu(ui->menuView, true);
         break;
     case DialogOpenAction:
+        ui->actionPFSM->setEnabled(false);
         enableMenu(ui->menuFile, false);
         enableMenu(ui->menuPattern, false);
+        enableMenu(ui->menuPeakSearch, false);
+        ui->actionPFSMOptions->setEnabled(false);
         ui->actionSearch_Match->setEnabled(false);
         break;
     case RunAction:
+        ui->actionPFSM->setEnabled(false);
+        ui->actionPFSMOptions->setEnabled(false);
         enableMenu(ui->menuFile, false);
         enableMenu(ui->menuPattern, false);
+        enableMenu(ui->menuPeakSearch, false);
         enableMenu(ui->menuDatabase, false);
         enableMenu(ui->menuEntry, false);
         ui->actionCancel_Search->setEnabled(true);
@@ -582,11 +705,13 @@ void MainWindow::enableActions(EnabledActions action, bool state)
         //ui->toolBarPattern
         //qInfo() << "Enable Pattern Menu";
         enableMenu(ui->menuPattern, true);
+        enableMenu(ui->menuPeakSearch, true);
         //ui->actionIntervals->setEnabled(false);
         break;
     default:
         break;
     }
+    updateBackgroundActions();
 }
 
 void MainWindow::enableMenu(QMenu *menu, bool enab)
@@ -600,6 +725,7 @@ void MainWindow::enableMenu(QMenu *menu, bool enab)
         menus.at(i)->setEnabled(enab);
         enableMenu(menus.at(i), enab); //to disable actions on toolbar
     }
+    if (menu == ui->menuPattern) { updateFwhmActions(); updateInitialPeakActions(); }
 }
 
 void MainWindow::enumerateEnabledActionsMenu(QMenu *menu)
@@ -651,6 +777,9 @@ void MainWindow::restoreEnabledActions()
             i.key()->setEnabled(i.value());
         }
     }
+    updateFwhmActions();
+    updateInitialPeakActions();
+    updateSearchActions();
 }
 
 XpdViewWidget *MainWindow::xpdViewer() const
@@ -747,25 +876,16 @@ void MainWindow::onActionNewTriggered()
         }
     }
 
-    xpdViewer()->setGraphicArea();
-    xpdViewer()->hideGraphicArea();
-    xpdViewer()->replot();
+    // Publish the empty project before refreshing any view. Widget mutation
+    // helpers would otherwise publish intermediate states with the old pattern.
+    context().searchSession().reset();
 
-    ui->plotLabel1->clear();
-    ui->plotLabel2->clear();
-    ui->plotLabel3->clear();
-
-    ui->resultsWidget->setResults({});
-    ui->peakListWidget->peakListModel->setRowCount(0);
     ui->peakCompareWidget->clearAcceptedPhases();
     ui->peakCompareWidget->clearCard();
     ui->peakCompareWidget->setExperimentalPeaks(ExperimentalPeaks());
-    ui->quantWidget->clearPhases();
     ui->reportWidget->clear();
     ui->cardBrowser->clear();
     ui->dockWidgetCard->setWindowTitle(tr("Card"));
-
-    context().searchSession().reset();
 
     clearProjectFile();
     currentFile.clear();
@@ -827,15 +947,18 @@ bool MainWindow::loadDiffractionPatterns(QStringList files, bool chooseRadiation
     }
     auto source = context().searchSession().snapshot();
     std::vector<qualpf::Pattern> prepared;
+    std::optional<qualpf::application::OriginalSignalProvenance> original;
     bool synchrotron = false;
     for (const auto &file : files) {
         const auto path = QFileInfo(file).absoluteFilePath();
-        auto result = context().files().patterns.readDetailed(path.toStdString());
+        auto result = context().files().patterns.readImported(path.toStdString());
         if (!result) {
             setStatusMessage(tr("Cannot open %1: %2").arg(file, QString::fromStdString(result.error().message)));
             return false;
         }
-        auto read = std::move(result).value();
+        auto imported = std::move(result).value();
+        if (prepared.empty()) original = std::move(imported.original_signal_provenance);
+        auto read = std::move(imported.input);
         if (!read.file_wavelength && chooseRadiation) {
             WaveDialog dialog(this);
             if (dialog.exec() != QDialog::Accepted) return false;
@@ -859,11 +982,12 @@ bool MainWindow::loadDiffractionPatterns(QStringList files, bool chooseRadiation
         setStatusMessage(QString::fromStdString(presentation.error().reason + ": " + presentation.error().message));
         return false;
     }
-    auto committed = context().searchSession().openPattern(source, std::move(first), std::move(prepared), synchrotron);
+    auto committed = context().searchSession().openPattern(source, std::move(first), std::move(prepared), synchrotron, std::move(original));
     if (!committed) {
         setStatusMessage(QString::fromStdString(committed.error().message));
         return false;
     }
+    clearProjectFile();
     refreshPatternPresentation();
     refreshPreprocessingDisplay();
     const auto filename = QFileInfo(files.front()).absoluteFilePath();
@@ -913,6 +1037,7 @@ bool MainWindow::loadPowderCif(const QString &file)
             return qualpf::Status{std::monostate{}};
         },
         [this, &file](const SessionViewHandle &) {
+            clearProjectFile();
             refreshPatternPresentation();
             refreshPreprocessingDisplay();
             const auto filename = QFileInfo(file).absoluteFilePath();
@@ -954,50 +1079,60 @@ void MainWindow::onActionImportDiffractionPatternTriggered()
     loadDiffractionPatterns(files);
 }
 
-void MainWindow::loadProject(QString fileName)
+bool MainWindow::loadProject(QString fileName)
 {
-    if (closingRequested_) return;
+    if (closingRequested_) return false;
     qualpf::gui::Preferences settings(qualpf::gui::workspaceContext(this).preferences());
-    if (fileName.isEmpty()) return;
+    if (fileName.isEmpty()) return false;
 
     fileName = QDir::toNativeSeparators(fileName);
-    settings.setValue(DEFAULT_DIR_KEY, QFileInfo(fileName).absolutePath());
-
+    QScopedValueRollback<bool> restoring(restoringProjectView_, true);
     const auto source = context().searchSession().snapshot();
-    if (source->editing) { setStatusMessage(tr("Finish the preprocessing edit before loading a project.")); return; }
-    const auto defaults=SearchOptionsDialog::snapshotSettings(qualpf::gui::workspaceContext(this).workspace().session().snapshot(), qualpf::gui::workspaceContext(this).settings());
-    const auto committed=qualpf::application::openProjectInput(context().workspace().session(),context().files().projects,fileName.toStdString(),defaults);
+    if (source->editing) { setStatusMessage(tr("Finish the preprocessing edit before loading a project.")); return false; }
+    const auto committed=qualpf::application::openProjectInput(context().workspace(),context().files().projects,fileName.toStdString());
     if (!committed) {
         const auto &error=committed.error();
         if (error.reason=="project_read_failed") QMessageBox::warning(this,tr("Open Project"),tr("Cannot read file:\n%1").arg(fileName));
         else if (error.reason=="project_parse_failed") QMessageBox::warning(this,tr("Open Project"),tr("Invalid project file:\n%1").arg(QString::fromStdString(error.message)));
         else if (error.reason=="project_warning") QMessageBox::warning(this,tr("Open Project"),QString::fromStdString(error.message));
         else setStatusMessage(QString::fromStdString(error.message));
-        return;
+        return false;
     }
+    const auto restoredView=context().workspace().projectView();
+    context().presentation().setBackgroundSubtraction(restoredView->subtract_background);
+    for(const auto &[layer,key]:qualpf::gui::projectLayers)
+        if(const auto found=restoredView->layers.find(key);found!=restoredView->layers.end())
+            context().presentation().setVisibility(layer,qualpf::gui::projectVisibility(found->second));
+    // Rebuild the canonical graph items before applying styles and offsets.
+    // Old item indexes belong to the preceding canvas until that rebuild finishes.
     if (!context().searchSession().snapshot()->pattern.two_theta.empty())
         refreshPatternPresentation();
+    else
+        xpdViewer()->clearProjectPlot();
     refreshPreprocessingDisplay();
     m_restraintsDialog->restore(context().searchSession().snapshot()->restraints);
     ui->peakCompareWidget->clearCard();
     updateReport();
-    ui->reportWidget->updateQuantitative(ui->quantWidget->phases(), ui->quantWidget->quantPercentages());
-    if (ui->resultsWidget->hasResults()) ui->resultsWidget->selectFirstCard();
+    ui->reportWidget->updateQuantitative(ui->quantWidget->quantificationResult());
+    ui->resultsWidget->applyProjectView(*restoredView);
+    xpdViewer()->applyProjectView(*restoredView);
+    ui->actionLegend->setChecked(restoredView->legend);
 
+    currentProjectFile = fileName;
+    projectFileSaved = true;
+    settings.setValue(DEFAULT_DIR_KEY, QFileInfo(fileName).absolutePath());
     setCurrentFile(fileName, QVariant::fromValue(RecentFileType::Project).toString());
-    if (!context().searchSession().snapshot()->projectMetadata["residual_current_known"].toBool())
-        setStatusMessage(tr("Project loaded: %1. Historical residual intensities are unavailable; saved original intensities were restored.").arg(QFileInfo(fileName).fileName()));
-    else
-        setStatusMessage(tr("Project loaded: %1").arg(QFileInfo(fileName).fileName()));
+    setStatusMessage(tr("Project loaded: %1").arg(QFileInfo(fileName).fileName()));
 
     enableActions(PatternAction);
+    return true;
 }
 
 void MainWindow::onActionLoadProjectTriggered()
 {
     if (closingRequested_) return;
     qualpf::gui::Preferences settings(qualpf::gui::workspaceContext(this).preferences());
-    QString selectedFilter = APP_DISPLAY_NAME + " Project (*.qxp)";
+    QString selectedFilter = APP_DISPLAY_NAME + " Project (*.qpf)";
     QString exts = selectedFilter;
 
     QString fileName = QFileDialog::getOpenFileName(this,
@@ -1009,12 +1144,10 @@ void MainWindow::onActionLoadProjectTriggered()
 void MainWindow::saveProject(const QString &fileName)
 {
     if (closingRequested_) return;
-    projectFileSaved = false;
     const auto snapshot = context().searchSession().snapshot();
     if (snapshot->editing) { setStatusMessage(tr("Finish the preprocessing edit before saving a project.")); return; }
-    const auto defaults=SearchOptionsDialog::snapshotSettings(qualpf::gui::workspaceContext(this).workspace().session().snapshot(), qualpf::gui::workspaceContext(this).settings());
-    const auto saved=qualpf::application::saveProjectInput(snapshot->canonical, context().files().projectWriter,
-        fileName.toStdString(), defaults, QDateTime::currentDateTime().toString(Qt::ISODate).toStdString());
+    captureProjectView();
+    const auto saved=qualpf::application::saveProjectInput(context().workspace(), context().files().projectWriter, fileName.toStdString());
     if (!saved && saved.error().reason != "project_open_failed" && saved.error().reason != "project_save_failed") {
         QMessageBox::warning(this,tr("Save Project"),QString::fromStdString(saved.error().message)); return;
     }
@@ -1023,6 +1156,8 @@ void MainWindow::saveProject(const QString &fileName)
         QMessageBox::warning(this,tr("Save Project"),message.arg(fileName)); return;
     }
     projectFileSaved = true;
+    currentProjectFile = fileName;
+    setCurrentFile(fileName, QVariant::fromValue(RecentFileType::Project).toString());
 }
 
 void MainWindow::onActionSaveProjectTriggered()
@@ -1039,14 +1174,13 @@ void MainWindow::onActionSaveProjectAsTriggered()
     if (closingRequested_) return;
     qualpf::gui::Preferences settings(qualpf::gui::workspaceContext(this).preferences());
     QString selectedFilter = "expo";
-    QString exts = APP_DISPLAY_NAME + " Project (*.qxp)";
+    QString exts = APP_DISPLAY_NAME + " Project (*.qpf)";
     QString fileName = SaveDialog::run(this,tr("Save Project As"),
                                        settings.value(DEFAULT_DIR_KEY).toString(),
                                        QFileInfo(currentFile).baseName(),exts,
-                                       "qxp",selectedFilter);
+                                       "qpf",selectedFilter);
     if (!fileName.isEmpty()) {
         fileName = QDir::toNativeSeparators(fileName);
-        currentProjectFile = fileName;
         saveProject(fileName);
     }
 }
@@ -1148,6 +1282,7 @@ void MainWindow::clearProjectFile()
     if (closingRequested_) return;
     projectFileSaved = true;
     currentProjectFile.clear();
+    context().workspace().resetProjectPresentation();
 }
 
 void MainWindow::markProjectModified()
@@ -1263,7 +1398,7 @@ void MainWindow::onActionFileDropped(const QStringList &fileList)
         if (xpdExtensions.contains(ext)) {
             loadDiffractionPatterns(fileList);
             break;
-        } else if (ext == "qxp") {
+        } else if (ext == "qpf" || ext == "qxp") {
             loadProject(fileIn);
             break;
         } else {
@@ -1383,7 +1518,7 @@ void MainWindow::onActionPrintTriggered()
 
 void MainWindow::onActionRangeTriggered()
 {
-    if (closingRequested_) return;
+    if (closingRequested_ || searchTasks_->busy()) return;
     if (rangeDialog && !rangeDialog->isClosed()) { rangeDialog->raise();rangeDialog->activateWindow();return; }
     if (context().searchSession().snapshot()->editing) {
         setStatusMessage(tr("Finish the preprocessing edit before opening Range."));return;
@@ -1398,6 +1533,19 @@ void MainWindow::onActionRangeTriggered()
 void MainWindow::onActionBackgroundTriggered()
 {
     if (closingRequested_) return;
+    if (searchTasks_->busy() || context().searchSession().snapshot()->editing) return;
+    if (!confirmWorkflowReplacement(qualpf::application::WorkflowStep::background)) return;
+    if (context().workspace().session().snapshot()->projectSettings) { runWorkflowPreparation(true); return; }
+    auto result = qualpf::gui::applyPreprocessing(context().searchSession(), qualpf::application::PreprocessingAction::generate_background);
+    if (!result) { setStatusMessage(QString::fromStdString(result.error().reason + ": " + result.error().message)); return; }
+    setBackgroundSubtractionDisplay(false);
+    refreshPatternPresentation(); refreshPreprocessingDisplay(); updateBackgroundActions();
+}
+
+void MainWindow::onActionBackgroundOptionsTriggered() {
+    if (closingRequested_ || searchTasks_->busy() || context().searchSession().snapshot()->editing ||
+        context().searchSession().snapshot()->pattern.observed.empty()) return;
+    setBackgroundSubtractionDisplay(false);
     backgroundDialog->setBackground();
     backgroundDialog->show();
 }
@@ -1438,22 +1586,35 @@ void MainWindow::onActionBackgroundExportTriggered()
     }
 }
 
-void MainWindow::onActionSubtractBackgroundTriggered()
-{
+void MainWindow::onActionSubtractBackgroundTriggered() {
     if (closingRequested_) return;
-    {
-        auto result=qualpf::gui::applyPreprocessing(context().searchSession(),qualpf::application::PreprocessingAction::subtract_background);
-        if (!result) { setStatusMessage(QString::fromStdString(result.error().reason+": "+result.error().message)); return; }
-        refreshPatternPresentation();
-        refreshPreprocessingDisplay();
-        markProjectModified();
-    }
-    updateReport();
+    setBackgroundSubtractionDisplay(!context().presentation().snapshot().subtract_background);
+    captureProjectView(); markProjectModified();
+}
+void MainWindow::updateBackgroundActions() {
+    if (closingRequested_) return;
+    const auto source = context().workspace().session().snapshot();
+    const bool aligned = qualpf::application::presentation::can_subtract_background(*source);
+    if (!aligned) context().presentation().setBackgroundSubtraction(false);
+    const QSignalBlocker blocker(ui->actionSubtract_Background);
+    ui->actionSubtract_Background->setChecked(context().presentation().snapshot().subtract_background);
+    ui->actionSubtract_Background->setEnabled(aligned && !source->editing);
+}
+void MainWindow::setBackgroundSubtractionDisplay(bool enabled) {
+    if (closingRequested_) return;
+    if (enabled && !qualpf::application::presentation::can_subtract_background(*context().workspace().session().snapshot())) enabled = false;
+    const bool changed = context().presentation().snapshot().subtract_background != enabled;
+    context().presentation().setBackgroundSubtraction(enabled);
+    updateBackgroundActions();
+    if (!changed) return;
+    const auto source = context().workspace().session().snapshot();
+    if (source->pfsm && displayedPfsmPlot_ && displayedPfsmSource_.lock() == source) showPfsmPlot(*displayedPfsmPlot_);
+    else { refreshPatternPresentation(); refreshPreprocessingDisplay(); }
 }
 
 void MainWindow::onActionSmoothingTriggered()
 {
-    if (closingRequested_) return;
+    if (closingRequested_ || searchTasks_->busy() || context().searchSession().snapshot()->editing || context().searchSession().snapshot()->pattern.observed.empty()) return;
     smoothingDialog->setSmoothing();
     smoothingDialog->show();
 }
@@ -1461,6 +1622,8 @@ void MainWindow::onActionSmoothingTriggered()
 void MainWindow::onActionKAlpha2StrippingTriggered()
 {
     if (closingRequested_) return;
+    if (searchTasks_->busy() || context().workspace().session().snapshot()->editing ||
+        !confirmWorkflowReplacement(qualpf::application::WorkflowStep::kalpha2)) return;
     auto status = qualpf::application::stripKalpha2Operation(context().workspace().session(), context().platform());
     if (!status) {
         if (status.error().reason == "invalid_kalpha2_backend")
@@ -1481,6 +1644,7 @@ void MainWindow::deleteSelectedPeaks(const QVector<int> &selected)
         auto allowed = qualpf::gui::peakEditEntryStatus(qualpf::gui::workspaceContext(this));
         if (!allowed) {setStatusMessage(QString::fromStdString(allowed.error().reason));return;}
     }
+    if (!confirmWorkflowReplacement(qualpf::application::WorkflowStep::peaks)) return;
     {
         qualpf::gui::PreprocessingEdit edit(context().searchSession());
         qualpf::application::PreprocessingRequest request;
@@ -1500,6 +1664,8 @@ void MainWindow::addDeleteSelectedPoint(int action, double xp, double yp, int &i
 {
     if (closingRequested_) return;
     if ((action == AddBackgroundPoint || action == DeleteBackgroundPoint)) {
+        if (!confirmWorkflowReplacement(qualpf::application::WorkflowStep::background)) { ier = 1; return; }
+        setBackgroundSubtractionDisplay(false);
         const auto state = context().searchSession().snapshot();
         const auto wave = state->pattern.radiation.lines.empty() ? std::optional<qualpf::WavelengthAngstrom>{} :
             std::optional{state->pattern.radiation.lines.front().wavelength};
@@ -1531,6 +1697,7 @@ void MainWindow::addDeleteSelectedPoint(int action, double xp, double yp, int &i
         setProperty("peakErrorField",error?QString::fromStdString(error->field):QString());
         setProperty("peakErrorReason",error?QString::fromStdString(error->reason):QString());
         if (error) {setStatusMessage(QString::fromStdString(error->reason+": "+error->message));return;}
+        if (action == AddInferredPeak && !confirmWorkflowReplacement(qualpf::application::WorkflowStep::peaks)) return;
         xp = coordinate.value();
         if (action == AddPeak) ier = qualpf::gui::editManualPeak(*this,{},xp)?0:1;
         else if (action == AddInferredPeak) ier = qualpf::gui::editInferredPeak(*this,xp)?0:1;
@@ -1552,13 +1719,30 @@ void MainWindow::addDeleteSelectedPoint(int action, double xp, double yp, int &i
     }
 }
 
+void MainWindow::clearPatternPresentation()
+{
+    displayedPfsmPlot_.reset();
+    displayedPfsmSource_.reset();
+    pfsmPreviewCandidate_.clear();
+    pfsmPreviewPending_ = false;
+    xpdViewer()->clearProjectPlot();
+    ui->peakListWidget->updatePeakListTable();
+}
+
 void MainWindow::refreshPreprocessingDisplay()
 {
     if (closingRequested_) return;
+    refreshInitialPeakCandidates();
+    updateBackgroundActions();
+    if (context().workspace().session().snapshot()->pfsm) return;
     if (!context().presentation().redrawEnabled()) return;
     using namespace qualpf::application::presentation; using namespace qualpf::gui::presentation;
     const auto state = context().searchSession().snapshot();
     auto *plot = xpdViewer();
+    if (state->pattern.two_theta.empty()) {
+        clearPatternPresentation();
+        return;
+    }
     auto projected = project_session_update(make_plot_input(*state, context().presentation(), 0),
         {0, qualpf::gui::QtPlotSink::abscissa(*plot)});
     if (!projected) { setStatusMessage(QString::fromStdString(projected.error().reason + ": " + projected.error().message)); return; }
@@ -1575,7 +1759,18 @@ void MainWindow::refreshPreprocessingDisplay()
 bool MainWindow::refreshPatternPresentation()
 {
     if (closingRequested_) return false;
+    const auto source = context().workspace().session().snapshot();
+    updateBackgroundActions();
+    if (source->pfsm) {
+        auto plot = qualpf::application::preparePfsmPlot(source, {}, {});
+        if (!plot) { setStatusMessage(QString::fromStdString(plot.error().message)); return false; }
+        showPfsmPlot(plot.value()); return true;
+    }
     if (!context().presentation().redrawEnabled()) return true;
+    if (source->pattern.two_theta.empty()) {
+        clearPatternPresentation();
+        return true;
+    }
     using namespace qualpf::application::presentation; using namespace qualpf::gui::presentation;
     auto prepared = project_product_refresh(*context().searchSession().snapshot(), context().presentation(),
         {1, qualpf::gui::QtPlotSink::abscissa(*xpdViewer())});
@@ -1587,19 +1782,24 @@ bool MainWindow::refreshPatternPresentation()
     }
     for (const auto &frame : prepared.value()) {
         if (frame.action == 5) {
-            setStatusMessage(tr("Number of peaks: ") + QString::number(context().searchSession().snapshot()->peaks.tth.size()));
+            const auto state = context().searchSession().snapshot();
+            const auto warning = qualpf::gui::peakRejectionSummary(state->preprocessing);
+            setStatusMessage(tr("Number of peaks: ") + QString::number(state->peaks.tth.size()) +
+                (warning.isEmpty() ? QString() : "; " + warning));
             updatePeakListTable();
         }
         context().presentation().applyPlotAction(frame.action);
         auto status = sink.apply(frame.update);
         if (!status) { setStatusMessage(QString::fromStdString(status.error().reason + ": " + status.error().message)); return false; }
     }
+    refreshInitialPeakCandidates();
     return true;
 }
 
 void MainWindow::onActionPeakSearchTriggered()
 {
     if (closingRequested_) return;
+    if (!confirmWorkflowReplacement(qualpf::application::WorkflowStep::peaks)) return;
     {
         auto allowed = qualpf::gui::peakEditEntryStatus(qualpf::gui::workspaceContext(this));
         if (!allowed) {setStatusMessage(QString::fromStdString(allowed.error().reason));return;}
@@ -1607,6 +1807,7 @@ void MainWindow::onActionPeakSearchTriggered()
     ui->peakDockWidget->show();
     ui->peakDockWidget->raise();
     {
+        if (context().workspace().session().snapshot()->projectSettings) { runWorkflowPreparation(false); return; }
         auto result=qualpf::gui::applyPreprocessing(context().searchSession(),qualpf::application::PreprocessingAction::automatic_peaks);
         if (!result) { setStatusMessage(QString::fromStdString(result.error().reason+": "+result.error().message)); return; }
         refreshPatternPresentation();
@@ -1646,6 +1847,7 @@ void MainWindow::onActionLoadPeaksTriggered()
                                                     exts, &selectedFilter);
 
     if (!fileName.isEmpty()) {
+        if (!confirmWorkflowReplacement(qualpf::application::WorkflowStep::peaks)) return;
         int tipo = (selectedFilter.startsWith("2 theta")) ? 1 : 2;
         {
             using namespace qualpf::application; using namespace qualpf::gui;
@@ -1718,17 +1920,21 @@ void MainWindow::onActionPlotStyleTriggered()
 void MainWindow::onActionResetZoomTriggered()
 {
     if (closingRequested_) return;
+    const auto before=context().workspace().projectView();
     xpdViewer()->updateMinMax();
     double lower, upper;
     xpdViewer()->getMinMax(lower, upper);
     xpdViewer()->xAxis->setRange(lower, upper);
     xpdViewer()->redrawPlot(true);
+    captureProjectView(); if(*before!=*context().workspace().projectView()) markProjectModified();
 }
 
 void MainWindow::onActionAutoscaleTriggered()
 {
     if (closingRequested_) return;
+    const auto before=context().workspace().projectView();
     xpdViewer()->applyAutoScale();
+    captureProjectView(); if(*before!=*context().workspace().projectView()) markProjectModified();
 }
 
 void MainWindow::createActionGroup()
@@ -1743,10 +1949,7 @@ void MainWindow::createActionGroup()
     zoomGroup->addAction(ui->actionDelete_Background_Point);
     zoomGroup->addAction(ui->actionAdd_Peak);
     zoomGroup->addAction(ui->actionDelete_Peak);
-    auto *inferred = new QAction(tr("Add inferred peak"), this);
-    inferred->setObjectName("actionAddInferredPeak");
-    inferred->setCheckable(true);
-    ui->menuPattern->insertAction(ui->actionDelete_Peak, inferred);
+    auto *inferred = ui->actionAddInferredPeak;
     zoomGroup->addAction(inferred);
     connect(ui->actionAdd_Peak, &QAction::changed, inferred, [this,inferred] {
         inferred->setEnabled(ui->actionAdd_Peak->isEnabled());
@@ -1766,8 +1969,10 @@ void MainWindow::zoomGroupTriggered(QAction *action)
     } else if (action == ui->actionPan) {
         if (mAction != Pan) setAction(Pan);
     } else if (action == ui->actionAdd_Background_Point) {
+        setBackgroundSubtractionDisplay(false);
         if (mAction != AddBackgroundPoint) setAction(AddBackgroundPoint, false);
     } else if (action == ui->actionDelete_Background_Point) {
+        setBackgroundSubtractionDisplay(false);
         if (mAction != DeleteBackgroundPoint) setAction(DeleteBackgroundPoint, false);
     } else if (action == ui->actionAdd_Peak) {
         if (mAction != AddPeak) setAction(AddPeak, false);
@@ -1858,6 +2063,7 @@ void MainWindow::plotStyleClosed(QDialogButtonBox::StandardButton button)
     if (closingRequested_) return;
     if (button == QDialogButtonBox::Apply) {
         plotStyleDialog->apply(xpdViewer());
+        if(plotStyleDialog->anyChangeApplied()) { captureProjectView(); markProjectModified(); }
     } else if (button == QDialogButtonBox::Ok) {
         if (plotStyleDialog->anyChangeToApply()) {
             plotStyleDialog->apply(xpdViewer());
@@ -1865,6 +2071,7 @@ void MainWindow::plotStyleClosed(QDialogButtonBox::StandardButton button)
 
         if (plotStyleDialog->anyChangeApplied()) {
             plotStyleConfig();
+            captureProjectView(); markProjectModified();
         }
 
     } else if (button == QDialogButtonBox::Cancel) {
@@ -1926,12 +2133,12 @@ void MainWindow::plotStyleConfig()
 void MainWindow::onActionSearchMatchTriggered()
 {
     if (closingRequested_) return;
-    if (searchAdmission()) beginMatch();
+    requestMatch(qualpf::application::SearchMethod::classic_sm);
 }
 
 void MainWindow::onActionSearchMatchOptionsTriggered()
 {
-    if (closingRequested_) return;
+    if (closingRequested_ || searchTasks_->busy() || context().searchSession().snapshot()->editing) return;
     SearchOptionsDialog dlg(this);
     dlg.exec();
 }
@@ -1947,7 +2154,7 @@ void MainWindow::executeSearch(qualpf::gui::SearchRequest &builder, bool merge)
     if (closingRequested_) return;
     if (!searchAdmission()) return;
     using namespace qualpf::application;
-    SearchInput input; input.source=context().workspace().session().snapshot();
+    SearchInput input; input.source=context().workspace().session().snapshot(); input.method=input.source->algorithms->spec.method();
     input.query=builder.candidateQuery(builder.getCalcFom()?CandidateQuery::Route::matching:CandidateQuery::Route::constrained_browse);
     input.operation=builder.getCalcFom()?SearchOperation::scored_browse:SearchOperation::metadata_browse;
     input.threshold=builder.getMinFom(); input.merge=merge;
@@ -1961,8 +2168,15 @@ void MainWindow::executeSearch(qualpf::gui::SearchRequest &builder, bool merge)
 void MainWindow::actionRestraintsTriggered()
 {
     if (closingRequested_) return;
+    const auto source = context().workspace().session().snapshot();
+    if (!m_restraintsDialog->isVisible()) {
+        const bool analysis = source->pfsm || !source->candidates.empty() || !source->phases.empty();
+        m_restraintsDialog->setSelectedSearchMethod(analysis ? source->algorithms->spec.method() : qualpf::application::SearchMethod::classic_sm);
+    }
     m_restraintsDialog->setMergeEnabled(ui->resultsWidget->hasResults());
-    m_restraintsDialog->setSearchEnabled(!context().peaks().tth.isEmpty());
+    m_restraintsDialog->setSearchEnabled(source->pattern.observed.size() >= 3 && !source->editing);
+    m_restraintsDialog->setBrowseEnabled(source->algorithms->spec.method() != qualpf::application::SearchMethod::pfsm);
+    m_restraintsDialog->setBusy(searchTasks_->busy());
     m_restraintsDialog->show();
     m_restraintsDialog->raise();
     m_restraintsDialog->activateWindow();
@@ -1971,9 +2185,12 @@ void MainWindow::actionRestraintsTriggered()
 void MainWindow::applyDialogRestraints(qualpf::gui::SearchRequest &builder)
 {
     if (closingRequested_) return;
-    builder.enableDeleted(SearchOptionsDialog::savedCheckDeleted(qualpf::gui::workspaceContext(this).workspace().session().snapshot(), qualpf::gui::workspaceContext(this).settings()));
+    const auto source = context().workspace().session().snapshot();
+    if (source->algorithms->spec.method() == qualpf::application::SearchMethod::classic_sm)
+        builder.enableDeleted(SearchOptionsDialog::savedCheckDeleted(source, context().settings()));
 
     const RestraintsDialog *dlg = m_restraintsDialog;
+    builder.setSpeciesBounds(dlg->compositionMinSpecies(), dlg->compositionMaxSpecies());
 
     const QString formula = dlg->compositionFormula();
     if (!formula.isEmpty()) {
@@ -2034,6 +2251,9 @@ void MainWindow::onRestraintsSearch(bool merge)
 {
     if (closingRequested_) return;
     if (!searchAdmission()) return;
+    if (context().workspace().session().snapshot()->algorithms->spec.method() == qualpf::application::SearchMethod::pfsm) {
+        setStatusMessage(tr("Use Search with Restraints to start a new PFSM candidate universe")); return;
+    }
     if (!m_restraintsDialog->hasRestraints()) return;
 
     qualpf::gui::SearchRequest builder;
@@ -2048,10 +2268,10 @@ void MainWindow::onRestraintsSearch(bool merge)
     executeSearch(builder, merge);
 }
 
-void MainWindow::onRestraintsSearchMatch()
+void MainWindow::onRestraintsSearchMatch(qualpf::application::SearchMethod method)
 {
     if (closingRequested_) return;
-    if (m_restraintsDialog->hasRestraints() && !context().peaks().tth.isEmpty() && searchAdmission()) beginMatch(true);
+    if (m_restraintsDialog->hasRestraints()) requestMatch(method, true);
 }
 
 void MainWindow::runSearch(const SearchOptions &opts)
@@ -2136,7 +2356,7 @@ void MainWindow::onCardSelected(const QString &id)
     }
 
     QString html = "<html><body style='font-family:sans-serif;font-size:9pt'>";
-    const QString idColor = cardColor(info.id).name();
+    const QString idColor = cardColor(info.id, this).name();
     html += QString("<h3 style='margin:4px 0;color:%1'>%2</h3>").arg(idColor, info.id);
     html += "<table cellspacing='2' cellpadding='2'>";
     html += row("Name",             info.name);
@@ -2225,7 +2445,7 @@ void MainWindow::performResidualSearch(const CardType &acceptedCard)
     if (!searchAdmission()) return;
     const auto source=context().workspace().session().snapshot();
     if (!source->peaks.valid || source->peaks.tth.empty()) return;
-    qualpf::application::SearchInput input; input.source=source; input.operation=qualpf::application::SearchOperation::residual;
+    qualpf::application::SearchInput input; input.source=source; input.method=source->algorithms->spec.method(); input.operation=qualpf::application::SearchOperation::residual;
     input.phase=acceptedCard.productValue(); input.parameters=currentSearchParameters(qualpf::gui::workspaceContext(this));
     submitSearch(std::move(input),[this](const auto &) {
         ui->resultsWidget->refresh(); ui->peakCompareWidget->setExperimentalPeaks(context().peaks());
@@ -2237,10 +2457,17 @@ void MainWindow::recalculateFOMs(const QString &statusSuffix)
 {
     if (closingRequested_) return;
     if (!searchAdmission()) return;
-    qualpf::application::SearchInput input; input.source=context().workspace().session().snapshot();
+    qualpf::application::SearchInput input; input.source=context().workspace().session().snapshot(); input.method=input.source->algorithms->spec.method();
     input.operation=qualpf::application::SearchOperation::rescore; input.parameters=currentSearchParameters(qualpf::gui::workspaceContext(this));
+    if (input.source->pfsm) {
+        auto request = qualpf::application::makePfsmRequest(input.source, qualpf::gui::savedPfsmSettings(context()));
+        if (!request) { setStatusMessage(QString::fromStdString(request.error().message)); return; }
+        input.pfsm = std::make_shared<const qualpf::application::PfsmRequest>(std::move(request).value());
+    }
     submitSearch(std::move(input),[this,statusSuffix](const auto &) {
-        ui->resultsWidget->refresh(); setStatusMessage(tr("%1 card(s)%2").arg(context().searchSession().snapshot()->candidates.size()).arg(statusSuffix));
+        ui->resultsWidget->refresh(); ui->quantWidget->refresh();
+        if (context().workspace().session().snapshot()->pfsm) refreshPatternPresentation();
+        setStatusMessage(tr("%1 card(s)%2").arg(context().searchSession().snapshot()->candidates.size()).arg(statusSuffix));
     });
 }
 
@@ -2253,11 +2480,14 @@ void MainWindow::onActionRecalculateFomTriggered()
 void MainWindow::onActionLoadAddTriggered()
 {
     if (closingRequested_) return;
+    if (context().workspace().session().snapshot()->algorithms->spec.method() == qualpf::application::SearchMethod::pfsm) {
+        setStatusMessage(tr("Start a new PFSM search to change the candidate universe")); return;
+    }
     if (!searchAdmission()) return;
     bool ok=false;
     const auto id=QInputDialog::getText(this,tr("Load/Add Card by ID"),tr("Card ID:"),QLineEdit::Normal,QString(),&ok).trimmed();
     if (!ok || id.isEmpty() || !searchAdmission()) return;
-    qualpf::application::SearchInput input; input.source=context().workspace().session().snapshot();
+    qualpf::application::SearchInput input; input.source=context().workspace().session().snapshot(); input.method=input.source->algorithms->spec.method();
     input.operation=qualpf::application::SearchOperation::load_card; input.cardId=id.toStdString(); input.parameters=currentSearchParameters(qualpf::gui::workspaceContext(this));
     submitSearch(std::move(input),[this,id](const auto &) {
         ui->resultsWidget->refresh(); ui->resultsWidget->selectCard(id);
@@ -2451,4 +2681,15 @@ void MainWindow::testSelection(qualpf::gui::SearchRequest &builder, int testCase
         builder.setCsysString({"Monoclinic"});
         break;
     }
+}
+
+void MainWindow::captureProjectView() {
+    if(closingRequested_ || restoringProjectView_) return;
+    auto &workspace=context().workspace();auto view=*workspace.projectView();
+    view=xpdViewer()->captureProjectView(std::move(view));view=ui->resultsWidget->captureProjectView(std::move(view));
+    const auto &presentation=context().presentation().snapshot();view.subtract_background=presentation.subtract_background;
+    for(const auto &[layer,key]:qualpf::gui::projectLayers)
+        view.layers[key]=qualpf::gui::projectVisibility(presentation.layers[static_cast<std::size_t>(layer)]);
+    const auto status=workspace.updateProjectView(std::move(view));
+    (void)status; // Automatic projection synchronization is not a user edit.
 }

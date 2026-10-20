@@ -56,14 +56,14 @@ not exist, a dialog is shown with two options:
   as the new default. QualPF scans it immediately and registers all databases
   found inside.
 - **Manage Databases later** — dismiss the dialog and configure databases
-  manually via **Search → Manage Databases**.
+  manually via **S&M → Manage Databases**.
 
 ## Adding a database manually
 
 If you prefer not to use the default folder, or need to register an additional
 database stored elsewhere:
 
-1. Open **Search → Manage Databases**
+1. Open **S&M → Manage Databases**
 2. Click **Add** and browse to your `.sq` database file
 3. Click **OK** — the database is now active
 

@@ -18,6 +18,7 @@ enum class PlotLayer : std::size_t {
 class PresentationWorkspace {
   public:
     struct Snapshot {
+        bool subtract_background = false; // Runtime display only, never a product edit.
         Visibility phase = Visibility::visible;
         Visibility observed = Visibility::visible;
         std::array<Visibility, 13> layers{};
@@ -39,6 +40,7 @@ class PresentationWorkspace {
     bool modalErrorsAllowed() const noexcept { return errorPresentation() == ErrorPresentation::interactive; }
     const Snapshot &snapshot() const noexcept { return state_; }
     void applyPlotAction(int action) noexcept;
+    void setBackgroundSubtraction(bool enabled) noexcept { state_.subtract_background = enabled; }
     void setVisibility(PlotLayer layer, Visibility visibility) noexcept;
 
   private:

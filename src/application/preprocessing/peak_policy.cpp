@@ -9,7 +9,7 @@ bool columnsEqual(const ProductPeaks &a, const ProductPeaks &b) {
 MetadataObject peakConfiguration(const PreprocessingConfiguration &c) {
     const auto encoded = preprocessingValues(c);
     MetadataObject out;
-    for (const auto *key : {"candidate_pool", "candidate_failure", "peaks", "selection"})
+    for (const auto *key : {"candidate_pool", "candidate_failure", "peaks", "selection", "fwhm", "fwhm_usage", "peak_fwhm_usage"})
         if (encoded.contains(key))
             out[key] = encoded.at(key);
     if (out.contains("candidate_pool")) {
@@ -34,6 +34,8 @@ bool peakEditorEquivalent(const ProductState &a, const ProductState &b) {
     if (!peakMatchingEquivalent(a, b) || a.peaks.integratedIntensity != b.peaks.integratedIntensity ||
         peakConfiguration(a.preprocessing) != peakConfiguration(b.preprocessing))
         return false;
+    if (a.preprocessing.fwhm_usage && b.preprocessing.fwhm_usage &&
+        a.preprocessing.fwhm_usage->current != b.preprocessing.fwhm_usage->current) return false;
     for (const auto *key : {"peak_snapshot_origin", "candidate_pool_state", "residual_current_known"})
         if (at(a.projectMetadata, key) != at(b.projectMetadata, key))
             return false;
@@ -49,6 +51,7 @@ Status finalizePeakEdit(ProductState &next, const ProductState &opening, PeakEdi
         return validateProductState(next);
     }
     if (manual) {
+        next.preprocessing.peak_fwhm_usage.reset();
         // Restore surviving rows before deriving the new width-based delta.
         // Never reconstruct removed rows from the detector pool.
         if (!columnsEqual(next.peaks, opening.peaks))
@@ -74,6 +77,9 @@ Status finalizePeakEdit(ProductState &next, const ProductState &opening, PeakEdi
         return Status{std::monostate{}};
     if (manual) {
         next.preprocessing.peak_candidates.reset();
+        next.preprocessing.peak_calibration.reset();
+        next.preprocessing.fwhm_estimate.reset();
+        next.preprocessing.rejected_candidates.clear();
         next.preprocessing.candidate_failure.reset();
         next.preprocessing.selection.reset();
     }

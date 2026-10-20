@@ -68,20 +68,27 @@ Status DatabaseCatalog::openActive() {
 }
 Result<std::vector<ProductCard>> synchronousQuery(SearchCoordinator &execution, CandidateReader &reader,
     ReferenceDatabase database, CandidateQuery query, SearchParameters parameters, double threshold, bool scored,
-    SearchProgress progress) {
+    SearchProgress progress, SynchronousSearchPurpose purpose) {
+    if (purpose == SynchronousSearchPurpose::cli_match && !scored)
+        return Result<std::vector<ProductCard>>{Error{ErrorCode::invalid_input, "search.operation",
+            "CLI matching requires a scored query"}};
     auto admission = execution.begin(std::move(database));
     if (!admission) return Result<std::vector<ProductCard>>{admission.error()};
     SearchInput input;
     input.source = admission.value().source;
+    input.method = admission.value().algorithms->spec.method();
     input.taskId = admission.value().id;
     input.databaseVersion = admission.value().database.selectionVersion;
+    input.databaseIdentity = admission.value().database.identity;
     input.query = std::move(query);
-    input.operation = scored ? SearchOperation::scored_browse : SearchOperation::metadata_browse;
+    input.operation = purpose == SynchronousSearchPurpose::cli_match ? SearchOperation::cli_match :
+        scored ? SearchOperation::scored_browse : SearchOperation::metadata_browse;
     input.threshold = threshold;
     input.parameters = parameters;
-    input.parameters.maximum_entries = std::numeric_limits<std::size_t>::max();
+    if (purpose == SynchronousSearchPurpose::browse)
+        input.parameters.maximum_entries = std::numeric_limits<std::size_t>::max();
     auto result = execution.complete(admission.value().id,
-        SearchEngine{}.run(input, reader, admission.value().context, std::move(progress)),
+        SearchEngine{admission.value().algorithms}.run(input, reader, admission.value().context, std::move(progress)),
         SearchPublication::prepare_only);
     if (!result) return Result<std::vector<ProductCard>>{result.error()};
     return Result<std::vector<ProductCard>>{std::move(result).value().next.candidates};

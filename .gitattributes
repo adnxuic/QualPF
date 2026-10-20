@@ -1,5 +1,6 @@
 # Current source and frozen regression bytes; historical attributes remain in protected Git snapshots.
 /tests/data/symmetry-reference-manifest.json -text
+/tests/data/pfsm-quantification/real-inputs.json -text -whitespace
 /tests/data/symmetry-reference.zip binary
 /src/core/crystallography/space_group_data.inc text eol=lf
 /tests/data/cif/** -text -whitespace
@@ -154,6 +155,7 @@
 /docs/development/agent-governance.md text eol=lf
 /tests/README.md text eol=lf
 /README.md text eol=lf
+/CHANGELOG.md text eol=lf
 
 # Exact frozen fixtures retain original whitespace and line-ending bytes.
 /tests/data/classic-fortran/captured-manifest.json -whitespace
@@ -232,4 +234,5 @@
 
 # Current integration metadata and composition CMake use canonical LF.
 /.gitignore text eol=lf
+/tests/reference/archives.json text eol=lf
 /apps/qualpf/CMakeLists.txt text eol=lf

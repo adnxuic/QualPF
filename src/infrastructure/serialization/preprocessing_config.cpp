@@ -3,6 +3,7 @@
 #include <QJsonArray>
 #include "infrastructure/serialization/metadata_values.h"
 #include <cmath>
+#include <limits>
 namespace qualpf::infrastructure {
 using namespace application;
 QJsonObject encodePreprocessing(const PreprocessingConfiguration &c) {
@@ -25,6 +26,76 @@ Result<PreprocessingConfiguration> decodePreprocessing(const QJsonObject &root) 
         auto v = o[k];
         return v.isDouble() && std::isfinite(v.toDouble()) && v.toDouble() >= lo && v.toDouble() <= hi;
     };
+    auto extension = [](QJsonObject o, std::initializer_list<const char *> keys) {
+        for (const auto *key : keys) o.remove(key);
+        return std::get<MetadataObject>(metadataValue(o).data);
+    };
+    out.extensions = extension(root, {"version", "initial_peaks", "fwhm", "fwhm_usage", "peak_fwhm_usage",
+        "candidate_failure", "smoothing_applied", "candidate_pool", "background_points", "background_filters",
+        "selection", "background", "smoothing", "peaks"});
+    if (root.contains("initial_peaks")) {
+        if (!root["initial_peaks"].isObject()) return Result<PreprocessingConfiguration>{error};
+        const auto o = root["initial_peaks"].toObject();
+        if (o["version"] != QJsonValue(1) || !real(o, "slope", 0, 200) ||
+            !o["automatic_window"].isBool() || !integer(o, "half_window", 2, 100) || !integer(o, "degree", 3, 20))
+            return Result<PreprocessingConfiguration>{error};
+        InitialPeakConfiguration c;
+        c.options = {float(o["slope"].toDouble()), o["automatic_window"].toBool(),
+            o["half_window"].toInt(), o["degree"].toInt()};
+        c.extensions = extension(o, {"version", "slope", "automatic_window", "half_window", "degree"});
+        out.initial_peaks = std::move(c);
+    }
+    if (root.contains("fwhm")) {
+        if (!root["fwhm"].isObject()) return Result<PreprocessingConfiguration>{error};
+        const auto o = root["fwhm"].toObject();
+        if (o["version"] != QJsonValue(1) || !o["use_fixed"].isBool() ||
+            (o["method"] != QJsonValue("gaussian") && o["method"] != QJsonValue("geometric")) ||
+            !real(o, "default_fwhm", 0, 180) || o["default_fwhm"].toDouble() <= 0 ||
+            !integer(o, "minimum_sampling_density", 2, 8))
+            return Result<PreprocessingConfiguration>{error};
+        FwhmConfiguration c;
+        c.method = o["method"] == QJsonValue("geometric") ? FwhmMethod::geometric : FwhmMethod::gaussian;
+        c.use_fixed = o["use_fixed"].toBool();
+        c.default_fwhm = AngularWidthDegrees{o["default_fwhm"].toDouble()};
+        c.minimum_sampling_density = o["minimum_sampling_density"].toInt();
+        c.extensions = extension(o, {"version", "method", "use_fixed", "default_fwhm", "minimum_sampling_density"});
+        out.fwhm = std::move(c);
+    }
+    auto usage = [&](const char *key, std::optional<FwhmUsage> &destination) -> bool {
+        if (!root.contains(key)) return true;
+        if (!root[key].isObject() || !out.fwhm) return false;
+        const auto o = root[key].toObject();
+        if (o["version"] != QJsonValue(1) || !real(o, "width", 0, 180) ||
+            !integer(o, "minimum_sampling_density", 2, 8) || !o["algorithm"].isString() ||
+            !integer(o, "algorithm_version", 1, 1000000) || !o["source_id"].isString()) return false;
+        FwhmUsage u;
+        const auto origin = o["origin"].toString();
+        if (origin == "fixed") u.origin = FwhmOrigin::fixed;
+        else if (origin == "gaussian") u.origin = FwhmOrigin::gaussian;
+        else if (origin == "geometric") u.origin = FwhmOrigin::geometric;
+        else return false;
+        u.algorithm = {o["algorithm"].toString().toStdString(), std::uint32_t(o["algorithm_version"].toInt())};
+        u.width = AngularWidthDegrees{o["width"].toDouble()};
+        u.minimum_sampling_density = o["minimum_sampling_density"].toInt();
+        bool ok = false;
+        if (!o["dataset"].isString()) return false;
+        u.dataset = {o["dataset"].toString().toULongLong(&ok)};
+        if (!ok || !o["source_revision"].isString()) return false;
+        u.source_revision = o["source_revision"].toString().toULongLong(&ok);
+        if (!ok || !o["width_count"].isString()) return false;
+        const auto count = o["width_count"].toString().toULongLong(&ok);
+        if (!ok || count > std::numeric_limits<std::size_t>::max()) return false;
+        u.width_count = std::size_t(count);
+        u.source_id = o["source_id"].toString().toStdString();
+        u.current = false;
+        u.extensions = extension(o, {"version", "width", "origin", "algorithm", "algorithm_version", "dataset",
+            "source_id", "source_revision", "minimum_sampling_density", "width_count"});
+        if (!validateFwhmUsage(u)) return false;
+        destination = std::move(u);
+        return true;
+    };
+    if (!usage("fwhm_usage", out.fwhm_usage) || !usage("peak_fwhm_usage", out.peak_fwhm_usage))
+        return Result<PreprocessingConfiguration>{error};
     if (root.contains("candidate_failure")) {
         if (root["candidate_failure"] != QJsonValue("nonfinite_candidate_measurement") ||
             root.contains("candidate_pool"))

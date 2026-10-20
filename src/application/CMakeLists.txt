@@ -18,6 +18,8 @@ add_library(qualpf_application STATIC
     export/pattern_export_input.cpp
     include/qualpf/application/export/pattern_export_input.h
     export/atomic_export_writer.cpp
+    export/quantification_export.cpp
+    include/qualpf/application/export/quantification_export.h
     include/qualpf/application/export/atomic_export_writer.h
     include/qualpf/application/presentation/plot_snapshot.h
     presentation/plot_projection.cpp

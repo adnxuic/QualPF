@@ -9,6 +9,7 @@ class DatabaseCatalogSettings final : public application::DatabaseCatalogStore {
     void setDefaultDirectory(const std::string &) override;
     bool directoryExists(const std::string &) const override;
     void discover(std::vector<application::ReferenceDatabaseEntry> &, const std::string &) override;
+    std::string identity(const std::string &) const override;
     std::pair<int, std::string> describe(const std::string &) const override;
     std::unique_ptr<application::DatabaseRemoval> prepareRemoval(const std::string &) override;
 };

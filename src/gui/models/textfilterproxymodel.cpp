@@ -7,6 +7,11 @@ TextFilterProxyModel::TextFilterProxyModel(QObject* parent)
 
 bool TextFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
 {
+    if (minimum_ >= 0) {
+        bool ok = false;
+        const double score = sourceModel()->index(source_row, 8, source_parent).data().toDouble(&ok);
+        if (!ok || score < minimum_) return false;
+    }
     int cols = sourceModel()->columnCount();
     const auto& regExp = filterRegularExpression();
     for (int col = 0; col < cols; ++col) {

@@ -1,4 +1,7 @@
 #include "qualpf/application/search_engine.h"
+#include "classical_workflow.h"
+#include "qualpf/application/result_management.h"
+#include "pfsm_workflow.h"
 #include "qualpf/domain/radiation.h"
 #include <algorithm>
 #include <cmath>
@@ -6,7 +9,38 @@
 namespace qualpf::application {
 namespace {
 Error cancelled() { return {ErrorCode::cancelled, "search", "Search canceled"}; }
+Error incompatible(const char *detail) {
+    return {ErrorCode::stale_snapshot, "search.provenance", detail, "algorithm_provenance_mismatch"};
+}
 } // namespace
+Status SearchEngine::validateBinding(const ProductState &state) const {
+    if (!state.algorithms || (algorithms_ && algorithms_ != state.algorithms))
+        return Status{incompatible("SearchEngine algorithms disagree with the source; prepare a new task")};
+    return preflightSearchMethod(state.algorithms->spec.method());
+}
+Status SearchEngine::validateHistory(const ProductState &state) const {
+    auto bound = validateBinding(state);
+    if (!bound) return bound;
+    if (state.provenance.legacyUnverified)
+        return Status{Error{ErrorCode::stale_snapshot, "search.provenance",
+            "QXP algorithm provenance is unverified; restart from the original measurement before scientific search",
+            "legacy_algorithm_provenance_unverified"}};
+    for (const auto &origin : state.provenance.subtractedBackgroundHistory)
+        if (!origin.algorithms || origin.algorithms->spec.selections().background != state.algorithms->spec.selections().background ||
+            !sameBackgroundOptions(origin.algorithms->spec.defaults().background, state.algorithms->spec.defaults().background))
+            return Status{incompatible("Working signal contains an incompatible background; restart from the original measurement")};
+    for (const auto &origin : state.provenance.residualHistory)
+        if (!origin.algorithms || !sameResidualDependencies(origin.algorithms->spec, state.algorithms->spec))
+            return Status{incompatible("Historical residual uses incompatible algorithms; restart from the original measurement")};
+    return Status{std::monostate{}};
+}
+Status SearchEngine::validateScale(const ProductState &state, const ProductCard &card) const {
+    const auto &origin = card.algorithmSource;
+    if (origin && (!origin->scale.algorithms ||
+        !sameScoreProducers(origin->scale.algorithms->spec, state.algorithms->spec)))
+        return Status{incompatible("Candidate scale uses incompatible Matcher/FOM; run a fresh search")};
+    return Status{std::monostate{}};
+}
 Result<ProductPeaks> productPeaksWithTolerance(const ProductPeaks &peaks, double delta) {
     if (!std::isfinite(delta) || delta <= 0)
         return Result<ProductPeaks>{
@@ -49,111 +83,92 @@ ReferenceCard productSearchCard(const ProductCard &card) {
 Result<ScoreValues> SearchEngine::score(const ProductState &state, const ProductCard &card,
                                         const SearchParameters &parameters,
                                         const ExecutionContext &context) const {
-    if (context.cancellation.stop_requested())
-        return Result<ScoreValues>{cancelled()};
-    if (state.editing)
-        return Result<ScoreValues>{Error{ErrorCode::invalid_input, "session.edit",
-                                         "Finish the preprocessing edit before searching"}};
-    auto peaks = productSearchPeaks(state.peaks);
-    if (!peaks)
-        return Result<ScoreValues>{peaks.error()};
-    if (card.tth.size() != card.intensity.size())
-        return Result<ScoreValues>{Error{ErrorCode::invalid_input, "card", "Card columns disagree"}};
-    const auto reference = productSearchCard(card);
-    auto score = search::score_classic({state.pattern, peaks.value(), reference, parameters}, context);
-    if (!score)
-        return Result<ScoreValues>{score.error()};
-    return Result<ScoreValues>{score.value().score};
+    auto history = validateHistory(state);
+    if (!history) return Result<ScoreValues>{history.error()};
+    if (state.algorithms->spec.method() == SearchMethod::pfsm)
+        return Result<ScoreValues>{Error{ErrorCode::unsupported,"pfsm.operation","Use joint PFSM search for profile scores"}};
+    return ClassicalWorkflow{algorithmsFor(state)}.score(state, card, parameters, context);
 }
 Result<std::vector<ProductCard>> SearchEngine::rescore(const ProductState &state,
                                                        const SearchParameters &parameters,
                                                        const ExecutionContext &context,
                                                        SearchProgress progress) const {
-    if (context.cancellation.stop_requested())
-        return Result<std::vector<ProductCard>>{cancelled()};
-    std::vector<ProductCard> cards;
-    if (state.peaks.tth.empty())
-        return Result<std::vector<ProductCard>>{cards};
-    std::size_t evaluated = 0;
-    for (auto card : state.candidates) {
-        if (context.cancellation.stop_requested())
-            return Result<std::vector<ProductCard>>{cancelled()};
-        if (progress)
-            progress(++evaluated, state.candidates.size());
-        if (card.tth.empty())
-            continue;
-        auto score = this->score(state, card, parameters, context);
-        if (!score)
-            return Result<std::vector<ProductCard>>{score.error()};
-        const auto &s = score.value();
-        if (s.total <= 0 || s.total < parameters.minimum_score)
-            continue;
-        card.fom = s.total;
-        card.fomCalculated = true;
-        card.fomPeakPos = s.position;
-        card.fomIntensity = s.intensity;
-        // Frozen contract: rescore retains previous/display scale.
-        cards.push_back(card);
+    auto history = validateHistory(state);
+    if (!history) return Result<std::vector<ProductCard>>{history.error()};
+    if (state.algorithms->spec.method() == SearchMethod::pfsm)
+        return Result<std::vector<ProductCard>>{Error{ErrorCode::unsupported,"pfsm.operation","Use joint PFSM search for profile rescoring"}};
+    for (const auto &card : state.candidates) {
+        auto scale = validateScale(state, card);
+        if (!scale) return Result<std::vector<ProductCard>>{scale.error()};
     }
-    std::stable_sort(cards.begin(), cards.end(), [](const auto &a, const auto &b) { return a.fom > b.fom; });
-    if (std::size_t(cards.size()) > parameters.maximum_entries)
-        cards.resize(parameters.maximum_entries);
-    if (context.cancellation.stop_requested())
-        return Result<std::vector<ProductCard>>{cancelled()};
-    return Result<std::vector<ProductCard>>{std::move(cards)};
+    return ClassicalWorkflow{algorithmsFor(state)}.rescore(state, parameters, context, std::move(progress));
 }
 Result<ProductPeaks> SearchEngine::residual(const ProductState &state, const ProductCard &card,
                                             const SearchParameters &parameters,
                                             const ExecutionContext &context) const {
-    if (context.cancellation.stop_requested())
-        return Result<ProductPeaks>{cancelled()};
-    if (state.editing || card.tth.size() != card.intensity.size())
-        return Result<ProductPeaks>{
-            Error{ErrorCode::invalid_input, "residual", "Unfinished edit or inconsistent card"}};
-    auto peaks = productSearchPeaks(state.peaks);
-    if (!peaks)
-        return Result<ProductPeaks>{peaks.error()};
-    auto residual = search::subtract_phase(peaks.value(), productSearchCard(card), card.scale, parameters);
-    if (!residual)
-        return Result<ProductPeaks>{residual.error()};
-    ProductPeaks result;
-    result.valid = state.peaks.valid;
-    result.wave = state.peaks.wave;
-    if (state.peaks.integratedIntensity)
-        result.integratedIntensity.emplace();
-    for (const auto &peak : residual.value().peaks.peaks) {
-        result.tth.push_back(peak.two_theta.value);
-        result.intensity.push_back(peak.intensity);
-        result.intensityOrig.push_back(*peak.original_intensity);
-        result.d.push_back(peak.d_spacing->value);
-        result.deltaD.push_back(peak.delta_d->value);
-        result.fwhm.push_back(peak.fwhm->value);
-        if (result.integratedIntensity)
-            result.integratedIntensity->push_back(*peak.integrated_intensity);
-    }
-    if (context.cancellation.stop_requested())
-        return Result<ProductPeaks>{cancelled()};
-    return Result<ProductPeaks>{std::move(result)};
+    auto history = validateHistory(state);
+    if (!history) return Result<ProductPeaks>{history.error()};
+    if (state.algorithms->spec.method() == SearchMethod::pfsm)
+        return Result<ProductPeaks>{Error{ErrorCode::unsupported,"pfsm.operation","PFSM does not subtract formal experimental peaks"}};
+    auto scale = validateScale(state, card);
+    if (!scale) return Result<ProductPeaks>{scale.error()};
+    return ClassicalWorkflow{algorithmsFor(state)}.residual(state, card, parameters, context);
 }
 Result<PreparedSearchResult> SearchEngine::run(const SearchInput &input, CandidateReader &reader,
                                                const ExecutionContext &context, SearchProgress progress) const
     try {
+    auto available = preflightSearchMethod(input.method);
+    if (!available) return Result<PreparedSearchResult>{available.error()};
     if (context.cancellation.stop_requested())
         return Result<PreparedSearchResult>{cancelled()};
     if (!input.source)
         return Result<PreparedSearchResult>{
             Error{ErrorCode::missing_data, "search.source", "Missing search snapshot"}};
+    auto bound = validateBinding(*input.source);
+    if (!bound) return Result<PreparedSearchResult>{bound.error()};
+    if (input.method != input.source->algorithms->spec.method())
+        return Result<PreparedSearchResult>{incompatible("Search method disagrees with the source")};
+    if (input.operation != SearchOperation::metadata_browse) {
+        auto history = validateHistory(*input.source);
+        if (!history) return Result<PreparedSearchResult>{history.error()};
+    }
     if (input.source->editing && input.operation != SearchOperation::metadata_browse)
         return Result<PreparedSearchResult>{Error{ErrorCode::invalid_input, "session.edit",
                                                   "Finish the preprocessing edit before searching"}};
+    const bool hasAnalysis=input.source->pfsm || !input.source->candidates.empty() || !input.source->phases.empty();
+    if(input.operation!=SearchOperation::metadata_browse && hasAnalysis &&
+       ((!input.source->analysis_database.empty() && input.source->analysis_database!=input.databaseIdentity) ||
+        (input.source->restored_project && input.source->analysis_database.empty())))
+        return Result<PreparedSearchResult>{Error{ErrorCode::stale_snapshot,"project.database",
+            "The saved database identity does not match. Restart the analysis before retrieving new references.","project_database_mismatch"}};
+    if (input.method == SearchMethod::pfsm)
+        return runPfsm(input, reader, context, std::move(progress));
+    const auto algorithms = algorithmsFor(*input.source);
+    if (!algorithms) return Result<PreparedSearchResult>{Error{ErrorCode::invalid_input, "algorithms", "Missing algorithm dependencies"}};
+    const SearchEngine engine(algorithms);
+    const auto stage=[&](const char *name) {if(input.workflowProgress)input.workflowProgress(name);};
     PreparedSearchResult result{input.source, input.taskId, input.databaseVersion, *input.source};
     auto &next = result.next;
+    if (input.operation != SearchOperation::metadata_browse) next.analysis_database = input.databaseIdentity;
+    const AlgorithmRunSource origin{algorithms, input.parameters, input.source, input.source->revision,
+        input.taskId, input.databaseVersion};
+    const auto recordScores = [&](std::vector<ProductCard> &cards, bool preserveScale) {
+        for (auto &card : cards) {
+            if (!card.fomCalculated) continue;
+            const auto scale = preserveScale && card.algorithmSource ? card.algorithmSource->scale : origin;
+            card.algorithmSource = std::make_shared<const CardAlgorithmSource>(CardAlgorithmSource{origin, scale});
+        }
+    };
     switch (input.operation) {
+    case SearchOperation::remove_phase:
+        return Result<PreparedSearchResult>{Error{ErrorCode::unsupported, "search.operation", "Joint removal requires PFSM"}};
     case SearchOperation::residual:
     case SearchOperation::accept_phase: {
         if (!input.phase)
             return Result<PreparedSearchResult>{
                 Error{ErrorCode::missing_data, "search.phase", "Missing phase"}};
+        auto scale = validateScale(next, *input.phase);
+        if (!scale) return Result<PreparedSearchResult>{scale.error()};
         if (input.operation == SearchOperation::accept_phase) {
             if (std::any_of(next.phases.begin(), next.phases.end(),
                             [&](const auto &p) { return p.id == input.phase->id; })) {
@@ -167,14 +182,18 @@ Result<PreparedSearchResult> SearchEngine::run(const SearchInput &input, Candida
                 next.candidates.end());
         }
         if (input.subtractResidual && !next.peaks.tth.empty()) {
-            auto peaks = residual(next, *input.phase, input.parameters, context);
+            stage("Residual");
+            auto peaks = engine.residual(next, *input.phase, input.parameters, context);
             if (!peaks)
                 return Result<PreparedSearchResult>{peaks.error()};
             next.peaks = std::move(peaks).value();
-            auto cards = rescore(next, input.parameters, context, progress);
+            next.provenance.residualHistory.push_back(origin);
+            stage("Matching / FOM");
+            auto cards = engine.rescore(next, input.parameters, context, progress);
             if (!cards)
                 return Result<PreparedSearchResult>{cards.error()};
             next.candidates = std::move(cards).value();
+            recordScores(next.candidates, true);
         }
         break;
     }
@@ -187,7 +206,7 @@ Result<PreparedSearchResult> SearchEngine::run(const SearchInput &input, Candida
         if (!card)
             return Result<PreparedSearchResult>{card.error()};
         if (next.peaks.valid && !next.peaks.tth.empty() && !card.value().tth.empty()) {
-            auto outcome = score(next, card.value(), input.parameters, context);
+            auto outcome = engine.score(next, card.value(), input.parameters, context);
             if (!outcome)
                 return Result<PreparedSearchResult>{outcome.error()};
             const auto &value = outcome.value();
@@ -196,6 +215,7 @@ Result<PreparedSearchResult> SearchEngine::run(const SearchInput &input, Candida
             card.value().fomPeakPos = value.position;
             card.value().fomIntensity = value.intensity;
             card.value().scale = value.scale;
+            card.value().algorithmSource = std::make_shared<const CardAlgorithmSource>(CardAlgorithmSource{origin, origin});
         }
         if (std::any_of(next.candidates.begin(), next.candidates.end(),
                         [&](const auto &old) { return old.id == card.value().id; }))
@@ -205,23 +225,39 @@ Result<PreparedSearchResult> SearchEngine::run(const SearchInput &input, Candida
         break;
     }
     case SearchOperation::rescore: {
-        auto cards = rescore(next, input.parameters, context, progress);
+        stage("Matching / FOM");
+            auto cards = engine.rescore(next, input.parameters, context, progress);
         if (!cards)
             return Result<PreparedSearchResult>{cards.error()};
         next.candidates = std::move(cards).value();
+        recordScores(next.candidates, true);
         break;
     }
     case SearchOperation::initial:
+    case SearchOperation::cli_match:
     case SearchOperation::scored_browse:
     case SearchOperation::metadata_browse: {
-        auto query = input.query;
-        query.decodeReflections = input.operation != SearchOperation::metadata_browse;
-        if (query.route == CandidateQuery::Route::stored_strongest && query.decodeReflections) {
-            auto windows = productPeaksWithTolerance(next.peaks, input.parameters.delta_two_theta.value);
-            if (!windows)
-                return Result<PreparedSearchResult>{windows.error()};
-            query.d = std::move(windows.value().d);
-            query.deltaD = std::move(windows.value().deltaD);
+        if (input.operation != SearchOperation::metadata_browse) {
+            auto spectrum = validateClassicalSpectrum(next.pattern);
+            if (!spectrum) return Result<PreparedSearchResult>{spectrum.error()};
+            auto peaks = productSearchPeaks(next.peaks);
+            if (!peaks) return Result<PreparedSearchResult>{peaks.error()};
+        }
+        stage("Candidate Screening");
+        auto planned = planCandidateQuery(input.query, input.operation != SearchOperation::metadata_browse, context);
+        if (planned) planned = prepareClassicalQuery(std::move(planned).value(), next.peaks, input.parameters,
+            input.operation != SearchOperation::metadata_browse);
+        if (!planned) return Result<PreparedSearchResult>{planned.error()};
+        auto query = std::move(planned).value();
+        if (query.route == CandidateQuery::Route::stored_strongest && !query.preselectedIds) {
+            auto indexes = reader.storedTop(context, progress);
+            if (!indexes) return Result<PreparedSearchResult>{indexes.error()};
+            query.preselectedIds.emplace();
+            for (const auto &index : indexes.value()) {
+                auto accepted = search::passes_stored_strongest(query.d, query.deltaD, index.strongest, context);
+                if (!accepted) return Result<PreparedSearchResult>{accepted.error()};
+                if (accepted.value()) query.preselectedIds->push_back(index.id);
+            }
         }
         auto candidates = reader.read(query, context, progress);
         if (context.cancellation.stop_requested())
@@ -230,37 +266,35 @@ Result<PreparedSearchResult> SearchEngine::run(const SearchInput &input, Candida
             return Result<PreparedSearchResult>{candidates.error()};
         std::vector<ProductCard> cards;
         const double minimum = input.threshold.value_or(input.parameters.minimum_score);
-        const auto total = candidates.value().size();
-        for (auto card : std::move(candidates).value()) {
-            if (context.cancellation.stop_requested())
-                return Result<PreparedSearchResult>{cancelled()};
-            ++result.evaluated;
-            if (progress)
-                progress(result.evaluated, total);
-            if (context.cancellation.stop_requested())
-                return Result<PreparedSearchResult>{cancelled()};
-            if (input.operation != SearchOperation::metadata_browse) {
-                if (card.tth.empty())
-                    continue;
-                auto outcome = score(next, card, input.parameters, context);
-                if (!outcome)
-                    return Result<PreparedSearchResult>{outcome.error()};
-                const auto &s = outcome.value();
-                if (!(s.total > minimum))
-                    continue;
-                card.fom = s.total;
-                card.fomCalculated = true;
-                card.fomPeakPos = s.position;
-                card.fomIntensity = s.intensity;
-                card.scale = s.scale;
+        const CandidateRankingRequest selection{
+            input.operation == SearchOperation::initial ? CandidateRankingRequest::Pass::initial :
+            input.operation == SearchOperation::cli_match ? CandidateRankingRequest::Pass::cli_match :
+            input.operation == SearchOperation::metadata_browse ? CandidateRankingRequest::Pass::metadata_browse :
+                CandidateRankingRequest::Pass::scored_browse,
+            input.parameters.maximum_entries};
+        if (input.operation == SearchOperation::metadata_browse) {
+            const auto total = candidates.value().size();
+            for (auto &card : candidates.value()) {
+                if (context.cancellation.stop_requested())
+                    return Result<PreparedSearchResult>{cancelled()};
+                ++result.evaluated;
+                if (progress) progress(result.evaluated, total);
+                if (context.cancellation.stop_requested())
+                    return Result<PreparedSearchResult>{cancelled()};
+                cards.push_back(std::move(card));
             }
-            cards.push_back(std::move(card));
+        } else {
+            stage("Matching / FOM");
+            auto evaluated = ClassicalWorkflow{algorithms}.evaluateInitial(next, std::move(candidates).value(),
+                input.parameters, query.excludeDeleted, minimum, context, progress, result.evaluated);
+            if (!evaluated) return Result<PreparedSearchResult>{evaluated.error()};
+            cards = std::move(evaluated).value();
         }
-        if (input.operation == SearchOperation::initial && cards.size() > input.parameters.maximum_entries) {
-            std::stable_sort(cards.begin(), cards.end(),
-                             [](const auto &a, const auto &b) { return a.fom > b.fom; });
-            cards.resize(input.parameters.maximum_entries);
-        }
+        stage("Results");
+        auto selected = rankCandidates(std::move(cards), selection, context);
+        if (!selected) return Result<PreparedSearchResult>{selected.error()};
+        cards = std::move(selected).value();
+        recordScores(cards, false);
         if (input.merge) {
             for (auto &card : cards)
                 if (std::none_of(next.candidates.begin(), next.candidates.end(),
@@ -277,6 +311,9 @@ Result<PreparedSearchResult> SearchEngine::run(const SearchInput &input, Candida
     }
     if (context.cancellation.stop_requested())
         return Result<PreparedSearchResult>{cancelled()};
+    if (next.projectSettings && result.changed && input.operation != SearchOperation::metadata_browse)
+        next.workflow.completed_target = input.operation == SearchOperation::accept_phase || input.operation == SearchOperation::residual ?
+            WorkflowStep::phases : WorkflowStep::search;
     return Result<PreparedSearchResult>{std::move(result)};
 } catch (const std::exception &error) {
     return Result<PreparedSearchResult>{

@@ -32,6 +32,8 @@ add_library(qualpf_core STATIC
     include/qualpf/domain/result.h
     include/qualpf/domain/units.h
     include/qualpf/domain/radiation.h
+    include/qualpf/domain/analysis_spectrum.h
+    preprocessing/analysis_signal.h
     include/qualpf/domain/pattern.h
     include/qualpf/domain/peaks.h
     include/qualpf/domain/reference_card.h
@@ -49,7 +51,13 @@ add_library(qualpf_core STATIC
     search/classic_score.cpp
     search/classic_candidates.cpp
     search/classic_residual.cpp
+    search/rir.cpp
+    include/qualpf/algorithms/identity.h
+    include/qualpf/search/algorithms.h
+    include/qualpf/search/rir.h
     include/qualpf/search/classic.h
+    preprocessing/algorithms.cpp
+    include/qualpf/preprocessing/algorithms.h
     include/qualpf/preprocessing/legacy.h
     preprocessing/legacy_internal.h
     preprocessing/legacy_reduction.h
@@ -60,12 +68,46 @@ add_library(qualpf_core STATIC
     preprocessing/kalpha2.cpp
     include/qualpf/preprocessing/kalpha2.h
     peaks/legacy_peaks.cpp
+    peaks/geometric_fwhm.cpp
+    peaks/geometric_fwhm_noise.cpp
+    peaks/geometric_fwhm_noise.h
+    include/qualpf/preprocessing/geometric_fwhm.h
     peaks/legacy_polynomial.cpp
     peaks/legacy_polynomial.h
     peaks/legacy_export.cpp
+    profile/pfsm_candidate_recall_selection.cpp
+    profile/pfsm_candidate_recall_refinement.cpp
+    profile/pfsm_candidate_recall_correlation.cpp
+    profile/pfsm_expansion.cpp
+    profile/pfsm_simd.cpp
+    profile/pfsm_nnls.cpp
+    profile/pfsm_fitting.cpp
+    profile/pfsm_trf.cpp
+    numerics/runtime.cpp
+    include/qualpf/numerics/runtime.h
 )
 add_library(qualpf::core ALIAS qualpf_core)
+option(QUALPF_PFSM_AVX2 "Build independently dispatched PFSM AVX2 kernels" ON)
+if(QUALPF_PFSM_AVX2 AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(AMD64|amd64|x86_64)$")
+    target_sources(qualpf_core PRIVATE profile/pfsm_avx2.cpp)
+    set_source_files_properties(profile/pfsm_simd.cpp PROPERTIES COMPILE_DEFINITIONS QUALPF_PFSM_AVX2)
+    if(MSVC)
+        set_source_files_properties(profile/pfsm_avx2.cpp PROPERTIES COMPILE_OPTIONS "/arch:AVX2;/fp:strict")
+    else()
+        set_source_files_properties(profile/pfsm_avx2.cpp PROPERTIES COMPILE_OPTIONS "-mavx2;-mno-fma;-fno-fast-math;-ffp-contract=off")
+    endif()
+endif()
 target_compile_features(qualpf_core PUBLIC cxx_std_20)
+if(MSVC)
+    set_source_files_properties(profile/pfsm_candidate_recall_selection.cpp profile/pfsm_candidate_recall_refinement.cpp profile/pfsm_candidate_recall_correlation.cpp profile/pfsm_expansion.cpp profile/pfsm_nnls.cpp profile/pfsm_fitting.cpp profile/pfsm_trf.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
+else()
+    set_source_files_properties(profile/pfsm_candidate_recall_selection.cpp profile/pfsm_candidate_recall_refinement.cpp profile/pfsm_candidate_recall_correlation.cpp profile/pfsm_expansion.cpp profile/pfsm_nnls.cpp profile/pfsm_fitting.cpp profile/pfsm_trf.cpp PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")
+endif()
+if(MSVC)
+    set_source_files_properties(peaks/geometric_fwhm.cpp peaks/geometric_fwhm_noise.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
+else()
+    set_source_files_properties(peaks/geometric_fwhm.cpp peaks/geometric_fwhm_noise.cpp PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")
+endif()
 target_include_directories(qualpf_core PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_link_libraries(qualpf_core PRIVATE Eigen3::Eigen)
 # No implicit Eigen/OpenMP worker pool, BLAS/MKL backend or new SIMD path in S4.
@@ -100,6 +142,13 @@ if(MSVC)
     set_source_files_properties(preprocessing/average_compatibility.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set_source_files_properties(preprocessing/average_compatibility.cpp PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")
+endif()
+
+# RIR retains the strict floating mode of its former Application producer.
+if(MSVC)
+    set_source_files_properties(search/rir.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
+else()
+    set_source_files_properties(search/rir.cpp PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")
 endif()
 
 add_subdirectory(peaks/measurement)

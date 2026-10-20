@@ -40,6 +40,9 @@ inline QJsonValue jsonValue(const application::MetadataValue &value) {
         else if constexpr (std::is_same_v<T, std::nullptr_t>) return QJsonValue::Null;
         else if constexpr (std::is_same_v<T, std::string>) return QString::fromStdString(entry);
         else if constexpr (std::is_same_v<T, std::int64_t>) return QJsonValue(qint64(entry));
+        // JSON has no full uint64 integer domain. This legacy/display bridge
+        // emits exact decimal text; QPF serializes the native integer directly.
+        else if constexpr (std::is_same_v<T, std::uint64_t>) return QString::number(qulonglong(entry));
         else if constexpr (std::is_same_v<T, application::MetadataArray>) {
             QJsonArray out;
             for (const auto &element : entry) out.append(jsonValue(element));

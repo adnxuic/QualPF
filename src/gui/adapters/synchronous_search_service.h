@@ -15,6 +15,7 @@ class SynchronousSearchService {
                              std::function<application::ReferenceDatabase()> database = {})
         : execution_(coordinator), reader_(reader), database_(std::move(database)) {}
     QVector<CardType> makeQuery(const qualpf::gui::SearchRequest &, ProgressCallback = {});
+    QVector<CardType> makeMatch(const qualpf::gui::SearchRequest &, std::size_t maximum, bool strongest, ProgressCallback = {});
     void makeQueryStrongest(const qualpf::gui::SearchRequest &, QVector<CardType> &, ProgressCallback = {});
     void makeQueryWithoutStrongest(const qualpf::gui::SearchRequest &, QVector<CardType> &, ProgressCallback = {});
     void cancelSearch() { execution_.cancel(); }
@@ -23,7 +24,9 @@ class SynchronousSearchService {
     QString searchError() const { return execution_.error() ? QString::fromStdString(execution_.error()->message) : QString{}; }
 
   private:
-    QVector<CardType> run(const qualpf::gui::SearchRequest &, application::CandidateQuery::Route, ProgressCallback);
+    QVector<CardType> run(const qualpf::gui::SearchRequest &, application::CandidateQuery::Route, ProgressCallback,
+        application::SynchronousSearchPurpose = application::SynchronousSearchPurpose::browse,
+        std::size_t maximum = std::numeric_limits<std::size_t>::max());
     application::SearchCoordinator &execution_;
     std::function<application::ReferenceDatabase()> database_;
     application::CandidateReader &reader_;

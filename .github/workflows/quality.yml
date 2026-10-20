@@ -21,4 +21,8 @@ jobs:
       - name: Check product identity
         run: python -B tools/validation/check_product_identity.py --self-test
       - name: Verify independent regression resources
-        run: python -B tools/validation/check_references.py
+        run: |
+          python -B tools/validation/restore_reference_archives.py --self-test
+          git fetch --no-tags --depth=1 origin b5933bba78dc3f02d8d68f0dc11d2eed4385de51
+          python -B tools/validation/restore_reference_archives.py
+          python -B tools/validation/check_references.py

@@ -1,4 +1,5 @@
 #include "qualpf/application/plot_coordinates.h"
+#include "qualpf/application/presentation/plot_snapshot.h"
 #include "tests/support/plot_coordinate_reference.h"
 #include <iostream>
 #include <limits>

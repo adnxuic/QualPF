@@ -1,37 +1,43 @@
 # Background
 
-## Overview
+## Generate and configure
 
-Background estimation is performed by fitting a polynomial (Chebyshev) or
-filter-based curve to the diffraction pattern. The estimated background can
-be visualised and subtracted before peak search.
+**Preprocessing → Generate Background** immediately estimates the background over
+the full current pattern using the current background options. It replaces previous
+background points and background-filter history. A failed estimate leaves the
+previous data intact. Range, smoothing and Kα2 processing remain part of the
+current working signal.
 
-## Controls
+**Preprocessing → Background Options** opens the original independent background
+editor. Choose a method, adjust its coefficients or apply/reset the Bruckner
+filter while previewing the curve. OK applies the preview and its requested
+parameters to the current project; Cancel discards them. Dependent results
+require confirmation before replacement. **Setting → Preprocessing** edits
+defaults for new projects in the separate workflow settings window.
 
-Open **Pattern → Background → Generate Background** to display the Background dialog.
+## Background points
 
-| Parameter | Description |
-|-----------|-------------|
-| **Type** | Background model: Chebyshev polynomial or filter |
-| **Coefficients** | Number of polynomial terms (Chebyshev mode) |
-| **Range** | 2θ range to use for background fitting |
+The main plot normally shows the working observations and background points,
+with the background curve hidden. Add or delete points with the corresponding
+Preprocessing actions. Background Options and point editing restore the
+unsubtracted display before editing. Algorithms use the background independently
+of its plot visibility.
 
-It is possible to choose the background function that best fits the selected
-background points. The default function is the Chebyshev polynomial. The
-other available background functions are: polynomial, cosine Fourier series,
-cubic spline, Bézier spline, and a filter function based on the Brückner
-algorithm (Brückner, 2000).
+## Display subtraction
 
-## Manual editing
+**View → Subtract Background** is a display-only checkbox, initially off. It is
+available when a complete aligned background exists. The checked display shows
+`Y - B`, preserving negative values and the current intensity units without
+clipping or renormalization. Background points are hidden until the checkbox is
+cleared. PFSM displays its joint calculation minus the same background; its
+residual, fitted parameters, FOM and quantification do not change.
 
-Background points selected automatically can be added or deleted using the mouse.
+Switching the checkbox never edits or dirties the project and never changes
+numerical exports. Image export and plot printing reflect the displayed view.
+All algorithm inputs contain the unsubtracted working signal and its background;
+the algorithm prepares its own analysis buffer. Background changes invalidate
+dependent numerical evidence under the normal source rules.
 
-## Subtraction
-
-Click **Pattern → Subtract Background** (or press the button in the toolbar)
-to subtract the estimated background from the pattern.
-The original pattern is preserved and can be restored by reloading the project.
-
-> **Note:**
-> Background subtraction is recommended before running Peak Search, as it
-> improves peak detection accuracy.
+Historical projects retain their stored values. An already-subtracted or unknown
+subtraction state requires an explicit preprocessing restart or reimport before
+new calculations; no background is added back to clipped historical data.

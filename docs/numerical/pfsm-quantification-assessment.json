@@ -1,0 +1,807 @@
+{
+  "schema": "qualpf.pfsm.quantification-assessment.v1",
+  "frozen_inputs_sha256": "ee280df611097435a73b4495dd9035cec9c4dd8a1ee57897302472ee6b4fc337",
+  "executable_sha256": "c5d5ddb34c15a55163a4aa007d271f59792859efbe391592431a68b50177b5f2",
+  "run_sha256": "33e43abd49d46b21ac4f652268ecaa53f80f22a8c8055a800af2d2bacfa3ceb2",
+  "code_revision": "d9761609ae2624c87483881e611353a67eb6129f",
+  "compiler": "GNU-13.1.0",
+  "qualifications": [
+    "Conditional on fixed structurally mapped phase identities; not identification acceptance.",
+    "One common fixed IL width, existing solver/defaults and raw library RIR; no fraction-derived calibration.",
+    "RIR provenance/radiation and profile-model mismatch remain scientific limitations.",
+    "Dara masses are author nominal sample-label tokens, not an independently retained weighing log.",
+    "All 28 cases retained, including unavailable results; no new accuracy tolerance or confidence interval.",
+    "The 22-case frozen holdout is untouched."
+  ],
+  "metrics": {
+    "CPD": {
+      "phase_occurrences": 24,
+      "mean_absolute_error_pp": 13.552788854479841,
+      "maximum_absolute_error_pp": 39.44300285810891
+    },
+    "Dara_binary": {
+      "phase_occurrences": 40,
+      "mean_absolute_error_pp": 7.699734347431097,
+      "maximum_absolute_error_pp": 29.74839101512352
+    },
+    "all": {
+      "phase_occurrences": 64,
+      "mean_absolute_error_pp": 9.89462978757437,
+      "maximum_absolute_error_pp": 39.44300285810891
+    }
+  },
+  "cases": [
+    {
+      "id": "cpd-1a",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.4150159576954031,
+      "phases": [
+        {
+          "phase": "Corundum",
+          "card_id": "1000017",
+          "expected_wt_percent": 1.15,
+          "actual_wt_percent": 2.858386058744979,
+          "signed_error_pp": 1.708386058744979,
+          "effective_rir": "1.017682671546936",
+          "reason": ""
+        },
+        {
+          "phase": "Fluorite",
+          "card_id": "1000043",
+          "expected_wt_percent": 94.81,
+          "actual_wt_percent": 95.37580102779935,
+          "signed_error_pp": 0.5658010277993526,
+          "effective_rir": "4.2012243270874023",
+          "reason": ""
+        },
+        {
+          "phase": "Zincite",
+          "card_id": "1011258",
+          "expected_wt_percent": 4.04,
+          "actual_wt_percent": 1.765812913455673,
+          "signed_error_pp": -2.2741870865443268,
+          "effective_rir": "6.8454031944274902",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "cpd-1b",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.39831477398671195,
+      "phases": [
+        {
+          "phase": "Corundum",
+          "card_id": "1000017",
+          "expected_wt_percent": 94.31,
+          "actual_wt_percent": 94.93755369697058,
+          "signed_error_pp": 0.6275536969705797,
+          "effective_rir": "1.017682671546936",
+          "reason": ""
+        },
+        {
+          "phase": "Fluorite",
+          "card_id": "1000043",
+          "expected_wt_percent": 4.33,
+          "actual_wt_percent": 4.243919004062489,
+          "signed_error_pp": -0.08608099593751106,
+          "effective_rir": "4.2012243270874023",
+          "reason": ""
+        },
+        {
+          "phase": "Zincite",
+          "card_id": "1011258",
+          "expected_wt_percent": 1.36,
+          "actual_wt_percent": 0.8185272989669293,
+          "signed_error_pp": -0.5414727010330708,
+          "effective_rir": "6.8454031944274902",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "cpd-1c",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.8995503985897636,
+      "phases": [
+        {
+          "phase": "Corundum",
+          "card_id": "1000017",
+          "expected_wt_percent": 5.0405040504050405,
+          "actual_wt_percent": 34.414011293837966,
+          "signed_error_pp": 29.373507243432925,
+          "effective_rir": "1.017682671546936",
+          "reason": ""
+        },
+        {
+          "phase": "Fluorite",
+          "card_id": "1000043",
+          "expected_wt_percent": 1.36013601360136,
+          "actual_wt_percent": 7.777256561460723,
+          "signed_error_pp": 6.417120547859363,
+          "effective_rir": "4.2012243270874023",
+          "reason": ""
+        },
+        {
+          "phase": "Zincite",
+          "card_id": "1011258",
+          "expected_wt_percent": 93.5993599359936,
+          "actual_wt_percent": 57.8087321447013,
+          "signed_error_pp": -35.7906277912923,
+          "effective_rir": "6.8454031944274902",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "cpd-1d",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.6547044095715356,
+      "phases": [
+        {
+          "phase": "Corundum",
+          "card_id": "1000017",
+          "expected_wt_percent": 13.53,
+          "actual_wt_percent": 23.872343108086593,
+          "signed_error_pp": 10.342343108086594,
+          "effective_rir": "1.017682671546936",
+          "reason": ""
+        },
+        {
+          "phase": "Fluorite",
+          "card_id": "1000043",
+          "expected_wt_percent": 53.58,
+          "actual_wt_percent": 68.14687289439374,
+          "signed_error_pp": 14.56687289439374,
+          "effective_rir": "4.2012243270874023",
+          "reason": ""
+        },
+        {
+          "phase": "Zincite",
+          "card_id": "1011258",
+          "expected_wt_percent": 32.89,
+          "actual_wt_percent": 7.980783997519669,
+          "signed_error_pp": -24.90921600248033,
+          "effective_rir": "6.8454031944274902",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "cpd-1e",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.5248430841648496,
+      "phases": [
+        {
+          "phase": "Corundum",
+          "card_id": "1000017",
+          "expected_wt_percent": 55.12551255125513,
+          "actual_wt_percent": 65.13293031625514,
+          "signed_error_pp": 10.007417765000014,
+          "effective_rir": "1.017682671546936",
+          "reason": ""
+        },
+        {
+          "phase": "Fluorite",
+          "card_id": "1000043",
+          "expected_wt_percent": 29.622962296229623,
+          "actual_wt_percent": 30.99497331345774,
+          "signed_error_pp": 1.3720110172281181,
+          "effective_rir": "4.2012243270874023",
+          "reason": ""
+        },
+        {
+          "phase": "Zincite",
+          "card_id": "1011258",
+          "expected_wt_percent": 15.251525152515251,
+          "actual_wt_percent": 3.8720963702871143,
+          "signed_error_pp": -11.379428782228137,
+          "effective_rir": "6.8454031944274902",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "cpd-1f",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.7820686920929578,
+      "phases": [
+        {
+          "phase": "Corundum",
+          "card_id": "1000017",
+          "expected_wt_percent": 27.06,
+          "actual_wt_percent": 55.073644632352654,
+          "signed_error_pp": 28.013644632352655,
+          "effective_rir": "1.017682671546936",
+          "reason": ""
+        },
+        {
+          "phase": "Fluorite",
+          "card_id": "1000043",
+          "expected_wt_percent": 17.72,
+          "actual_wt_percent": 29.14935822575624,
+          "signed_error_pp": 11.429358225756243,
+          "effective_rir": "4.2012243270874023",
+          "reason": ""
+        },
+        {
+          "phase": "Zincite",
+          "card_id": "1011258",
+          "expected_wt_percent": 55.22,
+          "actual_wt_percent": 15.776997141891085,
+          "signed_error_pp": -39.44300285810891,
+          "effective_rir": "6.8454031944274902",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "cpd-1g",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.670346405582274,
+      "phases": [
+        {
+          "phase": "Corundum",
+          "card_id": "1000017",
+          "expected_wt_percent": 31.37,
+          "actual_wt_percent": 48.602526810495064,
+          "signed_error_pp": 17.232526810495063,
+          "effective_rir": "1.017682671546936",
+          "reason": ""
+        },
+        {
+          "phase": "Fluorite",
+          "card_id": "1000043",
+          "expected_wt_percent": 34.42,
+          "actual_wt_percent": 42.66488711468464,
+          "signed_error_pp": 8.244887114684637,
+          "effective_rir": "4.2012243270874023",
+          "reason": ""
+        },
+        {
+          "phase": "Zincite",
+          "card_id": "1011258",
+          "expected_wt_percent": 34.21,
+          "actual_wt_percent": 8.7325860748203,
+          "signed_error_pp": -25.4774139251797,
+          "effective_rir": "6.8454031944274902",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "cpd-1h",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.6483964265838877,
+      "phases": [
+        {
+          "phase": "Corundum",
+          "card_id": "1000017",
+          "expected_wt_percent": 35.12,
+          "actual_wt_percent": 51.238702761389355,
+          "signed_error_pp": 16.118702761389358,
+          "effective_rir": "1.017682671546936",
+          "reason": ""
+        },
+        {
+          "phase": "Fluorite",
+          "card_id": "1000043",
+          "expected_wt_percent": 34.69,
+          "actual_wt_percent": 41.30333334956446,
+          "signed_error_pp": 6.6133333495644635,
+          "effective_rir": "4.2012243270874023",
+          "reason": ""
+        },
+        {
+          "phase": "Zincite",
+          "card_id": "1011258",
+          "expected_wt_percent": 30.19,
+          "actual_wt_percent": 7.457963889046191,
+          "signed_error_pp": -22.73203611095381,
+          "effective_rir": "6.8454031944274902",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_In2O3_0p5002-MnCO3_0p5000--2min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.4086737862323322,
+      "phases": [
+        {
+          "phase": "In2O3_bixbyite",
+          "card_id": "1538147",
+          "expected_wt_percent": 50.00999800039992,
+          "actual_wt_percent": 53.17457388105497,
+          "signed_error_pp": 3.1645758806550504,
+          "effective_rir": "13.848206520080566",
+          "reason": ""
+        },
+        {
+          "phase": "MnCO3_rhodochrosite",
+          "card_id": "1548822",
+          "expected_wt_percent": 49.99000199960008,
+          "actual_wt_percent": 46.82542611894503,
+          "signed_error_pp": -3.1645758806550504,
+          "effective_rir": "4.0225563049316406",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_In2O3_0p5002-MnCO3_0p5000--8min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.41023146099921426,
+      "phases": [
+        {
+          "phase": "In2O3_bixbyite",
+          "card_id": "1538147",
+          "expected_wt_percent": 50.00999800039992,
+          "actual_wt_percent": 52.89453137547271,
+          "signed_error_pp": 2.8845333750727917,
+          "effective_rir": "13.848206520080566",
+          "reason": ""
+        },
+        {
+          "phase": "MnCO3_rhodochrosite",
+          "card_id": "1548822",
+          "expected_wt_percent": 49.99000199960008,
+          "actual_wt_percent": 47.10546862452728,
+          "signed_error_pp": -2.884533375072799,
+          "effective_rir": "4.0225563049316406",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_Li2CO3_0p9001-ZrO2_0p1000--2min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.47656308702732975,
+      "phases": [
+        {
+          "phase": "Li2CO3_zabuyelite",
+          "card_id": "2310703",
+          "expected_wt_percent": 90.00099990001,
+          "actual_wt_percent": 92.89606597149626,
+          "signed_error_pp": 2.895066071486255,
+          "effective_rir": "0.76706230640411377",
+          "reason": ""
+        },
+        {
+          "phase": "ZrO2_baddeleyite",
+          "card_id": "1010912",
+          "expected_wt_percent": 9.99900009999,
+          "actual_wt_percent": 7.103934028503748,
+          "signed_error_pp": -2.8950660714862524,
+          "effective_rir": "5.7010202407836914",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_Li2CO3_0p9001-ZrO2_0p1000--8min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.4527530397564386,
+      "phases": [
+        {
+          "phase": "Li2CO3_zabuyelite",
+          "card_id": "2310703",
+          "expected_wt_percent": 90.00099990001,
+          "actual_wt_percent": 92.58626123896939,
+          "signed_error_pp": 2.585261338959384,
+          "effective_rir": "0.76706230640411377",
+          "reason": ""
+        },
+        {
+          "phase": "ZrO2_baddeleyite",
+          "card_id": "1010912",
+          "expected_wt_percent": 9.99900009999,
+          "actual_wt_percent": 7.413738761030618,
+          "signed_error_pp": -2.5852613389593833,
+          "effective_rir": "5.7010202407836914",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_NiO_0p6007-Bi2O3_0p4008--2min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.27007741571163235,
+      "phases": [
+        {
+          "phase": "NiO_rocksalt",
+          "card_id": "1010093",
+          "expected_wt_percent": 59.9800299550674,
+          "actual_wt_percent": 67.6674308304628,
+          "signed_error_pp": 7.687400875395404,
+          "effective_rir": "6.7973403930664062",
+          "reason": ""
+        },
+        {
+          "phase": "Bi2O3_bismite",
+          "card_id": "1010004",
+          "expected_wt_percent": 40.0199700449326,
+          "actual_wt_percent": 32.33256916953719,
+          "signed_error_pp": -7.6874008753954115,
+          "effective_rir": "9.2794790267944336",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_NiO_0p6007-Bi2O3_0p4008--8min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.292807154651168,
+      "phases": [
+        {
+          "phase": "NiO_rocksalt",
+          "card_id": "1010093",
+          "expected_wt_percent": 59.9800299550674,
+          "actual_wt_percent": 68.22100655710906,
+          "signed_error_pp": 8.240976602041663,
+          "effective_rir": "6.7973403930664062",
+          "reason": ""
+        },
+        {
+          "phase": "Bi2O3_bismite",
+          "card_id": "1010004",
+          "expected_wt_percent": 40.0199700449326,
+          "actual_wt_percent": 31.778993442890933,
+          "signed_error_pp": -8.240976602041666,
+          "effective_rir": "9.2794790267944336",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_TiO2_0p4009-ZnO_0p6010--2min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.7063160573275323,
+      "phases": [
+        {
+          "phase": "TiO2_anatase",
+          "card_id": "1010942",
+          "expected_wt_percent": 40.013973450444155,
+          "actual_wt_percent": 37.57394223027119,
+          "signed_error_pp": -2.440031220172962,
+          "effective_rir": "4.9919371604919434",
+          "reason": ""
+        },
+        {
+          "phase": "Zincite",
+          "card_id": "1011258",
+          "expected_wt_percent": 59.986026549555845,
+          "actual_wt_percent": 62.42605776972881,
+          "signed_error_pp": 2.440031220172962,
+          "effective_rir": "6.8454031944274902",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_TiO2_0p4009-ZnO_0p6010--8min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.6964059763881797,
+      "phases": [
+        {
+          "phase": "TiO2_anatase",
+          "card_id": "1010942",
+          "expected_wt_percent": 40.013973450444155,
+          "actual_wt_percent": 37.45436194220688,
+          "signed_error_pp": -2.559611508237275,
+          "effective_rir": "4.9919371604919434",
+          "reason": ""
+        },
+        {
+          "phase": "Zincite",
+          "card_id": "1011258",
+          "expected_wt_percent": 59.986026549555845,
+          "actual_wt_percent": 62.54563805779312,
+          "signed_error_pp": 2.559611508237275,
+          "effective_rir": "6.8454031944274902",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_V2O5_0p3015-TiO2_0p6998--2min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.7588064476091613,
+      "phases": [
+        {
+          "phase": "V2O5_shcherbinaite",
+          "card_id": "2020756",
+          "expected_wt_percent": 30.11085588734645,
+          "actual_wt_percent": 56.411089623666946,
+          "signed_error_pp": 26.300233736320497,
+          "effective_rir": "2.2641656398773193",
+          "reason": ""
+        },
+        {
+          "phase": "TiO2_anatase",
+          "card_id": "1010942",
+          "expected_wt_percent": 69.88914411265355,
+          "actual_wt_percent": 43.588910376333054,
+          "signed_error_pp": -26.3002337363205,
+          "effective_rir": "4.9919371604919434",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_V2O5_0p3015-TiO2_0p6998--8min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.7709136022746474,
+      "phases": [
+        {
+          "phase": "V2O5_shcherbinaite",
+          "card_id": "2020756",
+          "expected_wt_percent": 30.11085588734645,
+          "actual_wt_percent": 59.85924690246997,
+          "signed_error_pp": 29.74839101512352,
+          "effective_rir": "2.2641656398773193",
+          "reason": ""
+        },
+        {
+          "phase": "TiO2_anatase",
+          "card_id": "1010942",
+          "expected_wt_percent": 69.88914411265355,
+          "actual_wt_percent": 40.140753097530045,
+          "signed_error_pp": -29.74839101512351,
+          "effective_rir": "4.9919371604919434",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_V2O5_0p4005-NiO_0p6016--2min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.25722880845057994,
+      "phases": [
+        {
+          "phase": "V2O5_shcherbinaite",
+          "card_id": "2020756",
+          "expected_wt_percent": 39.96607125037421,
+          "actual_wt_percent": 38.76418261122476,
+          "signed_error_pp": -1.2018886391494519,
+          "effective_rir": "2.2641656398773193",
+          "reason": ""
+        },
+        {
+          "phase": "NiO_rocksalt",
+          "card_id": "1010093",
+          "expected_wt_percent": 60.03392874962579,
+          "actual_wt_percent": 61.23581738877524,
+          "signed_error_pp": 1.2018886391494519,
+          "effective_rir": "6.7973403930664062",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_V2O5_0p4005-NiO_0p6016--8min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.25470272931624355,
+      "phases": [
+        {
+          "phase": "V2O5_shcherbinaite",
+          "card_id": "2020756",
+          "expected_wt_percent": 39.96607125037421,
+          "actual_wt_percent": 37.565288027674576,
+          "signed_error_pp": -2.400783222699637,
+          "effective_rir": "2.2641656398773193",
+          "reason": ""
+        },
+        {
+          "phase": "NiO_rocksalt",
+          "card_id": "1010093",
+          "expected_wt_percent": 60.03392874962579,
+          "actual_wt_percent": 62.43471197232544,
+          "signed_error_pp": 2.4007832226996513,
+          "effective_rir": "6.7973403930664062",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_V2O5_0p6008-ZnO_0p4010--2min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.497874952029446,
+      "phases": [
+        {
+          "phase": "V2O5_shcherbinaite",
+          "card_id": "2020756",
+          "expected_wt_percent": 59.972050309443006,
+          "actual_wt_percent": 66.10944000492967,
+          "signed_error_pp": 6.137389695486661,
+          "effective_rir": "2.2641656398773193",
+          "reason": ""
+        },
+        {
+          "phase": "Zincite",
+          "card_id": "1011258",
+          "expected_wt_percent": 40.027949690556994,
+          "actual_wt_percent": 33.89055999507033,
+          "signed_error_pp": -6.137389695486661,
+          "effective_rir": "6.8454031944274902",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_V2O5_0p6008-ZnO_0p4010--8min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.49745786861288493,
+      "phases": [
+        {
+          "phase": "V2O5_shcherbinaite",
+          "card_id": "2020756",
+          "expected_wt_percent": 59.972050309443006,
+          "actual_wt_percent": 66.35249945104418,
+          "signed_error_pp": 6.380449141601176,
+          "effective_rir": "2.2641656398773193",
+          "reason": ""
+        },
+        {
+          "phase": "Zincite",
+          "card_id": "1011258",
+          "expected_wt_percent": 40.027949690556994,
+          "actual_wt_percent": 33.647500548955804,
+          "signed_error_pp": -6.38044914160119,
+          "effective_rir": "6.8454031944274902",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_V2O5_0p7006-MnCO3_0p3001--2min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.3704766126870843,
+      "phases": [
+        {
+          "phase": "V2O5_shcherbinaite",
+          "card_id": "2020756",
+          "expected_wt_percent": 70.01099230538622,
+          "actual_wt_percent": 77.74334423426968,
+          "signed_error_pp": 7.73235192888346,
+          "effective_rir": "2.2641656398773193",
+          "reason": ""
+        },
+        {
+          "phase": "MnCO3_rhodochrosite",
+          "card_id": "1548822",
+          "expected_wt_percent": 29.989007694613772,
+          "actual_wt_percent": 22.256655765730308,
+          "signed_error_pp": -7.732351928883464,
+          "effective_rir": "4.0225563049316406",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_V2O5_0p7006-MnCO3_0p3001--8min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.36378792794914466,
+      "phases": [
+        {
+          "phase": "V2O5_shcherbinaite",
+          "card_id": "2020756",
+          "expected_wt_percent": 70.01099230538622,
+          "actual_wt_percent": 77.46641858585387,
+          "signed_error_pp": 7.455426280467648,
+          "effective_rir": "2.2641656398773193",
+          "reason": ""
+        },
+        {
+          "phase": "MnCO3_rhodochrosite",
+          "card_id": "1548822",
+          "expected_wt_percent": 29.989007694613772,
+          "actual_wt_percent": 22.53358141414613,
+          "signed_error_pp": -7.455426280467641,
+          "effective_rir": "4.0225563049316406",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_V2O5_0p8011-ZrO2_0p2012--2min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.4549071496452581,
+      "phases": [
+        {
+          "phase": "V2O5_shcherbinaite",
+          "card_id": "2020756",
+          "expected_wt_percent": 79.92616980943829,
+          "actual_wt_percent": 86.54594254532755,
+          "signed_error_pp": 6.619772735889256,
+          "effective_rir": "2.2641656398773193",
+          "reason": ""
+        },
+        {
+          "phase": "ZrO2_baddeleyite",
+          "card_id": "1010912",
+          "expected_wt_percent": 20.073830190561708,
+          "actual_wt_percent": 13.454057454672443,
+          "signed_error_pp": -6.619772735889265,
+          "effective_rir": "5.7010202407836914",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_V2O5_0p8011-ZrO2_0p2012--8min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.46925362100328916,
+      "phases": [
+        {
+          "phase": "V2O5_shcherbinaite",
+          "card_id": "2020756",
+          "expected_wt_percent": 79.92616980943829,
+          "actual_wt_percent": 86.66514806034522,
+          "signed_error_pp": 6.738978250906925,
+          "effective_rir": "2.2641656398773193",
+          "reason": ""
+        },
+        {
+          "phase": "ZrO2_baddeleyite",
+          "card_id": "1010912",
+          "expected_wt_percent": 20.073830190561708,
+          "actual_wt_percent": 13.33485193965479,
+          "signed_error_pp": -6.738978250906918,
+          "effective_rir": "5.7010202407836914",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_ZnO_0p4006-In2O3_0p6008--2min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.5079573161996289,
+      "phases": [
+        {
+          "phase": "Zincite",
+          "card_id": "1011258",
+          "expected_wt_percent": 40.00399440782904,
+          "actual_wt_percent": 30.20700337142563,
+          "signed_error_pp": -9.796991036403412,
+          "effective_rir": "6.8454031944274902",
+          "reason": ""
+        },
+        {
+          "phase": "In2O3_bixbyite",
+          "card_id": "1538147",
+          "expected_wt_percent": 59.99600559217096,
+          "actual_wt_percent": 69.79299662857437,
+          "signed_error_pp": 9.796991036403412,
+          "effective_rir": "13.848206520080566",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "Dara_binary_ZnO_0p4006-In2O3_0p6008--8min",
+      "status": "conditional_quantification_available",
+      "rwp_net": 0.4792126260135495,
+      "phases": [
+        {
+          "phase": "Zincite",
+          "card_id": "1011258",
+          "expected_wt_percent": 40.00399440782904,
+          "actual_wt_percent": 28.97942001415956,
+          "signed_error_pp": -11.024574393669479,
+          "effective_rir": "6.8454031944274902",
+          "reason": ""
+        },
+        {
+          "phase": "In2O3_bixbyite",
+          "card_id": "1538147",
+          "expected_wt_percent": 59.99600559217096,
+          "actual_wt_percent": 71.02057998584043,
+          "signed_error_pp": 11.024574393669468,
+          "effective_rir": "13.848206520080566",
+          "reason": ""
+        }
+      ]
+    }
+  ]
+}

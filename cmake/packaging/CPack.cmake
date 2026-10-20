@@ -1,15 +1,56 @@
 # CPack configuration
 # Keep generated packages and CPack work under the selected build tree.
+set(CPACK_VERBATIM_VARIABLES ON)
 set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/packages" CACHE PATH "CPack output directory")
 set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${EXECUTABLE_NAME}-${PROJECT_VERSION}-Source")
 # Source packages exclude local caches and release products, retaining source inputs.
-set(QUALPF_CPACK_SOURCE_ROOT "${PROJECT_SOURCE_DIR}")
-foreach(character "." "+" "*" "?" "^" "$" "(" ")" "[" "]" "|")
-    string(REPLACE "${character}" "\\${character}" QUALPF_CPACK_SOURCE_ROOT "${QUALPF_CPACK_SOURCE_ROOT}")
-endforeach()
+function(qualpf_cpack_escape_regex output input)
+    foreach(character "." "+" "*" "?" "^" "$" "(" ")" "[" "]" "|")
+        string(REPLACE "${character}" "\\${character}" input "${input}")
+    endforeach()
+    set(${output} "${input}" PARENT_SCOPE)
+endfunction()
+qualpf_cpack_escape_regex(QUALPF_CPACK_SOURCE_ROOT "${PROJECT_SOURCE_DIR}")
 set(CPACK_SOURCE_IGNORE_FILES
-    "[/][.]git($|[/]);[/]__pycache__[/];[.]py[co]$;${QUALPF_CPACK_SOURCE_ROOT}/build[^/]*[/];${QUALPF_CPACK_SOURCE_ROOT}/releases[/];${QUALPF_CPACK_SOURCE_ROOT}/_CPack_Packages[/];${QUALPF_CPACK_SOURCE_ROOT}/[^/]+[.](deb|AppImage|exe)$;${QUALPF_CPACK_SOURCE_ROOT}/[.]evidence[/];${QUALPF_CPACK_SOURCE_ROOT}/lfs[/];[/]docs/[.]venv[/];[/]docs/qualx(_manual|pf_manual)[.]pdf$;CMakeUserPresets[.]json$")
+    "[/][.]git($|[/]);[/]__pycache__[/];[.]py[co]$;${QUALPF_CPACK_SOURCE_ROOT}/build([_-][^/]*)?[/];${QUALPF_CPACK_SOURCE_ROOT}/releases[/];${QUALPF_CPACK_SOURCE_ROOT}/_CPack_Packages[/];${QUALPF_CPACK_SOURCE_ROOT}/[^/]+[.](deb|AppImage|exe)$;${QUALPF_CPACK_SOURCE_ROOT}/[.]evidence[/];${QUALPF_CPACK_SOURCE_ROOT}/lfs[/];[/]docs/[.]venv[/];[/]docs/qualx(_manual|pf_manual)[.]pdf$;CMakeUserPresets[.]json$")
+list(APPEND CPACK_SOURCE_IGNORE_FILES
+    "${QUALPF_CPACK_SOURCE_ROOT}/docs/site[/]"
+    "${QUALPF_CPACK_SOURCE_ROOT}/docs/qualpf_manual[.]pdf$"
+    "${QUALPF_CPACK_SOURCE_ROOT}/references[/]"
+    "${QUALPF_CPACK_SOURCE_ROOT}/cmake-build-[^/]*[/]"
+    "${QUALPF_CPACK_SOURCE_ROOT}/[.]venv[/]"
+    "[/][.]pytest_cache[/]"
+    "[/]([.]DS_Store|Thumbs[.]db|desktop[.]ini)$")
+# Local example collections stay private; retain only the independent CoO fixture.
+file(GLOB_RECURSE QUALPF_LOCAL_EXAMPLES LIST_DIRECTORIES true CONFIGURE_DEPENDS
+    RELATIVE "${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/tests/real_example_data/*")
+foreach(example IN LISTS QUALPF_LOCAL_EXAMPLES)
+    if(NOT example STREQUAL "tests/real_example_data/03_reference_structures" AND
+       NOT example STREQUAL "tests/real_example_data/03_reference_structures/CoO.cif")
+        set(example_is_directory false)
+        if(IS_DIRECTORY "${PROJECT_SOURCE_DIR}/${example}")
+            set(example_is_directory true)
+        endif()
+        qualpf_cpack_escape_regex(example "${example}")
+        if(example_is_directory)
+            list(APPEND CPACK_SOURCE_IGNORE_FILES "${QUALPF_CPACK_SOURCE_ROOT}/${example}[/]")
+        else()
+            list(APPEND CPACK_SOURCE_IGNORE_FILES "${QUALPF_CPACK_SOURCE_ROOT}/${example}$")
+        endif()
+    endif()
+endforeach()
+# Keep provisioned reference payloads outside source packages as well as Git.
+set(QUALPF_REFERENCE_ARCHIVES "${PROJECT_SOURCE_DIR}/tests/reference/archives.json")
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${QUALPF_REFERENCE_ARCHIVES}")
+file(READ "${QUALPF_REFERENCE_ARCHIVES}" QUALPF_REFERENCE_ARCHIVE_MANIFEST)
+string(JSON QUALPF_REFERENCE_ARCHIVE_COUNT LENGTH "${QUALPF_REFERENCE_ARCHIVE_MANIFEST}" files)
+math(EXPR QUALPF_REFERENCE_ARCHIVE_LAST "${QUALPF_REFERENCE_ARCHIVE_COUNT} - 1")
+foreach(index RANGE 0 ${QUALPF_REFERENCE_ARCHIVE_LAST})
+    string(JSON archive GET "${QUALPF_REFERENCE_ARCHIVE_MANIFEST}" files ${index} path)
+    qualpf_cpack_escape_regex(archive "${archive}")
+    list(APPEND CPACK_SOURCE_IGNORE_FILES "${QUALPF_CPACK_SOURCE_ROOT}/${archive}$")
+endforeach()
 
 set(CPACK_RESOURCE_FILE_LICENSE  ${CMAKE_CURRENT_SOURCE_DIR}/deploy/Windows/licence.txt)
 set(CPACK_PACKAGE_VENDOR "Institute of Crystallography - CNR")

@@ -99,10 +99,14 @@
    </property>
    <widget class="QMenu" name="menuDatabase">
     <property name="title">
-     <string>&amp;Search</string>
+     <string>&amp;S&amp;&amp;M</string>
     </property>
     <addaction name="actionSearch_Match"/>
     <addaction name="actionSearch_Match_Options"/>
+    <addaction name="separator"/>
+    <addaction name="actionPFSM"/>
+    <addaction name="actionPFSMOptions"/>
+    <addaction name="separator"/>
     <addaction name="actionRestraints"/>
     <addaction name="actionTestDatabase"/>
     <addaction name="separator"/>
@@ -137,25 +141,41 @@
    </widget>
    <widget class="QMenu" name="menuPattern">
     <property name="title">
-     <string>&amp;Pattern</string>
+     <string>&amp;Preprocessing</string>
     </property>
     <addaction name="actionRange"/>
     <addaction name="separator"/>
     <addaction name="actionBackground"/>
-    <addaction name="actionSubtract_Background"/>
+    <addaction name="actionBackgroundOptions"/>
     <addaction name="actionAdd_Background_Point"/>
     <addaction name="actionDelete_Background_Point"/>
     <addaction name="actionExport_Background"/>
     <addaction name="separator"/>
-    <addaction name="actionPeak_Search"/>
-    <addaction name="actionPeak_Search_Conditions"/>
-    <addaction name="actionAdd_Peak"/>
-    <addaction name="actionDelete_Peak"/>
-    <addaction name="actionLoad_Peaks"/>
-    <addaction name="actionSave_Peaks"/>
+    <addaction name="actionInitialPeakSearch"/>
+    <addaction name="actionInitialPeakSearchOptions"/>
+    <addaction name="separator"/>
+    <addaction name="actionFwhmEstimation"/>
+    <addaction name="actionFwhmEstimationOptions"/>
     <addaction name="separator"/>
     <addaction name="actionSmoothing"/>
     <addaction name="actionK_alpha2_Stripping"/>
+    <addaction name="separator"/>
+    <addaction name="actionRestartPreprocessing"/>
+   </widget>
+   <widget class="QMenu" name="menuPeakSearch">
+    <property name="title">
+     <string>Pea&amp;k Search</string>
+    </property>
+    <addaction name="actionPeak_Search"/>
+    <addaction name="actionPeak_Search_Conditions"/>
+    <addaction name="separator"/>
+    <addaction name="actionAdd_Peak"/>
+    <addaction name="actionAddInferredPeak"/>
+    <addaction name="actionDelete_Peak"/>
+    <addaction name="actionDeleteAllPeaks"/>
+    <addaction name="separator"/>
+    <addaction name="actionLoad_Peaks"/>
+    <addaction name="actionSave_Peaks"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -164,6 +184,7 @@
     <addaction name="actionReset_Zoom"/>
     <addaction name="actionAutoscale"/>
     <addaction name="actionLegend"/>
+    <addaction name="actionSubtract_Background"/>
     <addaction name="separator"/>
     <addaction name="actionSelection_Mode"/>
     <addaction name="actionHorizontal_Zoom"/>
@@ -203,6 +224,7 @@
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
    <addaction name="menuPattern"/>
+   <addaction name="menuPeakSearch"/>
    <addaction name="menuDatabase"/>
    <addaction name="menuEntry"/>
    <addaction name="menuWindow"/>
@@ -561,7 +583,51 @@
   </action>
   <action name="actionPeak_Search_Conditions">
    <property name="text">
-    <string>Peak Search Conditions</string>
+    <string>Peak Search Options</string>
+   </property>
+  </action>
+  <action name="actionInitialPeakSearch">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Initial Peak Search</string>
+   </property>
+  </action>
+  <action name="actionInitialPeakSearchOptions">
+   <property name="text">
+    <string>Initial Peak Search Options</string>
+   </property>
+  </action>
+  <action name="actionFwhmEstimation">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>FWHM Estimation</string>
+   </property>
+  </action>
+  <action name="actionFwhmEstimationOptions">
+   <property name="text">
+    <string>FWHM Estimation Options...</string>
+   </property>
+  </action>
+  <action name="actionRestartPreprocessing">
+   <property name="text">
+    <string>Restart preprocessing...</string>
+   </property>
+  </action>
+  <action name="actionAddInferredPeak">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Add inferred peak</string>
+   </property>
+  </action>
+  <action name="actionDeleteAllPeaks">
+   <property name="text">
+    <string>Delete all peaks</string>
    </property>
   </action>
   <action name="actionAdd_Peak">
@@ -592,7 +658,13 @@
     <string>Delete Peak</string>
    </property>
   </action>
+  <action name="actionBackgroundOptions">
+   <property name="text"><string>Background Options</string></property>
+  </action>
   <action name="actionSubtract_Background">
+   <property name="checkable"><bool>true</bool></property>
+   <property name="checked"><bool>false</bool></property>
+   <property name="toolTip"><string>Display the observed and fitted curves without background</string></property>
    <property name="text">
     <string>Subtract Background</string>
    </property>
@@ -603,7 +675,7 @@
      <normaloff>:/images/images/search_match.png</normaloff>:/images/images/search_match.png</iconset>
    </property>
    <property name="text">
-    <string>Search-Match</string>
+    <string>CSM (Classical SM)</string>
    </property>
   </action>
   <action name="actionManage_Databases">
@@ -626,7 +698,20 @@
      <normaloff>:/images/images/search_match_options.png</normaloff>:/images/images/search_match_options.png</iconset>
    </property>
    <property name="text">
-    <string>Search-Match Options</string>
+    <string>CSM Options</string>
+   </property>
+  </action>
+  <action name="actionPFSM">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>PFSM</string>
+   </property>
+  </action>
+  <action name="actionPFSMOptions">
+   <property name="text">
+    <string>PFSM Options</string>
    </property>
   </action>
   <action name="actionRecalculate_FOM">
@@ -794,10 +879,10 @@
     <string>Open Project</string>
    </property>
    <property name="toolTip">
-    <string>Open an existing project (.qxp)</string>
+    <string>Open an existing project (.qpf)</string>
    </property>
    <property name="statusTip">
-    <string>Open an existing project (.qxp)</string>
+    <string>Open an existing project (.qpf)</string>
    </property>
   </action>
   <action name="actionDocumentation_HTML">

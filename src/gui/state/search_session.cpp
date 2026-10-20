@@ -27,7 +27,17 @@ Result<ExperimentalPeaks> peaksWithTolerance(const ExperimentalPeaks &peaks, dou
 
 ProductState productState(const SessionStateView &view) {
     ProductState out;
+    out.projectSettings = view.projectSettings;
     out.backend = view.backend;
+    if (view.canonical) {
+        out.workflow = view.canonical->workflow;
+        out.prepared_pfsm = view.canonical->prepared_pfsm;
+        out.analysis_database = view.canonical->analysis_database;
+        out.restored_project = view.canonical->restored_project;
+        out.projectStateExtensions = view.canonical->projectStateExtensions;
+        out.algorithms = view.canonical->algorithms;
+        out.provenance = view.canonical->provenance;
+    }
     out.editing = view.editing;
     out.revision = view.revision;
     out.automaticDelta = view.automaticDelta;
@@ -37,10 +47,12 @@ ProductState productState(const SessionStateView &view) {
     out.projectMetadata = view.projectMetadata.toObject();
     out.projectEnvelope = view.projectEnvelope.toObject();
     out.pattern = view.pattern;
+    out.original_signal_provenance = view.original_signal_provenance;
     out.powderCifProvenance = view.powderCifProvenance;
     out.comparisonPatterns = view.comparisonPatterns;
     out.peaks = view.peaks.productValue();
     out.preprocessing = view.preprocessing;
+    out.pfsm = view.pfsm;
     for (const auto &card : view.candidates)
         out.candidates.push_back(card.productValue());
     for (const auto &card : view.phases)
@@ -50,6 +62,7 @@ ProductState productState(const SessionStateView &view) {
 SessionStateView searchView(ProductHandle source) {
     SessionStateView view;
     view.canonical = source;
+    view.projectSettings = source->projectSettings;
     view.backend = source->backend;
     view.editing = source->editing;
     view.revision = source->revision;
@@ -60,10 +73,12 @@ SessionStateView searchView(ProductHandle source) {
     view.projectMetadata = MetadataValue(source->projectMetadata);
     view.projectEnvelope = MetadataValue(source->projectEnvelope);
     view.pattern = source->pattern;
+    view.original_signal_provenance = source->original_signal_provenance;
     view.powderCifProvenance = source->powderCifProvenance;
     view.comparisonPatterns = source->comparisonPatterns;
     view.peaks = ExperimentalPeaks::fromProductValue(source->peaks);
     view.preprocessing = source->preprocessing;
+    view.pfsm = source->pfsm;
     for (const auto &card : source->candidates)
         view.candidates.append(CardType(card));
     for (const auto &card : source->phases)
@@ -78,10 +93,10 @@ Status SessionView::commit(SessionViewHandle source, SessionStateView next) {
 void SessionView::replacePeaks(ExperimentalPeaks peaks) { canonical_.replacePeaks(peaks.productValue()); }
 void SessionView::replacePattern(Pattern pattern) { canonical_.replacePattern(std::move(pattern)); }
 Status SessionView::openPattern(SessionViewHandle source, Pattern pattern, std::vector<Pattern> comparisons,
-                                  bool synchrotron) {
+                                  bool synchrotron, std::optional<OriginalSignalProvenance> original) {
     if (source != state_)
         return Status{Error{ErrorCode::stale_snapshot, "session", "Search input changed"}};
-    return canonical_.openPattern(source->canonical, std::move(pattern), std::move(comparisons), synchrotron);
+    return canonical_.openPattern(source->canonical, std::move(pattern), std::move(comparisons), synchrotron, std::move(original));
 }
 Result<SessionStateView> preparePatternOpen(SessionViewHandle source, Pattern pattern, std::vector<Pattern> comparisons,
                                        bool synchrotron) {

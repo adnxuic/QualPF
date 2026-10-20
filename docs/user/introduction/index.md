@@ -22,10 +22,10 @@ The main window is divided into several panels:
 ## Workflow Overview
 
 1. **Import** a diffraction pattern (File → Import Diffraction Pattern)
-2. **Background**: estimate and optionally subtract the background
+2. **Background**: estimate the background and optionally view the net signal
 3. **Peak Search**: detect peak positions and intensities
 4. **Search/Match**: query the database and rank candidate phases by FOM
 5. **Accept**: move identified phases to the Quantitative panel
-6. **Save** the project (.qxp) to resume later
+6. **Save** the project (.qpf) to resume later
 
 See the individual sections for detailed instructions.

@@ -55,22 +55,28 @@ Status rowChange(ProductState &next, const ManualPeakChange &change, WavelengthA
 }
 } // namespace
 Result<Pattern> preparePeakMeasurementContext(const ProductState &state, WavelengthAngstrom wave) {
+    return preparePeakMeasurementContext(state, wave,
+        {{}, NumericalPolicy::legacy_mixed_precision, "product-preprocessing"});
+}
+Result<Pattern> preparePeakMeasurementContext(const ProductState &state, WavelengthAngstrom wave,
+                                             const ExecutionContext &execution) {
+    if (execution.cancellation.stop_requested())
+        return Result<Pattern>{Error{ErrorCode::cancelled, "preprocessing", "Preprocessing canceled"}};
     auto p = state.pattern;
     const auto fail = [](const char *reason) {
         return Result<Pattern>{Error{ErrorCode::missing_data, "peaks.background", reason, reason}};
     };
-    if (!p.processing.background_subtracted)
-        return fail("subtraction_state_unknown");
+    if (p.processing.background_subtracted != false)
+        return fail(p.processing.background_subtracted ? "subtracted_input_refused" : "subtraction_state_unknown");
     if (p.background && (!p.background->window || p.background->window->first != 0 ||
                          p.background->values.size() != p.observed.size()))
         return fail("background_alignment_unknown");
-    if (*p.processing.background_subtracted) {
-        if (!p.background || !std::all_of(p.background->values.begin(), p.background->values.end(),
-                                          [](double v) { return v == 0; }))
-            return fail("background_alignment_unknown");
-    } else if (!p.background) {
-        auto background = preprocessing::background(
-            p, state.preprocessing.background.value_or(preprocessing::BackgroundOptions{}), wave);
+    if (!p.background) {
+        auto background = state.algorithms->modules.background->estimate(
+            p, state.preprocessing.background.value_or(state.algorithms->spec.defaults().background), wave,
+            std::nullopt, execution);
+        if (execution.cancellation.stop_requested())
+            return Result<Pattern>{Error{ErrorCode::cancelled, "preprocessing", "Preprocessing canceled"}};
         if (!background)
             return Result<Pattern>{background.error()};
         p.background = SampledSignal{std::move(background).value().values, SampleWindow{0}};
@@ -80,6 +86,11 @@ Result<Pattern> preparePeakMeasurementContext(const ProductState &state, Wavelen
     return Result<Pattern>{std::move(p)};
 }
 Status preparePeakOperation(ProductState &next, const PreprocessingRequest &request) {
+    return preparePeakOperation(next, request,
+        {{}, NumericalPolicy::legacy_mixed_precision, "product-preprocessing"});
+}
+Status preparePeakOperation(ProductState &next, const PreprocessingRequest &request,
+                            const ExecutionContext &execution) {
     const auto opening = next;
     auto origin = PeakEditOrigin::manual;
     const auto wave = request.wavelength;
@@ -126,7 +137,7 @@ Status preparePeakOperation(ProductState &next, const PreprocessingRequest &requ
             return reject("peaks.coordinate", "invalid_wavelength");
         if (request.inferred_graph) {
             origin = PeakEditOrigin::inferred_graph;
-            auto context = preparePeakMeasurementContext(next, wave);
+            auto context = preparePeakMeasurementContext(next, wave, execution);
             if (!context)
                 return Status{context.error()};
             auto result = peaks::measure_graph_peak(context.value(), TwoThetaDegrees{*request.inferred_graph},
@@ -171,7 +182,7 @@ Status preparePeakOperation(ProductState &next, const PreprocessingRequest &requ
                     coordinates.push_back({TwoThetaDegrees{entry.value}, {}});
                 }
             }
-            auto context = preparePeakMeasurementContext(next, wave);
+            auto context = preparePeakMeasurementContext(next, wave, execution);
             if (!context)
                 return Status{context.error()};
             auto result = peaks::measure_imported_peaks(context.value(), coordinates, wave);

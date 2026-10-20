@@ -1,36 +1,60 @@
 #include "qualpf/application/preprocessing_evaluation.h"
+#include "qualpf/application/workflow.h"
 #include <algorithm>
 #include <cmath>
 namespace qualpf::application {
-Result<PreprocessingRequest> automaticPreprocessingRequest(ProductHandle source, PreprocessingAction action) {
+Result<PreprocessingRequest> automaticPreprocessingRequest(ProductHandle source, PreprocessingAction action, SearchMethod method) {
+    if (action == PreprocessingAction::prepare_search) {
+        auto available = preflightSearchMethod(method);
+        if (!available) return Result<PreprocessingRequest>{available.error()};
+        if (method == SearchMethod::pfsm) return Result<PreprocessingRequest>{Error{ErrorCode::unsupported,
+            "pfsm.preparation","PFSM requires an explicit observation request, not formal peak preparation","pfsm_requires_observations"}};
+    }
     if (!source || source->editing)
         return Result<PreprocessingRequest>{
             Error{ErrorCode::stale_snapshot, "preprocessing", "Finish the open edit first"}};
     if (source->pattern.two_theta.empty() || source->pattern.radiation.lines.empty())
         return Result<PreprocessingRequest>{
             Error{ErrorCode::missing_data, "preprocessing", "Pattern and wavelength are required"}};
-    if (!source->pattern.processing.background_subtracted)
+    if (source->pattern.processing.background_subtracted != false)
         return Result<PreprocessingRequest>{Error{
             ErrorCode::missing_data, "background.state",
-            "Subtraction history is unknown; choose an explicit new input", "subtraction_state_unknown"}};
+            "Restart preprocessing or choose an explicitly unsubtracted input",
+            source->pattern.processing.background_subtracted ? "subtracted_input_refused" : "subtraction_state_unknown"}};
     PreprocessingRequest request;
+    const auto flow = action == PreprocessingAction::prepare_search ? WorkflowId::csm :
+        action == PreprocessingAction::automatic_peaks ? WorkflowId::peak_search : WorkflowId::preprocessing;
+    request.workflow = flow;
+    const auto *profile = source->projectSettings ? &source->projectSettings->profile(flow) : nullptr;
+    request.algorithms = source->algorithms;
     request.wavelength = source->pattern.radiation.lines.front().wavelength;
     request.tolerance = AngularWidthDegrees{source->peakTolerance.value_or(.15)};
-    const bool subtract = action != PreprocessingAction::automatic_peaks;
     request.peak_product_operation = action == PreprocessingAction::automatic_peaks;
-    if (!source->pattern.background) {
-        if (*source->pattern.processing.background_subtracted)
-            return Result<PreprocessingRequest>{Error{
-                ErrorCode::missing_data, "background.state",
-                "Subtracted input has no aligned background representation", "background_alignment_unknown"}};
-        request.background = source->preprocessing.background.value_or(preprocessing::BackgroundOptions{});
+    if (!source->pattern.background || (profile && !reusableWorkflowStep(*source,flow,WorkflowStep::background))) {
+        request.background = profile ? profile->background : source->preprocessing.background.value_or(source->algorithms->spec.defaults().background);
     }
-    request.subtract_background = subtract;
-    if (action != PreprocessingAction::subtract_background) {
-        request.peaks = source->preprocessing.peaks.value_or(preprocessing::PeakOptions{});
+    if (action == PreprocessingAction::generate_background) {
+        request.background = profile ? profile->background : source->preprocessing.background.value_or(source->algorithms->spec.defaults().background);
+        if (request.background->method == preprocessing::BackgroundMethod::bruckner)
+            request.background->bruckner_range = AngularRange{source->pattern.two_theta.front(), source->pattern.two_theta.back()};
+    } else {
+        request.peaks = profile ? profile->peaks : source->preprocessing.peaks.value_or(source->algorithms->spec.defaults().peaks);
+        if (profile) {
+            request.initial_peaks = profile->initial_peaks;
+            request.fwhm = profile->fwhm;
+            request.selection = profile->selection;
+            request.peaks->maximum_peaks = profile->selection.maximum_peaks;
+            request.peaks->threshold_percent = profile->selection.threshold_percent;
+            if (source->preprocessing.fwhm_usage &&
+                (!request.background || source->preprocessing.fwhm_usage->origin == FwhmOrigin::fixed) &&
+                reusableWorkflowStep(*source,flow,WorkflowStep::fwhm)) {
+                request.supplied_width = source->preprocessing.fwhm_usage;
+                request.fwhm = source->preprocessing.fwhm;
+            }
+        }
         request.peaks->search_range = -1;
         request.peaks->detection_range.reset();
-        request.use_background_for_peaks = true;
+        request.purpose = action == PreprocessingAction::prepare_search ? AnalysisPurpose::classical_search : AnalysisPurpose::peak_measurement;
     }
     return Result<PreprocessingRequest>{std::move(request)};
 }
@@ -40,13 +64,18 @@ Result<PreprocessingRequest> backgroundPointRequest(ProductHandle source, bool a
         source->pattern.radiation.lines.empty())
         return Result<PreprocessingRequest>{
             Error{ErrorCode::missing_data, "background.points", "A closed, loaded pattern is required"}};
+    if (source->pattern.processing.background_subtracted != false)
+        return Result<PreprocessingRequest>{Error{ErrorCode::missing_data,"background.state",
+            "Background editing requires an explicitly unsubtracted signal",
+            source->pattern.processing.background_subtracted ? "subtracted_input_refused" : "subtraction_state_unknown"}};
     if (!std::isfinite(float(x)) || !std::isfinite(float(y)))
         return Result<PreprocessingRequest>{
             Error{ErrorCode::invalid_input, "background.points", "Finite point coordinates are required"}};
     PreprocessingRequest request;
+    request.algorithms = source->algorithms;
     request.wavelength = source->pattern.radiation.lines.front().wavelength;
     request.tolerance = AngularWidthDegrees{source->peakTolerance.value_or(.15)};
-    request.background = source->preprocessing.background.value_or(preprocessing::BackgroundOptions{});
+    request.background = source->preprocessing.background.value_or(source->algorithms->spec.defaults().background);
     if (request.background->method == preprocessing::BackgroundMethod::spline ||
         request.background->method == preprocessing::BackgroundMethod::bezier ||
         request.background->method == preprocessing::BackgroundMethod::bruckner)
@@ -56,7 +85,8 @@ Result<PreprocessingRequest> backgroundPointRequest(ProductHandle source, bool a
     if (source->preprocessing.background_points)
         request.background_points = source->preprocessing.background_points;
     else {
-        auto initial = preprocessing::background(source->pattern, *request.background, request.wavelength);
+        auto initial = source->algorithms->modules.background->estimate(source->pattern, *request.background,
+            request.wavelength, std::nullopt, {{}, NumericalPolicy::legacy_mixed_precision, "product-preprocessing"});
         if (!initial)
             return Result<PreprocessingRequest>{initial.error()};
         request.background_points = std::move(initial).value().points;
@@ -76,10 +106,9 @@ Result<PreprocessingRequest> backgroundPointRequest(ProductHandle source, bool a
         points.erase(at);
     }
     if (redetect) {
-        request.peaks = source->preprocessing.peaks.value_or(preprocessing::PeakOptions{});
+        request.peaks = source->preprocessing.peaks.value_or(source->algorithms->spec.defaults().peaks);
         request.peaks->search_range = -1;
         request.peaks->detection_range.reset();
-        request.use_background_for_peaks = true;
     }
     return Result<PreprocessingRequest>{std::move(request)};
 }

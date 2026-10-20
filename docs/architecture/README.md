@@ -1,27 +1,23 @@
 # QualPF architecture
 
 QualPF is a pure C++20 application with Qt-free Core and Application layers.
-Final independent Milestone A accepts `5a247152` as
-**CPP_ARCHITECTURE_REFACTOR_COMPLETE** after the bounded A-01 correction and
-three-platform independent reacceptance. All 22 mandatory criteria pass.
-PFSM has not started.
+Application owns canonical product state; Infrastructure implements its ports,
+GUI borrows immutable views, and explicit composition connects their lifetimes.
+PFSM provides fixed-IL expansion and NNLS/TRF fitting through the synchronous
+Application workflow; GUI presentation is outside its current scope.
 
-The separately authorized strict layer refinement is closed as
-**STRICT_LAYER_CONVERGENCE_3_PLATFORM_PASS** at implementation `895e4138`.
-Windows GCC/MSVC evidence is reused with identical inputs; independent Ubuntu
-26.04 / GCC 15.2 / Qt 6.10.2 validation passes all 86 normal tests, Qt-free clients,
-public headers, standalone snapshot consumers and installed DEB/runtime checks.
-Historical Milestone A/F acceptance scopes and failures remain unchanged. STOP.
-
-- [Strict layer convergence and current validation](strict-layer-convergence.md)
-- [Linux independent validation and three-platform closure](strict-layer-linux-closure.md)
 - [Ownership and dependencies](overview.md)
-- [Independent Milestone A reacceptance and result](milestone-a/a01/independent-review.md)
-- [Original blocked review (unchanged)](milestone-a/independent-review.md)
+- [Search-Match workflow and seven algorithm contracts](search-algorithms.md)
+- [Strict layer contracts](strict-layer-convergence.md)
 - [Architecture decisions](decisions.md)
 - [Retained product ADRs](adr/README.md)
-- [Recorded project baseline](../development/project-baseline.json)
 - [Retained compatibility responsibilities](compatibility-allowlist.json)
 - [Numerical policy and independent references](../numerical/policy.md)
-- [Build and test instructions](../development/building.md)
-- [History and restoration](../migration-history.md)
+- [Build, test and contribution instructions](../development/building.md)
+- [Changelog](../../CHANGELOG.md)
+
+Recorded refactoring acceptance lives in the [project baseline](../development/project-baseline.json).
+Original reviews, validation receipts and closure reports are indexed in
+[migration history](../migration-history.md#retained-reports). Their Phase,
+Milestone and STOP records describe completed historical scopes; ongoing
+development follows scoped tasks and the changelog.

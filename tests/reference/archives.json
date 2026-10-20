@@ -1,0 +1,83 @@
+{
+  "schema": "qualpf.reference_archives.v1",
+  "source_commit": "b5933bba78dc3f02d8d68f0dc11d2eed4385de51",
+  "local_protection_tag": "fast-pfsm-v2-pre-squash-20261020",
+  "expected_from_product": false,
+  "files": [
+    {
+      "path": "tests/data/cell-historical-scattering-reference.zip",
+      "bytes": 215190,
+      "sha256": "281d5984c87b28f7ab8e6b20252fbef4e7dac175065b6be84b279e5b1d91b035"
+    },
+    {
+      "path": "tests/data/crystallography-foundation-reference.zip",
+      "bytes": 273852,
+      "sha256": "683484dd82084b0f99efa68aac6d4b04be54125139541db922d4596437c780ed"
+    },
+    {
+      "path": "tests/data/kalpha2-reference.zip",
+      "bytes": 2906716,
+      "sha256": "9559a201a342f9dfadac3866afdcbc48d9cee0dad3509de2d835516beaba468d"
+    },
+    {
+      "path": "tests/data/pattern-abi-reference.zip",
+      "bytes": 279194,
+      "sha256": "c5c3ea40f6a0f1d6cc4c76ee87a2fa75cdc728654cab6af2eaea5ded9c051013"
+    },
+    {
+      "path": "tests/data/pattern-edge-reference.zip",
+      "bytes": 8790,
+      "sha256": "1b224d12f22ac9db2c9ec37ccf399a96ca5ae30238fa10fa7281719acfac699d"
+    },
+    {
+      "path": "tests/data/pattern-legacy-reference.zip",
+      "bytes": 274733,
+      "sha256": "db97c337c7401a74dd612d064061f32b0118404c997534c4380959056578304d"
+    },
+    {
+      "path": "tests/data/pattern-vendor-reference.zip",
+      "bytes": 14198,
+      "sha256": "f72a6c9cc90cbe9996a3f0a9e38f4d71876bb2db6fbee529bb2aff54b3844349"
+    },
+    {
+      "path": "tests/data/powder-intensity-reference.zip",
+      "bytes": 1848257,
+      "sha256": "dc6562533d456f0bd4e5b5cc649f451e7fbf4166465f99ed9b8615ae5028a514"
+    },
+    {
+      "path": "tests/data/reflection-reference.zip",
+      "bytes": 8442324,
+      "sha256": "56a0c0dd819affed1409dab91347bdbe5116a9c34763ec7e760c081cdc681327"
+    },
+    {
+      "path": "tests/data/scattering-reference.zip",
+      "bytes": 1890913,
+      "sha256": "0f8f888d047c79697ac35b9c752bd01facc17850739b567ac71fbda03653fe5e"
+    },
+    {
+      "path": "tests/data/symmetry-reference.zip",
+      "bytes": 328258,
+      "sha256": "66672d9f3f0dd533bbac4bf99eaa1b4faecd5ebd2d92692064fb4ddae90382be"
+    },
+    {
+      "path": "tests/data/theoretical-card-reference.zip",
+      "bytes": 2595164,
+      "sha256": "19312fffd4a1e4bec2630701d7f4088f1baf60a1953a7414da6e1ad833a02a0f"
+    },
+    {
+      "path": "tests/regression/references/card/cpp-replay-evidence.zip",
+      "bytes": 4511200,
+      "sha256": "3e4169ae5629dd4860ce542233c72ecc7e6dd8ea70cbbb1bfbdc5d651e694827"
+    },
+    {
+      "path": "tests/regression/references/powder/test-results/cpp-replay-transcripts.zip",
+      "bytes": 1895201,
+      "sha256": "0d22e1669a9aa9d4fa016a5df0a8b07a96ffba0815fa1a37c02371f1dd9c3411"
+    },
+    {
+      "path": "tests/regression/references/preprocessing/advanced-reference.zip",
+      "bytes": 4602639,
+      "sha256": "0e86a1b8f14aca6be14ed517b647318bdecc6598ddd9f4d5dfb94cb614680a62"
+    }
+  ]
+}

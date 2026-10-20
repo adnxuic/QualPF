@@ -1,0 +1,439 @@
+{
+  "schema": "qualpf.pfsm.reaction-count-evidence.v1",
+  "expected_from_product": false,
+  "scope": "Original observation-source evidence for all 20 supplied reaction acquisitions. No phase assignments, chemistry constraints, fitted curves, rankings or product output determine this input contract.",
+  "method": "SHA-256 of original bytes; namespace-aware XML parsing; every XY intensity compared with its XRDML count using exact decimal arithmetic; every XY coordinate compared with the explicit native endpoint grid rounded to five decimals. All 166020 intensity pairs and coordinates agree.",
+  "provenance": {
+    "inventory_path": "build/pfsm/bi2mo3o12-input-provenance-01/reaction-source-inventory.json",
+    "inventory_sha256": "dbf7266eb44a6b89f6945f45d299be26e6fdd4b97d6c5142c84b5f8a16d4b231",
+    "inventory_required_for_normal_tests": false
+  },
+  "common_original_metadata": {
+    "scope": "The following values and XML locators were checked in every listed XRDML file.",
+    "counts": {
+      "element": "scan/dataPoints/counts",
+      "unit": "counts",
+      "line": 93,
+      "interpretation": "Retain original count values; do not divide by counting time or normalize intensity."
+    },
+    "counting_time": {
+      "element": "scan/dataPoints/commonCountingTime",
+      "value": "13.770",
+      "unit": "seconds",
+      "line": 92
+    },
+    "coordinates": {
+      "element": "scan/dataPoints/positions[@axis=\"2Theta\"]",
+      "unit": "deg",
+      "lines": [
+        84,
+        85,
+        86,
+        87
+      ],
+      "start": "9.90343322",
+      "end": "100.09488522",
+      "point_count": 8301,
+      "step": "0.01086644",
+      "endpoint_decimal_places": 8,
+      "exported_xy_decimal_places": 5,
+      "maximum_export_rounding_degrees": "0.00000498"
+    },
+    "radiation": {
+      "element": "xrdMeasurement/usedWavelength",
+      "lines": [
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "kAlpha1_angstrom": "1.5405980",
+      "kAlpha2_angstrom": "1.5444260",
+      "ratioKAlpha2KAlpha1": "0.5000",
+      "intended_attribute": "K-Alpha 1",
+      "source": "The same acquisition XRDML records both K-alpha wavelengths and their ratio. These are instrument metadata, not an independent spectral calibration."
+    },
+    "instrument": {
+      "id": "950485",
+      "software": "PANalytical Aeris Instrument Suite",
+      "version": "1.4b (28)",
+      "acquisition_mode": "Continuous",
+      "scan_axis": "Gonio"
+    }
+  },
+  "retained_evidence_files": [
+    "tests/real_example_data/02_multiphase_benchmarks/06_real_world/pairwise_reactions_manual_rietveld_summary.xlsx",
+    "tests/data/pfsm-real/primary-input-evidence.json"
+  ],
+  "limitations": [
+    "The explicit counts unit and pointwise export identity support count-valued input. They do not prove an absence of detector, instrument or earlier processing corrections, nor an independently measured variance or independent Poisson counting process.",
+    "The existing raw-count variance rule is an analysis policy, not a variance measurement supplied by these files. Counting time is retained as provenance and does not turn counts into rates.",
+    "The intended=\"K-Alpha 1\" attribute is preserved as a qualification alongside the two recorded wavelengths and ratio; it does not establish a calibrated pure K-alpha1 spectrum. No K-beta component is added by this source correction.",
+    "No matching blank, dark, holder or substrate measurement was identified in the supplied local reaction files and author supplement. This does not establish that no such measurement was ever collected.",
+    "The original XY exports remain immutable evidence. Restoring the explicit XRDML grid changes rounded coordinates, and switching the declared noise policy changes weights; previous frozen inputs and failed comparisons remain tied to their original contracts."
+  ],
+  "pairs": [
+    {
+      "case_id": "Dara_reaction_2Fe3O4-3Y2O3_1000C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/2Fe3O4-3Y2O3_1000C_60min.xrdml",
+        "sha256": "b27c9f61816e4569f7cb525f967f543cc0659063f282d9557848c356a4bde6f4"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/2Fe3O4-3Y2O3_1000C_60min.xy",
+        "sha256": "63088da0887a0a6405674a8510e286ea4e60db18dfaa6d8a4362d5feebfa275b"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-04-12T22:32:06-07:00",
+      "acquisition_end": "2024-04-12T22:40:58-07:00"
+    },
+    {
+      "case_id": "Dara_reaction_2FeC2O4_H2O_2-Y2O3_200C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/2FeC2O4(H2O)2-Y2O3_200C_60min.xrdml",
+        "sha256": "dbb4fe3c77e3ed7bf3da710776d7ec11fd4a9e1f0152ee223390f64c7d45a4dd"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/2FeC2O4(H2O)2-Y2O3_200C_60min.xy",
+        "sha256": "2ff535210d9b7f08986ef7950e5d16cb5ee68a23b97ad3384db7137bc07de155"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-04-11T21:12:15-07:00",
+      "acquisition_end": "2024-04-11T21:21:07-07:00"
+    },
+    {
+      "case_id": "Dara_reaction_Bi2O3-2MoO3_400C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Bi2O3-2MoO3_400C_60min.xrdml",
+        "sha256": "bea6910884dcdc2b1b1bbe4583f10f91338801f3c89bb2ebf783d4f7d20855e8"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Bi2O3-2MoO3_400C_60min.xy",
+        "sha256": "d437d60c7fc57df402fe478f08b7b9163327de14ac57db874634ebbf7cc5de75"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-02-28T19:42:23-08:00",
+      "acquisition_end": "2024-02-28T19:51:15-08:00"
+    },
+    {
+      "case_id": "Dara_reaction_Bi2O3-Nb2O5_500C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Bi2O3-Nb2O5_500C_60min.xrdml",
+        "sha256": "d42d185f61e492b8cb6784e38ca0063f0e24888fab2b9682aa3a4fc9f3005020"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Bi2O3-Nb2O5_500C_60min.xy",
+        "sha256": "7563ece88778ae7850e2971f9f2a047023cc723f3807a87e1792d1c7d71cc2fe"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-02-13T14:45:33-08:00",
+      "acquisition_end": "2024-02-13T14:54:25-08:00"
+    },
+    {
+      "case_id": "Dara_reaction_Bi2O3-V2O5_400C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Bi2O3-V2O5_400C_60min.xrdml",
+        "sha256": "f536680653c1b7e1a35ef4d6b21d95ca388e1fefada824d062f43a1998cfb50b"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Bi2O3-V2O5_400C_60min.xy",
+        "sha256": "f0d9ce8af752c9e81d26da42f7df8fe6635c342d304f36874a8ba0300f0ec17d"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-03-05T15:51:18-08:00",
+      "acquisition_end": "2024-03-05T16:00:11-08:00"
+    },
+    {
+      "case_id": "Dara_reaction_CaCO3-NH4H2PO4_200C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/CaCO3-NH4H2PO4_200C_60min.xrdml",
+        "sha256": "adf3e8a05d17be077541e4202bcfb9a987980a04dd0ec7fd3640c21b6bea31e2"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/CaCO3-NH4H2PO4_200C_60min.xy",
+        "sha256": "606519f523b3660c27bf63b6220b01f55afe65e19277e6005910ef75ba0f0417"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-02-14T19:13:39-08:00",
+      "acquisition_end": "2024-02-14T19:22:31-08:00"
+    },
+    {
+      "case_id": "Dara_reaction_CoO-WO3_900C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/CoO-WO3_900C_60min.xrdml",
+        "sha256": "6fa00468cddf5378c7d7167be9de369b7e6c539f644ffbb89a3cef49e2aa0ea8"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/CoO-WO3_900C_60min.xy",
+        "sha256": "5c8ecd21a7e14bbd450c4492cc747873663f4ce545945311cc6909b290712f8e"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-04-17T04:45:38-07:00",
+      "acquisition_end": "2024-04-17T04:54:30-07:00"
+    },
+    {
+      "case_id": "Dara_reaction_CoO-ZnO_1100C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/CoO-ZnO_1100C_60min.xrdml",
+        "sha256": "d39511242fae41fcceb4f3577da48d99205d70ccf8d3283830e9c8206bd95347"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/CoO-ZnO_1100C_60min.xy",
+        "sha256": "7c3f0b83b94c94ee6b53fd0ccbc9448040f2f6d7306e2ff702da0c13feba3524"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-04-17T18:31:53-07:00",
+      "acquisition_end": "2024-04-17T18:40:45-07:00"
+    },
+    {
+      "case_id": "Dara_reaction_Cr2O3-2MnO_1100C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Cr2O3-2MnO_1100C_60min.xrdml",
+        "sha256": "2898b41e9af60ed33c133bbea0e470b235f3da83d79d58289ec313e84ac2948f"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Cr2O3-2MnO_1100C_60min.xy",
+        "sha256": "73afb8d09793564bf45d82e7eba7950d3ac90e91b983e81a4204b0916cc1a74c"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-02-20T14:53:16-08:00",
+      "acquisition_end": "2024-02-20T15:02:08-08:00"
+    },
+    {
+      "case_id": "Dara_reaction_Cr2O3-2PbO_500C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Cr2O3-2PbO_500C_60min.xrdml",
+        "sha256": "7553920e2c91c1e3b1f1c2a4c51190273c5e40c25031a51e8284c77633ca0735"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Cr2O3-2PbO_500C_60min.xy",
+        "sha256": "e65bc85524a6686149f1e03dfac44fa0f78889e668dedd16b0e73bbe3ab5d3a3"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-04-09T19:19:23-07:00",
+      "acquisition_end": "2024-04-09T19:28:15-07:00"
+    },
+    {
+      "case_id": "Dara_reaction_Cr2O3-2ZnO_1100C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Cr2O3-2ZnO_1100C_60min.xrdml",
+        "sha256": "a6156193488c5239cb8ce3082e28651b17ddcc66c30b4a6a6b5e648050ca2e01"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Cr2O3-2ZnO_1100C_60min.xy",
+        "sha256": "189dec840f112d9321b1d039db76df9e47172d565f5d1779f0ef516c2fcd669b"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-04-16T16:19:10-07:00",
+      "acquisition_end": "2024-04-16T16:28:02-07:00"
+    },
+    {
+      "case_id": "Dara_reaction_Cr2O3-V2O5_400C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Cr2O3-V2O5_400C_60min.xrdml",
+        "sha256": "7b31fb645e66c0931fd4da980a6ecd73ef1bcc0f9c56cb370916f85555ab0441"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Cr2O3-V2O5_400C_60min.xy",
+        "sha256": "25023051c8ecf2f839092380e74be9526bdc087d814775aa7b9b56fe2bc8b999"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-03-07T20:45:30-08:00",
+      "acquisition_end": "2024-03-07T20:54:22-08:00"
+    },
+    {
+      "case_id": "Dara_reaction_CuO-MnO_800C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/CuO-MnO_800C_60min.xrdml",
+        "sha256": "712dbecef2e3b3de8a597ac97cbfd0bc361db92102d59edcb0e9014e6f3d1943"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/CuO-MnO_800C_60min.xy",
+        "sha256": "4b2d1e09357f8e205a97728116742a3ddd59f52d4a7a7eae84b8f120512a71fc"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-02-21T07:16:53-08:00",
+      "acquisition_end": "2024-02-21T07:25:45-08:00"
+    },
+    {
+      "case_id": "Dara_reaction_Fe2O3-2TiO2_1000C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Fe2O3-2TiO2_1000C_60min.xrdml",
+        "sha256": "7138ba1ed9daba2ca3e32034c605a5238a4b6bb3f6605bbdfde41f254e990f1f"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Fe2O3-2TiO2_1000C_60min.xy",
+        "sha256": "522b0e6001c6ee5fb35b92bb0a633af0c2ff553a97d42ed9acef3079c07e742c"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-03-07T14:53:19-08:00",
+      "acquisition_end": "2024-03-07T15:02:12-08:00"
+    },
+    {
+      "case_id": "Dara_reaction_Fe2O3-Nb2O5_900C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Fe2O3-Nb2O5_900C_60min.xrdml",
+        "sha256": "484d446b4d65c4622e7ee4d319eb11939e5b2fc9b91d4683e49663fddd43d7dc"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Fe2O3-Nb2O5_900C_60min.xy",
+        "sha256": "4f7b2d4fb49f27b05abd8c1b1def8ab3e1d145b3c5f10a5b39dcd0a5ed6c16a9"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-04-09T18:53:22-07:00",
+      "acquisition_end": "2024-04-09T19:02:15-07:00"
+    },
+    {
+      "case_id": "Dara_reaction_Fe3O4-3SrCO3_900C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Fe3O4-3SrCO3_900C_60min.xrdml",
+        "sha256": "2a8223cf6e51308cf8a5663d4f071d2621f1c5288a29005c29af1cd2d58d1404"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Fe3O4-3SrCO3_900C_60min.xy",
+        "sha256": "b0a72ec6e78b7dd9e223b490f433608266e6f688d67406830a209550819fb5c1"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-03-06T18:30:03-08:00",
+      "acquisition_end": "2024-03-06T18:38:55-08:00"
+    },
+    {
+      "case_id": "Dara_reaction_Fe3O4-3ZnO_1000C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Fe3O4-3ZnO_1000C_60min.xrdml",
+        "sha256": "774663b46f9dacc18813be52a996d68ff8e5eafa1535fd1bdce963482dab8879"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/Fe3O4-3ZnO_1000C_60min.xy",
+        "sha256": "388c336a5100541dcfcee0d0e6c34057b2bb46fd46b7743fbed38a9a0a1391a6"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-04-16T15:45:25-07:00",
+      "acquisition_end": "2024-04-16T15:54:17-07:00"
+    },
+    {
+      "case_id": "Dara_reaction_GeO2-ZnO_700C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/GeO2-ZnO_700C_60min.xrdml",
+        "sha256": "5957f2b720da256bb45b73a1012e436694bc6dc445375f5ce766f712950008b9"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/GeO2-ZnO_700C_60min.xy",
+        "sha256": "35d28af67a41fddb44357ac8521109680d88dc86ecde0c24e702839be32cc842"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-04-12T11:05:06-07:00",
+      "acquisition_end": "2024-04-12T11:13:58-07:00"
+    },
+    {
+      "case_id": "Dara_reaction_NH4H2PO4-Na2CO3_200C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/NH4H2PO4-Na2CO3_200C_60min.xrdml",
+        "sha256": "551a928c95db200eb8e271fedbf6e6c2924d520bafd9bc508be478309c288264"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/NH4H2PO4-Na2CO3_200C_60min.xy",
+        "sha256": "1d78f61bc2db166f357e3fcb1a327304e3387e94e2d3a93263f1ac524c32e4a5"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-02-15T06:05:46-08:00",
+      "acquisition_end": "2024-02-15T06:14:38-08:00"
+    },
+    {
+      "case_id": "Dara_reaction_V2O5-2ZnO_400C_60min",
+      "xrdml": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/V2O5-2ZnO_400C_60min.xrdml",
+        "sha256": "06c548eb0f47edfec50d59e5f585077f0c6abcd05d39c131bae662ded9a3c6ec"
+      },
+      "exported_xy": {
+        "path": "tests/real_example_data/02_multiphase_benchmarks/06_real_world/reaction_products/V2O5-2ZnO_400C_60min.xy",
+        "sha256": "fc10228c405376d556648676d941a3189f039498fce954cad7a00e9b488bcaaf"
+      },
+      "point_count": 8301,
+      "all_exported_intensities_equal_original_counts": true,
+      "all_original_counts_integer": true,
+      "all_exported_coordinates_equal_native_grid_rounded_to_five_decimals": true,
+      "maximum_coordinate_rounding_degrees": "0.00000498",
+      "acquisition_start": "2024-04-24T15:13:31-07:00",
+      "acquisition_end": "2024-04-24T15:22:23-07:00"
+    }
+  ]
+}

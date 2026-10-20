@@ -1,4 +1,5 @@
 #include "gui/dialogs/backgrounddialog.h"
+#include "qualpf/application/workflow.h"
 #include "gui/state/workspace_context.h"
 #include "gui/state/preprocessing_product.h"
 #include "gui/dialogs/preprocessing_dialog.h"
@@ -50,6 +51,7 @@ BackgroundDialog::~BackgroundDialog()
 void BackgroundDialog::setBackground()
 {
     if (auto *owner = qobject_cast<MainWindow *>(parent()); owner && (owner->isClosing() || owner->searchTasks()->busy())) return;
+    if (auto *owner = qobject_cast<MainWindow *>(parent())) owner->setBackgroundSubtractionDisplay(false);
     preprocessingAction(0);
     initializing_ = true;
     setWidgets(bkCurrentSettings);
@@ -216,7 +218,7 @@ void BackgroundDialog::onButtonBoxClicked(QAbstractButton *button)
 
     if(stdButton == QDialogButtonBox::Ok) {
         MainWindow *mw = qobject_cast<MainWindow *>(this->parent());
-        if (mw)
+        if (mw && !cpp_)
             mw->restoreEnabledActions();
 
     } else if (stdButton == QDialogButtonBox::Cancel) {
@@ -260,7 +262,8 @@ void BackgroundDialog::preprocessingAction(int action) {
         explicitLegacy_ = false;
         setProperty("backgroundOwnership", "cpp_transaction");
         auto state = qualpf::gui::workspaceContext(this).searchSession().snapshot();
-        auto o = state->preprocessing.background.value_or(preprocessing::BackgroundOptions{});
+        auto o = state->projectSettings ? state->projectSettings->profile(application::WorkflowId::preprocessing).background :
+            state->preprocessing.background.value_or(preprocessing::BackgroundOptions{});
         bkCurrentSettings = {int(o.method),
                              o.automatic,
                              o.coefficients,
@@ -271,12 +274,12 @@ void BackgroundDialog::preprocessingAction(int action) {
         oldIndex = bkCurrentSettings.btype;
         cpp_ = std::make_unique<gui::PreprocessingDialog>(*this, qobject_cast<MainWindow *>(parent()));
         cpp_->show_background = true;
-        if (qEnvironmentVariable("QUALPF_PREPROCESSING_BACKEND") == "legacy")
-            cpp_->request.use_background_for_peaks = true;
+
         // T3 permits an identity filter request and records it in the history.
         ui->iterationsSpinBox->setMinimum(0);
         const auto &background = state->pattern.background;
-        if (application::hasActiveBackground(state->pattern) && background->window) {
+        if (application::hasActiveBackground(state->pattern) && background->window &&
+            (!state->projectSettings || application::reusableWorkflowStep(*state->canonical, application::WorkflowId::preprocessing, application::WorkflowStep::background))) {
             if (o.bruckner_range) {
                 bkCurrentSettings.minf = o.bruckner_range->minimum.value;
                 bkCurrentSettings.maxf = o.bruckner_range->maximum.value;

@@ -42,7 +42,8 @@ completePowderImport(const PowderCifImportDraft &draft,
     if (auto e = std::get_if<ImportError>(&imported))
         return *e;
     auto value = std::move(std::get<ImportedPowderPattern>(imported));
-    auto next = prepareProductPatternOpen(draft.source, value.pattern, {}, synchrotron);
+    auto next = prepareProductPatternOpen(draft.source, value.pattern, {}, synchrotron,
+        OriginalSignalProvenance{value.pattern.source_id, "as imported", true, false});
     if (!next)
         return applicationError(next.error(), value.provenance.source);
     next.value().powderCifProvenance =
@@ -55,6 +56,10 @@ Status commitPowderImport(ProductSearchSession &session, PreparedPowderCifImport
                           const std::function<void(const ProductHandle &)> &effects) {
     if (session.snapshot() != pending.source)
         return Status{Error{ErrorCode::stale_snapshot, "session", "Search input changed"}};
+    if (session.defaultSettingsStore()) {
+        auto initialized = session.initializeProjectSettings(pending.next);
+        if (!initialized) return initialized;
+    }
     if (preflight) {
         const auto status = preflight(pending.next);
         if (!status)

@@ -126,7 +126,7 @@ bool editManualPeak(MainWindow &window, std::optional<std::size_t> row, std::opt
         QObject::connect(inferWidth,&QCheckBox::toggled,&dialog,[&](bool infer){fields[2]->setEnabled(!infer);preview();});
     }
     QObject::connect(buttons, &QDialogButtonBox::accepted, &dialog, [&] {
-        if (editor.commit())
+        if (window.confirmWorkflowReplacement(application::WorkflowStep::peaks) && editor.commit())
             dialog.accept();
     });
     QObject::connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);

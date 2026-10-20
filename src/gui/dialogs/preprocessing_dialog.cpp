@@ -1,4 +1,8 @@
 #include "gui/dialogs/preprocessing_dialog.h"
+#include "gui/support/workflow_confirmation.h"
+#include "qualpf/application/workflow.h"
+#include <set>
+#include <algorithm>
 #include "gui/state/workspace_context.h"
 #include "gui/state/preprocessing_product.h"
 #include "gui/mainwindow.h"
@@ -9,6 +13,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QLayout>
+#include <QMessageBox>
 namespace qualpf::gui {
 bool PreprocessingDialog::enabled() {
     if (qEnvironmentVariable("QUALPF_PREPROCESSING_BACKEND") == "legacy") return false;
@@ -19,17 +24,22 @@ PreprocessingDialog::PreprocessingDialog(QDialog &dialog, MainWindow *window)
     : dialog_(dialog), window_(window) {
     auto &session = qualpf::gui::workspaceContext(&dialog_).searchSession();
     const auto state = session.snapshot();
+    request.fwhm = state->projectSettings ? state->projectSettings->profile(application::WorkflowId::preprocessing).fwhm :
+        state->preprocessing.fwhm.value_or(application::FwhmConfiguration{});
     request.wavelength = WavelengthAngstrom{state->pattern.radiation.lines.empty()
                                                 ? state->peaks.wave
                                                 : state->pattern.radiation.lines.front().wavelength.value};
     request.tolerance = AngularWidthDegrees{state->peakTolerance.value_or(.15)};
-    request.use_background_for_peaks = gui::cppPreprocessingProduct();
+
     edit_ = std::make_unique<gui::PreprocessingEdit>(session, true);
     if (window_ && qualpf::gui::workspaceContext(&dialog_).presentation().redrawEnabled())
         sink_ = std::make_unique<QtPlotSink>(window_->xpdViewer());
     dialog_.setProperty("preprocessingBackend", "cpp");
 }
-PreprocessingDialog::~PreprocessingDialog() { cancel(); }
+PreprocessingDialog::~PreprocessingDialog() {
+    QObject::disconnect(detailsConnection_);
+    cancel();
+}
 void PreprocessingDialog::clearPlot() {
     if (sink_ && (!window_ || !window_->isClosing())) {
         using namespace application::presentation;
@@ -64,9 +74,29 @@ bool PreprocessingDialog::preview() {
         dialog_.layout()->addWidget(diagnostic);
     }
     if (diagnostic) {
-        diagnostic->setText(status ? QString() : QString::fromStdString(status.error().reason + ": " + status.error().message) +
-            QObject::tr("\nNothing was applied. Adjust the parameters, or Cancel and use Pattern > Restart preprocessing / Add Peak."));
-        diagnostic->setVisible(!status);
+        const auto summary = status ? peakRejectionSummary(edit_->preview()->preprocessing) : QString();
+        diagnostic->setText(status ? summary : QString::fromStdString(status.error().reason + ": " + status.error().message) +
+            QObject::tr("\nNothing was applied. Adjust the parameters, or Cancel and use "
+                        "Preprocessing > Restart preprocessing... / Peak Search > Add Peak."));
+        diagnostic->setToolTip(status ? peakRejectionDetails(edit_->preview()->preprocessing) : QString());
+        diagnostic->setVisible(!status || !summary.isEmpty());
+        auto *details = dialog_.findChild<QPushButton *>("peakRejectionDetails");
+        if (!details) {
+            details = new QPushButton(QObject::tr("Candidate details..."), &dialog_);
+            details->setObjectName("peakRejectionDetails");
+            dialog_.layout()->addWidget(details);
+        }
+        if (!detailsConnection_)
+            detailsConnection_ = QObject::connect(details, &QPushButton::clicked, &dialog_, [this] {
+                if (!edit_ || !edit_->preview()) return;
+                const auto &configuration = edit_->preview()->preprocessing;
+                QMessageBox message(QMessageBox::Information, QObject::tr("Rejected peak candidates"),
+                    peakRejectionSummary(configuration), QMessageBox::Ok, &dialog_);
+                message.setInformativeText(QObject::tr("Indices start at zero. Valid peaks can be applied."));
+                message.setDetailedText(peakRejectionDetails(configuration));
+                message.exec();
+            });
+        details->setVisible(status && !summary.isEmpty());
     }
     if (!status) {
         if (window_)
@@ -111,6 +141,12 @@ void PreprocessingDialog::rejectPreview(const QString &reason) {
     (void)invalidated;
     clearPlot();
     dialog_.setProperty("preprocessingReason", reason);
+    if (auto *diagnostic = dialog_.findChild<QLabel *>("preprocessingDiagnostic")) {
+        diagnostic->setText(reason);
+        diagnostic->setToolTip({});
+        diagnostic->show();
+    }
+    if (auto *details = dialog_.findChild<QPushButton *>("peakRejectionDetails")) details->hide();
     if (auto *buttons = dialog_.findChild<QDialogButtonBox *>())
         buttons->button(QDialogButtonBox::Ok)->setEnabled(false);
     if (window_)
@@ -120,6 +156,24 @@ bool PreprocessingDialog::commit() {
     if (window_ && window_->isClosing()) return false;
     if (!edit_)
         return false;
+    const auto source=qualpf::gui::workspaceContext(&dialog_).workspace().session().snapshot();
+    if(source->projectSettings && edit_->preview()) {
+        std::set<std::uint64_t> affected;
+        const auto step=request.crop_range?application::WorkflowStep::range:
+            request.smoothing?application::WorkflowStep::smoothing:
+            request.peaks?application::WorkflowStep::peaks:application::WorkflowStep::background;
+        if(const auto *record=application::currentWorkflowRecord(source->workflow,step)) {
+            const auto closure=application::workflowDependents(source->workflow,record->id);
+            if(closure.size()>1)affected.insert(closure.begin(),closure.end());
+        }
+        const auto &preview=edit_->preview()->canonical->workflow;
+        for(const auto &record:source->workflow.records) {
+            const auto found=std::find_if(preview.records.begin(),preview.records.end(),[&](const auto &r){return r.id==record.id;});
+            if(record.status!=application::WorkflowStepStatus::invalidated && found!=preview.records.end() &&
+                found->status==application::WorkflowStepStatus::invalidated)affected.insert(record.id);
+        }
+        if(!confirmWorkflowImpact(&dialog_,source,{affected.begin(),affected.end()},QObject::tr("Apply the edited step?")))return false;
+    }
     // Remove the private overlay before Session::changed creates/updates plots.
     clearPlot();
     auto status = edit_->commit();

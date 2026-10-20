@@ -8,6 +8,16 @@ void kalpha2Lifecycle12(const QString &tables, const QString &output) {
         qunsetenv("QUALPF_KALPHA2_BACKEND"); // Exercise actual default.
     auto &session = AppState::searchSession();
     MainWindow window(AppState::context());
+    bool unexpectedModal = false;
+    QTimer modalDiagnostics;
+    QObject::connect(&modalDiagnostics, &QTimer::timeout, [&] {
+        if (auto *box = qobject_cast<QMessageBox *>(QApplication::activeModalWidget())) {
+            unexpectedModal = true;
+            std::cerr << "Kalpha unexpected modal: " << box->text().toStdString() << std::endl;
+            box->reject();
+        }
+    });
+    modalDiagnostics.start(10);
     MainWindow::setPathDataFiles(tables);
     qualpf::application::StartupOptions options{0, 1, 0, -1};
     const auto directory = QFile::encodeName(QDir(tables).absolutePath() + "/");
@@ -112,7 +122,7 @@ void kalpha2Lifecycle12(const QString &tables, const QString &output) {
             "All stale derived state invalidated");
     ProductWorkflowProbe::strip(window);
     require(session.snapshot() == stripped, "Repeated GUI stripping is atomic rejection");
-    const auto project = files.path() + "/stripped.qxp";
+    const auto project = files.path() + "/stripped.qpf";
     ProductWorkflowProbe::save(window, project);
     ProductWorkflowProbe::load(window, project);
     auto loaded = session.snapshot();
@@ -121,8 +131,8 @@ void kalpha2Lifecycle12(const QString &tables, const QString &output) {
                 loaded->pattern.processing.kalpha2_subtracted == true &&
                 loaded->pattern.original_kalpha2_subtracted == false,
             "Project round-trip stripping and raw history");
-    ProductWorkflowProbe::save(window, files.path() + "/current-known-history.qxp");
-    ProductWorkflowProbe::load(window, files.path() + "/current-known-history.qxp");
+    ProductWorkflowProbe::save(window, files.path() + "/current-known-history.qpf");
+    ProductWorkflowProbe::load(window, files.path() + "/current-known-history.qpf");
     require(session.snapshot()->pattern.processing.kalpha2_subtracted == true &&
                 session.snapshot()->pattern.original_kalpha2_subtracted == false,
             "Current project transport preserves known current/raw history");
@@ -173,8 +183,8 @@ void kalpha2Lifecycle12(const QString &tables, const QString &output) {
     historical.pattern.processing.kalpha2_subtracted.reset();
     historical.pattern.original_kalpha2_subtracted.reset();
     require(bool(session.commit(session.snapshot(), std::move(historical))), "Unknown history fixture");
-    ProductWorkflowProbe::save(window, files.path() + "/unknown.qxp");
-    ProductWorkflowProbe::load(window, files.path() + "/unknown.qxp");
+    ProductWorkflowProbe::save(window, files.path() + "/unknown.qpf");
+    ProductWorkflowProbe::load(window, files.path() + "/unknown.qpf");
     auto unknown = session.snapshot();
     require(!unknown->pattern.processing.kalpha2_subtracted && !unknown->pattern.original_kalpha2_subtracted,
             "Missing project flags remain unknown");
@@ -187,8 +197,8 @@ void kalpha2Lifecycle12(const QString &tables, const QString &output) {
                 "Raw existence does not invent stripping history");
     }
     // Validate current project transport preserves unknown state as well.
-    ProductWorkflowProbe::save(window, files.path() + "/current-unknown-history.qxp");
-    ProductWorkflowProbe::load(window, files.path() + "/current-unknown-history.qxp");
+    ProductWorkflowProbe::save(window, files.path() + "/current-unknown-history.qpf");
+    ProductWorkflowProbe::load(window, files.path() + "/current-unknown-history.qpf");
     require(!session.snapshot()->pattern.processing.kalpha2_subtracted &&
                 !session.snapshot()->pattern.original_kalpha2_subtracted,
             "Current project transport preserves unknown history");
@@ -210,6 +220,7 @@ void kalpha2Lifecycle12(const QString &tables, const QString &output) {
     require(qualpf_test_native_strips() == 0,
             "Default and selected compatibility Kalpha2 execute only C++ values");
 #endif
+    require(!unexpectedModal, "Kalpha workflow displayed an unexpected modal dialog");
     QJsonObject report{{"passed", true},
                        {"backend", fallback ? "legacy" : "default_cpp"},
                        {"atomic_preview_cancel_failure_stale", true},

@@ -154,9 +154,10 @@ void SmoothingDialog::on_buttonBox_clicked(QAbstractButton *button)
     QDialogButtonBox::StandardButton stdButton = ui->buttonBox->standardButton(button);
 
     if(stdButton == QDialogButtonBox::Ok) {
-        if (!cpp_)
+        if (!cpp_) {
             preprocessingAction(4);
-        mWindow->restoreEnabledActions();
+            mWindow->restoreEnabledActions();
+        }
     } else if (stdButton == QDialogButtonBox::Cancel) {
         restoreOptions();
     }
@@ -166,8 +167,9 @@ void SmoothingDialog::preprocessingAction(int action) {
     using namespace qualpf;
     if (action == 0) {
         cpp_.reset();
-        auto o = qualpf::gui::workspaceContext(this).searchSession().snapshot()->preprocessing.smoothing.value_or(
-            preprocessing::SmoothingOptions{});
+        const auto state = qualpf::gui::workspaceContext(this).searchSession().snapshot();
+        auto o = state->projectSettings ? state->projectSettings->profile(application::WorkflowId::preprocessing).smoothing :
+            state->preprocessing.smoothing.value_or(preprocessing::SmoothingOptions{});
         sOptions.method = int(o.method);
         sOptions.npoints_sg = o.half_window;
         sOptions.npoints_ave = o.half_window;

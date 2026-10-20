@@ -2,6 +2,7 @@
 #include "qualpf/application/search_engine.h"
 #include "qualpf/io/pattern_reader.h"
 #include "qualpf/application/preferences.h"
+#include "qualpf/application/project_document.h"
 namespace qualpf::application {
 struct SearchSettingsSnapshot {
     SearchParameters parameters;
@@ -13,6 +14,10 @@ class SearchSettingsProvider {
     virtual PreferencePayload option(ProductHandle, const std::string &, const PreferencePayload &fallback) const = 0;
     virtual Result<SearchSettingsSnapshot> load(ProductHandle) const = 0;
 };
+struct ImportedPattern {
+    io::PatternRead input;
+    std::optional<OriginalSignalProvenance> original_signal_provenance;
+};
 class PatternSourceReader {
   public:
     virtual ~PatternSourceReader() = default;
@@ -22,13 +27,19 @@ class PatternSourceReader {
         if (!loaded) return Result<io::PatternRead>{loaded.error()};
         return Result<io::PatternRead>{io::PatternRead{std::move(loaded).value(), false, 0}};
     }
+    virtual Result<ImportedPattern> readImported(const std::string &identity) const {
+        auto loaded = readDetailed(identity);
+        if (!loaded) return Result<ImportedPattern>{loaded.error()};
+        return Result<ImportedPattern>{ImportedPattern{std::move(loaded).value(), {}}};
+    }
 };
 class ProjectSourceReader {
 public:
     virtual ~ProjectSourceReader() = default;
-    virtual Result<ProductState> read(const std::string &, SearchBackend, const MetadataObject &defaults) const = 0;
+    virtual Result<ProjectDocument> read(const std::string &, SearchBackend, const ProjectReadOptions & = {}) const = 0;
 };
-Status openProjectInput(ProductSearchSession &, const ProjectSourceReader &, const std::string &, const MetadataObject &defaults);
+class Workspace;
+Status openProjectInput(Workspace &, const ProjectSourceReader &, const std::string &, const ProjectReadOptions & = {});
 // Read into an owned value, then apply the canonical open transaction. Neither
 // the provider nor the parser receives the live Session.
 Status openPatternInput(ProductSearchSession &, const PatternSourceReader &, const std::string &);

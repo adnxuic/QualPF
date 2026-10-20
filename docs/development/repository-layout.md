@@ -2,6 +2,7 @@
 
 | Area | Current responsibility |
 | --- | --- |
+| `CHANGELOG.md` | Ongoing record of notable completed features, fixes, optimizations and maintenance |
 | `apps/qualpf` | Explicit GUI/CLI composition and entry points |
 | `src/core`, `src/application` | Qt-free domain/numerical kernels, canonical state, engine/use cases and ports |
 | `src/infrastructure`, `src/gui` | SQL/files/codecs/settings providers; Qt views/intents/presenter/task adapters |
@@ -16,8 +17,10 @@
 | `docs/architecture`, `docs/numerical`, `docs/development`, `docs/user` | Current architecture, scientific contracts, development guides and manual |
 | `AGENTS.md`, `.agent` | Agent working rules, task-specific navigation and one mutable handoff; product acceptance lives in project-baseline.json |
 | `docs/migration-history.md` | Protected-tag/external archive recovery, independent of normal builds |
+| Retained acceptance, consolidation and dated maintenance reports | Historical snapshots indexed by migration history; no Phase workflow for new development |
 | `docs/refactoring/deferred-defects` | Nine conservatively retained original investigation records; no current execution dependency |
 | `build`, `releases` | Ignored local builds/logs/packages; never source prerequisites |
+| `references` | Ignored local design drafts; current contracts belong in `docs`, frozen scientific references in `tests` |
 
 Public headers remain module-local. `.inc` tables are required C++ source data.
 Same-name test helpers with different behavior remain beside their consuming probes;
@@ -26,10 +29,31 @@ No empty template directories are required. Existing consumed resource paths and
 runtime installation inputs remain unchanged. Source packages exclude local Git
 metadata and generated Python caches. See [architecture](../architecture/overview.md),
 [building](building.md), [testing](../../tests/README.md) and
-[consolidation inventory](repository-consolidation/inventory.json).
+[changelog](../../CHANGELOG.md). Retained refactoring and maintenance records are
+indexed in [migration history](../migration-history.md).
 
-The [Agent context maintenance result](agent-governance.md) describes the six-file
-context and the separation of task state, product baseline and retained decisions.
+## Publication boundary
 
-The [unused-file audit](unused-file-audit-20261009.md) records the complete tracked
-file inventory, bounded removals and preservation checks after Docker retirement.
+Publish the tracked product, build/deployment inputs, tests/tools, runtime data,
+documentation, license and repository rules. Keep generated C++ `.inc` tables,
+third-party notices, test scripts and frozen reference manifests. The 15 sealed
+reference ZIPs are retained in the protected local branch/tag and the pinned
+pre-integration main ancestor, outside the final main tree and source packages.
+Provision them before regression checks with the hash-checked
+[restoration tool](../../tools/validation/restore_reference_archives.py); see
+[test prerequisites](../../tests/README.md#independent-references).
+Do not ignore scientific extensions or archives globally.
+
+Local `build/`, `build-*/`, `build_*/`, `cmake-build-*/`, `releases/`, `DB/`,
+`.evidence/`, `references/`, SDK presets, generated manuals and installers stay
+outside commits. Only `CoO.cif` is published from `tests/real_example_data/`.
+Ignoring an output preserves its bytes locally; it does not remove tracked files
+or historical Git objects.
+
+For a squash integration, preserve the source branch and an annotated local
+protection tag, then use a separate integration branch based on current main.
+The final commit must have main as its sole parent and the reviewed final tree;
+check newly reachable objects as well as the tree. Publish only the explicit main
+ref with tag following disabled. Original development commits and local tags
+remain available locally without becoming main ancestors. Existing main history
+is retained. Never force-push or prune preserved Git/LFS objects.

@@ -3,6 +3,7 @@
 #include "infrastructure/diagnostics/scopedtimer.h"
 
 #include "core/io/powder_cif/binary32.h"
+#include "qualpf/search/algorithms.h"
 #include <bit>
 #include <cmath>
 #include <QSqlQuery>
@@ -24,16 +25,30 @@ qualpf::Result<std::vector<qualpf::application::ProductCard>> SqlReferenceReposi
     m_reading=true;
     const auto cleanup=qScopeGuard([this]{m_reading=false; m_token={};});
     m_token=context.cancellation; m_decodeReflections=request.decodeReflections; m_readError.clear();
+    m_strictPairedReflections=request.strictPairedReflections;
     if (m_token.stop_requested()) return Result<std::vector<application::ProductCard>>{Error{ErrorCode::cancelled,"search","Search canceled"}};
     if (!dbMain.isOpen()) return Result<std::vector<application::ProductCard>>{Error{ErrorCode::missing_data,"database","Database is not open"}};
     auto lease = referenceLease_ ? nullptr : infrastructure::DatabaseLease::read(basePath_);
     if (!referenceLease_ && !lease) return Result<std::vector<application::ProductCard>>{Error{ErrorCode::invalid_input,"database","Database is being written","busy"}};
     SqlCandidateQuery builder(request);
     std::vector<application::ProductCard> cards;
+    if (request.preselectedIds) {
+        QStringList ids;
+        for (const auto &id : *request.preselectedIds) ids.push_back(QString::fromStdString(id));
+        int count = ids.size();
+        applyRestraintsToIds(builder, ids, count);
+        if (!ids.empty()) {
+            QString quoted;
+            for (const auto &id : ids) quoted += QLatin1Char('\'') + id + QLatin1String("',");
+            quoted.chop(1);
+            readRows(quoted, builder, count, cards, progress);
+        }
+    } else {
     switch (request.route) {
     case application::CandidateQuery::Route::constrained_browse: queryBrowse(builder,cards,progress); break;
     case application::CandidateQuery::Route::stored_strongest: queryStrongest(builder,cards,progress); break;
     case application::CandidateQuery::Route::matching: queryWithoutStrongest(builder,cards,progress); break;
+    }
     }
     if (m_token.stop_requested()) return Result<std::vector<application::ProductCard>>{Error{ErrorCode::cancelled,"search","Search canceled"}};
     if (!m_readError.isEmpty()) return Result<std::vector<application::ProductCard>>{Error{ErrorCode::missing_data,"database.query",m_readError.toStdString()}};
@@ -244,8 +259,8 @@ int SqlReferenceRepository::makeQueryCellParameters(const QStringList &qParList,
         } else {
             QString tmpResult;
             int tmpData = makeQueryCellPar(qParList.at(i), tmpResult);
-            QStringList list1 = result.split(",");
-            QStringList list2 = tmpResult.split(",");
+            QStringList list1 = result.split(QLatin1Char(','), Qt::SkipEmptyParts);
+            QStringList list2 = tmpResult.split(QLatin1Char(','), Qt::SkipEmptyParts);
             QStringList resultTmp;
             nData = stringInnerJoin(list1, list2, resultTmp);
             qInfo() << "Inner join: " << list1.size() << " - " << list2.size() << " -> " << nData;
@@ -295,7 +310,9 @@ void SqlReferenceRepository::readRows(const QString &idsString, const SqlCandida
 {
     if (idsString.isEmpty() && !noFilter) return;
     QSqlQuery query(dbMain.db());
-    QString sql = "Select id, name, mineralname, chemical_formula, spacegroup, quality, rir, nrec, dvalue, intensita, n from id";
+    QString sql = "Select id, name, mineralname, chemical_formula, spacegroup, quality, rir, nrec, dvalue, intensita, n";
+    if(m_strictPairedReflections)sql+=", nd";
+    sql+=" from id";
     if (!idsString.isEmpty()) {
         if (builder.deletedEnabled()) sql += " where trim(quality)!='D' and id in (" + idsString + ")";
         else sql += " where id in (" + idsString + ")";
@@ -317,10 +334,44 @@ void SqlReferenceRepository::readRows(const QString &idsString, const SqlCandida
         card.spaceGroup=query.value(4).toString().toStdString();
         card.quality=query.value(5).toString().toStdString();
         card.rir=query.value(6).toString().toStdString();
+        if (m_strictPairedReflections) {
+            bool validRir = false;
+            const auto raw = query.value(6);
+            const auto type = raw.metaType().id();
+            const bool numeric = type == QMetaType::Double || type == QMetaType::Float ||
+                type == QMetaType::Int || type == QMetaType::UInt ||
+                type == QMetaType::LongLong || type == QMetaType::ULongLong;
+            // Preserve stored binary64 numbers; the legacy display string can
+            // contain fewer digits. Text still uses the existing Qt boundary.
+            const auto value = numeric ? raw.toDouble(&validRir) : raw.toString().trimmed().toDouble(&validRir);
+            if (validRir) card.referenceRir = value;
+        }
         if (m_decodeReflections) {
+            if (m_strictPairedReflections) {
+                const auto decode=[](const QByteArray &bytes,std::vector<double> &values,bool spacing) {
+                    if(bytes.trimmed().isEmpty())return true; // Legal nd=0 gives an explicit zero template.
+                    auto parts=QString::fromUtf8(bytes).split(',',Qt::KeepEmptyParts);
+                    // Database writers conventionally append one terminal comma.
+                    if(!parts.empty()&&parts.back().trimmed().isEmpty())parts.removeLast();
+                    for(const auto &part:parts) {
+                        bool ok=false;const double value=part.toDouble(&ok);
+                        if(!ok||!std::isfinite(value)||(spacing?value<=0:value<0))return false;
+                        values.push_back(value);
+                    }
+                    return true;
+                };
+                bool validCount=false;
+                const auto declaredCount=query.value(11).toString().toULongLong(&validCount);
+                if(!validCount||!decode(query.value(8).toByteArray(),card.d,true)||!decode(query.value(9).toByteArray(),card.intensity,false)||
+                    card.d.size()!=card.intensity.size()||declaredCount!=card.d.size()) {
+                    m_readError=QStringLiteral("Invalid paired d/I reflections for PFSM card ")+query.value(0).toString();
+                    break;
+                }
+            } else {
             const auto d=blobToDoubleVector(query.value(8).toByteArray());
             const auto intensity=blobToDoubleVector(query.value(9).toByteArray());
             card.d.assign(d.begin(),d.end()); card.intensity.assign(intensity.begin(),intensity.end());
+            }
             if (builder.getWave()>0) for (double value:card.d) {
                 const auto angle=qualpf::io::powder_cif::binary32::certifiedAsin64(std::bit_cast<std::uint64_t>(0.5*builder.getWave()/value));
                 const double tth=2.0*std::bit_cast<double>(angle)*(180/3.14159265358979323846);
@@ -376,118 +427,13 @@ int SqlReferenceRepository::stringInnerJoin(const QStringList &list1, const QStr
 
 void SqlReferenceRepository::queryBrowse(const SqlCandidateQuery &builder, std::vector<qualpf::application::ProductCard> &cards, ProgressCallback progress)
 {
-    //Step 1: build and make query for cell parameters
-    QString queryResult;
-    int nCountQuery = 0;
-    QStringList queryCellPar = builder.getQueryCellPar();
-    if (!queryCellPar.isEmpty()) {
-        nCountQuery = makeQueryCellParameters(queryCellPar, queryResult);
-    }
-
-    //Step 1b: density queries (stat_cdens = calculated, stat_dens = measured)
-    QStringList queryDens = builder.getQueryDensity();
-    if (!queryDens.isEmpty()) {
-        QString densResult;
-        int nCountDens = makeQueryCellParameters(queryDens, densResult);
-        if (!queryResult.isEmpty() && nCountDens > 0) {
-            QStringList list1 = queryResult.split(",");
-            QStringList list2 = densResult.split(",");
-            QStringList resultTmp;
-            nCountQuery = stringInnerJoin(list1, list2, resultTmp);
-            qInfo() << "Inner join density: " << list1.size() << " - " << list2.size() << " -> " << nCountQuery;
-            queryResult = resultTmp.join(",");
-        } else if (nCountDens > 0) {
-            nCountQuery = nCountDens;
-            queryResult = densResult;
-        }
-    }
-
-    //Step 2: build and make query for crystal system and space groups
-    QString qSimmetryResult;
-    int nCountSimmetry = 0;
-    QString querySymm = builder.getSymmetryQueryString();
-    if (!querySymm.isEmpty()) {
-        nCountSimmetry = makeQuerySymmetry(querySymm, qSimmetryResult);
-        if (!queryResult.isEmpty() && nCountSimmetry > 0) {
-            QStringList list1 = queryResult.split(",");
-            QStringList list2 = qSimmetryResult.split(",");
-            QStringList resultTmp;
-            nCountQuery = stringInnerJoin(list1, list2, resultTmp);
-            qInfo() << "Inner join: " << list1.size() << " - " << list2.size() << " -> " << nCountQuery;
-            queryResult = resultTmp.join(",");
-        } else {
-            nCountQuery = nCountSimmetry;
-            queryResult = qSimmetryResult;
-        }
-    }
-
-    //Step 2b: color query (stat_color in dbInfoStat)
-    QString queryColor = builder.getColorQueryString();
-    if (!queryColor.isEmpty()) {
-        QString colorResult;
-        int nCountColor = makeQuerySymmetry(queryColor, colorResult);
-        if (!queryResult.isEmpty() && nCountColor > 0) {
-            QStringList list1 = queryResult.split(",");
-            QStringList list2 = colorResult.split(",");
-            QStringList resultTmp;
-            nCountQuery = stringInnerJoin(list1, list2, resultTmp);
-            qInfo() << "Inner join color: " << list1.size() << " - " << list2.size() << " -> " << nCountQuery;
-            queryResult = resultTmp.join(",");
-        } else if (nCountColor > 0) {
-            nCountQuery = nCountColor;
-            queryResult = colorResult;
-        }
-    }
-
-    //Spep 3: get query for id entries
-    QString qIdEntry = builder.getQueryIdEntry();
-
-    //Step 4: build query for chemical elements
-    QString queryChemical = builder.getChemicalQueryString();
-    if (!qIdEntry.isEmpty()) {
-        if (!queryChemical.isEmpty()) {
-            queryChemical = qIdEntry + " intersect " + queryChemical;
-        } else {
-            queryChemical = qIdEntry;
-        }
-    }
-    if (nCountQuery > 0 && !queryChemical.isEmpty()) {
-        queryChemical = queryChemical + " intersect select id from chemical where id in (" + queryResult + ")";
-    }
-
-    if (!queryChemical.isEmpty()) {
-        //qInfo() << "Query chemical: " << queryChemical;
-        int nCountChemical = dbMain.queryForCount(queryChemical);
-        qInfo() << "NCOUNT: " << nCountChemical;
-        qInfo() << "Start query for idsString";
-        QSqlQuery query(dbMain.db());
-        query.prepare(queryChemical);
-
-        QString idsString;
-        if (query.exec()) {
-            int n = 0;
-            while (query.next()) {
-                if (m_token.stop_requested()) {
-                    qInfo() << "Search canceled while building id list";
-                    break;
-                }
-                idsString.append("'"+query.value(0).toString()+"',");
-                if (++n % 500 == 0)
-                    if (progress) progress(0, 0);
-            }
-            idsString.chop(1); //rimove last ','
-            qInfo() << "End query for idsString";
-
-            //qInfo() << "idsString: " << idsString;
-            readRows(idsString, builder, nCountChemical, cards, progress);
-            return;
-        }
-        if (query.lastError().isValid()) m_readError=query.lastError().text();
-    } else if (nCountQuery > 0) {
-        readRows(queryResult, builder, nCountQuery, cards, progress);
-        return;
-    }
-    return;
+    // Browse and matching use the same restraint intersections. Keep the existing
+    // empty Classical browse behavior. PFSM explicitly requests the complete
+    // paired library when no restraints are supplied.
+    if (!m_strictPairedReflections && builder.getQueryCellPar().isEmpty() && builder.getQueryDensity().isEmpty() &&
+        builder.getSymmetryQueryString().isEmpty() && builder.getColorQueryString().isEmpty() &&
+        builder.getChemicalQueryString().isEmpty() && builder.getQueryIdEntry().isEmpty()) return;
+    queryWithoutStrongest(builder, cards, std::move(progress));
 }
 
 void SqlReferenceRepository::applyRestraintsToIds(const SqlCandidateQuery &builder,
@@ -495,58 +441,27 @@ void SqlReferenceRepository::applyRestraintsToIds(const SqlCandidateQuery &build
 {
     if (ids.isEmpty()) return;
 
-    // --- Stat-table restraints (cell params, symmetry, color) ---
-    QString statResult;
-    int     statCount = 0;
-    bool    hasStatRestraints = false;
-
-    const QStringList queryCellPar = builder.getQueryCellPar();
-    if (!queryCellPar.isEmpty()) {
-        statCount = makeQueryCellParameters(queryCellPar, statResult);
-        hasStatRestraints = true;
-    }
-
-    const QString querySymm = builder.getSymmetryQueryString();
-    if (!querySymm.isEmpty()) {
-        QString symResult;
-        int symCount = makeQuerySymmetry(querySymm, symResult);
-        if (hasStatRestraints && symCount > 0) {
-            QStringList l1 = statResult.split(QLatin1Char(','), Qt::SkipEmptyParts);
-            QStringList l2 = symResult.split(QLatin1Char(','), Qt::SkipEmptyParts);
-            QStringList tmp;
-            statCount = stringInnerJoin(l1, l2, tmp);
-            statResult = tmp.join(QLatin1Char(','));
-        } else if (symCount > 0) {
-            statCount = symCount;
-            statResult = symResult;
-        }
-        hasStatRestraints = true;
-    }
-
-    const QString queryColor = builder.getColorQueryString();
-    if (!queryColor.isEmpty()) {
-        QString colResult;
-        int colCount = makeQuerySymmetry(queryColor, colResult);
-        if (hasStatRestraints && colCount > 0) {
-            QStringList l1 = statResult.split(QLatin1Char(','), Qt::SkipEmptyParts);
-            QStringList l2 = colResult.split(QLatin1Char(','), Qt::SkipEmptyParts);
-            QStringList tmp;
-            statCount = stringInnerJoin(l1, l2, tmp);
-            statResult = tmp.join(QLatin1Char(','));
-        } else if (colCount > 0) {
-            statCount = colCount;
-            statResult = colResult;
-        }
-        hasStatRestraints = true;
-    }
-
-    if (hasStatRestraints) {
-        if (statCount == 0) { ids.clear(); count = 0; return; }
-        const QStringList statIds = statResult.split(QLatin1Char(','), Qt::SkipEmptyParts);
+    // Every enabled statistical restraint participates, including an empty result.
+    // Reuse the query builder's existing calculated/measured table semantics.
+    const auto intersect = [&](const QString &matches) {
+        const auto allowed = matches.split(QLatin1Char(','), Qt::SkipEmptyParts);
         QStringList filtered;
-        stringInnerJoin(ids, statIds, filtered);
-        ids   = filtered;
+        stringInnerJoin(ids, allowed, filtered);
+        ids = std::move(filtered);
         count = ids.size();
+    };
+    const auto statistical = builder.getQueryCellPar() + builder.getQueryDensity();
+    if (!statistical.isEmpty()) {
+        QString matches;
+        makeQueryCellParameters(statistical, matches);
+        intersect(matches);
+        if (ids.isEmpty()) return;
+    }
+    for (const auto &query : {builder.getSymmetryQueryString(), builder.getColorQueryString()}) {
+        if (query.isEmpty()) continue;
+        QString matches;
+        makeQuerySymmetry(query, matches);
+        intersect(matches);
         if (ids.isEmpty()) return;
     }
 
@@ -583,38 +498,60 @@ void SqlReferenceRepository::applyRestraintsToIds(const SqlCandidateQuery &build
 
 
 
+Result<std::vector<application::StoredCandidateIndex>> SqlReferenceRepository::storedTopValues(
+    const ExecutionContext &context, application::SearchProgress progress) {
+    using Return = Result<std::vector<application::StoredCandidateIndex>>;
+    QSqlQuery query(dbSearch.db());
+    if (!query.exec("SELECT id, n, dval FROM top"))
+        return Return{Error{ErrorCode::missing_data, "database.query", query.lastError().text().toStdString()}};
+    std::vector<application::StoredCandidateIndex> result;
+    std::size_t scanned = 0;
+    while (query.next()) {
+        if (context.cancellation.stop_requested())
+            return Return{Error{ErrorCode::cancelled, "search", "Search canceled"}};
+        application::StoredCandidateIndex index;
+        index.id = query.value(0).toString().toStdString();
+        const auto values = SearchUtil::extractNumbers(query.value(2).toString(), query.value(1).toInt(), 3);
+        for (double d : values) index.strongest.push_back(DSpacingAngstrom{d});
+        result.push_back(std::move(index));
+        if (++scanned % 500 == 0 && progress) progress(0, 0);
+    }
+    if (context.cancellation.stop_requested())
+        return Return{Error{ErrorCode::cancelled, "search", "Search canceled"}};
+    if (query.lastError().isValid())
+        return Return{Error{ErrorCode::missing_data, "database.query", query.lastError().text().toStdString()}};
+    return Return{std::move(result)};
+}
+Result<std::vector<application::StoredCandidateIndex>> SqlReferenceRepository::storedTop(
+    const ExecutionContext &context, application::SearchProgress progress) {
+    using Return = Result<std::vector<application::StoredCandidateIndex>>;
+    if (!dbMain.onOwnerThread()) return Return{Error{ErrorCode::invalid_input, "database.thread", "Reader requires its execution thread"}};
+    if (m_reading) return Return{Error{ErrorCode::invalid_input, "database", "Reader is already active", "busy"}};
+    if (context.cancellation.stop_requested()) return Return{Error{ErrorCode::cancelled, "search", "Search canceled"}};
+    if (!dbMain.isOpen()) return Return{Error{ErrorCode::missing_data, "database", "Database is not open"}};
+    auto lease = referenceLease_ ? nullptr : infrastructure::DatabaseLease::read(basePath_);
+    if (!referenceLease_ && !lease) return Return{Error{ErrorCode::invalid_input, "database", "Database is being written", "busy"}};
+    m_reading = true;
+    const auto cleanup = qScopeGuard([this] { m_reading = false; });
+    return storedTopValues(context, std::move(progress));
+}
+
 void SqlReferenceRepository::queryStrongest(const SqlCandidateQuery &builder, std::vector<qualpf::application::ProductCard> &acceptedCards,
                                         ProgressCallback progress)
 {
     ScopedTimer timer("QualxDbManager::makeQueryStrongest->makeQueryInfoIdsWithFom");
 
-    QSqlQuery query(dbSearch.db());
-    query.prepare("SELECT id, n, dval FROM top");
-
-    if (!query.exec()) {
-        m_readError = query.lastError().text();
-        qCritical() << "Failed to execute strongest query:" << query.lastError().text();
-        return;
-    }
-
-    // Collect candidate IDs as plain strings (no quotes)
+    auto indexes = storedTopValues({m_token, qualpf::NumericalPolicy::legacy_mixed_precision, "stored-index"}, progress);
+    if (!indexes) { m_readError = QString::fromStdString(indexes.error().message); return; }
     QStringList idList;
-    int nScanned = 0;
-    while (query.next()) {
-        if (m_token.stop_requested()) {
-            qInfo() << "Search canceled while scanning strongest table at" << nScanned;
-            break;
-        }
-        const QString id      = query.value(0).toString();
-        const int     n       = query.value(1).toInt();
-        const QString dvalStr = query.value(2).toString();
-        const QVector<double> dStrong = SearchUtil::extractNumbers(dvalStr, n, 3);
-        if (SearchUtil::checkStrongValuesWithTolerance(builder.getDValues(), builder.getDTol(), dStrong))
-            idList.append(id);
-        if (++nScanned % 500 == 0)
-            if (progress) progress(0, 0);
+    const auto d = builder.getDValues(), delta = builder.getDTol();
+    for (const auto &index : indexes.value()) {
+        auto accepted = qualpf::search::passes_stored_strongest({d.constData(), std::size_t(d.size())},
+            {delta.constData(), std::size_t(delta.size())}, index.strongest,
+            {m_token, qualpf::NumericalPolicy::legacy_mixed_precision, "stored-index"});
+        if (!accepted) return;
+        if (accepted.value()) idList.append(QString::fromStdString(index.id));
     }
-    if (query.lastError().isValid()) m_readError = query.lastError().text();
     qInfo() << "Number of strongest matches:" << idList.size();
 
     // Apply restraints from builder (cell params, symmetry, chemical, names…)

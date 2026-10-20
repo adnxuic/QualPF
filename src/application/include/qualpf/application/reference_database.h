@@ -52,6 +52,7 @@ class DatabaseCatalogStore {
     virtual void setDefaultDirectory(const std::string &) = 0;
     virtual bool directoryExists(const std::string &) const = 0;
     virtual void discover(std::vector<ReferenceDatabaseEntry> &, const std::string &) = 0;
+    virtual std::string identity(const std::string &path) const { return path; }
     virtual std::pair<int, std::string> describe(const std::string &) const = 0;
     virtual std::unique_ptr<DatabaseRemoval> prepareRemoval(const std::string &) = 0;
 };
@@ -67,7 +68,7 @@ class DatabaseCatalog {
     void close() { repository_.close(); }
     const std::vector<ReferenceDatabaseEntry> &entries() const { return entries_; }
     const ReferenceDatabaseEntry *active() const;
-    ReferenceDatabase reference() const { return {openPath_, version_}; }
+    ReferenceDatabase reference() const { return {openPath_, version_, store_.identity(openPath_)}; }
     std::string defaultDirectory() const { return store_.defaultDirectory(); }
     void setDefaultDirectory(const std::string &path) { store_.setDefaultDirectory(path); }
     bool directoryExists(const std::string &path) const { return store_.directoryExists(path); }
@@ -92,6 +93,8 @@ class DatabaseCatalog {
 };
 
 // Shared synchronous execution; Qt clients only convert requests/projections.
+enum class SynchronousSearchPurpose { browse, cli_match };
 Result<std::vector<ProductCard>> synchronousQuery(SearchCoordinator &, CandidateReader &,
-    ReferenceDatabase, CandidateQuery, SearchParameters, double threshold, bool scored, SearchProgress = {});
+    ReferenceDatabase, CandidateQuery, SearchParameters, double threshold, bool scored, SearchProgress = {},
+    SynchronousSearchPurpose = SynchronousSearchPurpose::browse);
 } // namespace qualpf::application

@@ -1,6 +1,8 @@
 # Local build trees (root-relative: scripts/build remains a source directory).
-/build*/
-/cmake-build*/
+/build/
+/build-*/
+/build_*/
+/cmake-build-*/
 /debug/
 /debug_gfor/
 /release/
@@ -9,10 +11,13 @@
 # In-source CMake/Ninja outputs; out-of-source builds are preferred.
 /CMakeCache.txt
 /CMakeFiles/
+/CMakeScripts/
+/.cmake/
 /Makefile
 /cmake_install.cmake
 /install_manifest*.txt
 /CTestTestfile.cmake
+/DartConfiguration.tcl
 /Testing/
 /build.ninja
 /rules.ninja
@@ -39,6 +44,27 @@
 /*.AppImage
 /QualXPF-*-win64.exe
 /QualPF-*-win64.exe
+/qualpf-*-Source.tar.gz
+
+# Local design drafts; maintained contracts and frozen references live in docs/tests.
+/references/
+
+# Sealed regression ZIPs are provisioned from the preserved Git source on demand.
+/tests/data/cell-historical-scattering-reference.zip
+/tests/data/crystallography-foundation-reference.zip
+/tests/data/kalpha2-reference.zip
+/tests/data/pattern-abi-reference.zip
+/tests/data/pattern-edge-reference.zip
+/tests/data/pattern-legacy-reference.zip
+/tests/data/pattern-vendor-reference.zip
+/tests/data/powder-intensity-reference.zip
+/tests/data/reflection-reference.zip
+/tests/data/scattering-reference.zip
+/tests/data/symmetry-reference.zip
+/tests/data/theoretical-card-reference.zip
+/tests/regression/references/card/cpp-replay-evidence.zip
+/tests/regression/references/powder/test-results/cpp-replay-transcripts.zip
+/tests/regression/references/preprocessing/advanced-reference.zip
 
 # Local example collections; retain the independently tracked CoO fixture.
 /tests/real_example_data/*
@@ -56,6 +82,11 @@ __pycache__/
 *.pyc
 *.pyo
 .pytest_cache/
+
+# File-manager metadata (not scientific data or shared editor configuration).
+.DS_Store
+Thumbs.db
+desktop.ini
 
 # Materialized historical evidence; tracked reviews and frozen inputs remain.
 /.evidence/

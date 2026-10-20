@@ -6,10 +6,12 @@
 #include <QColor>
 #include <QToolBar>
 #include "gui/model/cardtype.h"
+#include "qualpf/application/algorithms.h"
+#include "qualpf/application/project_document.h"
 
 // Returns the display color associated with a card ID (same golden-ratio hue mapping
 // used in DbResultsWidget and cardBrowser).
-QColor cardColor(const QString &id);
+QColor cardColor(const QString &id, const QObject *owner = nullptr);
 
 class QStandardItemModel;
 class TextFilterProxyModel;
@@ -30,7 +32,6 @@ public:
     explicit DbResultsWidget(QWidget* parent = nullptr);
     ~DbResultsWidget();
 
-    std::vector<qualpf::application::ProductCard> orderForPublication(const std::vector<qualpf::application::ProductCard> &) const;
     void refresh();
     void setResults(const QVector<CardType>& results);
     void mergeResults(const QVector<CardType>& newCards);
@@ -41,6 +42,8 @@ public:
     QVector<CardType> displayCards() const;
     void selectFirstCard();
     void selectCard(const QString &id);
+    qualpf::application::ProjectViewState captureProjectView(qualpf::application::ProjectViewState) const;
+    void applyProjectView(const qualpf::application::ProjectViewState &);
     void deleteSelectedCards();
     void acceptSelectedCards();
     void changeSelectedCardColor();
@@ -88,6 +91,10 @@ private:
     QSpinBox    *maxRowSpin = nullptr;
 
     QAction *clearSelAction = nullptr;
+    std::optional<qualpf::application::SearchMethod> method_;
+    bool restoringLayout_ = false;
+    void updateMethod(qualpf::application::SearchMethod);
+    void saveLayout();
 };
 
 #endif // DBRESULTSWIDGET_H

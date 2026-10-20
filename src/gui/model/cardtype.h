@@ -61,6 +61,8 @@ private:
     QVector<double> d;       // d-spacing
     QVector<double> tth;     // two-theta
     QVector<double> intensity; // intensity
+    std::shared_ptr<const qualpf::application::CardAlgorithmSource> algorithmSource;
+    std::shared_ptr<const qualpf::application::PfsmCandidateEvidence> pfsm;
 };
 
 Q_DECLARE_METATYPE(CardType)

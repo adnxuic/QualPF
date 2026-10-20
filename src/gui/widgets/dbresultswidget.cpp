@@ -6,8 +6,11 @@
 #include "gui/support/scopedtimer.h"
 
 #include "gui/widgets/floatdelegate.h"
+#include "gui/adapters/preferences.h"
+#include "qualpf/application/pfsm.h"
 
 #include <QColor>
+#include "gui/presentation/project_view_values.h"
 #include <QColorDialog>
 #include <QLabel>
 #include <QSpinBox>
@@ -23,13 +26,14 @@
 
 #include <algorithm>
 #include <cmath>
+#include <stdexcept>
 
-static QHash<QString, QColor> s_colorOverrides;
-
-QColor cardColor(const QString &id)
+QColor cardColor(const QString &id, const QObject *owner)
 {
-    if (s_colorOverrides.contains(id))
-        return s_colorOverrides.value(id);
+    if (owner) {
+        const auto view=qualpf::gui::workspaceContext(owner).workspace().projectView();
+        if (const auto found=view->card_colors.find(id.toStdString());found!=view->card_colors.end()) return qualpf::gui::projectColor(found->second);
+    }
     bool ok;
     quint64 n = id.toULongLong(&ok);
     if (!ok)
@@ -39,7 +43,18 @@ QColor cardColor(const QString &id)
 }
 
 namespace {
-void populateResultRow(QStandardItemModel &model, int row, const CardType &card) {
+class PfsmNumberDelegate final : public FloatDelegate {
+    bool signed_;
+  public:
+    PfsmNumberDelegate(QObject *parent, bool sign = false) : FloatDelegate(parent, 5), signed_(sign) {}
+    QString displayText(const QVariant &value, const QLocale &locale) const override {
+        bool ok = false; const double number = value.toDouble(&ok);
+        if (!ok) return QStringLiteral("-");
+        return (signed_ && number >= 0 ? QStringLiteral("+") : QString()) + locale.toString(number, 'f', 5);
+    }
+};
+void populateResultRow(QStandardItemModel &model, int row, const CardType &card,
+                       const std::optional<qualpf::application::PfsmCandidateMetrics> &pfsm, const QObject *owner) {
     QString chemName = card.getChemicalName();
     const QString mineral = card.getMineralName();
     if (!mineral.isEmpty()) {
@@ -50,7 +65,7 @@ void populateResultRow(QStandardItemModel &model, int row, const CardType &card)
     }
 
     auto *colorItem = new QStandardItem();
-    colorItem->setBackground(QBrush(cardColor(card.getId())));
+    colorItem->setBackground(QBrush(cardColor(card.getId(), owner)));
     colorItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
     colorItem->setData(QVariant::fromValue(card), Qt::UserRole);
     model.setItem(row, 0, colorItem);
@@ -76,6 +91,13 @@ void populateResultRow(QStandardItemModel &model, int row, const CardType &card)
     bool rirOk = false;
     const double rirVal = rir.toDouble(&rirOk);
     model.setItem(row, 9, (rirOk && rirVal != 0.0) ? numItem(rirVal) : naItem());
+    if (pfsm) {
+        model.setItem(row, 5, numItem(pfsm->rwp_percent));
+        model.setItem(row, 6, numItem(pfsm->shift_degrees));
+        model.setItem(row, 7, numItem(pfsm->scale));
+        model.setItem(row, 8, numItem(pfsm->relative_fom));
+        model.setItem(row, 9, numItem(pfsm->delta_rwp_pp));
+    }
 }
 }
 
@@ -174,6 +196,7 @@ DbResultsWidget::DbResultsWidget(QWidget* parent)
     // Sort per click sull'intestazione della colonna
     connect(ui->table->horizontalHeader(), &QHeaderView::sectionClicked,
             this, &DbResultsWidget::onHeaderSectionClicked);
+    connect(ui->table->horizontalHeader(), &QHeaderView::sectionResized, this, [this] { if (!restoringLayout_) saveLayout(); });
 
 
     // Card selection: emit id (for info panel) and full CardType (for peak compare)
@@ -212,14 +235,13 @@ void DbResultsWidget::setResults(const QVector<CardType>& results)
 {
     qualpf::gui::workspaceContext(this).searchSession().replaceCandidates(results);
     refresh();
-    // The historical GUI contract uses table order for later tie decisions.
-    qualpf::gui::workspaceContext(this).searchSession().replaceCandidates(displayCards());
 }
 
 void DbResultsWidget::refresh()
 {
     const auto input = qualpf::gui::workspaceContext(this).searchSession().snapshot();
     const auto &results = input->candidates;
+    updateMethod(input->canonical->algorithms->spec.method());
     QSignalBlocker selectionBlocker(ui->table->selectionModel());
     qualpf::gui::ScopedTimer timer("DbResultsWidget::setResults");
 
@@ -230,6 +252,7 @@ void DbResultsWidget::refresh()
     for (int i = 0; i < results.size(); ++i)
         populateRow(i, results[i]);
     sourceModel->blockSignals(false);
+    filterModel->setMinimumScore(input->pfsm ? qualpf::application::pfsmSettings(input->canonical->searchOptions).minimum_relative_fom : -1);
 
     if (m_sortColumn >= 0) {
         sourceModel->sort(m_sortColumn, m_sortOrder);
@@ -237,7 +260,6 @@ void DbResultsWidget::refresh()
     }
 
     pageModel->setCurrentPage(0);
-    ui->table->resizeColumnsToContents();
     // The model rebuild invalidates selection while its signals are blocked.
     // Publish the resulting empty selection so card plots cannot outlive it.
     emit entrySelectionChanged(false);
@@ -247,65 +269,59 @@ void DbResultsWidget::refresh()
 
 void DbResultsWidget::populateRow(int row, const CardType &card)
 {
-    populateResultRow(*sourceModel, row, card);
+    const auto source = qualpf::gui::workspaceContext(this).workspace().session().snapshot();
+    populateResultRow(*sourceModel, row, card, qualpf::application::pfsmCandidateMetrics(*source, card.productValue()), this);
+}
+void DbResultsWidget::saveLayout() {
+    if (!method_ || restoringLayout_) return;
+    qualpf::gui::Preferences preferences(qualpf::gui::workspaceContext(this).preferences());
+    const QString prefix = *method_ == qualpf::application::SearchMethod::pfsm ? "Results/PFSM/" : "Results/CSM/";
+    preferences.setValue(prefix + "header", ui->table->horizontalHeader()->saveState());
+    preferences.setValue(prefix + "sortColumn", m_sortColumn);
+    preferences.setValue(prefix + "sortOrder", int(m_sortOrder));
+}
+void DbResultsWidget::updateMethod(qualpf::application::SearchMethod method) {
+    if (method_ == method) return;
+    saveLayout(); restoringLayout_ = true; method_ = method;
+    const bool pfsm = method == qualpf::application::SearchMethod::pfsm;
+    sourceModel->setHeaderData(5, Qt::Horizontal, pfsm ? "Rwp(net) %" : "Peakpos.");
+    sourceModel->setHeaderData(6, Qt::Horizontal, pfsm ? "Shift °2θ" : "Intensity");
+    sourceModel->setHeaderData(9, Qt::Horizontal, pfsm ? "ΔRwp pp" : "S-Quant.");
+    sourceModel->setHeaderData(8, Qt::Horizontal, pfsm ? tr("Relative improvement within this round; not a probability") : tr("Classical figure of merit"), Qt::ToolTipRole);
+    for (int col : {5,6,7,8,9}) {
+        auto *old = ui->table->itemDelegateForColumn(col);
+        ui->table->setItemDelegateForColumn(col, pfsm ? static_cast<QAbstractItemDelegate *>(new PfsmNumberDelegate(this, col == 6)) : new FloatDelegate(this, col == 9 ? 3 : 5));
+        if (old) old->deleteLater();
+    }
+    auto *header = ui->table->horizontalHeader();
+    qualpf::gui::Preferences preferences(qualpf::gui::workspaceContext(this).preferences());
+    const QString prefix = pfsm ? "Results/PFSM/" : "Results/CSM/";
+    const QByteArray saved = preferences.value(prefix + "header").toByteArray();
+    if (saved.isEmpty() || !header->restoreState(saved)) {
+        const int sizes[] = {25,40,80,250,140,110,110,100,100,100};
+        for (int i = 0; i < 10; ++i) header->resizeSection(i, sizes[i]);
+    }
+    header->setSectionResizeMode(3, QHeaderView::Stretch);
+    m_sortColumn = std::clamp(preferences.value(prefix + "sortColumn", 8).toInt(), 0, 9);
+    m_sortOrder = preferences.value(prefix + "sortOrder", int(Qt::DescendingOrder)).toInt() == int(Qt::AscendingOrder) ? Qt::AscendingOrder : Qt::DescendingOrder;
+    restoringLayout_ = false;
 }
 
 void DbResultsWidget::mergeResults(const QVector<CardType> &newCards)
 {
-    // Build set of existing IDs (column 2)
-    QSet<QString> existingIds;
-    for (int r = 0; r < sourceModel->rowCount(); ++r) {
-        if (auto *item = sourceModel->item(r, 2))
-            existingIds.insert(item->text());
-    }
-
-    // Filter to cards not already present
-    QVector<CardType> toAdd;
-    toAdd.reserve(newCards.size());
-    for (const CardType &card : newCards) {
-        if (!existingIds.contains(card.getId()))
-            toAdd.append(card);
-    }
-    if (toAdd.isEmpty()) return;
-
-    const int startRow = sourceModel->rowCount();
-    sourceModel->setRowCount(startRow + toAdd.size());
-    sourceModel->blockSignals(true);
-    for (int i = 0; i < toAdd.size(); ++i)
-        populateRow(startRow + i, toAdd[i]);
-    sourceModel->blockSignals(false);
-
-    if (m_sortColumn >= 0) {
-        sourceModel->sort(m_sortColumn, m_sortOrder);
-        ui->table->horizontalHeader()->setSortIndicator(m_sortColumn, m_sortOrder);
-    }
-
-    pageModel->setCurrentPage(0);
-    ui->table->resizeColumnsToContents();
-    qualpf::gui::workspaceContext(this).searchSession().replaceCandidates(displayCards());
-    emit hasResultsChanged(hasResults());
+    auto &session = qualpf::gui::workspaceContext(this).workspace().session();
+    std::vector<qualpf::application::ProductCard> values;
+    values.reserve(newCards.size());
+    for (const auto &card : newCards) values.push_back(card.productValue());
+    const auto source = session.snapshot();
+    auto status = session.mergeCandidates(source, std::move(values));
+    if (!status) throw std::runtime_error(status.error().message);
+    if (session.snapshot() != source) refresh();
 }
 
 void DbResultsWidget::addCard(const CardType &card)
 {
-    // If already present, just select it
-    for (int r = 0; r < sourceModel->rowCount(); ++r) {
-        if (auto *item = sourceModel->item(r, 2); item && item->text() == card.getId()) {
-            selectCard(card.getId());
-            return;
-        }
-    }
-
-    const int row = sourceModel->rowCount();
-    sourceModel->insertRow(row);
-    populateRow(row, card);
-
-    // Re-apply the current sort if any
-    if (m_sortColumn >= 0)
-        sourceModel->sort(m_sortColumn, m_sortOrder);
-
-    qualpf::gui::workspaceContext(this).searchSession().replaceCandidates(displayCards());
-    emit hasResultsChanged(true);
+    mergeResults({card});
     selectCard(card.getId());
 }
 
@@ -455,7 +471,9 @@ void DbResultsWidget::changeSelectedCardColor()
     const QColor chosen = QColorDialog::getColor(current, this, tr("Choose card color"));
     if (!chosen.isValid()) return;
 
-    s_colorOverrides.insert(id, chosen);
+    auto &workspace=qualpf::gui::workspaceContext(this).workspace();
+    auto view=*workspace.projectView();view.card_colors[id.toStdString()]=qualpf::gui::projectRgba(chosen);
+    if(!workspace.updateProjectView(std::move(view))) return;
     colorItem->setBackground(QBrush(chosen));
 
     emit cardColorChanged(id);
@@ -495,17 +513,14 @@ void DbResultsWidget::deleteSelectedCards()
             targetId = item->text();
     }
 
-    // Remove rows highest-first to keep lower indices valid
-    QList<int> srcRows(srcRowSet.begin(), srcRowSet.end());
-    std::sort(srcRows.begin(), srcRows.end(), std::greater<int>());
-    for (int r : srcRows)
-        sourceModel->removeRow(r);
-
-    if (!targetId.isEmpty())
-        selectCard(targetId);
-
-    qualpf::gui::workspaceContext(this).searchSession().replaceCandidates(displayCards());
-    emit hasResultsChanged(hasResults());
+    std::vector<std::string> ids;
+    for (int row : srcRowSet)
+        ids.push_back(sourceModel->item(row, 2)->text().toStdString());
+    auto &session = qualpf::gui::workspaceContext(this).workspace().session();
+    auto status = session.removeCandidates(session.snapshot(), ids);
+    if (!status) throw std::runtime_error(status.error().message);
+    refresh();
+    if (!targetId.isEmpty()) selectCard(targetId);
 }
 
 void DbResultsWidget::acceptSelectedCards()
@@ -551,7 +566,7 @@ void DbResultsWidget::onHeaderSectionClicked(int column)
     sourceModel->sort(m_sortColumn, m_sortOrder);
     ui->table->horizontalHeader()->setSortIndicator(m_sortColumn, m_sortOrder);
     pageModel->setCurrentPage(0);
-    qualpf::gui::workspaceContext(this).searchSession().replaceCandidates(displayCards());
+    saveLayout();
 }
 
 QVector<CardType> DbResultsWidget::allCards() const
@@ -559,12 +574,29 @@ QVector<CardType> DbResultsWidget::allCards() const
     return qualpf::gui::workspaceContext(this).searchSession().snapshot()->candidates;
 }
 
-std::vector<qualpf::application::ProductCard> DbResultsWidget::orderForPublication(const std::vector<qualpf::application::ProductCard> &cards) const {
-    QStandardItemModel draft(0,10);
-    for (int row=0; row<int(cards.size()); ++row) populateResultRow(draft,row,CardType(cards[std::size_t(row)]));
-    if (m_sortColumn>=0) draft.sort(m_sortColumn,m_sortOrder);
-    std::vector<qualpf::application::ProductCard> result;
-    result.reserve(cards.size());
-    for (int row=0;row<draft.rowCount();++row) result.push_back(draft.item(row,0)->data(Qt::UserRole).value<CardType>().productValue());
-    return result;
+qualpf::application::ProjectViewState DbResultsWidget::captureProjectView(qualpf::application::ProjectViewState view) const {
+    view.result_order.clear();for(const auto &card:displayCards()) view.result_order.push_back(card.getId().toStdString());
+    view.selected_cards.clear();for(const auto &card:selectedCards()) view.selected_cards.push_back(card.getId().toStdString());
+    for(const auto &card:allCards()) view.card_colors[card.getId().toStdString()]=qualpf::gui::projectRgba(cardColor(card.getId(),this));
+    for(const auto &card:qualpf::gui::workspaceContext(this).searchSession().snapshot()->phases) view.card_colors[card.getId().toStdString()]=qualpf::gui::projectRgba(cardColor(card.getId(),this));
+    return view;
+}
+void DbResultsWidget::applyProjectView(const qualpf::application::ProjectViewState &view) {
+    QSignalBlocker blocker(ui->table->selectionModel());
+    QList<QList<QStandardItem *>> rows;
+    for(const auto &id:view.result_order) for(int row=0;row<sourceModel->rowCount();++row)
+        if(sourceModel->item(row,2)->text().toStdString()==id) {rows.push_back(sourceModel->takeRow(row));break;}
+    while(sourceModel->rowCount()) rows.push_back(sourceModel->takeRow(0));
+    for(auto &row:rows) sourceModel->appendRow(row);
+    pageModel->setCurrentPage(0);ui->table->clearSelection();
+    if(!view.selected_cards.empty()) for(int row=0;row<filterModel->rowCount();++row)
+        if(filterModel->index(row,2).data().toString().toStdString()==view.selected_cards.front()) {pageModel->setCurrentPage(row/pageModel->maxRows());break;}
+    for(const auto &id:view.selected_cards) for(int row=0;row<filterModel->rowCount();++row) {
+        const auto index=filterModel->index(row,2);if(index.data().toString().toStdString()!=id) continue;
+        // The current UI selection is page-local. Move to the first selected page.
+        const auto source=pageModel->mapFromSource(index);
+        if(source.isValid()) ui->table->selectionModel()->select(source,QItemSelectionModel::Select|QItemSelectionModel::Rows);
+    }
+    blocker.unblock();emit selectedCardsChanged(selectedCards());emit entrySelectionChanged(hasSelection());
+    if(!view.selected_cards.empty()) emit cardSelected(QString::fromStdString(view.selected_cards.front()));
 }

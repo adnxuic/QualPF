@@ -2,6 +2,7 @@
 #include "infrastructure/database/database_access.h"
 #include "sql_reference_repository.h"
 #include <QUuid>
+#include "infrastructure/settings/database_identity.h"
 namespace qualpf::infrastructure {
 Result<std::unique_ptr<application::CandidateReader>>
 SqlCandidateReaderFactory::open(const application::ReferenceDatabase &database, std::uint64_t task,
@@ -13,6 +14,8 @@ SqlCandidateReaderFactory::open(const application::ReferenceDatabase &database, 
     auto lease = DatabaseLease::read(path);
     if (!lease)
         return Return{Error{ErrorCode::invalid_input, "database", "Database is being written", "busy"}};
+    if(!database.identity.empty() && database.identity!=databaseFileIdentity(database.basePath))
+        return Return{Error{ErrorCode::stale_snapshot,"project.database","Reference database changed before opening","project_database_mismatch"}};
     auto scope = QUuid::createUuid().toString(QUuid::Id128) + "_task_" + QString::number(task);
     auto reader =
         std::make_unique<qualpf::infrastructure::SqlReferenceRepository>(scope, trace_, std::move(lease));

@@ -2,25 +2,32 @@
 #include "gui/search/searchmatch.h"
 #include "gui/state/workspace_context.h"
 #include "gui/state/preprocessing_product.h"
+#include "qualpf/application/search_preparation.h"
 
 
 
 int ensurePeaksFound(qualpf::gui::WorkspaceContext &context, std::optional<qualpf::Error> *failure) {
     if (failure)
         failure->reset();
-    if (context.peaks().valid)
-        return context.peaks().tth.size();
-    {
-        const auto status = qualpf::gui::applyPreprocessing(context.searchSession(),
-            qualpf::application::PreprocessingAction::prepare_search);
+    auto &session = context.workspace().session();
+    const auto source = session.snapshot();
+    auto prepared = qualpf::application::prepareSearch(source, source->algorithms->spec.method());
+    if (!prepared) {
+        if (failure) *failure = prepared.error();
+        qWarning("Search preparation rejected: %s (%s)", prepared.error().message.c_str(), prepared.error().reason.c_str());
+        return 0;
+    }
+    if (prepared.value().state == qualpf::application::SearchPreparation::State::needs_peak_preparation) {
+        qualpf::application::ProductPreprocessingEdit edit(session);
+        auto status = edit.preview(*prepared.value().peaks);
+        if (status) status = edit.commit();
         if (!status) {
-            if (failure)
-                *failure = status.error();
-            qWarning("C++ preprocessing rejected: %s (%s)", status.error().message.c_str(),status.error().reason.c_str());
+            if (failure) *failure = status.error();
+            qWarning("C++ preprocessing rejected: %s (%s)", status.error().message.c_str(), status.error().reason.c_str());
             return 0;
         }
-        return context.peaks().tth.size();
     }
+    return session.snapshot()->peaks.tth.size();
 }
 
 int loadExperimentalPeaks(qualpf::gui::WorkspaceContext &context) { return context.peaks().tth.size(); }

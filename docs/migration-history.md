@@ -10,10 +10,35 @@ The subsequent architecture implementation was independently accepted as
 approvals, failures and compiler/source fingerprints are historical authority.
 
 Current development starts with [architecture](architecture/README.md),
-[numerical policy](numerical/policy.md) and [building](development/building.md).
-The normal suite is independent of migration execution facilities. Repository
-consolidation prepares `READY_FOR_MILESTONE_A_ACCEPTANCE`; it does not grant that
-final independent acceptance or start PFSM.
+[numerical policy](numerical/policy.md), [building](development/building.md) and
+[CHANGELOG.md](../CHANGELOG.md). Phase numbering ended with the refactoring;
+this page is a historical lookup and recovery entry. Historical STOP records and
+pending outcomes apply to their original snapshots, not current task status.
+The normal suite is independent of migration execution facilities. Final
+architecture reacceptance and subsequent strict-layer validation are recorded in
+the [project baseline](development/project-baseline.json). Those acceptance
+snapshots predate PFSM; current PFSM contracts and qualifications are maintained
+in the [PFSM guide](numerical/pfsm.md).
+
+## Retained reports
+
+These documents retain their original scope, outcomes and evidence. They are not
+templates or a task queue for new development. Routine change history belongs in
+the changelog; keep current guides and contracts in their owning areas.
+
+- [Independent architecture reacceptance](architecture/milestone-a/a01/independent-review.md),
+  [gate](architecture/milestone-a/a01/gate.json) and [acceptance matrix](architecture/milestone-a/a01/acceptance-matrix.md)
+- [Original blocked architecture review](architecture/milestone-a/independent-review.md)
+- [Strict-layer refinement and validation](architecture/strict-layer-convergence.md)
+  and [independent Linux closure](architecture/strict-layer-linux-closure.md)
+- [Repository consolidation batches](development/repository-consolidation/batches.md),
+  [closure](development/repository-consolidation/closure.md),
+  [inventory](development/repository-consolidation/inventory.json) and
+  [validation index](development/repository-consolidation/validation-index.json)
+- [Agent context maintenance](development/agent-governance.md)
+- [Unused-file audit](development/unused-file-audit-20261009.md)
+- [Release refresh](development/release-refresh-20261009.md)
+- [Main integration validation](development/main-integration-20261010.md)
 
 ## Archive locations
 

@@ -4,6 +4,7 @@
 #include "qualpf/domain/peaks.h"
 #include "qualpf/domain/result.h"
 #include <span>
+#include <string>
 
 namespace qualpf::preprocessing {
 // Versioned compatibility parameters, independent of GUI and native global
@@ -49,11 +50,41 @@ struct PeakOptions {
     bool automatic_window = true;
     std::optional<AngularRange> detection_range; // peak_create input slice, not post-detection filtering.
 };
+// Physical width evidence. An absent width means no usable initial measurements,
+// never a wavelength seed or a scaled Classical search range. Failures use Result.
+struct FwhmEstimate {
+    enum class State { no_initial_peaks, measured };
+    State state = State::no_initial_peaks;
+    std::optional<AngularWidthDegrees> width;
+    std::size_t peak_count = 0;
+};
+Status validate_fwhm_estimate(const FwhmEstimate &);
+struct PeakCalibration {
+    enum class Source { manual_parameters, wavelength_seed, strongest_initial_widths, fixed_fwhm, geometric_fwhm };
+    PeakOptions applied;
+    // Physical FWHM in degrees two theta, before the .9f search-range factor.
+    std::optional<AngularWidthDegrees> estimated_fwhm;
+    AngularWidthDegrees formal_search_range;
+    std::size_t width_count = 0;
+    Source source = Source::manual_parameters;
+};
+enum class PeakDetectionStage { initial, formal };
+struct RejectedPeakCandidate {
+    PeakDetectionStage stage = PeakDetectionStage::formal;
+    std::size_t candidate_index = 0; // Ordered pre-measurement pool, before compaction.
+    std::size_t sample_index = 0; // Zero-based index in the full input pattern.
+    TwoThetaDegrees two_theta;
+    std::string reason;
+    friend bool operator==(const RejectedPeakCandidate &, const RejectedPeakCandidate &) = default;
+};
 struct PeakSearchResult {
     PeakSet peaks;
     PeakSet candidates;
     PeakOptions applied;
     double automatic_tolerance = .5;
+    std::optional<PeakCalibration> calibration;
+    std::optional<FwhmEstimate> fwhm;
+    std::vector<RejectedPeakCandidate> rejected_candidates;
 };
 
 Result<std::vector<double>> smooth(std::span<const double>, const SmoothingOptions &);

@@ -14,6 +14,7 @@ class SearchRequest {
     void initialize() {
         query_.names.clear(); query_.subfiles.clear(); query_.elements.clear();
         query_.spaceGroups.clear(); query_.colors.clear();
+        query_.minimumSpecies = query_.maximumSpecies = 0;
         query_.cellMinimum.fill(-1); query_.cellMaximum.fill(-1);
         query_.calculatedDensityMinimum = query_.calculatedDensityMaximum = -1;
         query_.measuredDensityMinimum = query_.measuredDensityMaximum = -1;
@@ -29,6 +30,7 @@ class SearchRequest {
         auto value = query_; value.route = route; return value;
     }
     void setNames(const QString &s) { query_.names = s.toStdString(); }
+    void setSpeciesBounds(int minimum, int maximum) { query_.minimumSpecies = minimum; query_.maximumSpecies = maximum; }
     void setElements(QString s) {
         s.replace(" AND ", " and ", Qt::CaseInsensitive).replace(" OR ", " or ", Qt::CaseInsensitive).replace(" NOT ", " not ", Qt::CaseInsensitive);
         query_.elements = s.toStdString();

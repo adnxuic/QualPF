@@ -6,13 +6,16 @@ Final independent Milestone A accepts `5a247152` as
 all 22 mandatory criteria and actual three-platform evidence. The original blocked
 review remains unchanged. The map below describes the current stricter owners and
 dependency contracts added by [strict layer convergence](strict-layer-convergence.md).
-PFSM has not started.
+PFSM now has a continuous-profile workflow and GUI entry, described in the
+[Search-Match contracts](search-algorithms.md). QPF 1.0 preserves its complete frozen analysis under the
+[workflow persistence contract](workflow-settings.md#qpf-10); PFSM/RIR semi-quantification
+uses the same immutable selected-phase snapshot as the GUI and report.
 
 | Layer | Responsibility | Allowed dependencies |
 | --- | --- | --- |
 | Core | Domain values; qualified numerics, crystallography, preprocessing, classic scoring, memory Pattern/CIF parsers | Standard C++ and configured numerical headers |
-| Application | Workspace, canonical ProductSearchSession, SearchEngine/Coordinator, transactions, private preprocessing, ports and use cases | Core |
-| Infrastructure | Execution-thread SQL, builders/writers/mappers, files, codecs, QXP and settings providers | Application/Core; explicit Qt Core/Sql or Core/Network adapters |
+| Application | Workspace, canonical ProductSearchSession, SearchEngine/Coordinator, transactions, common preprocessing/formal extraction, ports and use cases | Core |
+| Infrastructure | Execution-thread SQL, builders/writers/mappers, files, codecs, QPF and settings providers | Application/Core; explicit Qt Core/Sql or Core/Network adapters |
 | GUI | User intent, immutable SessionView, editors, presenter, widgets and Qt task scheduling | Application; Qt Widgets/PrintSupport for presentation |
 | Composition | GUI/CLI startup explicitly constructs owner, concrete providers, borrowing context and window in lifetime order | Lower layers |
 
@@ -31,15 +34,16 @@ Domain responsibility is assigned as follows:
 | Preprocessing, peaks, Range, Kalpha2 | Core evaluation; Application source-bound transactions and private drafts |
 | Search, ranking, residual | Shared Application SearchEngine/Coordinator and canonical ProductSearchSession |
 | Database access/build/import | Infrastructure execution-thread repositories/schema/writers/mappers; Application ports/use cases |
-| QXP, settings, exports | Infrastructure codecs/providers; Application canonical values/formatting |
+| QPF, settings, exports | Infrastructure codecs/providers; Application canonical values/formatting |
 | Display coordinate arithmetic | Core expressions; Application API and admission |
 | Process/network/settings capabilities | Infrastructure providers; Application owned requests/results and policy |
 | GUI/plot/edit/lifetime | Intent/presenter/SessionView, QtPlotSink and drained task controller |
-| Profile kernels | Isolated Core/reference tests; no PFSM product integration |
+| Profile kernels | Qt-free Core IL templates and NNLS/TRF fitting; Application owns PFSM orchestration |
+| PFSM candidate recall | Core correlation/local evaluation/selection; Application owns immutable round inputs, formal-set selection and diagnostics |
 
 One Application Workspace owns one ProductSearchSession per product workspace.
 Measurement, preprocessing, peaks, candidates, accepted phases, residual and
-QXP-represented values belong to it. GUI SessionView is an immutable projection
+QPF-represented values belong to it. GUI SessionView is an immutable projection
 with scoped subscriptions. Private preprocessing edits own drafts. Workers own
 immutable inputs and private workspaces. Metadata preserves undefined/null and
 integer/floating distinctions; Infrastructure alone performs JSON conversion.
@@ -54,7 +58,26 @@ retain their distinct approved no-op/dirty/provenance/invalidation behavior.
 
 SearchEngine is synchronous, Qt-free and nonpublishing. Tests/CLI and every GUI
 search entry use it. CandidateReader returns owned records; SQL owns access and
-decoding, while the engine owns evaluation, scoring and stable ranking.
+decoding, while the engine delegates to the concrete Classical or PFSM workflow described
+in [Search-Match contracts](search-algorithms.md).
+Application resolves immutable algorithm specifications and dependencies; Core owns
+background/peak stages, stored-index filtering, matching/FOM, residual and RIR.
+Application query planning and candidate retention preserve operation-specific rules.
+Exactly seven scientific replacement points remain: background, initial peaks,
+physical FWHM, formal extraction, Classical matching, profile expansion and profile
+fitting. FOM, residual, query, ranking, PFSM joint-fit orchestration and RIR are
+fixed operations. GUI sorting affects display only; canonical ranking,
+identity-based mutations and QPF order belong to Application.
+PFSM candidate recall is a fixed method-dependent prescreen operation, separate
+from profile expansion and formal fitting. It selects candidates and reports
+approximate local evidence; it neither supplies formal fit starts nor calculates
+the final FOM. Formal evidence flows through fixed PFSM FOM calculation into
+common result management. The [workflow module map](search-algorithms.md#workflow-modules-and-ownership)
+defines three subworkflows and seventeen logical modules without adding a
+scientific replacement point or a generic workflow engine.
+Composition supplies defaults; each prepared task retains its snapshot's resolved
+module set. Algorithm changes use the canonical revision and existing invalidation
+rules, with Busy/edit/Closing admission. They add no persisted schema or second state.
 
 SearchCoordinator owns TaskId, stop_source, Busy admission and commit rules.
 SearchTaskController adapts this to a dedicated QThreadPool with one worker;
@@ -62,6 +85,20 @@ running/cancelling tasks reject a second start. Inputs freeze before dispatch.
 Progress is coalesced and queued; obsolete messages are ignored. SQLite connections
 are created, used, closed and removed in their executing thread, with unique names.
 A nonblocking reference-read guard excludes managed writes through publication.
+
+PFSM consumes a source-bound, explicitly declared continuous observation problem
+and uses an explicit fixed width, compatible manual measurement or automatic
+geometric FWHM without formal peak extraction. SQL finishes before the
+OpenMP candidate loop; compute workers share the immutable discrete library and
+each own their matrices and bounded template cache. A fixed result slot per
+original candidate preserves deterministic ordering. Accepted phases and their
+joint scales/shifts, common baseline and all candidate evidence publish atomically.
+GUI presents Application-owned relative FOM and exact joint trial profiles.
+Phase removal jointly refits and reranks the frozen universe. Core converts final
+joint scales using frozen full-card intensity maxima and effective RIR values.
+Application owns typed quantification availability and analysis-local RIR revisions;
+GUI and reports consume that result. Revisions use checked atomic publication and
+never refit, rerank or write the reference database. QPF 1.0 preserves the frozen analysis and revisions; see [workflow settings](workflow-settings.md).
 
 Automatic peak preparation is a separate worker calculation and owner-thread
 commit before search takes a new snapshot. Later search cancellation retains
@@ -80,7 +117,7 @@ non-search work and remain outside this repository-consolidation scope.
 Initial matching uses `score > minimum`, sorting/capping only when over the cap.
 Rescoring uses `score > 0 && score >= minimum`, stable order and original scale.
 Scored/unscored browse, stored strongest indexes, SQL order and merge contracts
-remain operation-specific. QXP unknown fields, SQL schema, settings import,
+remain operation-specific. QPF unknown fields, SQL schema, settings import,
 CLI output/exit, formats, precision and tolerance policies remain unchanged.
 
 The [compatibility allowlist](compatibility-allowlist.json) explains retained

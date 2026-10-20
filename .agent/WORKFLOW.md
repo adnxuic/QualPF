@@ -6,6 +6,7 @@
    Identify unrelated user work and any existing active task before writing.
 2. Resolve task scope and success criteria from user authorization. Follow
    [CONTEXT_MAP](CONTEXT_MAP.md) to inspect the relevant authority, owners and consumers.
+   Use a descriptive task name; no Phase number, phase plan or phase gate is required.
 3. Start one active task or resume the matching task. Compare its base/checkpoint
    with actual Git state. Reconcile differences by inspection; never reset or
    blindly replay its next_action or a completed migration queue.
@@ -38,10 +39,14 @@ After a completed batch or before a session ends, update only concise completed
 items, actual checks, concrete blockers and the next step. Keep one writer for the
 task state. A paused status requires the user's explicit pause request.
 
-Finish with a scoped result and actual validation. Small tasks use their Git
-commit descriptions; complex tasks use the corresponding project documentation.
-Clear active_task to null after completion. Future work starts from new
-authorization. Do not leave a permanent completion log in this directory.
+Finish with a scoped result and actual validation. Record notable completed
+changes under Unreleased in [CHANGELOG.md](../CHANGELOG.md), using Added, Changed,
+Fixed or Removed as appropriate. Describe the resulting behavior or maintenance,
+not Phase numbers or execution logs. Update affected guides and contracts in place;
+ordinary tasks need no separate plan, validation index or completion report. Keep
+necessary scientific evidence with its owning contract and raw logs in existing
+validation locations. Clear active_task to null after completion. Future work
+starts from new authorization. Do not leave a permanent completion log in this directory.
 
 ## Task state interface
 

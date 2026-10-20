@@ -27,6 +27,9 @@ int main(int argc,char **argv) {
             state.pattern.id=DatasetId{1};
             state.pattern.two_theta={TwoThetaDegrees{0},TwoThetaDegrees{20},TwoThetaDegrees{40},TwoThetaDegrees{60}};
             state.pattern.observed={0,100,80,0};
+            // This analytic fixture has unsubtracted observations and zero background.
+            state.pattern.processing={false,false,false};
+            state.pattern.background=SampledSignal{std::vector<double>(4,0),SampleWindow{0}};
             state.pattern.calculation_range=AngularRange{TwoThetaDegrees{0},TwoThetaDegrees{60}};
             state.peaks.tth={20,40};state.peaks.d={4,2};state.peaks.deltaD={.1,.1};
             state.peaks.fwhm={.2,.3};state.peaks.intensity={100,80};state.peaks.intensityOrig={100,80};
@@ -39,6 +42,7 @@ int main(int argc,char **argv) {
             auto unmatched=card("unmatched",50,10);
             for (const auto &c:{card("out-of-range",100,10),unmatched}) {
                 const auto result=scoreCard(*before,c,parameters);
+                if (!result) std::cerr<<result.error().field<<": "<<result.error().message<<" ["<<result.error().reason<<"]\n";
                 check(bool(result),"Valid unmatched input rejected");
                 const auto &s=result.value();
                 check(s.total==0 && s.position==0 && s.intensity==0 && s.scale==1,"Unmatched score not initialized");

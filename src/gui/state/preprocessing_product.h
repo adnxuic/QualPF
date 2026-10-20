@@ -14,5 +14,7 @@ Status peakEditEntryStatus(qualpf::gui::WorkspaceContext &context);
 // An aligned zero transport after subtraction is not an active background.
 
 Status applyPreprocessing(SessionView &, PreprocessingAction);
+QString peakRejectionSummary(const PreprocessingConfiguration &);
+QString peakRejectionDetails(const PreprocessingConfiguration &);
 Status editBackgroundPoint(SessionView &, bool add, double x, double y, bool redetect);
 } // namespace qualpf::gui

@@ -14,6 +14,7 @@ SqlCandidateQuery::SqlCandidateQuery()
 SqlCandidateQuery::SqlCandidateQuery(const qualpf::application::CandidateQuery &q) : SqlCandidateQuery() {
     auto strings=[](const auto &values) { QStringList out; for (const auto &value:values) out.append(QString::fromStdString(value)); return out; };
     setNames(QString::fromStdString(q.names)); setElements(QString::fromStdString(q.elements));
+    minimumSpecies_ = q.minimumSpecies; maximumSpecies_ = q.maximumSpecies;
     setSubfiles(strings(q.subfiles)); setCsysString(strings(q.crystalSystems)); setSpgString(strings(q.spaceGroups));
     setColorString(strings(q.colors)); setIdEntry(strings(q.ids));
     setBOperator(boolOperator(q.elementOperator)); enableDeleted(q.excludeDeleted); setPrintEnabled(q.print);
@@ -27,6 +28,7 @@ qualpf::application::CandidateQuery SqlCandidateQuery::candidateQuery(qualpf::ap
     qualpf::application::CandidateQuery q; q.route=route;
     auto strings=[](const QStringList &values) { std::vector<std::string> out; for (const auto &value:values) out.push_back(value.toStdString()); return out; };
     q.names=names.toStdString(); q.elements=elString.toStdString();
+    q.minimumSpecies = minimumSpecies_; q.maximumSpecies = maximumSpecies_;
     q.subfiles=strings(subfiles); q.crystalSystems=strings(csysString); q.spaceGroups=strings(spgString);
     q.colors=strings(colorList); q.ids=strings(idEntry); q.elementOperator=decltype(q.elementOperator)(bOperator);
     q.excludeDeleted=addDeleted; q.print=printEnabled; q.decodeReflections=decodeReflections_;
@@ -40,6 +42,7 @@ qualpf::application::CandidateQuery SqlCandidateQuery::candidateQuery(qualpf::ap
 
 void SqlCandidateQuery::initialize()
 {
+    minimumSpecies_ = maximumSpecies_ = 0;
     subfiles.clear();
     names.clear();
     subfiles.clear();
@@ -241,6 +244,13 @@ void SqlCandidateQuery::buildQuery()
     }
 
     queryIdEntry = buildQueryIdEntry();
+    if (minimumSpecies_ > 0 || maximumSpecies_ > 0) {
+        QStringList bounds;
+        if (minimumSpecies_ > 0) bounds << QString("count(distinct chemical_element) >= %1").arg(minimumSpecies_);
+        if (maximumSpecies_ > 0) bounds << QString("count(distinct chemical_element) <= %1").arg(maximumSpecies_);
+        if (!queryChemical.isEmpty()) queryChemical += " intersect ";
+        queryChemical += "select id from chemical group by id having " + bounds.join(" and ");
+    }
     if (!queryIdEntry.isEmpty() && printEnabled) {
         qInfo() << "Query id entry: " << queryIdEntry;
     }

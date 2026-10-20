@@ -1,7 +1,44 @@
 #include "qualpf/application/preprocessing_configuration.h"
 namespace qualpf::application {
+MetadataObject initialPeakConfigurationValues(const InitialPeakConfiguration &c) {
+    auto out = c.extensions;
+    out["version"] = 1;
+    out["slope"] = c.options.slope;
+    out["automatic_window"] = c.options.automatic_window;
+    out["half_window"] = c.options.half_window;
+    out["degree"] = c.options.polynomial_degree;
+    return out;
+}
+MetadataObject fwhmConfigurationValues(const FwhmConfiguration &c) {
+    auto out = c.extensions;
+    out["version"] = 1;
+    out["method"] = c.method == FwhmMethod::gaussian ? "gaussian" : "geometric";
+    out["use_fixed"] = c.use_fixed;
+    out["default_fwhm"] = c.default_fwhm.value;
+    out["minimum_sampling_density"] = c.minimum_sampling_density;
+    return out;
+}
+MetadataObject fwhmUsageValues(const FwhmUsage &u) {
+    auto out = u.extensions;
+    out["version"] = 1;
+    out["width"] = u.width.value;
+    out["origin"] = u.origin == FwhmOrigin::fixed ? "fixed" : u.origin == FwhmOrigin::gaussian ? "gaussian" : "geometric";
+    out["algorithm"] = u.algorithm.id;
+    out["algorithm_version"] = int(u.algorithm.version);
+    out["dataset"] = std::to_string(u.dataset.value);
+    out["source_id"] = u.source_id;
+    out["source_revision"] = std::to_string(u.source_revision);
+    out["minimum_sampling_density"] = u.minimum_sampling_density;
+    out["width_count"] = std::to_string(u.width_count);
+    return out;
+}
 MetadataObject preprocessingValues(const PreprocessingConfiguration &c) {
-    MetadataObject out{{"version", 2}};
+    auto out = c.extensions;
+    out["version"] = 2;
+    if (c.initial_peaks) out["initial_peaks"] = initialPeakConfigurationValues(*c.initial_peaks);
+    if (c.fwhm) out["fwhm"] = fwhmConfigurationValues(*c.fwhm);
+    if (c.fwhm_usage) out["fwhm_usage"] = fwhmUsageValues(*c.fwhm_usage);
+    if (c.peak_fwhm_usage) out["peak_fwhm_usage"] = fwhmUsageValues(*c.peak_fwhm_usage);
     if (c.candidate_failure)
         out["candidate_failure"] = *c.candidate_failure;
     if (c.smoothing_applied)

@@ -22,6 +22,9 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/src"
 )
+
+include("${PROJECT_SOURCE_DIR}/cmake/packaging/MinGWRuntime.cmake")
+qualpf_stage_mingw_runtime(${EXECUTABLE_NAME})
 target_include_directories(${EXECUTABLE_NAME} PRIVATE
     "${PROJECT_SOURCE_DIR}/src/gui/resources/images"
 )

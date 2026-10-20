@@ -1,4 +1,4 @@
-#include "qualpf/search/classic.h"
+#include "qualpf/search/algorithms.h"
 
 #include "qualpf/domain/validation.h"
 
@@ -40,6 +40,30 @@ bool deleted_quality(const std::string &quality) {
 }
 } // namespace
 
+Result<bool> accepts_record_quality(std::string_view quality, bool include_deleted,
+    const ExecutionContext &context) {
+    if (context.cancellation.stop_requested())
+        return Result<bool>{Error{ErrorCode::cancelled, "search", "Cancelled during candidate filtering"}};
+    return Result<bool>{include_deleted || !deleted_quality(std::string(quality))};
+}
+Result<bool> passes_stored_strongest(std::span<const double> d, std::span<const double> delta_d,
+    std::span<const DSpacingAngstrom> stored_top, const ExecutionContext &context) {
+    if (context.cancellation.stop_requested())
+        return Result<bool>{Error{ErrorCode::cancelled, "search", "Cancelled during candidate filtering"}};
+    if (d.size() != delta_d.size() || std::min(std::size_t{3}, stored_top.size()) > d.size())
+        return Result<bool>{false};
+    PeakSet peaks;
+    for (std::size_t i = 0; i < d.size(); ++i) {
+        Peak p;
+        p.d_spacing = DSpacingAngstrom{d[i]};
+        p.delta_d = DSpacingAngstrom{delta_d[i]};
+        peaks.peaks.push_back(p);
+    }
+    for (auto value : stored_top.first(std::min(std::size_t{3}, stored_top.size())))
+        if (!nearby(peaks, value.value)) return Result<bool>{false};
+    return Result<bool>{true};
+}
+
 Result<bool> passes_strongest(const PeakSet &peaks, std::span<const DSpacingAngstrom> stored_top) {
     const auto issues = validate(peaks);
     if (!issues.empty())
@@ -58,12 +82,9 @@ Result<bool> passes_strongest(const PeakSet &peaks, std::span<const DSpacingAngs
         if (!std::isfinite(value.value) || value.value <= 0)
             return Result<bool>{
                 Error{ErrorCode::invalid_input, "prefilter.top", "Expected finite positive stored d"}};
-    if (count > peaks.peaks.size())
-        return Result<bool>{false};
-    for (const auto value : stored_top.first(count))
-        if (!nearby(peaks, value.value))
-            return Result<bool>{false};
-    return Result<bool>{true};
+    std::vector<double> d, delta;
+    for (const auto &peak : peaks.peaks) { d.push_back(peak.d_spacing->value); delta.push_back(peak.delta_d->value); }
+    return passes_stored_strongest(d, delta, stored_top, ExecutionContext{});
 }
 
 Result<BatchEvaluation> evaluate_candidates(const Pattern &pattern, const PeakSet &peaks,

@@ -45,7 +45,10 @@ cancellation and atomic owner-thread publication.
 Product and normal tests require no Fortran compiler/runtime or historical runner.
 See [current architecture](docs/architecture/README.md),
 [building and testing](docs/development/building.md) and
-[migration history/recovery](docs/migration-history.md). PFSM has not started.
+[migration history/recovery](docs/migration-history.md). Classical and PFSM
+Search-Match workflows are available; PFSM identification and performance
+qualifications remain explicit in the [PFSM guide](docs/numerical/pfsm.md).
+Projects use the incompatible QPF 1.0 format; older QXP projects are not accepted.
 
 The application can work with:
 - **PDF-2** (Powder Diffraction File) reference data,
@@ -98,7 +101,7 @@ To install a database:
 2. Download one of the zip archives from the link above and extract it directly into `QualXDB`.
 3. Launch QualPF — the database is detected and registered automatically.
 
-You can also add a database stored elsewhere via **Search → Manage Databases → Add existing**. See the [Database Installation](docs/user/database-installation.md) documentation page for full details.
+You can also add a database stored elsewhere via **S&M → Manage Databases → Add existing**. See the [Database Installation](docs/user/database-installation.md) documentation page for full details.
 
 ## Requirements
 
@@ -207,6 +210,11 @@ mkdocs build --strict -f docs/mkdocs.yml
 bash docs/make_pdf.sh   # optional: generates docs/qualpf_manual.pdf
 ```
 
+For development, see [building and contributing](docs/development/building.md),
+[current architecture](docs/architecture/README.md) and [CHANGELOG.md](CHANGELOG.md).
+Historical refactoring reports and evidence are indexed in
+[migration history](docs/migration-history.md).
+
 ## Repository structure
 
 ```text
@@ -238,9 +246,7 @@ releases/               ignored local package outputs
 
 [Directory responsibilities](docs/development/repository-layout.md) and
 [build/contribution instructions](docs/development/building.md) describe shared
-presets and machine-local SDK configuration. The
-[directory migration report](docs/development/repository-consolidation/batches.md)
-records this maintenance separately from Milestone F and Phase36E.
+presets and machine-local SDK configuration.
 
 ## Citing QualX
 
@@ -269,6 +275,12 @@ Originally developed and maintained at the **Institute of Crystallography, CNR (
 ## Contributing
 
 Bug reports, feature requests, and merge requests are welcome. Please open an issue describing the problem or proposal before submitting larger changes.
+
+Develop features, fixes and optimizations as ordinary scoped tasks. Phase numbering
+was used for the completed refactoring and is no longer part of development.
+Record notable completed changes under Unreleased in [CHANGELOG.md](CHANGELOG.md)
+and update affected current documentation. Routine tasks need no separate Phase
+plan or completion report.
 
 Write current project documentation and README files in English. Preserve the
 original bytes and language of frozen evidence and archived snapshots.

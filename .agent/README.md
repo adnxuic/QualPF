@@ -13,7 +13,8 @@ independently of the current task. Historical STOP records do not prevent a newl
 authorized maintenance task and do not authorize PFSM.
 
 Keep only README.md, POLICY.md, WORKFLOW.md, CONTEXT_MAP.md, TASK_STATE.json and
-.gitattributes here. Product contracts, decisions and completion reports belong
-to the corresponding project documentation. Raw logs belong to the existing
-validation locations or ignored build directories. Do not add an archive or a
+.gitattributes here. Record notable completed changes in [CHANGELOG.md](../CHANGELOG.md).
+Product contracts and decisions belong to their owning documentation; ordinary
+tasks need no Phase documents or separate completion reports. Raw logs belong to
+the existing validation locations or ignored build directories. Do not add an archive or a
 second progress summary here. Current documents use English, UTF-8 and LF.

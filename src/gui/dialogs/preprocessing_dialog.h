@@ -1,4 +1,5 @@
 #pragma once
+#include <QMetaObject>
 #include "gui/state/preprocessing_edit.h"
 #include <QPointer>
 #include <memory>
@@ -24,6 +25,7 @@ class PreprocessingDialog {
     void cancel();
 
   private:
+    QMetaObject::Connection detailsConnection_;
     void clearPlot();
     QDialog &dialog_;
     QPointer<MainWindow> window_;

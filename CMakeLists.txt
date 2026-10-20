@@ -20,6 +20,7 @@ include(QualpfQtBoundaryTargets)
 add_subdirectory(third_party)
 add_subdirectory(src)
 add_subdirectory(apps/qualpf)
+add_subdirectory(apps/pfsm-benchmark)
 add_subdirectory(tests)
 
 include(cmake/packaging/Install.cmake)

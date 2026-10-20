@@ -27,6 +27,11 @@ typedef struct {
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+class FwhmOptionsDialog;
+class InitialPeakOptionsDialog;
+class PfsmOptionsDialog;
+namespace qualpf::application { struct PfsmPlot; }
+namespace qualpf::gui { class WorkflowDock; }
 
 class MainWindow : public QMainWindow
 {
@@ -79,6 +84,7 @@ public:
     ~MainWindow();
     qualpf::gui::WorkspaceContext &context() const { return context_; }
     XpdViewWidget *xpdViewer() const;
+    void setBackgroundSubtractionDisplay(bool);
     void setAction(const MouseAction &action, bool writeConfig = true);
     void setCurrentFile(const QString &fullFileName, const QString &fileType);
     void setStatusMessage(const QString &message);
@@ -87,7 +93,14 @@ public:
     void runSearch(const SearchOptions &opts);
     void runSearchMatch();
     qualpf::gui::SearchTaskController *searchTasks() const { return searchTasks_; }
+    qualpf::Status startConfiguredFwhm(qualpf::application::ProductHandle, qualpf::application::FwhmConfiguration,
+                                     qualpf::gui::SearchTaskController::Completion);
+    qualpf::Status startInitialPeakSearch(qualpf::application::ProductHandle,
+        qualpf::application::InitialPeakConfiguration, qualpf::gui::SearchTaskController::Completion);
     bool isClosing() const { return closingRequested_; }
+    bool confirmWorkflowReplacement(qualpf::application::WorkflowStep);
+    qualpf::Status applyProjectOptions(qualpf::application::ProductHandle, const qualpf::application::ProjectSettings &);
+    bool loadProject(QString fileName);
     bool loadDiffractionPatterns(QStringList files, bool chooseRadiation = true, bool legacyCif = false);
     bool loadPowderCif(const QString &file);
     void updatePeakListTable();
@@ -127,10 +140,13 @@ private slots:
     void onActionBackgroundTriggered();
     void onActionBackgroundExportTriggered();
     void onActionSubtractBackgroundTriggered();
+    void onActionBackgroundOptionsTriggered();
     void onActionSmoothingTriggered();
     void onActionKAlpha2StrippingTriggered();
     void onActionPeakSearchTriggered();
     void onActionPeakSearchConditionsTriggered();
+    void onActionFwhmOptionsTriggered();
+    void onActionFwhmEstimationTriggered();
     void onActionLoadPeaksTriggered();
     void onActionSavePeaksTriggered();
 
@@ -164,14 +180,36 @@ private:
     qualpf::gui::SearchTaskController *searchTasks_ = nullptr;
     bool searchUiActive_ = false, closingRequested_ = false;
     quint64 searchUiTask_ = 0;
+    QString pfsmPreviewCandidate_;
+    bool pfsmPreviewPending_ = false;
+    std::shared_ptr<const qualpf::application::PfsmPlot> displayedPfsmPlot_;
+    std::weak_ptr<const qualpf::application::ProductState> displayedPfsmSource_;
+    void clearPatternPresentation();
+    void updateBackgroundActions();
     bool searchAdmission();
     void beginMatch(bool restraintsOnly = false);
+    void requestMatch(qualpf::application::SearchMethod, bool restraintsOnly = false);
+    void previewPfsmCandidate(const QString &);
+    void showPfsmPlot(const qualpf::application::PfsmPlot &);
+    void removePfsmPhase(const QString &);
+    void updateSearchActions();
     void publishSearchView(bool browse);
     void acceptPhases(QVector<CardType>, int index = 0);
     void submitSearch(qualpf::application::SearchInput, std::function<void(const qualpf::application::PreparedSearchResult &)>);
     void createDialogs();
+    void createWorkflowUi();
+    void openWorkflowDefaults(qualpf::application::WorkflowId);
+    void runWorkflowPreparation(bool background);
+
+    qualpf::gui::WorkflowDock *workflowDock_ = nullptr;
     void createActionGroup();
     void actionsSetup();
+    void onActionInitialPeakOptionsTriggered();
+    void onActionInitialPeakSearchTriggered();
+    void updateInitialPeakActions();
+    void refreshInitialPeakCandidates();
+    void showInitialPeakCandidates();
+    void updateFwhmActions();
     void updateReport();
     void writeSettings();
     void readSettings();
@@ -193,6 +231,9 @@ private:
     PeakSearchDialog  *peakSearchDialog  = nullptr;
     PlotStyleDialog *plotStyleDialog = nullptr;
     BackgroundDialog  *backgroundDialog  = nullptr;
+    FwhmOptionsDialog *fwhmDialog_ = nullptr;
+    InitialPeakOptionsDialog *initialPeakDialog_ = nullptr;
+    PfsmOptionsDialog *pfsmDialog_ = nullptr;
     RestraintsDialog  *m_restraintsDialog = nullptr;
     SmoothingDialog *smoothingDialog = nullptr;
     AboutDialog *aboutDialog = nullptr;
@@ -202,6 +243,8 @@ private:
     QString currentFile;
     QString currentProjectFile;
     bool projectFileSaved;
+    bool restoringProjectView_ = false;
+    void captureProjectView();
     void clearProjectFile();
     void markProjectModified();
     static QString pathDataFiles;
@@ -216,12 +259,11 @@ private:
     void testSelection(qualpf::gui::SearchRequest &builder, int testCase);
     void executeSearch(qualpf::gui::SearchRequest &builder, bool merge = false);
     void onRestraintsSearch(bool merge);
-    void onRestraintsSearchMatch();
+    void onRestraintsSearchMatch(qualpf::application::SearchMethod);
     void onCardSelected(const QString &id);
     void applyDialogRestraints(qualpf::gui::SearchRequest &builder);
     void performResidualSearch(const CardType &acceptedCard);
     void recalculateFOMs(const QString &statusSuffix = QString());
 
-    void loadProject(QString fileName);
 };
 #endif // MAINWINDOW_H

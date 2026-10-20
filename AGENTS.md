@@ -13,6 +13,9 @@ Read in order:
 
 Read [.agent/WORKFLOW](.agent/WORKFLOW.md) before changes. Use
 [.agent/CONTEXT_MAP](.agent/CONTEXT_MAP.md) to find task-specific authority.
+Develop by ordinary scoped tasks; Phase numbering ended with the refactoring.
+Record notable changes in [CHANGELOG.md](CHANGELOG.md) under Unreleased and update
+affected current guides. Routine work needs no Phase plan or completion report.
 Application uniquely owns canonical product state; Core/Application stay Qt-free.
 Keep immutable GUI views, checked atomic transactions, owned/cancellable worker
 inputs, execution-thread SQL, queued publication and safe close/drain lifetimes.

@@ -12,7 +12,7 @@ CardType::CardType(const qualpf::application::ProductCard &value)
       spaceGroup(QString::fromStdString(value.spaceGroup)), fom(value.fom), fomCalculated(value.fomCalculated),
       fomPeakPos(value.fomPeakPos), fomIntensity(value.fomIntensity), scale(value.scale),
       d(value.d.begin(), value.d.end()), tth(value.tth.begin(), value.tth.end()),
-      intensity(value.intensity.begin(), value.intensity.end()) {}
+      intensity(value.intensity.begin(), value.intensity.end()), algorithmSource(value.algorithmSource), pfsm(value.pfsm) {}
 
 qualpf::application::ProductCard CardType::productValue() const {
     qualpf::application::ProductCard value;
@@ -23,6 +23,8 @@ qualpf::application::ProductCard CardType::productValue() const {
     value.fomIntensity = fomIntensity; value.scale = scale;
     value.d.assign(d.begin(), d.end()); value.tth.assign(tth.begin(), tth.end());
     value.intensity.assign(intensity.begin(), intensity.end());
+    value.algorithmSource = algorithmSource;
+    value.pfsm = pfsm;
     return value;
 }
 

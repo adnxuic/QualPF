@@ -1,4 +1,5 @@
 #include "legacy_internal.h"
+#include "analysis_signal.h"
 #include "legacy_reduction.h"
 
 namespace qualpf::preprocessing {
@@ -437,4 +438,17 @@ Result<Pattern> subtract_background(const Pattern &p) {
     out.processing.background_subtracted = true;
     return Result<Pattern>{std::move(out)};
 }
+namespace detail {
+Result<Pattern> prepare_analysis_signal(const AnalysisSpectrum &spectrum) {
+    const auto &input = spectrum.pattern();
+    if (spectrum.purpose() == AnalysisPurpose::classical_search)
+        return subtract_background(input);
+    Pattern prepared = input;
+    for (std::size_t i = 0; i < prepared.observed.size(); ++i)
+        prepared.observed[i] = float(input.observed[i]) - float(input.background->values[i]);
+    prepared.background->values.assign(prepared.observed.size(), 0);
+    prepared.processing.background_subtracted = true;
+    return Result<Pattern>{std::move(prepared)};
+}
+} // namespace detail
 } // namespace qualpf::preprocessing

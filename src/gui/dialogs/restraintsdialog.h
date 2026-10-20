@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "qualpf/application/product_values.h"
+#include "qualpf/application/algorithms.h"
 #include <QStringList>
 
 namespace Ui {
@@ -48,6 +49,10 @@ public:
     bool hasRestraints() const;
     void setMergeEnabled(bool enabled);
     void setSearchEnabled(bool enabled);
+    qualpf::application::SearchMethod selectedSearchMethod() const;
+    void setSelectedSearchMethod(qualpf::application::SearchMethod);
+    void setBusy(bool);
+    void setBrowseEnabled(bool);
 
     // --- Subfiles tab accessors ---
     QStringList subfilesCodes() const;
@@ -66,7 +71,7 @@ public:
 signals:
     void loadCardsRequested();
     void loadAndMergeCardsRequested();
-    void searchWithRestraintsRequested();
+    void searchWithRestraintsRequested(qualpf::application::SearchMethod method);
     void cancelAllRestraintsRequested();
 
 private slots:
@@ -109,6 +114,9 @@ private:
     QPushButton         *m_clearButton        = nullptr;
     QSpinBox            *m_minSpecies         = nullptr;
     QSpinBox            *m_maxSpecies         = nullptr;
+    QPushButton *m_csm = nullptr, *m_pfsm = nullptr;
+    bool m_busy = false, m_continuous = false, m_browseEnabled = true, m_mergeEnabled = false;
+    void updateSearchAdmission();
 
     QStringList m_lastSelectedSymbols;
 

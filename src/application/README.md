@@ -10,6 +10,23 @@ are external-service ports. Providers receive immutable values and return owned 
 Qt models, codec implementations and UI intent adapters live in Infrastructure or GUI.
 CIF card evaluation and plot/export projection remain portable Application services.
 
-The complete target is independently consumed by `tests/architecture`, which performs
-no Qt discovery. See the [Phase37 plan](../../docs/architecture/phase-37/plan.md) and
-[current state](../../.agent/CURRENT_STATE.md).
+AlgorithmSpec and its explicit factory assemble seven typed replacement modules:
+background, initial peaks, physical FWHM, formal extraction, Classical matching,
+profile expansion and profile fitting.
+Canonical snapshots and prepared tasks own the immutable selection. Public common
+preprocessing and formal extraction evaluate source-bound values; shared search
+preparation drives GUI and CLI. SearchEngine delegates to a concrete Classical
+workflow with fixed FOM/residual processing and common query/ranking operations.
+See [algorithm contracts](../../docs/architecture/search-algorithms.md).
+PFSM fits continuous observations and freezes its discrete reference universe.
+Source-bound PFSM/RIR quantification reads the selected joint baseline and frozen
+full-card maxima, with typed RIR values supplied by the reference reader. RIR
+revisions are checked Workspace transactions, scoped to that frozen analysis;
+they never modify the database or rerun the fit. QPF preserves complete frozen
+PFSM evidence and supports validated continuation.
+
+The complete target is independently consumed by the compiled example in
+[`tests/architecture`](../../tests/architecture/application_boundary.cpp), which
+performs no Qt discovery. See the [build guide](../../docs/development/building.md)
+for standalone consumption and [ownership](../../docs/architecture/overview.md)
+for publication and lifetime rules.

@@ -61,18 +61,15 @@ void ReportWidget::setRestraintsInfo(bool hasRestraints, const QStringList &acti
     m_activeRestraints = active;
 }
 
-void ReportWidget::updateQuantitative(const QVector<CardType> &phases,
-                                      const QVector<double> &percentages)
+void ReportWidget::updateQuantitative(const qualpf::application::QuantificationResult &result)
 {
-    m_phases = phases;
-    m_quant  = percentages;
+    m_quantification = result;
     generateHtml();
 }
 
 void ReportWidget::clearQuantitative()
 {
-    m_phases.clear();
-    m_quant.clear();
+    m_quantification = {};
     generateHtml();
 }
 
@@ -81,8 +78,7 @@ void ReportWidget::clear()
     m_ep       = ExperimentalPeaks();
     m_cards.clear();
     m_maxCards = 100;
-    m_phases.clear();
-    m_quant.clear();
+    m_quantification = {};
     m_pkSettings = {};
     m_hasRestraints = false;
     m_activeRestraints.clear();
@@ -121,7 +117,7 @@ QPixmap ReportWidget::renderPieChart(const QVector<QPair<QColor, double>> &slice
 void ReportWidget::generateHtml()
 {
     QString html =
-        "<html><body style='font-family:sans-serif;font-size:9pt'>"
+        "<html><body style='font-size:9pt'>"
         "<style>table{border-collapse:collapse} th,td{padding:3px} "
         "th{background:#e0e0e0}</style>";
 
@@ -216,8 +212,8 @@ void ReportWidget::generateHtml()
         html += "</table>";
     }
 
-    // ── Peak Search Conditions ──────────────────────────────────────────────
-    html += "<h3>Peak Search Conditions</h3>";
+    // ── Peak Search Options ─────────────────────────────────────────────────
+    html += "<h3>Peak Search Options</h3>";
     {
         html += "<table border='0'>";
         auto pkRow = [](const QString &label, const QString &val) {
@@ -270,7 +266,7 @@ void ReportWidget::generateHtml()
             QString name = card.getChemicalName();
             if (!card.getMineralName().isEmpty())
                 name += " [" + card.getMineralName() + "]";
-            const QString bg = cardColor(card.getId()).name();
+            const QString bg = cardColor(card.getId(), this).name();
             html += QString("<tr>"
                             "<td align='right'>%1</td>"
                             "<td bgcolor='%2'>%3</td>"
@@ -288,45 +284,37 @@ void ReportWidget::generateHtml()
         html += "</table>";
     }
 
-    // ── Quantitative analysis ───────────────────────────────────────────────
-    if (!m_phases.isEmpty()) {
-        const bool valid = (m_quant.size() == m_phases.size());
-
-        // Build slices for pie chart
-        QVector<QPair<QColor, double>> slices;
-        slices.reserve(m_phases.size());
-        for (int i = 0; i < m_phases.size(); ++i) {
-            const double pct = valid ? m_quant[i] : (100.0 / m_phases.size());
-            slices.append({cardColor(m_phases[i].getId()), pct});
+    // Quantification is the same immutable Application result shown by the panel.
+    const auto &q = m_quantification;
+    if (!q.phases.empty()) {
+        const bool pfsm = q.method == qualpf::application::QuantificationMethod::pfsm_rir;
+        const auto escaped = [](const std::string &v) { return QString::fromStdString(v).toHtmlEscaped(); };
+        const auto number = [](std::optional<double> v, int precision = 2) {
+            return v ? QString::number(*v, 'f', precision) : QStringLiteral("-");
+        };
+        html += pfsm ? "<h3>Quantitative analysis · PFSM/RIR</h3>" : "<h3>Quantitative Analysis · CSM/RIR</h3>";
+        html += QString("<p>%1 · revision %2 · generation %3 · database %4</p>")
+            .arg(q.available() ? "Available" : "Unavailable").arg(q.revision).arg(q.generation).arg(q.database_version);
+        if (q.rwp_net) html += "<p>Joint Rwp (net): " + QString::number(*q.rwp_net, 'g', 17) + "</p>";
+        for (const auto &issue : q.issues)
+            html += "<p>" + escaped(issue.phase_id) + " " + escaped(issue.reason) + ": " + escaped(issue.message) + "</p>";
+        for (const auto &note : q.qualifications) html += "<p>" + escaped(note) + "</p>";
+        if (q.available()) {
+            QVector<QPair<QColor, double>> slices;
+            for (const auto &phase : q.phases) slices.append({cardColor(QString::fromStdString(phase.id), this), *phase.weight_percent});
+            QByteArray ba; QBuffer buf(&ba); buf.open(QIODevice::WriteOnly);
+            renderPieChart(slices, 280).save(&buf, "PNG");
+            html += "<img src='data:image/png;base64," + QString::fromLatin1(ba.toBase64()) + "' width='280' height='280'/><br>";
         }
-
-        // Render pie chart and embed as base64 PNG
-        const QPixmap pix = renderPieChart(slices, 280);
-        QByteArray ba;
-        QBuffer buf(&ba);
-        buf.open(QIODevice::WriteOnly);
-        pix.save(&buf, "PNG");
-        const QString imgSrc = "data:image/png;base64," + QString::fromLatin1(ba.toBase64());
-
-        html += "<h3>Quantitative Analysis</h3>";
-        html += "<img src='" + imgSrc + "' width='280' height='280'/><br>";
-
-        html += "<table border='1'>"
-                "<tr><th></th><th>ID</th><th>Name</th><th>%</th></tr>";
-        for (int i = 0; i < m_phases.size(); ++i) {
-            const CardType &ph = m_phases[i];
-            QString name = ph.getChemicalName();
-            if (!ph.getMineralName().isEmpty())
-                name += " [" + ph.getMineralName() + "]";
-            const QString bg  = cardColor(ph.getId()).name();
-            const QString pct = valid ? QString::number(m_quant[i], 'f', 2) + "%" : "-";
-            html += QString("<tr>"
-                            "<td bgcolor='%1'>&nbsp;&nbsp;&nbsp;</td>"
-                            "<td>%2</td><td>%3</td>"
-                            "<td align='right'>%4</td>"
-                            "</tr>")
-                        .arg(bg, ph.getId())
-                        .arg(name.toHtmlEscaped(), pct);
+        html += "<table border='1'><tr><th>ID</th><th>Name</th><th>wt.%</th>";
+        if (pfsm) html += "<th>Scale</th><th>Shift °2θ</th>";
+        html += "<th>Effective RIR</th><th>RIR source</th><th>Reference RIR</th></tr>";
+        for (const auto &phase : q.phases) {
+            html += "<tr><td>" + escaped(phase.id) + "</td><td>" + escaped(phase.name) +
+                "</td><td>" + number(phase.weight_percent) + "</td>";
+            if (pfsm) html += "<td>" + number(phase.scale, 5) + "</td><td>" + number(phase.shift_degrees, 5) + "</td>";
+            html += "<td>" + number(phase.rir) + "</td><td>" + escaped(phase.rir_source) +
+                (phase.rir_revised ? " (Cu Kα revision)" : "") + "</td><td>" + escaped(phase.original_rir) + "</td></tr>";
         }
         html += "</table>";
     }

@@ -55,6 +55,8 @@ public:
     qualpf::Result<std::vector<qualpf::application::ProductCard>> read(
         const qualpf::application::CandidateQuery &, const qualpf::ExecutionContext &,
         qualpf::application::SearchProgress) override;
+    Result<std::vector<application::StoredCandidateIndex>> storedTop(const ExecutionContext &,
+                                                                    application::SearchProgress) override;
     qualpf::Result<qualpf::application::ProductCard> findById(std::string_view, double, const qualpf::ExecutionContext &) override;
     void getInfo(int &ncard, QString &type);
     // void getCardInfo(const QString &idCard);
@@ -63,6 +65,8 @@ public:
     QList<QPair<QString,int>> querySpaceGroups() const;
     QList<QPair<QString,int>> queryColors() const;
 private:
+    Result<std::vector<application::StoredCandidateIndex>> storedTopValues(const ExecutionContext &,
+                                                                          application::SearchProgress);
     void queryBrowse(const SqlCandidateQuery &, std::vector<qualpf::application::ProductCard> &, ProgressCallback);
     void queryStrongest(const SqlCandidateQuery &, std::vector<qualpf::application::ProductCard> &, ProgressCallback);
     void queryWithoutStrongest(const SqlCandidateQuery &, std::vector<qualpf::application::ProductCard> &, ProgressCallback);
@@ -73,6 +77,7 @@ private:
     int nStrongest;
     std::stop_token m_token;
     bool m_decodeReflections=true;
+    bool m_strictPairedReflections=false;
     QString m_readError;
     bool m_reading = false;
     QString basePath_;

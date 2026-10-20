@@ -19,6 +19,8 @@ PlotInput make_plot_input(const SessionStateView &state, const PresentationWorks
                           double card_display_wavelength) {
     PlotInput out;
     out.presentation = workspace.snapshot();
+    out.presentation.layers[std::size_t(PlotLayer::background)] = Visibility::hidden;
+    out.presentation.layers[std::size_t(PlotLayer::background_points)] = Visibility::visible;
     out.mode = workspace.mode();
     auto add_pattern = [&](const Pattern &pattern) {
         PatternLayerInput input;

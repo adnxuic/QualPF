@@ -10,9 +10,12 @@ class FloatDelegate : public QStyledItemDelegate
 public:
     explicit FloatDelegate(QObject *parent = 0, int decimal = 3);
     void setDecimals(int n) {mDecimal = n;}
+    void setDoublePrecision(bool value) { doublePrecision_ = value; }
+    void setSigned(bool value) { signed_ = value; }
 
 private:
     int mDecimal;
+    bool doublePrecision_ = false, signed_ = false;
 protected:
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
     void setEditorData(QWidget * editor, const QModelIndex & index) const override;
@@ -29,9 +32,9 @@ protected:
     QString displayText(const QVariant &value, const QLocale &locale) const override
     {
         bool ok;
-        float val = value.toFloat(&ok);
+        double val = doublePrecision_ ? value.toDouble(&ok) : value.toFloat(&ok);
         if (!ok) return QString("-");
-        return locale.toString(val,'f',mDecimal);
+        return (signed_ && val >= 0 ? QStringLiteral("+") : QString()) + locale.toString(val,'f',mDecimal);
     }
 
 signals:

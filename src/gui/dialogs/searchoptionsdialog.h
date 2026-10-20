@@ -46,10 +46,13 @@ private slots:
 
 private:
     void loadSettings();
-    void saveSettings();
+    bool saveSettings();
     void resetToDefaults();
 
     Ui::SearchOptionsDialog *ui;
+    qualpf::application::ProductHandle source_;
+    double manualDelta_ = .08;
+    bool loading_ = false;
 };
 
 #endif // SEARCHOPTIONSDIALOG_H
