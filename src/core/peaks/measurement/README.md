@@ -8,7 +8,7 @@ angles follow the original rules. Numerical operations retain rounding-mode
 constraints.
 
 Original Phase28M.1 qualification and product-switch records are available through
-the [history index](../../../../docs/maintenance/phase-history-cleanup/HISTORY.md#phase-28).
+the [history index](../../../../history/README.md#recovering-historical-authority).
 `tests` organizes current product/unit registration. The retired `tests/phase28m1`
 is a historical entry. This maintenance relocates target definitions while
 preserving measurement algorithms and qualification conclusions.

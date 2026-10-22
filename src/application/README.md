@@ -17,7 +17,7 @@ Canonical snapshots and prepared tasks own the immutable selection. Public commo
 preprocessing and formal extraction evaluate source-bound values; shared search
 preparation drives GUI and CLI. SearchEngine delegates to a concrete Classical
 workflow with fixed FOM/residual processing and common query/ranking operations.
-See [algorithm contracts](../../docs/architecture/search-algorithms.md).
+See [algorithm contracts](../../docs/developer/architecture/search-algorithms.md).
 PFSM fits continuous observations and freezes its discrete reference universe.
 Source-bound PFSM/RIR quantification reads the selected joint baseline and frozen
 full-card maxima, with typed RIR values supplied by the reference reader. RIR
@@ -27,6 +27,6 @@ PFSM evidence and supports validated continuation.
 
 The complete target is independently consumed by the compiled example in
 [`tests/architecture`](../../tests/architecture/application_boundary.cpp), which
-performs no Qt discovery. See the [build guide](../../docs/development/building.md)
-for standalone consumption and [ownership](../../docs/architecture/overview.md)
+performs no Qt discovery. See the [build guide](../../docs/developer/building.md)
+for standalone consumption and [ownership](../../docs/developer/architecture/overview.md)
 for publication and lifetime rules.

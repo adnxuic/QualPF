@@ -7,6 +7,6 @@ GUI consumes existing Application workflows; Core remains independent of Qt.
 This maintenance preserves MainWindow lifetime, interaction, projection semantics
 and Qt resource paths.
 
-See the [repository layout](../../docs/development/repository-layout.md) for
-current responsibilities and [migration status](../../.agent/MIGRATION_STATUS.md)
+See the [repository layout](../../docs/developer/repository-layout.md) for
+current responsibilities and [developer contracts](../../docs/developer/README.md)
 for existing numerical and product authorities.

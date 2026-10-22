@@ -10,7 +10,7 @@ import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
-BASELINE = "docs/development/project-baseline.json"
+BASELINE = "docs/developer/project-baseline.json"
 COMPLETE = "CPP_ARCHITECTURE_REFACTOR_COMPLETE"
 CRITERIA = {f"A{i:02d}" for i in range(1, 23)}
 RECOVERY_FIELDS = ("inventory", "recovery_index", "batch_report", "closure_report", "validation_index")

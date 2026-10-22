@@ -7,20 +7,14 @@ user changes. Completed migration queues and old investigation records are not
 new task instructions. PFSM, algorithm changes and threading changes need their
 own authorization; file organization implies none of them.
 
-QualPF uses C++20, CMake and Qt 6 Widgets, with Eigen/Boost supporting current
-numerics. QualX is an algorithm/behavior reference. Core and Application stay
-Qt-free. Application uniquely owns canonical product state. Infrastructure
-implements ports using owned values and never accesses GUI or a live Session.
-GUI depends on Application and borrows immutable views. Explicit composition
-retains dependencies through their required lifetimes. Mandatory source/header
-and configured-target gates enforce the [current architecture](../docs/architecture/overview.md).
-
-Keep source/revision-checked atomic publication, owned worker inputs, cooperative
-cancellation, execution-thread SQLite connections, queued owner-thread delivery,
-safe close/drain and subscription lifetimes. Do not introduce writable canonical
-mirrors, search event pumps or forced thread termination. Preserve the current QPF, SQL, CLI,
-settings, export and retained [compatibility contracts](../docs/architecture/compatibility-allowlist.json).
-Keep unknown fields and values at persistence/settings boundaries unchanged.
+Before editing, read the owning developer contract selected by
+[CONTEXT_MAP](CONTEXT_MAP.md). Preserve Qt-free Core/Application, Application-owned
+canonical state, immutable GUI views, checked atomic publication, owned/cancellable
+worker inputs, execution-thread SQL and safe queued close/drain lifetimes. Detailed
+ownership and dependency rules belong to the
+[architecture guide](../docs/developer/architecture/overview.md), not this policy.
+Check the [compatibility contracts](../docs/developer/architecture/compatibility-allowlist.json)
+for persistence, settings, CLI and exports; preserve unknown boundary values.
 
 ## Scientific integrity and evidence
 
@@ -30,7 +24,7 @@ Never generate expected values from product output, waive unexplained mismatches
 widen tolerances or reproduce undefined Legacy behavior. Substantive numerical
 corrections need independent exact/analytic/property evidence and bounded review.
 Existing accepted contracts need causal conformance checks; organization does not
-reopen their approvals. Follow the [numerical authority](../docs/numerical/policy.md).
+reopen their approvals. Follow the [numerical authority](../docs/developer/numerical/policy.md).
 
 FRESH_VALIDATION means actually executed. REUSED_UNCHANGED_DEPENDENCIES requires
 matching implementation, inputs, references, runner, compiler/options and relevant
@@ -39,11 +33,9 @@ platform or hosted-CI PASS from a subset or local run. Historical gates bind the
 original snapshots, never mutable Agent-file SHA equality. Do not hash gates
 recursively or create per-file proposal/review/gate packages.
 
-Supported product configurations are Windows x64 GCC/MSVC and Linux x64 GCC;
-macOS releases remain disabled. Optimize only from profiling. Future OpenMP
-normally runs across candidate cards, with oneMKL single-threaded underneath;
-no scheduling or numerical change follows from maintenance. GoogleTest/Benchmark
-and clang-format/clang-tidy remain optional development tools.
+Use the supported configurations and toolchain instructions in the
+[build guide](../docs/developer/building.md). Profile before optimizing; a maintenance
+task does not authorize scheduling, numerical or platform-support changes.
 
 ## Git and documentation
 
@@ -62,5 +54,5 @@ Do not push/force-push, reset/stash user work, change remotes, rebase/rewrite hi
 delete protection tags or prune referenced Git/LFS objects. Preserve original
 approval, receipt and failed-comparison bytes and scope. Current documentation uses
 English; original frozen evidence retains its language and bytes. Use
-[historical recovery](../docs/migration-history.md) only for affected authority,
+[historical recovery](../history/README.md) only for affected authority,
 independently of normal builds and tests.

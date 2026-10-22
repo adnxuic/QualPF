@@ -5,5 +5,5 @@
 `migration/backends.h` retains the abstract backend interface identity.
 Public types expose no Qt, SQL, GUI, Eigen/oneMKL or Fortran ABI types.
 
-See [migration status](../../../../.agent/MIGRATION_STATUS.md) for current owners
+See [developer contracts](../../../../docs/developer/README.md) for current owners
 and authorities.

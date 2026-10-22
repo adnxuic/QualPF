@@ -37,7 +37,7 @@ retained pre-refactor executable, in addition to independent scientific tests.
 ## Running
 
 Use the shared `windows-gnu`, `windows-msvc`, or `linux-gnu` presets and a local
-SDK preset when needed; see [building](../docs/development/building.md).
+SDK preset when needed; see [building](../docs/developer/building.md).
 
 ```sh
 cmake --preset windows-gnu
@@ -62,7 +62,7 @@ run complete Windows suites serially to avoid their shared system-scope fixture.
 wires/transcripts, tolerance policies and CIF fixtures.
 `regression/references` holds small algorithm-organized accepted/proved resources
 and inert `.txt` provenance. Values and hashes are unchanged; no golden is
-generated from C++. See [numerical policy](../docs/numerical/policy.md) and
+generated from C++. See [numerical policy](../docs/developer/numerical/policy.md) and
 [data provenance](data-guide.md). Logical historical keys are resolved locally
 by `reference_paths.py`, without restoring full phase packages.
 
@@ -103,12 +103,12 @@ python -B tools/validation/check_product_identity.py --self-test
 Some test/data names retain `fortran_capture`, `phase6` or `legacy`: these check
 frozen provenance and valid compatibility behavior in current C++, not migration
 execution. Missing/changed input fails. Full old audits and capture tools are
-available through [historical recovery](../docs/migration-history.md) independently
+available through [historical recovery](../history/README.md) independently
 of normal development.
 
 ## Search-Match workflow
 
-[Algorithm contracts](../docs/architecture/search-algorithms.md) map the seven
+[Algorithm contracts](../docs/developer/architecture/search-algorithms.md) map the seven
 replacement points to their numerical owners and product consumers. The
 `qualpf.algorithms.*` tests retain independent scientific/error assertions and
 exercise common preprocessing, physical FWHM, fixed parameter mapping, independent
@@ -120,7 +120,7 @@ PFSM Core contracts run as `qualpf.algorithms.pfsm_core` (or `pfsm.core` in the
 Qt-free architecture harness). Analytic templates/NNLS, prescribed shift fits,
 active bounds, degenerate columns, final-shift rank with all scales inactive, and
 cancellation are covered. The optional
-independent SciPy/Brent comparison is documented in [the PFSM contract](../docs/numerical/pfsm.md).
+independent SciPy/Brent comparison is documented in [the PFSM contract](../docs/developer/numerical/pfsm.md).
 
 `qualpf.quantification.core` independently checks profile/RIR analytic fractions,
 reference and observation scaling, common IL integral cancellation, radiation

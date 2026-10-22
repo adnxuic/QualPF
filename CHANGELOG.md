@@ -12,6 +12,11 @@ reports are no longer used for routine development.
 
 ### Changed
 
+- Separated user and developer documentation from AI working instructions, with
+  task-based developer navigation for agents. Preserved original reports and
+  evidence under `history/`, with relocation and integrity checks. Completed user
+  website navigation and PDF coverage without changing existing page URLs.
+
 - Extended local-output exclusions to Visual Studio CMake outputs/settings and
   Python/tool caches in both Git and source packages. Retained the optimization
   development branch and a local protection tag for final-tree squash publication.

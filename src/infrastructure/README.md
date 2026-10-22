@@ -9,6 +9,6 @@ This module registers the SQL writer; Application registers card, product and
 database-build services. Class responsibilities, database schema, formats and
 link relationships remain unchanged.
 
-See the [repository layout](../../docs/development/repository-layout.md) for
-current responsibilities and [migration status](../../.agent/MIGRATION_STATUS.md)
+See the [repository layout](../../docs/developer/repository-layout.md) for
+current responsibilities and [developer contracts](../../docs/developer/README.md)
 for existing numerical and product authorities.

@@ -28,10 +28,12 @@ nav:
   - Introduction:
     - Overview: introduction/index.md
     - Getting Started: introduction/getting-started.md
+    - Settings and Workflow History: settings.md
     - Examples: introduction/examples.md
   - Data Reduction:
     - Overview: data-reduction/index.md
     - Background: data-reduction/background.md
+    - Initial Peak Search: data-reduction/initial-peak-search.md
     - Peak Search: data-reduction/peak-search.md
     - Smoothing: data-reduction/smoothing.md
     - K-α2 Stripping: data-reduction/kalpha2-stripping.md

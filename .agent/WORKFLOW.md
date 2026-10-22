@@ -5,7 +5,9 @@
 1. Inspect git status, branch and HEAD. Read the startup files in README order.
    Identify unrelated user work and any existing active task before writing.
 2. Resolve task scope and success criteria from user authorization. Follow
-   [CONTEXT_MAP](CONTEXT_MAP.md) to inspect the relevant authority, owners and consumers.
+   [CONTEXT_MAP](CONTEXT_MAP.md) from the [developer entry](../docs/developer/README.md)
+   to inspect the owning contract, implementation and tests. Check the user manual
+   for observable behavior; consult history only for the affected evidence.
    Use a descriptive task name; no Phase number, phase plan or phase gate is required.
 3. Start one active task or resume the matching task. Compare its base/checkpoint
    with actual Git state. Reconcile differences by inspection; never reset or
@@ -27,7 +29,7 @@ the batch and locally commit it. A batch boundary alone is not an approval reque
 Run affected checks per batch. Full normal regressions belong to checkpoints and
 final verification when the affected behavior requires them. Repeat after a
 meaningful source/runner/configuration repair, not merely to accumulate PASS logs.
-Use the [build/test guide](../docs/development/building.md) and
+Use the [build/test guide](../docs/developer/building.md) and
 [normal coverage](../tests/coverage.json). Preserve timeouts and original inputs.
 
 Fix routine build/test/integration errors with original failures retained. Pause
@@ -52,7 +54,7 @@ starts from new authorization. Do not leave a permanent completion log in this d
 
 [TASK_STATE.json](TASK_STATE.json) uses qualpf.agent_task_state.v1. Its only root
 fields are schema, baseline_ref and active_task. baseline_ref points to
-[project-baseline.json](../docs/development/project-baseline.json); baseline
+[project-baseline.json](../docs/developer/project-baseline.json); baseline
 acceptance is checked separately and does not dictate the current task's status.
 
 active_task is null or an object containing exactly:

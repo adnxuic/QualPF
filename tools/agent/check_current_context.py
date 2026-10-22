@@ -11,10 +11,10 @@ from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
 STATE = ".agent/TASK_STATE.json"
-BASELINE = "docs/development/project-baseline.json"
+BASELINE = "docs/developer/project-baseline.json"
 AGENT_FILES = {"README.md", "POLICY.md", "WORKFLOW.md", "CONTEXT_MAP.md", "TASK_STATE.json", ".gitattributes"}
 ENTRY_DOCUMENTS = ("AGENTS.md", ".agent/README.md", ".agent/POLICY.md", ".agent/WORKFLOW.md", ".agent/CONTEXT_MAP.md")
-REQUIRED_INPUTS = ("AGENTS.md", "docs/development/building.md", "tests/reference/manifest.json",
+REQUIRED_INPUTS = ("AGENTS.md", "docs/README.md", "docs/developer/README.md", "docs/developer/building.md", "tests/reference/manifest.json",
                    "tools/architecture/check_boundaries.py", "tools/validation/check_references.py", BASELINE)
 RETIRED_NAMES = ("CURRENT_STATE.md", "ARCHITECTURE.md", "NUMERICAL_POLICY.md", "VALIDATION_POLICY.md",
                  "EXECUTION_POLICY.md", "ACTIVE_PHASE.md", "PROJECT_STATE.json", "OWNERSHIP.md", "COMPATIBILITY.md")
@@ -217,8 +217,8 @@ def check(root=ROOT):
             for retired in RETIRED_NAMES:
                 if re.search(r"(?<![\w-])" + re.escape(retired) + r"(?![\w-])", content):
                     errors.append(f"{name}: retired startup input: {retired}")
-    consumers = [root / name for name in ("AGENTS.md", "README.md", ".gitattributes", "docs/development/building.md",
-                                         "docs/development/repository-layout.md", "tests/README.md")]
+    consumers = [root / name for name in ("AGENTS.md", "README.md", ".gitattributes", "docs/developer/building.md",
+                                         "docs/developer/repository-layout.md", "tests/README.md")]
     for area in ("tools", ".github"):
         consumers.extend(path for path in (root / area).rglob("*") if path.is_file()
                          and path.suffix in (".py", ".ps1", ".sh", ".yml", ".yaml", ".json", ".cmake"))

@@ -298,7 +298,7 @@
   },
   "algorithm_modularization_additions": {
     "baseline_normal_count": 86,
-    "contract": "docs/architecture/search-algorithms.md",
+    "contract": "docs/developer/architecture/search-algorithms.md",
     "tests": [
       "qualpf.algorithms.classic_contracts",
       "qualpf.algorithms.core_modules",
@@ -312,7 +312,7 @@
     "expected_values_changed": false
   },
   "configured_fwhm": {
-    "contract": "docs/architecture/fwhm-workflow.md",
+    "contract": "docs/developer/architecture/fwhm-workflow.md",
     "tests": [
       "qualpf.application.configured_fwhm",
       "qualpf.project.boundaries",
@@ -324,7 +324,7 @@
   },
   "search_workflow_migration": {
     "entry_commit": "0f5b56eee139989d80df705c3a74e96bc4100bf7",
-    "contract": "docs/architecture/search-algorithms.md",
+    "contract": "docs/developer/architecture/search-algorithms.md",
     "replacement_points": [
       "background",
       "initial_peaks",
@@ -425,7 +425,7 @@
     "frozen_expected_values_changed": false
   },
   "qpf_project": {
-    "contract": "docs/architecture/project-format.md",
+    "contract": "docs/developer/architecture/project-format.md",
     "tests": [
       "qualpf.project.qpf",
       "qualpf.project.qpf_protocol",

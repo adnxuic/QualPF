@@ -43,11 +43,11 @@ GUI searches use that same engine in a dedicated background worker with cooperat
 cancellation and atomic owner-thread publication.
 
 Product and normal tests require no Fortran compiler/runtime or historical runner.
-See [current architecture](docs/architecture/README.md),
-[building and testing](docs/development/building.md) and
-[migration history/recovery](docs/migration-history.md). Classical and PFSM
+See [current architecture](docs/developer/architecture/README.md),
+[building and testing](docs/developer/building.md) and
+[migration history/recovery](history/README.md). Classical and PFSM
 Search-Match workflows are available; PFSM identification and performance
-qualifications remain explicit in the [PFSM guide](docs/numerical/pfsm.md).
+qualifications remain explicit in the [PFSM guide](docs/developer/numerical/pfsm.md).
 Projects use the incompatible QPF 1.0 format; older QXP projects are not accepted.
 
 The application can work with:
@@ -210,10 +210,11 @@ mkdocs build --strict -f docs/mkdocs.yml
 bash docs/make_pdf.sh   # optional: generates docs/qualpf_manual.pdf
 ```
 
-For development, see [building and contributing](docs/development/building.md),
-[current architecture](docs/architecture/README.md) and [CHANGELOG.md](CHANGELOG.md).
-Historical refactoring reports and evidence are indexed in
-[migration history](docs/migration-history.md).
+Choose [user documentation](docs/user/index.md) for installation and operation,
+or the [developer guide](docs/developer/README.md) for building, architecture,
+numerical contracts and tests. [Documentation ownership](docs/README.md) explains
+where each topic belongs. [History](history/README.md) indexes original evidence;
+[AGENTS.md](AGENTS.md) is the entry for AI working rules.
 
 ## Repository structure
 
@@ -234,18 +235,16 @@ tools/                  current context, architecture, validation and table tool
 third_party/            required third-party source
 share/qualx/            consumed runtime data with original names/attribution
 deploy/                 current Windows/Linux packaging resources
-docs/architecture/      ownership/dependencies and accepted decisions
-docs/numerical/         scientific policy and reference instructions
-docs/development/       build/test/contribution and repository guides
 docs/user/              user manual with unchanged page URLs
-docs/migration-history.md  archive and recovery entry
-.agent/                 Agent rules, task navigation and one mutable handoff
+docs/developer/         architecture, numerical contracts and developer guides
+history/                original reports, frozen evidence and recovery index
+.agent/                 AI working rules, documentation navigation and task handoff
 build/<configuration>/  ignored local caches, binaries and test logs
 releases/               ignored local package outputs
 ```
 
-[Directory responsibilities](docs/development/repository-layout.md) and
-[build/contribution instructions](docs/development/building.md) describe shared
+[Directory responsibilities](docs/developer/repository-layout.md) and
+[build/contribution instructions](docs/developer/building.md) describe shared
 presets and machine-local SDK configuration.
 
 ## Citing QualX
@@ -276,14 +275,9 @@ Originally developed and maintained at the **Institute of Crystallography, CNR (
 
 Bug reports, feature requests, and merge requests are welcome. Please open an issue describing the problem or proposal before submitting larger changes.
 
-Develop features, fixes and optimizations as ordinary scoped tasks. Phase numbering
-was used for the completed refactoring and is no longer part of development.
-Record notable completed changes under Unreleased in [CHANGELOG.md](CHANGELOG.md)
-and update affected current documentation. Routine tasks need no separate Phase
-plan or completion report.
-
-Write current project documentation and README files in English. Preserve the
-original bytes and language of frozen evidence and archived snapshots.
+See the [contribution workflow](docs/developer/building.md#contribution-workflow)
+for checks and change records. Current documentation uses English; frozen evidence
+retains its original language and bytes.
 
 ## Support
 

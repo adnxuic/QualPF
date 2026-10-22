@@ -1,0 +1,1292 @@
+{
+  "schema": "qualpf.milestone_a.a01_independent_reacceptance.v1",
+  "review_date": "2026-10-09",
+  "candidate_commit": "5a247152c9a57bdab4f0ba348218dec80044d49c",
+  "correction_baseline_commit": "b4e506bba0d052c2e3c3f60ef6cce422b48e9a81",
+  "phase37e_final_closure_commit": "e6883edab2fb26d8f22866c0585b910322027c12",
+  "original_fresh_build_test_checkpoint": "d2915b0bd32b3644b00bc343440dd24548571bd6",
+  "phase37a_d_accepted_implementation": "2610439f883dba06b609d1c2393c522bda257cfa",
+  "review": "docs/architecture/milestone-a/a01/independent-review.md",
+  "matrix": "docs/architecture/milestone-a/a01/acceptance-matrix.md",
+  "correction": "docs/architecture/milestone-a/a01/correction.md",
+  "record_commit_resolution": "git log -1 -- docs/architecture/milestone-a/a01/gate.json",
+  "record_commit_scope": "Independent records/raw logs, current summaries and context-checker acceptance support only; no post-correction production/test/build/runtime changes",
+  "independence": {
+    "committed_input_checkout": true,
+    "actual_source_and_status_owner_review": true,
+    "original_product_negative_control": true,
+    "independent_original_fixed_cli_script": true,
+    "new_product_compiled_and_executed_on_all_three_configurations": true,
+    "raw_logs_junit_commands_inputs_artifacts_checked": true,
+    "correction_report_labels_not_sufficient": true,
+    "production_modified_during_reacceptance": false,
+    "expected_values_tolerances_or_history_modified": false
+  },
+  "mandatory_criteria": [
+    {
+      "id": "A01",
+      "criterion": "Core dependency and Qt independence",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A02",
+      "criterion": "Complete Application dependency and Qt independence",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A03",
+      "criterion": "Canonical state ownership and derived views",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A04",
+      "criterion": "Snapshot/revision/commit/preprocessing contracts",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A05",
+      "criterion": "Database and IO responsibility separation",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A06",
+      "criterion": "SQLite execution-thread ownership and write exclusion",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A07",
+      "criterion": "Shared engine/scoring/ranking/residual contracts",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A08",
+      "criterion": "Background GUI search and zero search event pumps",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A09",
+      "criterion": "Busy/cancellation/stale/owner-thread atomic publication",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A10",
+      "criterion": "GUI/dialog/actions/closing/drain lifetime",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A11",
+      "criterion": "Structured error boundaries do not return empty success",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A12",
+      "criterion": "169 reference byte identities and approved numerical policy",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A13",
+      "criterion": "Current normal numerical/product regression coverage",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A14",
+      "criterion": "GUI/CLI/import/export product boundary behavior",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A15",
+      "criterion": "Windows GCC 13.1 Qt 6.8.3 supported clean build/tests",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A16",
+      "criterion": "Windows MSVC 19.40 Qt 6.8.3 supported clean build/tests",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A17",
+      "criterion": "Ubuntu 26.04 GCC 15.2 Qt 6.10.2 supported clean build/tests",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A18",
+      "criterion": "Clean repository/checkout independent of migration facilities",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A19",
+      "criterion": "Actual final source package exclusions",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A20",
+      "criterion": "Historical index and actual local recovery",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A21",
+      "criterion": "Milestone F preservation",
+      "mandatory": true,
+      "result": "PASS"
+    },
+    {
+      "id": "A22",
+      "criterion": "PFSM architecture boundary/no unauthorized start",
+      "mandatory": true,
+      "result": "PASS"
+    }
+  ],
+  "mandatory_summary": {
+    "total": 22,
+    "PASS": 22,
+    "FAIL": 0,
+    "NOT_VERIFIED": 0,
+    "distinct_blockers": 0
+  },
+  "blockers": [],
+  "resolved_findings": [
+    {
+      "id": "A-01",
+      "criteria": [
+        "A11",
+        "A14"
+      ],
+      "owner": "CLI composition",
+      "production_file": "apps/qualpf/main.cpp",
+      "added_lines": 4,
+      "resolution": "Check existing cancellation/error status before success output; existing pattern diagnostic and EXIT_FAILURE; no empty-vector inference"
+    }
+  ],
+  "platforms": {
+    "windows-gnu": {
+      "status": "PASS",
+      "platform": "windows-gnu",
+      "candidate": "5a247152c9a57bdab4f0ba348218dec80044d49c",
+      "source_inputs_rehashed": 1775,
+      "authorized_input_delta": [
+        "apps/qualpf/main.cpp",
+        "tests/README.md",
+        "tests/coverage.json",
+        "tests/product/CMakeLists.txt"
+      ],
+      "added_sources": [
+        "tests/product/cli/search_boundary.py",
+        "tests/integration/gui/synchronous_search_service_test.cpp"
+      ],
+      "compile_units": 304,
+      "existing_compile_commands_preserved": 302,
+      "complete_qtfree_core_application_units": 70,
+      "commands_sha256": "5e8708d5a0e36bfd2e3390b4167a062f86f4676d2827d6f5a002179293092d84",
+      "binaries_rehashed": 70,
+      "unchanged_original_binaries": 68,
+      "changed_original_binaries": [
+        "src/qualpf.exe"
+      ],
+      "new_product_sha256": "1af3e25b57970a4d5ec39112e7daf84a001525e6342b7a5fe8c8ae7fc00e8150",
+      "old_product_sha256": "630182276457eb648298d75254b335285d31f431371410ba2258c3306cb672ff",
+      "normal_tests": 82,
+      "fresh_validation": [
+        "qualpf.application.preprocessing_evaluation",
+        "qualpf.application.product_session",
+        "qualpf.application.product_values",
+        "qualpf.application.search_coordinator",
+        "qualpf.application.search_engine",
+        "qualpf.cif.product.lifecycle",
+        "qualpf.classic.reference",
+        "qualpf.classic.reference_contract",
+        "qualpf.classic.synthetic_replay",
+        "qualpf.cli.search_boundary",
+        "qualpf.cli.synchronous_boundaries",
+        "qualpf.database.candidate_reader",
+        "qualpf.database.threaded_reader",
+        "qualpf.gui.search_tasks",
+        "qualpf.gui.window_child_close",
+        "qualpf.gui.window_lifecycle",
+        "qualpf.gui.window_queued_close",
+        "qualpf.gui.workspace_context",
+        "qualpf.pattern.lifecycle",
+        "qualpf.plot.sink.controls",
+        "qualpf.preprocessing.current_probe_state",
+        "qualpf.preprocessing.product_reference",
+        "qualpf.preprocessing.reference",
+        "qualpf.preprocessing.rounding",
+        "qualpf.product.startup",
+        "qualpf.project.boundaries",
+        "qualpf.project.codec",
+        "qualpf.settings.migration"
+      ],
+      "reused_unchanged_dependencies": [
+        "qualpf.card.acceptance_gate",
+        "qualpf.card.chemistry_registry",
+        "qualpf.card.properties",
+        "qualpf.card.reference",
+        "qualpf.cif.compatibility.selectors",
+        "qualpf.classic.fortran_capture",
+        "qualpf.classic.phase6_evidence",
+        "qualpf.classic.undefined_product",
+        "qualpf.crystallography.properties",
+        "qualpf.crystallography.reference",
+        "qualpf.cutover.default.startup",
+        "qualpf.export.service.controls",
+        "qualpf.io.memory_boundary",
+        "qualpf.kalpha2.lifecycle.cpp",
+        "qualpf.kalpha2.lifecycle.legacy",
+        "qualpf.kalpha2.reference",
+        "qualpf.math.current_reference_protocol",
+        "qualpf.math.rounded_transcendentals",
+        "qualpf.numerics.reference",
+        "qualpf.pattern.abi_reference",
+        "qualpf.pattern.canonical_projection",
+        "qualpf.pattern.edge_reference",
+        "qualpf.pattern.reference",
+        "qualpf.pattern.vendor_reference",
+        "qualpf.pdf2.lifecycle",
+        "qualpf.powder.properties",
+        "qualpf.powder.protocol_integrity",
+        "qualpf.powder.reference",
+        "qualpf.powder_import.math.asin64",
+        "qualpf.powder_import.service.controls",
+        "qualpf.preprocessing.acceptance_gate",
+        "qualpf.preprocessing.export.reference",
+        "qualpf.profile.properties",
+        "qualpf.reflection.properties",
+        "qualpf.reflection.reference",
+        "qualpf.scattering.properties",
+        "qualpf.scattering.protocol_integrity",
+        "qualpf.scattering.reference",
+        "qualpf.scattering.table_reproducible",
+        "qualpf.symmetry.properties",
+        "qualpf.symmetry.reference",
+        "qualpf.symmetry.table_reproducible",
+        "qualpf_atomic_export_controls",
+        "qualpf_cif_block_properties",
+        "qualpf_cif_build_properties",
+        "qualpf_cif_card_properties",
+        "qualpf_cif_database_properties",
+        "qualpf_cif_import_properties",
+        "qualpf_cif_semantic_properties",
+        "qualpf_cif_site_symmetry_properties",
+        "qualpf_cif_syntax_properties",
+        "qualpf_export_properties",
+        "qualpf_export_schema_controls",
+        "qualpf_presentation_properties"
+      ],
+      "reused_checkpoint": "d2915b0bd32b3644b00bc343440dd24548571bd6",
+      "original_junit_sha256": "ac9c2d7d4f6ec362193a236a3e7e4c8c3afe934da29c6b9e648d9a55d4c73e69",
+      "fresh_junit_sha256": "b9a3b688c0cad884912bfb8bf92bc813c49f9d6d1d4c8e1615d3d47997d30a46",
+      "normal_test_commands_and_properties_preserved": true,
+      "independent_product_cases": 11
+    },
+    "windows-msvc": {
+      "status": "PASS",
+      "platform": "windows-msvc",
+      "candidate": "5a247152c9a57bdab4f0ba348218dec80044d49c",
+      "source_inputs_rehashed": 1775,
+      "authorized_input_delta": [
+        "apps/qualpf/main.cpp",
+        "tests/README.md",
+        "tests/coverage.json",
+        "tests/product/CMakeLists.txt"
+      ],
+      "added_sources": [
+        "tests/product/cli/search_boundary.py",
+        "tests/integration/gui/synchronous_search_service_test.cpp"
+      ],
+      "compile_units": 301,
+      "existing_compile_commands_preserved": 299,
+      "complete_qtfree_core_application_units": 70,
+      "commands_sha256": "5212b6806241281d7837a26260515f009437051ec034c41403a0ed60e3ebabb3",
+      "binaries_rehashed": 70,
+      "unchanged_original_binaries": 68,
+      "changed_original_binaries": [
+        "src/qualpf.exe"
+      ],
+      "new_product_sha256": "68ac8486e976495cdff4791066e33c99931c9fbc5dc4ab1a9109493a614440fb",
+      "old_product_sha256": "2f7cea9bc49a20b397ec602f052dcb740b1c10e7a1933c43a0a6a9d68d47bd00",
+      "normal_tests": 82,
+      "fresh_validation": [
+        "qualpf.application.preprocessing_evaluation",
+        "qualpf.application.product_session",
+        "qualpf.application.product_values",
+        "qualpf.application.search_coordinator",
+        "qualpf.application.search_engine",
+        "qualpf.cif.product.lifecycle",
+        "qualpf.classic.reference",
+        "qualpf.classic.reference_contract",
+        "qualpf.classic.synthetic_replay",
+        "qualpf.cli.search_boundary",
+        "qualpf.cli.synchronous_boundaries",
+        "qualpf.database.candidate_reader",
+        "qualpf.database.threaded_reader",
+        "qualpf.gui.search_tasks",
+        "qualpf.gui.window_child_close",
+        "qualpf.gui.window_lifecycle",
+        "qualpf.gui.window_queued_close",
+        "qualpf.gui.workspace_context",
+        "qualpf.pattern.lifecycle",
+        "qualpf.plot.sink.controls",
+        "qualpf.preprocessing.current_probe_state",
+        "qualpf.preprocessing.product_reference",
+        "qualpf.preprocessing.reference",
+        "qualpf.preprocessing.rounding",
+        "qualpf.product.startup",
+        "qualpf.project.boundaries",
+        "qualpf.project.codec",
+        "qualpf.settings.migration"
+      ],
+      "reused_unchanged_dependencies": [
+        "qualpf.card.acceptance_gate",
+        "qualpf.card.chemistry_registry",
+        "qualpf.card.properties",
+        "qualpf.card.reference",
+        "qualpf.cif.compatibility.selectors",
+        "qualpf.classic.fortran_capture",
+        "qualpf.classic.phase6_evidence",
+        "qualpf.classic.undefined_product",
+        "qualpf.crystallography.properties",
+        "qualpf.crystallography.reference",
+        "qualpf.cutover.default.startup",
+        "qualpf.export.service.controls",
+        "qualpf.io.memory_boundary",
+        "qualpf.kalpha2.lifecycle.cpp",
+        "qualpf.kalpha2.lifecycle.legacy",
+        "qualpf.kalpha2.reference",
+        "qualpf.math.current_reference_protocol",
+        "qualpf.math.rounded_transcendentals",
+        "qualpf.numerics.reference",
+        "qualpf.pattern.abi_reference",
+        "qualpf.pattern.canonical_projection",
+        "qualpf.pattern.edge_reference",
+        "qualpf.pattern.reference",
+        "qualpf.pattern.vendor_reference",
+        "qualpf.pdf2.lifecycle",
+        "qualpf.powder.properties",
+        "qualpf.powder.protocol_integrity",
+        "qualpf.powder.reference",
+        "qualpf.powder_import.math.asin64",
+        "qualpf.powder_import.service.controls",
+        "qualpf.preprocessing.acceptance_gate",
+        "qualpf.preprocessing.export.reference",
+        "qualpf.profile.properties",
+        "qualpf.reflection.properties",
+        "qualpf.reflection.reference",
+        "qualpf.scattering.properties",
+        "qualpf.scattering.protocol_integrity",
+        "qualpf.scattering.reference",
+        "qualpf.scattering.table_reproducible",
+        "qualpf.symmetry.properties",
+        "qualpf.symmetry.reference",
+        "qualpf.symmetry.table_reproducible",
+        "qualpf_atomic_export_controls",
+        "qualpf_cif_block_properties",
+        "qualpf_cif_build_properties",
+        "qualpf_cif_card_properties",
+        "qualpf_cif_database_properties",
+        "qualpf_cif_import_properties",
+        "qualpf_cif_semantic_properties",
+        "qualpf_cif_site_symmetry_properties",
+        "qualpf_cif_syntax_properties",
+        "qualpf_export_properties",
+        "qualpf_export_schema_controls",
+        "qualpf_presentation_properties"
+      ],
+      "reused_checkpoint": "d2915b0bd32b3644b00bc343440dd24548571bd6",
+      "original_junit_sha256": "a9838e20e921ac312fef15a4e4d5a488f35cf75311af3d514f0695dd83468ab1",
+      "fresh_junit_sha256": "70662823859acf876b143ee2e8cdb6c165cb0ede7e9035bc7aab1a13d284ae50",
+      "normal_test_commands_and_properties_preserved": true,
+      "independent_product_cases": 11
+    },
+    "linux-gnu": {
+      "status": "PASS",
+      "platform": "linux-gnu",
+      "candidate": "5a247152c9a57bdab4f0ba348218dec80044d49c",
+      "source_inputs_rehashed": 1775,
+      "authorized_input_delta": [
+        "apps/qualpf/main.cpp",
+        "tests/README.md",
+        "tests/coverage.json",
+        "tests/product/CMakeLists.txt"
+      ],
+      "added_sources": [
+        "tests/product/cli/search_boundary.py",
+        "tests/integration/gui/synchronous_search_service_test.cpp"
+      ],
+      "compile_units": 303,
+      "existing_compile_commands_preserved": 301,
+      "complete_qtfree_core_application_units": 70,
+      "commands_sha256": "47c29b69fb4ae0eb5bca1a83a789ec6d68cb6e8aebbaef1511ece99bba3ac9e7",
+      "binaries_rehashed": 71,
+      "unchanged_original_binaries": 69,
+      "changed_original_binaries": [
+        "src/qualpf"
+      ],
+      "new_product_sha256": "b50f4047ca7ecfc4c2bae4fa3b9562c33bd5410e04cea66f8fb0c4380d4e2fa7",
+      "old_product_sha256": "3234a64f292e8fb1c9eb07bf25f767cc2e467eb8bf8da30e794e7dfb4a899cdf",
+      "normal_tests": 82,
+      "fresh_validation": [
+        "qualpf.application.preprocessing_evaluation",
+        "qualpf.application.product_session",
+        "qualpf.application.product_values",
+        "qualpf.application.search_coordinator",
+        "qualpf.application.search_engine",
+        "qualpf.cif.product.lifecycle",
+        "qualpf.classic.reference",
+        "qualpf.classic.reference_contract",
+        "qualpf.classic.synthetic_replay",
+        "qualpf.cli.search_boundary",
+        "qualpf.cli.synchronous_boundaries",
+        "qualpf.database.candidate_reader",
+        "qualpf.database.threaded_reader",
+        "qualpf.gui.search_tasks",
+        "qualpf.gui.window_child_close",
+        "qualpf.gui.window_lifecycle",
+        "qualpf.gui.window_queued_close",
+        "qualpf.gui.workspace_context",
+        "qualpf.pattern.lifecycle",
+        "qualpf.plot.sink.controls",
+        "qualpf.preprocessing.current_probe_state",
+        "qualpf.preprocessing.product_reference",
+        "qualpf.preprocessing.reference",
+        "qualpf.preprocessing.rounding",
+        "qualpf.product.startup",
+        "qualpf.project.boundaries",
+        "qualpf.project.codec",
+        "qualpf.settings.migration"
+      ],
+      "reused_unchanged_dependencies": [
+        "qualpf.card.acceptance_gate",
+        "qualpf.card.chemistry_registry",
+        "qualpf.card.properties",
+        "qualpf.card.reference",
+        "qualpf.cif.compatibility.selectors",
+        "qualpf.classic.fortran_capture",
+        "qualpf.classic.phase6_evidence",
+        "qualpf.classic.undefined_product",
+        "qualpf.crystallography.properties",
+        "qualpf.crystallography.reference",
+        "qualpf.cutover.default.startup",
+        "qualpf.export.service.controls",
+        "qualpf.io.memory_boundary",
+        "qualpf.kalpha2.lifecycle.cpp",
+        "qualpf.kalpha2.lifecycle.legacy",
+        "qualpf.kalpha2.reference",
+        "qualpf.math.current_reference_protocol",
+        "qualpf.math.rounded_transcendentals",
+        "qualpf.numerics.reference",
+        "qualpf.pattern.abi_reference",
+        "qualpf.pattern.canonical_projection",
+        "qualpf.pattern.edge_reference",
+        "qualpf.pattern.reference",
+        "qualpf.pattern.vendor_reference",
+        "qualpf.pdf2.lifecycle",
+        "qualpf.powder.properties",
+        "qualpf.powder.protocol_integrity",
+        "qualpf.powder.reference",
+        "qualpf.powder_import.math.asin64",
+        "qualpf.powder_import.service.controls",
+        "qualpf.preprocessing.acceptance_gate",
+        "qualpf.preprocessing.export.reference",
+        "qualpf.profile.properties",
+        "qualpf.reflection.properties",
+        "qualpf.reflection.reference",
+        "qualpf.scattering.properties",
+        "qualpf.scattering.protocol_integrity",
+        "qualpf.scattering.reference",
+        "qualpf.scattering.table_reproducible",
+        "qualpf.symmetry.properties",
+        "qualpf.symmetry.reference",
+        "qualpf.symmetry.table_reproducible",
+        "qualpf_atomic_export_controls",
+        "qualpf_cif_block_properties",
+        "qualpf_cif_build_properties",
+        "qualpf_cif_card_properties",
+        "qualpf_cif_database_properties",
+        "qualpf_cif_import_properties",
+        "qualpf_cif_semantic_properties",
+        "qualpf_cif_site_symmetry_properties",
+        "qualpf_cif_syntax_properties",
+        "qualpf_export_properties",
+        "qualpf_export_schema_controls",
+        "qualpf_presentation_properties"
+      ],
+      "reused_checkpoint": "d2915b0bd32b3644b00bc343440dd24548571bd6",
+      "original_junit_sha256": "850c40f481da5d31e0a0b5170c515d529b64cda813c8019503b75619a5703592",
+      "fresh_junit_sha256": "361f546745e3c239931ab07319efd74c85b2e74860c8f94f88ee9d7d8927e6e0",
+      "normal_test_commands_and_properties_preserved": true,
+      "independent_product_cases": 11
+    }
+  },
+  "toolchains": {
+    "windows-gnu": {
+      "compiler_version": "13.1.0",
+      "compiler": "E:\\QualPF-SDK\\Qt\\Tools\\mingw1310_64\\bin\\g++.exe",
+      "compiler_sha256": "cd65c087ad69a877e5a105c607cc910abfabcc52ba7e9448572f36567b51698c",
+      "unchanged_compiler_configuration_sha256": "d50b21c550dd21b68ca997f65c0daec4f191bf6812c6fbbd4f83603f2aa2550c",
+      "qt_version": "6.8.3",
+      "qt_version_file": "E:\\QualPF-SDK\\Qt\\6.8.3\\mingw_64\\lib\\cmake\\Qt6Core\\Qt6CoreConfigVersionImpl.cmake",
+      "qt_version_sha256": "31f25524609ecb6488babcfa5fb4d81ae5f1e3e94c74d15a5a012afeea2f4cd1"
+    },
+    "windows-msvc": {
+      "compiler_version": "19.40.33811.0",
+      "compiler": "D:\\Visual Studio 2022\\Community\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
+      "compiler_sha256": "1706e469753a77bfa364472af9fadc8b8f182c6760e416ec1932a127fd129678",
+      "unchanged_compiler_configuration_sha256": "f5026f18ed0714afed85ad9ba1de624e0602f96adaa6aa0b3b5094e8c3b09b0e",
+      "qt_version": "6.8.3",
+      "qt_version_file": "E:\\QualPF-SDK\\Qt\\6.8.3\\msvc2022_64\\lib\\cmake\\Qt6Core\\Qt6CoreConfigVersionImpl.cmake",
+      "qt_version_sha256": "31f25524609ecb6488babcfa5fb4d81ae5f1e3e94c74d15a5a012afeea2f4cd1"
+    },
+    "linux-gnu": {
+      "compiler_version": "15.2.0",
+      "compiler": "/var/tmp/qualpf-layout-sdk-20261008/usr/bin/g++",
+      "compiler_sha256": "e6718f7e0c7d057c3ff77b550c603da9bc4030e3ede3c053705acce1293dbe4d",
+      "unchanged_compiler_configuration_sha256": "920cd5ff22679fb7812d239d52781a53b04f86100d499ba9c4b98cc5ad2546ad",
+      "qt_version": "6.10.2",
+      "qt_version_file": "/var/tmp/qualpf-layout-sdk-20261008/usr/lib/x86_64-linux-gnu/cmake/Qt6Core/Qt6CoreConfigVersionImpl.cmake",
+      "qt_version_sha256": "7a944d9d7e0c90075ba749b5d1622ff04609433071df4daa5a728072ef0c1084",
+      "os_release": "PRETTY_NAME=\"Ubuntu 26.04.1 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"26.04\"\nVERSION=\"26.04.1 LTS (Resolute Raccoon)\"\nVERSION_CODENAME=resolute\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=resolute\nLOGO=ubuntu-logo\n",
+      "actual_compiler_banner": "g++ (Ubuntu 15.2.0-16ubuntu1) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+    }
+  },
+  "numerical_and_historical_authority": {
+    "status": "PASS",
+    "candidate": "5a247152c9a57bdab4f0ba348218dec80044d49c",
+    "indexed_prior_raw_logs_verified": 73,
+    "references_verified": 169,
+    "reference_authority": "phase37e-entry-20261009:tests/reference/manifest.json",
+    "original_blocked_records_unchanged": {
+      "docs/architecture/milestone-a/independent-review.md": "3720f39725486fe3d0bda1117f46c79fa58e2f3c71a79b743501efdf3eb0c344",
+      "docs/architecture/milestone-a/acceptance-matrix.md": "91a2900d4c01199b41021ba34bc6797c37df82e386d8406670afe4ad55c38012",
+      "docs/architecture/milestone-a/gate.json": "1774b0b04769e8ed3cc79a92491a18f09a515743da0aaa764eaf57945f0ed7c0"
+    },
+    "production_build_runtime_delta": [
+      "apps/qualpf/main.cpp"
+    ],
+    "approved_numerical_contracts_unchanged": true
+  },
+  "source_package": {
+    "status": "PASS",
+    "candidate": "5a247152c9a57bdab4f0ba348218dec80044d49c",
+    "files": 1941,
+    "references": 169,
+    "sha256": "db84b348fe45898d7983470572495b38f7c1eb024e3d983b3edfd7a8978acd60",
+    "bytes": 37163227,
+    "package": "build\\milestone-a01\\source-package\\qualpf-1.0.5-Source.tar.gz",
+    "controls_present_in_checkout": [
+      ".git",
+      "tools/validation/__pycache__/acceptance-exclusion.pyc",
+      "build/source-check/CMakeCache.txt"
+    ],
+    "forbidden_packaged_inputs": [],
+    "validation_mode": "FRESH_VALIDATION"
+  },
+  "historical_recovery": {
+    "status": "PASS",
+    "samples": [
+      {
+        "kind": "raw_FAIL",
+        "path": ".evidence/raw/phase31c-ai-observed/actual-gnu-001/cases/injected-allocation-failure/comparison.json",
+        "bytes": 1146,
+        "sha256": "082d323d2b5c5e95ad33a6f94d1c83b6d88f967e6d368c147d17a94388817a3e",
+        "object": "evidence/objects/7906603800f322bd6240dcbd2cb725cd253e8be21411e1551c8e55cd10d81c68.zip",
+        "object_sha256": "7906603800f322bd6240dcbd2cb725cd253e8be21411e1551c8e55cd10d81c68",
+        "catalog_sha256": "06118368984e49f14e83529c7c7b8aeec4ccfff74761bf872ffdd36391986fa1",
+        "status": "PASS"
+      },
+      {
+        "kind": "repository_hygiene",
+        "path": "docs/refactoring/phase-36/post-f-hygiene/closure-report.md",
+        "bytes": 5817,
+        "sha256": "71aad8d3246e931c074e5107929223b5c3dd40d1c2d8bbbb8cbfcfeb3f83202f",
+        "object": "evidence/objects/9c25a91cc1fd42b68ed8cb3be6992f551f5c8e6c2fd62d3bb1e1222630d862ad.zip",
+        "object_sha256": "9c25a91cc1fd42b68ed8cb3be6992f551f5c8e6c2fd62d3bb1e1222630d862ad",
+        "catalog_sha256": "06118368984e49f14e83529c7c7b8aeec4ccfff74761bf872ffdd36391986fa1",
+        "status": "PASS"
+      },
+      {
+        "kind": "numerical_reference",
+        "path": "tests/data/scattering-reference.zip",
+        "bytes": 1890913,
+        "sha256": "0f8f888d047c79697ac35b9c752bd01facc17850739b567ac71fbda03653fe5e",
+        "object": "evidence/objects/f35b2dd11c110b7f7fe2d1984568c710d3b3216d15b03bb09061519bd14536aa.zip",
+        "object_sha256": "f35b2dd11c110b7f7fe2d1984568c710d3b3216d15b03bb09061519bd14536aa",
+        "catalog_sha256": "06118368984e49f14e83529c7c7b8aeec4ccfff74761bf872ffdd36391986fa1",
+        "status": "PASS"
+      },
+      {
+        "kind": "numerical_decision",
+        "path": ".evidence/raw/phase26a1-acceptance/authorization-001/user-approval.md",
+        "bytes": 8190,
+        "sha256": "a4189ada9a8edee42d25d802075706b6f8ab9546b4f1604869e4d7239e36ae9d",
+        "object": "evidence/objects/fd0dfb8788831d3391e057e1bbf3f739480ca8408befae828e644a987277ff19.zip",
+        "object_sha256": "fd0dfb8788831d3391e057e1bbf3f739480ca8408befae828e644a987277ff19",
+        "catalog_sha256": "76885ef7e29d12f32bdc839625d877fdfbd659d72f2209cc6cf4d7635285131a",
+        "status": "PASS"
+      },
+      {
+        "kind": "migration_record",
+        "path": "docs/refactoring/phase-31/complete-fortran-migration/zero-fortran-gate.json",
+        "bytes": 7398,
+        "sha256": "1c7274fe1034f5298f261e9fe146dd533392fb4150ed5663d3f34d7a27344633",
+        "object": "evidence/objects/f41f4780c300c429a3469991505ab167c267bdf14a7dc51e0fd082cd931a1bb6.zip",
+        "object_sha256": "f41f4780c300c429a3469991505ab167c267bdf14a7dc51e0fd082cd931a1bb6",
+        "catalog_sha256": "900537ccc20e15089aec0ef19396069ce08eeafa2410c03e92b3b3f842cafb87",
+        "status": "PASS"
+      },
+      {
+        "kind": "milestone_F",
+        "path": "docs/refactoring/phase-36/current-release-acceptance/independent-review.md",
+        "bytes": 12621,
+        "sha256": "c2c339400787a51396f21c643828b91cdba3f2ee1eb92efe8779120911ed3284",
+        "object": "evidence/objects/90ff6bf1926894a8d3523a97f4cc20998a3ffec68d40ce7252d1e5ba430d425d.zip",
+        "object_sha256": "90ff6bf1926894a8d3523a97f4cc20998a3ffec68d40ce7252d1e5ba430d425d",
+        "catalog_sha256": "fb45aa93275ed21269cb4719fef89aa1746248f4a5b69210b5525a87bf9ae8de",
+        "status": "PASS"
+      }
+    ],
+    "original_git_receipts": [
+      {
+        "path": "docs/architecture/phase-37/receipt.json",
+        "sha256": "3fefae80aa2a2ac1ffc1fc966d00696000b4f4c1d528ac464898ffdda513cd12",
+        "bytes": 288142,
+        "status": "PASS"
+      },
+      {
+        "path": "docs/architecture/phase-37/gate.json",
+        "sha256": "44c0881fc1542410a5679a1fad45ac23b77b64109cb72ee76b506ad8d847b736",
+        "bytes": 3455,
+        "status": "PASS"
+      },
+      {
+        "path": "docs/refactoring/phase-36/current-release-acceptance/independent-review.md",
+        "sha256": "c2c339400787a51396f21c643828b91cdba3f2ee1eb92efe8779120911ed3284",
+        "bytes": 12621,
+        "status": "PASS"
+      }
+    ],
+    "availability": "LOCAL_ONLY_NO_REMOTE_RECOVERY_GUARANTEE",
+    "protected_entry": "8fdf0a71d7eef8b6801e5336720c19b3c936e18f",
+    "protected_references": "084347cd95011cf3eb4371ec85a9838cc0e856eb",
+    "validation_mode": "FRESH_VALIDATION"
+  },
+  "original_blocked_gate": "docs/architecture/milestone-a/gate.json",
+  "original_validation_index": "docs/development/repository-consolidation/validation-index.json",
+  "normal_suite": {
+    "total_identities_per_configuration": 82,
+    "original_identities_retained": 80,
+    "new_identities": 2,
+    "fresh_per_configuration": 28,
+    "reused_unchanged_per_configuration": 54,
+    "fresh_scope": "Actual corrected product; 26 existing affected workflow identities and 2 new CLI boundary identities",
+    "reuse_scope": "Only unchanged code, input, runner, compiler configuration/options, resource and binary dependencies",
+    "claims_new_full_82_test_run": false,
+    "failures": 0,
+    "skips": 0
+  },
+  "cli": {
+    "regression_product_subprocesses_per_configuration": 8,
+    "independent_product_observations_per_configuration": 11,
+    "old_positive_empty_pattern_stdout_stderr_comparison": "Equal; only pre-existing named pattern elapsed-time diagnostic value normalized",
+    "exact_original_four_file_sql_failure_recipe": true,
+    "diagnostic": "Search failed: <nonempty error>",
+    "failed_metadata_exit": 1,
+    "successful_empty_exit": 0,
+    "successful_positive_exit": 0,
+    "failed_query_has_no_successful_found_output": true,
+    "programmatic_cancel_exception_and_status_reset": true,
+    "synchronous_error_cancel_exception_publications": 0,
+    "no_new_cli_signal_or_cooperative_cancel_command": true
+  },
+  "zero_fortran": {
+    "result": "PASS",
+    "validation_mode": "FRESH_VALIDATION",
+    "three_current_build_source_graph_import_checks": true,
+    "msvc_objects_archives": 319,
+    "msvc_actual_symbol_lines": 1514163,
+    "fortran_origin_matches": 0
+  },
+  "current_context_checker": {
+    "scope": "Acceptance bookkeeping only; not a normal CTest runner or product input",
+    "acceptance_requires_matching_independent_gate_and_22_passes": true,
+    "negative_controls": [
+      "missing gate",
+      "stale candidate",
+      "FAIL criterion",
+      "NOT_VERIFIED criterion",
+      "missing criterion",
+      "false accepted flag",
+      "PFSM start",
+      "pending completion"
+    ]
+  },
+  "preserved_failed_attempts": [
+    "Original product A-01 negative control; initial SQLite fixture cleanup",
+    "Development SQL diagnostic wording and Linux informational stderr assertions",
+    "Windows sandbox temp/native-registry fixture restrictions",
+    "Independent pattern diagnostic elapsed-time comparison; original bytes retained"
+  ],
+  "optional_observations": {
+    "hosted_github_ci": "NOT_VERIFIED",
+    "clang": "NOT_VERIFIED",
+    "macos": "NOT_VERIFIED",
+    "remote_offsite_archive_recovery": "NOT_VERIFIED",
+    "new_complete_installer_provider_matrix": "NOT_VERIFIED"
+  },
+  "archive_risk": "Actual local protected Git/object recovery verified; no remote/offsite availability or disaster-recovery guarantee",
+  "milestone_F": "MILESTONE_F_PRESERVED",
+  "milestone_A_accepted": true,
+  "milestone_A_final_acceptance": "ACCEPTED",
+  "outcome": "CPP_ARCHITECTURE_REFACTOR_COMPLETE",
+  "PFSM_started": false,
+  "PFSM_final_handoff": "ARCHITECTURE_READY; implementation requires a separately authorized task",
+  "next_action": "STOP",
+  "raw_evidence": {
+    "encoding": "gzip; original bytes preserved",
+    "files": [
+      {
+        "path": "logs/authority.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/authority.json",
+        "original_bytes": 785,
+        "original_sha256": "9f55e6f7c3b17795fb6f149547f88d600180582a4eb7545e406732f922b732f7",
+        "stored_sha256": "91cb211ba86ab0bbb975214200aa95680ac994f6d2ed207cc427b925ccf5f55f"
+      },
+      {
+        "path": "logs/boundaries.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/boundaries.json",
+        "original_bytes": 251722,
+        "original_sha256": "89cd90390c1abac7d9cf9caba245dde17fa3134d53dddccd3a1c0c90a5bcdb1b",
+        "stored_sha256": "5a3ccb03f4c7509bb0221ceee9e804f75322c1caac902a2400d880e1598e8b13"
+      },
+      {
+        "path": "logs/historical-recovery.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/historical-recovery.json",
+        "original_bytes": 4282,
+        "original_sha256": "6c71468badf7a17f71bff6c4ab02a735bed8000be50f6dcd8558a4e12e5a4974",
+        "stored_sha256": "abb4fe4b933b81d9b02c9e48644626c57986b9c6b5aa8df35bf9a8d06a19fa73"
+      },
+      {
+        "path": "logs/linux-gnu-binding.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/linux-gnu-binding.json",
+        "original_bytes": 4441,
+        "original_sha256": "b8d5a14d52a4f52625b8b24999d9e05518328e8c470ca38feeee24c7ea2a5f84",
+        "stored_sha256": "d3bb0e57388325b196347e2bc727e27beb7abb25de5c24ef6cdebc839b4bb827"
+      },
+      {
+        "path": "logs/linux-gnu-build.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/linux-gnu-build.log",
+        "original_bytes": 428,
+        "original_sha256": "6538e6ed53e175329bce7ef18f35100261a7c980a6943ead4b02308a453d2d57",
+        "stored_sha256": "2b4751fda4534d21f5fef8966f981fe67f36332dabbf6a14e216f0dce3fb8489"
+      },
+      {
+        "path": "logs/linux-gnu-cli.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/linux-gnu-cli.json",
+        "original_bytes": 6589,
+        "original_sha256": "d258594c316c245578f6ca5c83f721d9803de39726b00edcffcb8c5f40a1201f",
+        "stored_sha256": "857d4b269947bf83529b3174973f836761058c5c6f8fdf9a52ae65e88a3894d1"
+      },
+      {
+        "path": "logs/linux-gnu-configure.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/linux-gnu-configure.log",
+        "original_bytes": 184,
+        "original_sha256": "639029dffcacd65a3bb6da828408f0d73ca0416522048b07193cdbcf096eb673",
+        "stored_sha256": "aa224c541894ce2e7877e32bb698a315e342dce41f13f5876ac51dd1cc8c7b99"
+      },
+      {
+        "path": "logs/linux-gnu-final-quality-mount-attempt1.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/linux-gnu-final-quality-mount-attempt1.log",
+        "original_bytes": 1962,
+        "original_sha256": "8668756204cf88195e97301cc6f0ff70286e5908f79223ca4e641d9c5ce5b21b",
+        "stored_sha256": "9075b4c5603e0120553292bb2c4718c0df645f08e526ea3775a4e425f1de7c53"
+      },
+      {
+        "path": "logs/linux-gnu-final-quality.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/linux-gnu-final-quality.log",
+        "original_bytes": 379,
+        "original_sha256": "90a69f0d87cff0c50dd5d439905c50cf5837640c17d5bc2bff380edb143197f6",
+        "stored_sha256": "1c270123bbd8551eb7647cc058c726d2df7db40f1d456c1bedbdb6fc1b9229d8"
+      },
+      {
+        "path": "logs/linux-gnu-independent-cli-clock-attempt1.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/linux-gnu-independent-cli-clock-attempt1.json",
+        "original_bytes": 5882,
+        "original_sha256": "4238c0ca5a66d7db8d4ac10181c9584cff1c4061a62c7d4f92fdd9b9a4c4fa04",
+        "stored_sha256": "4cd23d44ada557f60573d01758eaaf002c26475074c4640aa3b8c283c410821b"
+      },
+      {
+        "path": "logs/linux-gnu-independent-cli-clock-attempt1.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/linux-gnu-independent-cli-clock-attempt1.log",
+        "original_bytes": 276,
+        "original_sha256": "86365517ea69b85381a3954bb9fc3467b9204e0c2acd18232932f807d3dc581a",
+        "stored_sha256": "b56f042f85545114aed6c802e1dd5f05524777331c642e557d111fc04ffbb3d6"
+      },
+      {
+        "path": "logs/linux-gnu-independent-cli-clock-attempt2.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/linux-gnu-independent-cli-clock-attempt2.json",
+        "original_bytes": 7979,
+        "original_sha256": "abeef0ff8dbfb8a9b6ead70a774738568c076eede981f3da189d3ba9835d055c",
+        "stored_sha256": "f97b404e1eae6e4a0dbdce00c8903b3f05499ee327bab25815031d7841d72c4e"
+      },
+      {
+        "path": "logs/linux-gnu-independent-cli-clock-attempt2.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/linux-gnu-independent-cli-clock-attempt2.log",
+        "original_bytes": 215,
+        "original_sha256": "8ced4ac3dfdaa406ca9e7bf6358724ca08cdbcc5e1fcf44b6076d428ca2e2c2d",
+        "stored_sha256": "73808c41a80ad71d10d38fa6598b4029cf7112c635790c44181ce66c280580e1"
+      },
+      {
+        "path": "logs/linux-gnu-independent-cli.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/linux-gnu-independent-cli.json",
+        "original_bytes": 9642,
+        "original_sha256": "1d73c051749074de33924d5e7a0ff098793a430e376b96401d0254f2fdda903f",
+        "stored_sha256": "070bfa00f4ed49b5b9fdf37cac636a238c2db4d8113c097ae47ec9e4a5e2e8fa"
+      },
+      {
+        "path": "logs/linux-gnu-independent-cli.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/linux-gnu-independent-cli.log",
+        "original_bytes": 108,
+        "original_sha256": "32d4787f50d44e91dd001aac0344fe369207523a149188c54ae097c5597bd805",
+        "stored_sha256": "58e469927b115ee74c59274f82663c9195ad7c9e05c6f8d76f7e9d0eeb418f03"
+      },
+      {
+        "path": "logs/linux-gnu-tests.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/linux-gnu-tests.json",
+        "original_bytes": 67617,
+        "original_sha256": "0036e835012b6bd93a8fdcae1269d1cdd7ba3cd8ae3c9835cc30e805b6d12806",
+        "stored_sha256": "ff79be113141a58992ea2a35af18d8718ee85b922f6e92246957a29e4a67a168"
+      },
+      {
+        "path": "logs/linux-gnu-workflows.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/linux-gnu-workflows.log",
+        "original_bytes": 29586,
+        "original_sha256": "6f93f48ea0fe0421ff9e40d70af7210040de39f8a6cf61a30925b92c6262332d",
+        "stored_sha256": "b3aa24c7f03c4d68ab1e7307e67fc134cce21dbfdbe45ca738d449bd5f1f82c1"
+      },
+      {
+        "path": "logs/linux-gnu-workflows.xml.gz",
+        "original_path": "build/milestone-a01/reacceptance/linux-gnu-workflows.xml",
+        "original_bytes": 19381,
+        "original_sha256": "361f546745e3c239931ab07319efd74c85b2e74860c8f94f88ee9d7d8927e6e0",
+        "stored_sha256": "d147a2f6c7d2242133a06187ea54efd97e7388a61bf25f7b170d5d1d263a6413"
+      },
+      {
+        "path": "logs/linux-gnu-zero-fortran.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/linux-gnu-zero-fortran.json",
+        "original_bytes": 23762,
+        "original_sha256": "5be1c8c5b8a338a74886d8730eb3a13b3f5b3cbe9f1b4273f45c2df665ae6886",
+        "stored_sha256": "6d6eb46f3cd4ee8480dca3b8756c638f5b0896f754b1f8975b1d0e1f0ceaff90"
+      },
+      {
+        "path": "logs/linux-gnu-zero-fortran.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/linux-gnu-zero-fortran.log",
+        "original_bytes": 51,
+        "original_sha256": "a4473537eabe0994ec9360efba4b9f49946fedfdc1443c55ba002afe2f9b58b3",
+        "stored_sha256": "c38f375eac4165f6787480796b36764806a2ef84ba724437d9202ff6185a9211"
+      },
+      {
+        "path": "logs/package-and-recovery.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/package-and-recovery.log",
+        "original_bytes": 216,
+        "original_sha256": "501b20a28bbf551ed3fbbb6108345b1b4579eada12758b4df91baca0fdd09077",
+        "stored_sha256": "1ffc8ae3e199204f5519b88d78493c6d17d43ed3039d2590277a936e1262bb84"
+      },
+      {
+        "path": "logs/source-package-check.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/source-package-check.json",
+        "original_bytes": 506,
+        "original_sha256": "47b02059579bcd530bcce852c744d6edb0e2842ce1450af7729b950143db2335",
+        "stored_sha256": "2fc4317f14188e5bf8a34e256df2d2e6e84cec83d0ad6421fc0b4ec99121f53e"
+      },
+      {
+        "path": "logs/source-package-configure.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/source-package-configure.log",
+        "original_bytes": 1065,
+        "original_sha256": "177b091772343cab2054ca91d4389c21b939c31d2cfc35b76958cd4faa733829",
+        "stored_sha256": "f7c8a7c78a09135fb3559a456d4f089bb8067c709d8c374e8a16eab45ede302a"
+      },
+      {
+        "path": "logs/source-package.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/source-package.log",
+        "original_bytes": 284,
+        "original_sha256": "05f1f8b079542285ca7274d55837cfc3654f894263a930a302d8f7e40396f637",
+        "stored_sha256": "71f6065496d39857b380733b2a8627d223d2b6acfbf50e9dcaec093d462116b0"
+      },
+      {
+        "path": "logs/toolchains-linux.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/toolchains-linux.json",
+        "original_bytes": 1323,
+        "original_sha256": "f95843c0938bbf47390bea6c39a221b0b3336949cca8cc25eff6d7115e322d04",
+        "stored_sha256": "970218c04c760a7d70e50fdaf265a51677299eb90fa6cd38a1c3770b150aaaf9"
+      },
+      {
+        "path": "logs/toolchains-windows.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/toolchains-windows.json",
+        "original_bytes": 1213,
+        "original_sha256": "d27cfc17b1cbe44acf85b16707e1436c932c18cd5fef54c083f0be6d5d330c77",
+        "stored_sha256": "3ba76abba8a9d3160b385bbb453dc0fe48edb0c1d6ea653c12f001e2f1e196a1"
+      },
+      {
+        "path": "logs/windows-final-quality.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-final-quality.log",
+        "original_bytes": 385,
+        "original_sha256": "96a36d14eab2b3e249bb0b9a7fb140830878dc581dba9906f7533d425f6414ab",
+        "stored_sha256": "6eea049bddfae46c1989710cb40b6afca29c86a69b06591ad5d14cc001b7754d"
+      },
+      {
+        "path": "logs/windows-gnu-binding.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-gnu-binding.json",
+        "original_bytes": 4566,
+        "original_sha256": "eec84196530fdecfe3577f4792baf6c1eb015441414a7e1556a16afc8c60de89",
+        "stored_sha256": "39abcab89a686a7327a4b82d430577841acce0fde3c899c987e7de47875f4504"
+      },
+      {
+        "path": "logs/windows-gnu-build.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-gnu-build.log",
+        "original_bytes": 440,
+        "original_sha256": "86815732c1d2d7cd686dc5acb7a5e4d7e24f1e324ef5ebe53cdcaf71037cdf5a",
+        "stored_sha256": "4477e24d3ccb8453f0f2532c29b55908534610d34720e70ca291769f350824e9"
+      },
+      {
+        "path": "logs/windows-gnu-cli.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-gnu-cli.json",
+        "original_bytes": 7559,
+        "original_sha256": "36649704fb5a5691f13caa70d5379871e8838b0d2c34573fc5f192e1467667ac",
+        "stored_sha256": "2ab9b47049b7ac8addaec8881cacd68c65607089e8b4cc52abd7ec44b726f01b"
+      },
+      {
+        "path": "logs/windows-gnu-configure-shell-attempt1.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-gnu-configure-shell-attempt1.log",
+        "original_bytes": 138,
+        "original_sha256": "7b7688c57e2ec23f7235b0ad0788aef81fc66868930aead970e0456bad50298d",
+        "stored_sha256": "d8647d62b93a248020b809b178e290782bd2069b37fc8d677b8869f1e3518f5d"
+      },
+      {
+        "path": "logs/windows-gnu-configure.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-gnu-configure.log",
+        "original_bytes": 352,
+        "original_sha256": "e3ca8f4848c5edc5d1a6552b0778befe6b00f77d8e28812e6ff8ee1a9f05ba08",
+        "stored_sha256": "d75c4e23a10f55cb5efc7de3aa9254b52bcd117a3b0f69cb947fdccbbcaf5994"
+      },
+      {
+        "path": "logs/windows-gnu-independent-cli.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-gnu-independent-cli.json",
+        "original_bytes": 9675,
+        "original_sha256": "a94da0508a4edb3a7d4faf2fd01ea78f1957feeb5dffa27f4b89527792b5fe7d",
+        "stored_sha256": "2789325ccb29e5242a54cb63913607adc1527399e7cc0f061fc4ec7b46e962b9"
+      },
+      {
+        "path": "logs/windows-gnu-independent-cli.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-gnu-independent-cli.log",
+        "original_bytes": 109,
+        "original_sha256": "b8a81d1ed7413741f14e3a5e75af8b3bc8412031b5eacdc6e83da45dd2195090",
+        "stored_sha256": "bc9c87093f5d84a1c58309ce9257d39e67ac62f4bac00ff9fc3f69f6b33852f6"
+      },
+      {
+        "path": "logs/windows-gnu-tests.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-gnu-tests.json",
+        "original_bytes": 86645,
+        "original_sha256": "fcc2618cb6c21e1f50400b0ab1412d5463777447fb1f8f68d1f8acce6a1a2b9a",
+        "stored_sha256": "e1197c9b1e4d445bda36e1c8a461a50207b9eb4202d47756d02500a89ce1b785"
+      },
+      {
+        "path": "logs/windows-gnu-workflows-fixture-attempt1.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-gnu-workflows-fixture-attempt1.log",
+        "original_bytes": 22341,
+        "original_sha256": "241e79c528a16c869792b03d2e589a24237a814cecd657c144176d94f666c0d5",
+        "stored_sha256": "b81946062bba3d1c22301d447e2a8c9541148f2bad97ceb9b58e5d120be0716b"
+      },
+      {
+        "path": "logs/windows-gnu-workflows-fixture-attempt1.xml.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-gnu-workflows-fixture-attempt1.xml",
+        "original_bytes": 12377,
+        "original_sha256": "eecc99b96cfe9dfb320a3bb4e6dc335123b7d62bd11618366ccd54aecfcc3140",
+        "stored_sha256": "50368f57ae0a154e9154692151eeb10fa505de5bf28d3a3470d22a22ee42e83a"
+      },
+      {
+        "path": "logs/windows-gnu-workflows-registry-attempt2.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-gnu-workflows-registry-attempt2.log",
+        "original_bytes": 24804,
+        "original_sha256": "f0ff3cb1709037126fbcaa7a82a2731da41066d4a03e77a25929c60eb4734f31",
+        "stored_sha256": "8d88200dceddbe7c9f46bab7cf8efc86d19b2570ebe4278a4e419cde0bb9702b"
+      },
+      {
+        "path": "logs/windows-gnu-workflows-registry-attempt2.xml.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-gnu-workflows-registry-attempt2.xml",
+        "original_bytes": 13516,
+        "original_sha256": "1b9467407181a81106045aeadfce16faee15286bf384677302c6456ce59d9a71",
+        "stored_sha256": "bc5c2b5a1bba867645b0acb17a80e14716649f75383ca8d05772d3fbf3bd0cf5"
+      },
+      {
+        "path": "logs/windows-gnu-workflows.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-gnu-workflows.log",
+        "original_bytes": 24604,
+        "original_sha256": "934334a560f96bfa81647bd644d165c44b1c8225b7d63815c38a22a67ca7fce4",
+        "stored_sha256": "f65afb617fac70aee747b5d9451a0cdaeaccc185348ac8ef714cb1da544d40dc"
+      },
+      {
+        "path": "logs/windows-gnu-workflows.xml.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-gnu-workflows.xml",
+        "original_bytes": 13574,
+        "original_sha256": "b9a3b688c0cad884912bfb8bf92bc813c49f9d6d1d4c8e1615d3d47997d30a46",
+        "stored_sha256": "f2618530b0906fc1f83775e12804d7bc492538ad65fe07d6015334b6400474ee"
+      },
+      {
+        "path": "logs/windows-gnu-zero-fortran.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-gnu-zero-fortran.json",
+        "original_bytes": 25069,
+        "original_sha256": "b48b28e69c222105d4573459056954ed87b635b5efe5663566a280ec916c4c03",
+        "stored_sha256": "1e9db5c3b3f3abc16895aee1d2f45ad2688b433ccfaeae3c9c2f39c117256345"
+      },
+      {
+        "path": "logs/windows-gnu-zero-fortran.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-gnu-zero-fortran.log",
+        "original_bytes": 52,
+        "original_sha256": "c5c9925e95e1d36387fbc269042697f9c7a68a8bd04bf792ec6dcef3bdd7c853",
+        "stored_sha256": "9d5cad1b4489659bdb2683ae54f7862545872df05a88a4cc6a1f7dd8c7c6a2c8"
+      },
+      {
+        "path": "logs/windows-msvc-binding.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-msvc-binding.json",
+        "original_bytes": 4567,
+        "original_sha256": "43a7c36131c92d8acd91e58fe553120ee75f0755199464ff24b720aa6ed3c63d",
+        "stored_sha256": "44aa550aa7503e72e087200b164f1eee9d32a1cad94967ae2e951dad680add67"
+      },
+      {
+        "path": "logs/windows-msvc-build.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-msvc-build.log",
+        "original_bytes": 440,
+        "original_sha256": "c4417c64cad1a93ec1933bde5336981b99b439dd1503fc1da03363ba1eb2b380",
+        "stored_sha256": "840e6bfab94dcdbbcdb3a6865e7b8c2997cc5ea96dd80db64500efea5dcc33b9"
+      },
+      {
+        "path": "logs/windows-msvc-cli.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-msvc-cli.json",
+        "original_bytes": 7584,
+        "original_sha256": "fc14b91d28415cd2d8acdaa964bc98899bf06ede5226d6ef2508ac429137d8de",
+        "stored_sha256": "b346576ae8466ea685f0282c9dc2ce4532f02196a5fe6916b5bf41345f401bb8"
+      },
+      {
+        "path": "logs/windows-msvc-configure.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-msvc-configure.log",
+        "original_bytes": 353,
+        "original_sha256": "77422487e4842bee5b170f68bbec2f928a4a1fda409ce2094ffe7b557470cb11",
+        "stored_sha256": "77fce405b0ac5f67c6ac486bc135b6fcd0d310605c881613ee47c728f54a5546"
+      },
+      {
+        "path": "logs/windows-msvc-independent-cli.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-msvc-independent-cli.json",
+        "original_bytes": 9686,
+        "original_sha256": "dfb33117c60459b3216461f5b5c1ac9c1995d67009bbab2ce3eac08a76ae8591",
+        "stored_sha256": "774c46b33a388d830df135ee461c79c68a836fa50c9fd58888ea65046f20fec6"
+      },
+      {
+        "path": "logs/windows-msvc-independent-cli.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-msvc-independent-cli.log",
+        "original_bytes": 109,
+        "original_sha256": "b8a81d1ed7413741f14e3a5e75af8b3bc8412031b5eacdc6e83da45dd2195090",
+        "stored_sha256": "bc9c87093f5d84a1c58309ce9257d39e67ac62f4bac00ff9fc3f69f6b33852f6"
+      },
+      {
+        "path": "logs/windows-msvc-static-symbols.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-msvc-static-symbols.json",
+        "original_bytes": 63863,
+        "original_sha256": "dbe6e50ff807efb3fdb787da5d6bde5bc6983371350d345dcc53009ce41935fb",
+        "stored_sha256": "f9493b1b8cb1739a9302c09a3be550e6d798e25b741d32372831abe4e6adb433"
+      },
+      {
+        "path": "logs/windows-msvc-tests.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-msvc-tests.json",
+        "original_bytes": 86835,
+        "original_sha256": "0ba7b4744aa87e1f94b6ceb3b5529b7f5da72996ecd3c7ad578572b47cd70aa3",
+        "stored_sha256": "5f5ba560d672bb420315f49b46ad6dd9d30d6ee3dd835033efb13aacb9e00708"
+      },
+      {
+        "path": "logs/windows-msvc-workflows-registry-attempt1.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-msvc-workflows-registry-attempt1.log",
+        "original_bytes": 24871,
+        "original_sha256": "dbf729ffc7e15b445485adcefe254a8560d91b0819d831097feb18b4bf65f3fd",
+        "stored_sha256": "cc052a21c336eb7a7b8c3b5d542bef58f00c2a34d1a0addc274aa8eb3a595698"
+      },
+      {
+        "path": "logs/windows-msvc-workflows-registry-attempt1.xml.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-msvc-workflows-registry-attempt1.xml",
+        "original_bytes": 13507,
+        "original_sha256": "36ad627e9724f9e90f0b05787fcd575ad9f692132d9d11005d668e535cc4ae52",
+        "stored_sha256": "9a4d1687f5288c66dfd6f14017a68aacb26854e4b9fa28caf0164a18407179a2"
+      },
+      {
+        "path": "logs/windows-msvc-workflows.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-msvc-workflows.log",
+        "original_bytes": 24670,
+        "original_sha256": "da325c00647f3855c5603d4ef5d5b274b31d783206572ce4a0bf5087536290c6",
+        "stored_sha256": "5bf405b7185fb272266a5f0219ed051a511dd64994d6828d6d01e052d21c79ff"
+      },
+      {
+        "path": "logs/windows-msvc-workflows.xml.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-msvc-workflows.xml",
+        "original_bytes": 13574,
+        "original_sha256": "70662823859acf876b143ee2e8cdb6c165cb0ede7e9035bc7aab1a13d284ae50",
+        "stored_sha256": "ac0c53a925d0d3bd48464fc5c76b1edde159e4fdbd83000af61096077d492cee"
+      },
+      {
+        "path": "logs/windows-msvc-zero-fortran.json.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-msvc-zero-fortran.json",
+        "original_bytes": 45371,
+        "original_sha256": "99bd1e098d5016723a71ac491527b9c558da562503914556a43bee5ee3065fbd",
+        "stored_sha256": "a2839339bf245035a03ed1ad81a8fee7edf330b054239c228bfad9b6313d3746"
+      },
+      {
+        "path": "logs/windows-msvc-zero-fortran.log.gz",
+        "original_path": "build/milestone-a01/reacceptance/windows-msvc-zero-fortran.log",
+        "original_bytes": 52,
+        "original_sha256": "f427037f7fdb071883cac632bb41022e7c9783dbe96a5a719defd5f3d289bd23",
+        "stored_sha256": "9b897263c8201ab70d1acca031520bb9ce35e8053e5241f6456ab785fbb4868e"
+      },
+      {
+        "path": "logs/review_cli.py.gz",
+        "original_path": "build/milestone-a01/reacceptance/review_cli.py",
+        "original_bytes": 5824,
+        "original_sha256": "e5b1367f4487e3ad09f3abc8f33030d590e905be6a486d1c9c45789c94f4986b",
+        "stored_sha256": "a2776bb765c9658d9ed720825a285e94c75a8ded7e5687b765f0e64b7fdac5fc"
+      },
+      {
+        "path": "logs/platform_audit.py.gz",
+        "original_path": "build/milestone-a01/reacceptance/platform_audit.py",
+        "original_bytes": 5600,
+        "original_sha256": "02422853270df0aa893f69ee83ddfae505f90c0052750ab22439ecf0ad57c95b",
+        "stored_sha256": "65d2bd41c4be4afcb1f531b0b421c1dc7ce1a6e28e66b3633a0bbbd5e5ca271c"
+      },
+      {
+        "path": "logs/msvc_static_scan.py.gz",
+        "original_path": "build/milestone-a01/reacceptance/msvc_static_scan.py",
+        "original_bytes": 1788,
+        "original_sha256": "c7476d67c449f9f04de56f6f1110b0c0c89bed21cb08978a19bd500dad4ca732",
+        "stored_sha256": "03dd88ea8604d67db2ffe187c4ba4e9c1afd4f86dfbd83217d10ccf9c043c03b"
+      },
+      {
+        "path": "logs/toolchains.py.gz",
+        "original_path": "build/milestone-a01/reacceptance/toolchains.py",
+        "original_bytes": 2589,
+        "original_sha256": "a365e5ad6f90bc49748054b8248fed8062dd405d6274cba05e8e0e0d932f9ea2",
+        "stored_sha256": "b4606b2e5e3b0667b879636caf637f09d9e0719d6820dd32de832fae44653f98"
+      },
+      {
+        "path": "logs/audit_authority.py.gz",
+        "original_path": "build/milestone-a01/reacceptance/audit_authority.py",
+        "original_bytes": 2490,
+        "original_sha256": "d09ea460ac74650589c2cc2314ee56804787f5651bbe79d984a04958e06785df",
+        "stored_sha256": "9c91d5bd93c6c5773a93a1c28732833f980c7f7ee94c69f2c1648ced936e60d4"
+      },
+      {
+        "path": "logs/development-linux-gnu-cli-attempt1.json.gz",
+        "original_path": "build/milestone-a01/development/linux-gnu-cli-attempt1.json",
+        "original_bytes": 2525,
+        "original_sha256": "6e1d86b18f590bc3dadd665022a50d01f762f0d5eb5d496be59cf03cb20306d7",
+        "stored_sha256": "c77adf80e64091d2a87d4a20cb3c248109bcc982a0b93befd9fe5a10546ee775"
+      },
+      {
+        "path": "logs/development-linux-gnu-cli-attempt1.log.gz",
+        "original_path": "build/milestone-a01/development/linux-gnu-cli-attempt1.log",
+        "original_bytes": 3028,
+        "original_sha256": "09b26d6cc66b223cfd4a13cd799f423d864700362fc0b28d6c084050230e9ef1",
+        "stored_sha256": "beca747d3af698d37620020b5982ef791df75783f51990f8527a9f2e64d76d18"
+      },
+      {
+        "path": "logs/development-linux-gnu-cli-attempt1.xml.gz",
+        "original_path": "build/milestone-a01/development/linux-gnu-cli-attempt1.xml",
+        "original_bytes": 2207,
+        "original_sha256": "15c54ced5f6c16745eda787c6f34293c67837ddb071db0a6ca37b1554000c680",
+        "stored_sha256": "d058324b2ebcfd62dd8db2cc6624d46744eb1dd13b7b30055fba66c3b96bd4eb"
+      },
+      {
+        "path": "logs/development-windows-gnu-cli-attempt1.json.gz",
+        "original_path": "build/milestone-a01/development/windows-gnu-cli-attempt1.json",
+        "original_bytes": 4658,
+        "original_sha256": "b1d443fce221e9250bdfebe2f4e09529f4147481f87cb28aca52f191297d42ee",
+        "stored_sha256": "a61903eb7ecd4809b988cddf9a487a16b307588d3259b8d5350e7b24c1e11469"
+      },
+      {
+        "path": "logs/development-windows-gnu-cli-attempt1.log.gz",
+        "original_path": "build/milestone-a01/development/windows-gnu-cli-attempt1.log",
+        "original_bytes": 3741,
+        "original_sha256": "666051bd5eca1b4ecb52eefdccd71187a17f917ac2da431c9361d61e9141f947",
+        "stored_sha256": "9592dfd7744f13a0c26b1e04b5b27fabf43a4f02c8801d94c49ee9f926a908a9"
+      },
+      {
+        "path": "logs/development-windows-gnu-cli-attempt1.xml.gz",
+        "original_path": "build/milestone-a01/development/windows-gnu-cli-attempt1.xml",
+        "original_bytes": 2054,
+        "original_sha256": "8b3674b3ee6d22e4f9be03c42a968adcc8985d0ffc2ad328c2a79e07b14e8873",
+        "stored_sha256": "c79f7ee0a067e0bd709767ef4f42f3e05bc16aca238772e96426283611c4d74f"
+      },
+      {
+        "path": "logs/development-windows-msvc-cli-attempt1.json.gz",
+        "original_path": "build/milestone-a01/development/windows-msvc-cli-attempt1.json",
+        "original_bytes": 4673,
+        "original_sha256": "50763e6e1e2a4a0420c1b368a76cc445cdf8d59da6714fc6bcbdd54ea4762d04",
+        "stored_sha256": "d00abb58202b92abc6a224ab79ca2c2001743d026a258c93ad09a94860479191"
+      },
+      {
+        "path": "logs/development-windows-msvc-cli-attempt1.log.gz",
+        "original_path": "build/milestone-a01/development/windows-msvc-cli-attempt1.log",
+        "original_bytes": 3753,
+        "original_sha256": "4b3292f8daca4ca70472542943ffba6eb83708c3f3fdbc67e83296f30abb56a8",
+        "stored_sha256": "441fd945ad29f08984c1eb1e9dd3a7ee7abb14fa8b1b665c9de4daa62082718c"
+      },
+      {
+        "path": "logs/development-windows-msvc-cli-attempt1.xml.gz",
+        "original_path": "build/milestone-a01/development/windows-msvc-cli-attempt1.xml",
+        "original_bytes": 2057,
+        "original_sha256": "de22e9e21911011113f288730010279d623d8a57acbc5951b591c0d24953db07",
+        "stored_sha256": "1bff0f9d4e40be14dba9c42897135848b781ff93efba761dee23fc537f3303d4"
+      },
+      {
+        "path": "logs/negative-control-original-cli-regression.log.gz",
+        "original_path": "build/milestone-a01/original-cli-regression.log",
+        "original_bytes": 3910,
+        "original_sha256": "0cc9fdbf3d65a58d7e9a1599f373ba575d84ea74e85728593cb7701c5bf51692",
+        "stored_sha256": "e0f6fbab1642a4e3767730c52fd4cf205156738c60c4a9e50308627a81796928"
+      },
+      {
+        "path": "logs/negative-control-original-cli-regression.json.gz",
+        "original_path": "build/milestone-a01/original-cli-regression.json",
+        "original_bytes": 3831,
+        "original_sha256": "4ec3656bdd22a4cce1e86c434ee5a438b90c0a4465c277776048b5483ea1d7b7",
+        "stored_sha256": "c5939b36a33a3e928f85af28c885cac3ddf5ae061c972b7bcef8e300dd5e3896"
+      },
+      {
+        "path": "logs/negative-control-original-cli-regression-002.log.gz",
+        "original_path": "build/milestone-a01/original-cli-regression-002.log",
+        "original_bytes": 1222,
+        "original_sha256": "d1cd94eacf01bbc039aa02f254c9e1ff41056f739d0b5e3fc1e93ad72fa5f2d4",
+        "stored_sha256": "2abcc71724c8674852a14cbb9bb66c8f13ef44e648258f2f7625db9a9830f24f"
+      },
+      {
+        "path": "logs/negative-control-original-cli-regression-002.json.gz",
+        "original_path": "build/milestone-a01/original-cli-regression-002.json",
+        "original_bytes": 4259,
+        "original_sha256": "749389041c751ca3b892d79b6dd2af30ed56c9b1039bd62ec838798b7217004c",
+        "stored_sha256": "be81ccccbd8893af5f0e3a3a1cc52f4b66190b5fdb5aee0c85606dcad641cf61"
+      }
+    ]
+  }
+}

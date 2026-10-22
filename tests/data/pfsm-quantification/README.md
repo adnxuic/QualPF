@@ -6,7 +6,7 @@ mass inputs before the conditional quantification run. These are input evidence,
 not product-generated golden outputs. The selection policy is fixed independently
 of fit quality or quantitative error. IUCr organizer weights and nominal author
 sample-label masses are kept separate from the runner manifest. See the
-[assessment protocol](../../../docs/numerical/pfsm-benchmark.md#conditional-pfsmrir-quantification-assessment).
+[assessment protocol](../../../history/numerical/pfsm-benchmark.md#conditional-pfsmrir-quantification-assessment).
 
 Library RIR provenance remains unverified. The Dara sample labels are not a
 separately retained weighing log. Raw fit outputs and original preparation

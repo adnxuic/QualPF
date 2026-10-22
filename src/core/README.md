@@ -11,6 +11,6 @@ Production and tests have completed Fortran decoupling. Compatibility algorithms
 strict floating-point options and accepted numerical contracts remain in effect.
 Public interfaces expose no Qt, SQL or Eigen/oneMKL types.
 
-See the [repository layout](../../docs/development/repository-layout.md) for
-current responsibilities and [migration status](../../.agent/MIGRATION_STATUS.md)
+See the [repository layout](../../docs/developer/repository-layout.md) for
+current responsibilities and [developer contracts](../../docs/developer/README.md)
 for existing numerical and product authorities.

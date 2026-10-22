@@ -5,6 +5,6 @@ interpolation, linear algebra and polynomial fitting. Eigen is a private
 implementation dependency. Strict floating-point options and existing mathematical
 contracts remain unchanged.
 
-See [migration status](../../../.agent/MIGRATION_STATUS.md) for current owners and
-original acceptance authorities, and the [maintenance report](../../../docs/maintenance/directory-organization/report.md)
+See [developer contracts](../../../docs/developer/README.md) for current owners and
+original acceptance authorities, and the [repository layout](../../../docs/developer/repository-layout.md)
 for directory changes.

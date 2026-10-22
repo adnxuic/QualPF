@@ -11,7 +11,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 OLD_NAME = re.compile(r"qualx" + "pf", re.IGNORECASE)
 AREAS = (".agent", ".github", "apps", "src", "cmake", "deploy", "scripts",
-         "tools", "tests", "docs/user", "docs/development")
+         "tools", "tests", "docs/user", "docs/developer")
 TEXT_SUFFIXES = {".md", ".cpp", ".h", ".hpp", ".cmake", ".txt", ".json",
                  ".py", ".sh", ".ps1", ".cmd", ".qs", ".in", ".desktop",
                  ".yml", ".yaml", ".ui", ".qrc"}
@@ -28,7 +28,6 @@ def check(root=ROOT, build=None):
                      if path.is_file() and path.suffix in TEXT_SUFFIXES
                      and not path.is_relative_to(root / "tests/reference")
                      and not path.is_relative_to(root / "tests/regression/references")
-                     and not path.is_relative_to(root / "docs/development/repository-consolidation")
                      and not path.is_relative_to(root / "tests/data"))
     # The reviewed whitelist itself stores the permitted previous-store tokens.
     files.discard(root / "tools/validation/product-identity.json")

@@ -141,18 +141,10 @@
 /tests/regression/references/** -text -whitespace
 /tools/architecture/** text eol=lf
 /tools/validation/** text eol=lf
-/docs/development/repository-consolidation/** text eol=lf
-/docs/development/project-baseline.json text eol=lf
 /.agent/** text eol=lf
 /AGENTS.md text eol=lf
-/docs/architecture/** text eol=lf
-/docs/numerical/** text eol=lf
 /tools/agent/** text eol=lf
 /.github/workflows/quality.yml text eol=lf
-/docs/migration-history.md text eol=lf
-/docs/development/repository-layout.md text eol=lf
-/docs/development/building.md text eol=lf
-/docs/development/agent-governance.md text eol=lf
 /tests/README.md text eol=lf
 /README.md text eol=lf
 /CHANGELOG.md text eol=lf
@@ -236,3 +228,17 @@
 /.gitignore text eol=lf
 /tests/reference/archives.json text eol=lf
 /apps/qualpf/CMakeLists.txt text eol=lf
+
+# Current documentation and original historical bytes have separate policies.
+/docs/**/*.md text eol=lf
+/docs/**/*.json text eol=lf
+/docs/*.yml text eol=lf
+/docs/*.sh text eol=lf
+/docs/*.txt text eol=lf
+/apps/**/README.md text eol=lf
+/src/**/README.md text eol=lf
+/tests/data/pfsm-quantification/README.md text eol=lf
+/tests/coverage.json text eol=lf
+/history/** -text -whitespace
+/history/README.md text eol=lf
+/history/relocations.json text eol=lf
