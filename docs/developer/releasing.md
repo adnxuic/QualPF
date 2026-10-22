@@ -154,6 +154,8 @@ The checker verifies identities and missing-material rejection; it cannot invent
 the underlying legal grant. Reconfigure/build after the final implementation
 commit and pair binary/source artifacts at that revision. Release preparation
 does not authorize scientific model, precision, compiler-flag or PFSM changes.
+Pass `--build` when manually running formal staged checks, so preflight uses the
+selected build's compiler and provenance rather than unspecified CLI defaults.
 
 ## Local 1.0.0 audit scope
 
@@ -191,3 +193,30 @@ now registers 127 entries; this follow-up does not claim a fresh full matrix run
 After the material exclusions, a fresh export without Git metadata completed all
 279 application build steps and all four maintained generator checks. Original
 diagnostics and follow-up evidence remain in `build/distribution-rights`.
+
+On 23 October, the final follow-up MinGW IFW audit and source TGZ were paired at
+clean revision `7690fb9372bc950af9ea7af12c9e735ca13d95fd`. Their exact hashes and
+six build/packaging tool hashes are recorded in
+`build/distribution-rights/clean-artifact-pair-03.json`. The actual installer was
+dumped and all **537** payload files matched the component staging bytes, with
+no duplicate destinations. Its publisher, independent icons and canonical GPL
+were checked from the dumped metadata. The uncleared optional examples, old D3D
+copy and VC redistributable were absent. The extracted application passed the
+isolated system-only-PATH startup, SQLite and legacy settings checks.
+
+`clean-artifact-inspection-03.json` retains those comparisons;
+`actual-ifw-reviewed-03-inventory.json` binds 18 runtime files and the header/SDK
+materials, retaining three unreviewed GCC DLLs and the incomplete IFW container
+review. Scientific and inherited-asset grants remain unresolved. Formal checks
+still reject these audit artifacts. The earlier conflicting IFW artifact and
+both failed byte comparisons are preserved.
+
+The final source archive passed complete source/manifest checking and fresh
+configuration without Git metadata. Its product/generator and remaining CMake
+bytes match the earlier successful 279-step no-Git build (818 inputs compared);
+the subsequent `QtDeployment.cmake` ownership fix was verified through fresh
+configuration, component staging and actual archive extraction. This is not a
+second full source compilation or a fresh 127-test platform matrix. The latest
+installer's interactive install/uninstall and supported Linux package acceptance
+remain **NOT_VERIFIED**. Later documentation-only commits do not change this
+recorded artifact revision. No audit artifact is cleared for publication.

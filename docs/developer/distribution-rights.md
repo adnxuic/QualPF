@@ -1,7 +1,8 @@
 # Distribution rights and source review
 
 This guide records material-specific findings from the public-source review on
-22 October 2026. The corresponding byte/origin inventory is
+22 October 2026, with actual package verification completed on 23 October.
+The corresponding byte/origin inventory is
 [`deploy/rights-review.json`](../../deploy/rights-review.json). It supplements
 the [distribution procedure](releasing.md), not the scientific acceptance
 contracts. No scientific input, generated table or reference was changed.
