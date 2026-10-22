@@ -27,10 +27,15 @@ SRC_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 # Deprecated compiler selectors are accepted as inert compatibility arguments.
 # The product now selects its C++ compiler through CXX/CMake.
-if [ "$#" -gt 0 ]; then
+if [ "$#" -gt 0 ] && [ "${1:-}" != --audit-only ]; then
     echo "Deprecated compiler selector ignored; building C++ only."
 fi
 NUM_THREADS=$(nproc)
+AUDIT_ONLY=${QUALPF_DISTRIBUTION_AUDIT_ONLY:-OFF}
+if [ "${1:-}" = --audit-only ]; then AUDIT_ONLY=ON; fi
+DIST_ARGS=(--release)
+SUFFIX=""
+if [ "$AUDIT_ONLY" = ON ]; then DIST_ARGS=(--audit-only); SUFFIX=-audit; fi
 
 BUILD_DIR="$SRC_DIR/build/linux-appimage"
 PROG_NAME=$(grep -m1 'EXECUTABLE_NAME' "$SRC_DIR/CMakeLists.txt" | sed 's/.*set(EXECUTABLE_NAME[[:space:]]*"\([^"]*\)").*/\1/')
@@ -62,7 +67,10 @@ echo -e "${YELLOW}Step 1/5: Configuration with CMake (AppImage mode)...${NC}"
 cmake -B "$BUILD_DIR/cmake" -S "$SRC_DIR" \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_APPIMAGE=ON \
+    -DQUALPF_DISTRIBUTION_AUDIT_ONLY="$AUDIT_ONLY" \
     -DCMAKE_INSTALL_PREFIX="$APPDIR/usr"
+python3 -B "$SRC_DIR/tools/validation/check_distribution.py" --root "$SRC_DIR" \
+    --build "$BUILD_DIR/cmake" --kind AppImage "${DIST_ARGS[@]}"
 echo -e "${GREEN}✓ Configuration completed${NC}"
 echo ""
 
@@ -127,14 +135,28 @@ while IFS= read -r -d '' plugin_lib; do
 done < <(find "$APPDIR/usr/plugins" -name '*.so' -print0)
 
 "$LINUXDEPLOY" "${linuxdeploy_args[@]}"
+DIST_REVIEW_ARGS=()
+if [ -n "${QUALPF_DISTRIBUTION_RUNTIME_REVIEW:-}" ]; then
+    DIST_REVIEW_ARGS+=(--review "$QUALPF_DISTRIBUTION_RUNTIME_REVIEW")
+fi
+if [ -n "${QUALPF_CORRESPONDING_SOURCE_ARCHIVE:-}" ]; then
+    DIST_REVIEW_ARGS+=(--source-artifact "$QUALPF_CORRESPONDING_SOURCE_ARCHIVE")
+fi
+python3 -B "$SRC_DIR/tools/validation/check_distribution.py" --root "$SRC_DIR" \
+    --build "$BUILD_DIR/cmake" --stage "$APPDIR" --kind AppImage \
+    "${DIST_ARGS[@]}" "${DIST_REVIEW_ARGS[@]}" \
+    --output "$APPDIR/usr/share/qualpf/distribution-inventory.json"
 
 VERSION="$(grep -m1 'project\s*(' "$SRC_DIR/CMakeLists.txt" | sed 's/.*VERSION[[:space:]]\+\([0-9][0-9.]*\).*/\1/')"
-OUTPUT="$BUILD_DIR/${PROG_NAME}-${VERSION:-unknown}-x86_64.AppImage"
+OUTPUT="$BUILD_DIR/${PROG_NAME}-${VERSION:-unknown}-x86_64${SUFFIX}.AppImage"
 ARCH=x86_64 "$APPIMAGETOOL" "$APPDIR" "$OUTPUT"
 
 RELEASE_DIR="$SRC_DIR/releases/${VERSION:-unknown}/linux-appimage"
 mkdir -p "$RELEASE_DIR"
 cp "$OUTPUT" "$RELEASE_DIR/"
+python3 -B "$SRC_DIR/tools/validation/check_distribution.py" --root "$SRC_DIR" \
+    --build "$BUILD_DIR/cmake" --record-artifacts "$RELEASE_DIR/artifacts.json" \
+    --artifact "$RELEASE_DIR/$(basename "$OUTPUT")" --tool "$LINUXDEPLOY" --tool "$APPIMAGETOOL"
 echo -e "${GREEN}=========================================="
 echo "✓ AppImage created successfully!"
 echo -e "==========================================${NC}"

@@ -40,7 +40,10 @@ Publish the tracked product, build/deployment inputs, tests/tools, runtime data,
 documentation, license and repository rules. Keep generated C++ `.inc` tables,
 third-party notices, test scripts and frozen reference manifests. The 15 sealed
 reference ZIPs are retained in the protected local branch/tag and the pinned
-pre-integration main ancestor, outside the final main tree and source packages.
+pre-integration main ancestor, outside the final main tree. Corresponding-source
+exports additionally include the hash-verified symmetry ZIP because it is a
+preferred table-generator input; the other 14 remain test prerequisites outside
+source packages. See [independent distribution](releasing.md).
 Provision them before regression checks with the hash-checked
 [restoration tool](../../tools/validation/restore_reference_archives.py); see
 [test prerequisites](../../tests/README.md#independent-references).

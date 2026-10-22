@@ -24,91 +24,131 @@
   "components": [
     {
       "id": "qualx3-source",
-      "paths": ["apps/", "src/", "scripts/"],
+      "paths": [
+        "apps/",
+        "src/",
+        "scripts/"
+      ],
       "source": "https://github.com/ccorrado71/qualx3/commit/f98a51da8435fef0f730b513e76c820fb879865d",
       "version": "inherited source; provenance retained in Git",
       "copyright": "QualX3 contributors, IC-CNR; individual original notices retained",
       "license": "GPL-3.0",
       "modifications": "C++20 refactoring, Application workspace, QPF format, search/GUI and packaging changes recorded in Git and CHANGELOG.md",
-      "license_files": ["LICENSE"],
+      "license_files": [
+        "LICENSE"
+      ],
       "status": "reviewed",
       "obligations": "Preserve authorship, mark modifications/dates, provide corresponding source. This code-level evidence does not clear separately sourced data/artwork."
     },
     {
       "id": "qcustomplot",
-      "paths": ["third_party/qcustomplot/"],
+      "paths": [
+        "third_party/qcustomplot/"
+      ],
       "source": "https://www.qcustomplot.com/index.php/download",
       "version": "2.1.1, 2022-11-06",
       "copyright": "Copyright (C) 2011-2022 Emanuel Eichhammer",
       "license": "GPL-3.0-or-later",
       "modifications": "Local OBJECT target and include integration; upstream file notices retained",
-      "license_files": ["LICENSE"],
+      "license_files": [
+        "LICENSE"
+      ],
       "status": "reviewed",
       "obligations": "Use GPLv3 for the combined application; preserve both source headers and supply these sources."
     },
     {
       "id": "qt",
-      "paths": ["selected SDK libraries, plugins, translations and their embedded dependencies"],
+      "paths": [
+        "selected SDK libraries, plugins, translations and their embedded dependencies"
+      ],
       "source": "https://download.qt.io/archive/qt/",
       "version": "per-build Qt SDK and its component SBOM",
       "copyright": "The Qt Company and Qt/embedded-component contributors; exact notices from the SDK",
       "license": "LGPL-3.0-only OR GPL-3.0-only; embedded components have individual terms",
       "modifications": "Deployment selection/layout; SDK binaries are not rebuilt by this task",
-      "license_files": ["LICENSE", "LICENSES/LGPL-3.0-only.txt"],
+      "license_files": [
+        "LICENSE",
+        "LICENSES/LGPL-3.0-only.txt"
+      ],
       "status": "package-review",
       "obligations": "Match every shipped library/plugin to SDK notices, exact source and build configuration; preserve component-specific notices, not only these generic texts."
     },
     {
       "id": "eigen",
-      "paths": ["headers instantiated into product object code"],
+      "paths": [
+        "headers instantiated into product object code"
+      ],
       "source": "https://gitlab.com/libeigen/eigen/-/tree/3.4.0",
       "version": "minimum 3.4; actual version per build",
       "copyright": "Eigen contributors, with file-specific notices including Intel Corporation",
       "license": "MPL-2.0 and file-specific permissive/copyleft terms",
       "modifications": "External unmodified headers; no compile policy or numerical change",
-      "license_files": ["LICENSES/MPL-2.0.txt", "LICENSES/Eigen-BSD.txt"],
+      "license_files": [
+        "LICENSES/MPL-2.0.txt",
+        "LICENSES/Eigen-BSD.txt"
+      ],
       "status": "package-review",
       "obligations": "Review headers actually compiled; preserve file-specific notices and applicable source availability."
     },
     {
       "id": "boost",
-      "paths": ["Boost headers instantiated into product object code"],
+      "paths": [
+        "Boost headers instantiated into product object code"
+      ],
       "source": "https://www.boost.org/",
       "version": "actual version per build (local Windows SDK 1.82.0)",
       "copyright": "Boost contributors; retain the individual header notices",
       "license": "BSL-1.0",
       "modifications": "External unmodified headers",
-      "license_files": ["LICENSES/BSL-1.0.txt"],
+      "license_files": [
+        "LICENSES/BSL-1.0.txt"
+      ],
       "status": "package-review",
       "obligations": "Record exact headers/version and retain required notices."
     },
     {
       "id": "spglib-supplement",
-      "paths": ["src/core/io/cif/cif_site_constraints.inc", "tests/regression/references/cif/site-symmetry/constraint-catalogue.json"],
+      "paths": [
+        "src/core/io/cif/cif_site_constraints.inc",
+        "tests/regression/references/cif/site-symmetry/constraint-catalogue.json"
+      ],
       "source": "https://github.com/spglib/spglib/tree/v2.5.0",
       "version": "2.5.0 naming supplement",
       "copyright": "Copyright (c) 2024, Spglib team",
       "license": "BSD-3-Clause",
       "modifications": "Frozen exact naming supplement and generated constraint table; original source notice preserved",
-      "license_files": ["LICENSES/spglib-BSD-3-Clause.txt"],
+      "license_files": [
+        "LICENSES/spglib-BSD-3-Clause.txt"
+      ],
       "status": "reviewed",
       "obligations": "Reproduce copyright, conditions and disclaimer in binary notices; no endorsement. Does not clear the other table sources."
     },
     {
       "id": "gnu-mingw-runtime",
-      "paths": ["libgomp-1.dll", "libgcc_s_seh-1.dll", "libstdc++-6.dll", "libwinpthread-1.dll", "Linux bundled compiler runtimes"],
+      "paths": [
+        "libgomp-1.dll",
+        "libgcc_s_seh-1.dll",
+        "libstdc++-6.dll",
+        "libwinpthread-1.dll",
+        "Linux bundled compiler runtimes"
+      ],
       "source": "https://gcc.gnu.org/ and https://www.mingw-w64.org/",
       "version": "compiler-resolved runtime files and package-specific hashes",
       "copyright": "Free Software Foundation, MinGW-w64/winpthreads and respective contributors",
       "license": "component-specific GPL/runtime exceptions and MinGW-w64 terms",
       "modifications": "Unmodified compiler-resolved runtime files; deployment only",
-      "license_files": ["LICENSE", "LICENSES/GCC-exception-3.1.txt"],
+      "license_files": [
+        "LICENSE",
+        "LICENSES/GCC-exception-3.1.txt"
+      ],
       "status": "package-review",
       "obligations": "Collect each runtime's actual license/copyright and source obligations. Do not apply GCC's exception to winpthreads by assumption."
     },
     {
       "id": "msvc-runtime",
-      "paths": ["MSVC runtime DLLs and vc_redist.x64.exe if shipped"],
+      "paths": [
+        "MSVC runtime DLLs and vc_redist.x64.exe if shipped"
+      ],
       "source": "https://learn.microsoft.com/cpp/windows/redistributing-visual-cpp-files",
       "version": "selected MSVC toolset and actual redist package",
       "copyright": "Microsoft Corporation",
@@ -120,7 +160,11 @@
     },
     {
       "id": "package-runtimes",
-      "paths": ["IFW installer and maintenance tool", "AppImage runtime/AppRun", "actual transitive DLL/shared-library/plugin payload"],
+      "paths": [
+        "IFW installer and maintenance tool",
+        "AppImage runtime/AppRun",
+        "actual transitive DLL/shared-library/plugin payload"
+      ],
       "source": "selected QtIFW/AppImage/runtime releases and deployed dependencies",
       "version": "exact tool/runtime identities and hashes per artifact",
       "copyright": "Respective runtime/dependency authors",
@@ -132,7 +176,13 @@
     },
     {
       "id": "scientific-data",
-      "paths": ["share/qualx/files/", "share/qualx/examples/", "src/core/crystallography/*_data.inc", "tests/regression/references/provenance/resource-inputs/", "tests/data/symmetry-reference.zip"],
+      "paths": [
+        "share/qualx/files/",
+        "share/qualx/examples/",
+        "src/core/crystallography/*_data.inc",
+        "tests/regression/references/provenance/resource-inputs/",
+        "tests/data/symmetry-reference.zip"
+      ],
       "source": "Retained QualX3 tables, scientific references and frozen exact generator inputs",
       "version": "hash-pinned current scientific manifests; no numerical changes",
       "copyright": "Original table/data authors; independent redistribution scope not established by citations alone",
@@ -144,7 +194,11 @@
     },
     {
       "id": "inherited-artwork-docs",
-      "paths": ["src/gui/resources/images/", "docs/user/images/", "inherited documentation and example material"],
+      "paths": [
+        "src/gui/resources/images/",
+        "docs/user/images/",
+        "inherited documentation and example material"
+      ],
       "source": "QualX3 and any external original asset authors",
       "version": "current retained assets; legacy brand images excluded from active resources",
       "copyright": "Original asset/document authors; institutional marks are not QualPF marks",
@@ -156,22 +210,35 @@
     },
     {
       "id": "qualpf-additions",
-      "paths": ["QualPF changes recorded in Git", "src/gui/resources/branding/", "src/gui/resources/icons/"],
+      "paths": [
+        "QualPF changes recorded in Git",
+        "src/gui/resources/branding/",
+        "src/gui/resources/icons/"
+      ],
       "source": "QualPF contributors; preserved raster master/prompt and SVG masters",
       "version": "current committed QualPF revision",
       "copyright": "Copyright (C) 2026 QualPF contributors, to the extent applicable rights exist",
       "license": "GPL-3.0-only",
       "modifications": "Independent artwork and implementation; upstream and third-party notices remain separate",
-      "license_files": ["LICENSE"],
+      "license_files": [
+        "LICENSE"
+      ],
       "status": "reviewed",
       "obligations": "Preserve source/master inputs and modification dates; identify exact corresponding source."
     }
   ],
   "source_inputs": {
     "archive_manifest": "tests/reference/archives.json",
-    "generator_archives": ["tests/data/symmetry-reference.zip"],
+    "generator_archives": [
+      "tests/data/symmetry-reference.zip"
+    ],
     "test_only_archives": "All other entries in the archive manifest: retained independent comparison evidence, excluded from source delivery and restored separately for normal regressions.",
-    "tracked_generator_inputs": ["share/qualx/files/AtomProperties.xen", "tests/regression/references/provenance/resource-inputs/fortran/crystallography/scatt_params.F90.txt", "tests/regression/references/provenance/resource-inputs/fortran/crystallography/nist_table.f90.txt", "tests/regression/references/cif/site-symmetry/constraint-catalogue.json"],
+    "tracked_generator_inputs": [
+      "share/qualx/files/AtomProperties.xen",
+      "tests/regression/references/provenance/resource-inputs/fortran/crystallography/scatt_params.F90.txt",
+      "tests/regression/references/provenance/resource-inputs/fortran/crystallography/nist_table.f90.txt",
+      "tests/regression/references/cif/site-symmetry/constraint-catalogue.json"
+    ],
     "obligations": "Include preferred modification inputs and generators in corresponding source after rights clearance; a successful compile of committed generated tables is not sufficient. Never regenerate scientific expected results from the product."
   },
   "excluded_legacy_assets": [
@@ -193,5 +260,13 @@
     "Binary and corresponding-source artifacts identify the same clean committed revision and carry SHA-256 checksums.",
     "DEB Maintainer has a real supplied contact email, never an Issues URL or a fabricated address.",
     "Only tested native platform/toolchain scopes are claimed; no publication is performed by the validation tools."
-  ]
+  ],
+  "license_text_sha256_lf": {
+    "LICENSES/BSL-1.0.txt": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566",
+    "LICENSES/Eigen-BSD.txt": "51928dce36213c5333ba3172e847d735d4c6e9b7ff2722a326c49067155b82eb",
+    "LICENSES/GCC-exception-3.1.txt": "9d6b43ce4d8de0c878bf16b54d8e7a10d9bd42b75178153e3af6a815bdc90f74",
+    "LICENSES/LGPL-3.0-only.txt": "996af0513df21f7496288951c41428a03c174e9e4a9d63665c57d670f845ccb1",
+    "LICENSES/MPL-2.0.txt": "fab3dd6bdab226f1c08630b1dd917e11fcb4ec5e1e020e2c16f83a0a13863e85",
+    "LICENSES/spglib-BSD-3-Clause.txt": "b7676bc8754b9b3aafbb2d13c9131e1f73a29f57a86a0504d550c9894dc26833"
+  }
 }

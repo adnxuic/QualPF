@@ -24,6 +24,8 @@ jobs:
         run: python -B tools/architecture/check_boundaries.py --self-test
       - name: Check product identity
         run: python -B tools/validation/check_product_identity.py --self-test
+      - name: Check distribution notices and rejection controls
+        run: python -B tools/validation/check_distribution.py --self-test
       - name: Verify independent regression resources
         run: |
           python -B tools/validation/restore_reference_archives.py --self-test

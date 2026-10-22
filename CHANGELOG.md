@@ -12,6 +12,12 @@ reports are no longer used for routine development.
 
 ### Added
 
+- Added checked distribution staging, actual payload/artifact SHA-256 inventories,
+  tracked-only corresponding-source export with preferred generator inputs,
+  explicit audit package labels and formal-release rejection of unresolved rights.
+  DEB packaging now requires a real supplied maintainer contact email. Generated
+  PDF manuals are installed only with matching documentation-source provenance.
+
 - Added GPL-3.0-only origin/modification notices, third-party license texts and a
   distribution rights inventory that keeps unresolved data, artwork and runtime
   obligations explicit instead of treating them as cleared for release.

@@ -12,6 +12,10 @@
 /cmake/packaging/ProductIdentity.cmake text eol=lf
 /cmake/templates/legal.qrc.in text eol=lf
 /src/gui/resources/resource.qrc text eol=lf
+/tools/validation/check_distribution.py text eol=lf
+/cmake/packaging/Distribution.cmake text eol=lf
+/cmake/templates/Distribution*.cmake.in text eol=lf
+/deploy/linux/*.desktop* text eol=lf
 /tests/data/symmetry-reference-manifest.json -text
 /tests/data/pfsm-quantification/real-inputs.json -text -whitespace
 /tests/data/symmetry-reference.zip binary

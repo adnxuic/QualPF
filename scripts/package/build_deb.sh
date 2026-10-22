@@ -19,12 +19,14 @@ NC='\033[0m' # No Color
 # An old compiler-selector argument is accepted and ignored.
 # Deprecated compiler selectors are accepted as inert compatibility arguments.
 # The product now selects its C++ compiler through CXX/CMake.
-if [ "$#" -gt 0 ]; then
+if [ "$#" -gt 0 ] && [ "${1:-}" != --audit-only ]; then
     echo "Deprecated compiler selector ignored; building C++ only."
 fi
 
 # Number of threads for parallel compilation
 NUM_THREADS=$(nproc)
+AUDIT_ONLY=${QUALPF_DISTRIBUTION_AUDIT_ONLY:-OFF}
+if [ "${1:-}" = --audit-only ]; then AUDIT_ONLY=ON; fi
 
 echo -e "${BLUE}=========================================="
 echo "QualPF - Debian Package Build"
@@ -51,7 +53,15 @@ mkdir -p "$BUILD_DIR/packages"
 echo -e "${YELLOW}Step 1/4: Configuration with CMake (Debian package mode)...${NC}"
 cmake -B "$BUILD_DIR" -S "$REPO_DIR" \
     -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_DEB_PACKAGE=ON
+    -DBUILD_DEB_PACKAGE=ON \
+    -DQUALPF_DISTRIBUTION_AUDIT_ONLY="$AUDIT_ONLY" \
+    -DQUALPF_RELEASE_CONTACT_EMAIL="${QUALPF_RELEASE_CONTACT_EMAIL:-}" \
+    -DQUALPF_DISTRIBUTION_RUNTIME_REVIEW="${QUALPF_DISTRIBUTION_RUNTIME_REVIEW:-}" \
+    -DQUALPF_CORRESPONDING_SOURCE_ARCHIVE="${QUALPF_CORRESPONDING_SOURCE_ARCHIVE:-}"
+DIST_ARGS=(--release)
+if [ "$AUDIT_ONLY" = ON ]; then DIST_ARGS=(--audit-only); fi
+python3 -B "$REPO_DIR/tools/validation/check_distribution.py" --root "$REPO_DIR" \
+    --build "$BUILD_DIR" --kind DEB --contact-email="${QUALPF_RELEASE_CONTACT_EMAIL:-}" "${DIST_ARGS[@]}"
 
 echo -e "${GREEN}✓ Configuration completed${NC}"
 echo ""
@@ -75,12 +85,15 @@ echo ""
 echo -e "${YELLOW}Step 4/4: Package information...${NC}"
 VERSION="$(grep -m1 'project\s*(' "$REPO_DIR/CMakeLists.txt" | sed 's/.*VERSION[[:space:]]\+\([0-9][0-9.]*\).*/\1/')"
 PROG_NAME=$(grep -m1 'EXECUTABLE_NAME' "$REPO_DIR/CMakeLists.txt" | sed 's/.*set(EXECUTABLE_NAME[[:space:]]*"\([^"]*\)").*/\1/')
-DEB_FILE=$(ls -1 "${PROG_NAME}-${VERSION}"*.deb | head -1)
+DEB_FILE=$(sed -n 's/^set(CPACK_DEBIAN_FILE_NAME "\(.*\)")$/\1/p' "$BUILD_DIR/CPackConfig.cmake")
 RELEASE_DIR="$REPO_DIR/releases/${VERSION:-unknown}/linux-deb"
 
 if [ -f "$DEB_FILE" ]; then
     mkdir -p "$RELEASE_DIR"
     cp "$DEB_FILE" "$RELEASE_DIR/"
+    python3 -B "$REPO_DIR/tools/validation/check_distribution.py" --root "$REPO_DIR" \
+        --build "$BUILD_DIR" --record-artifacts "$RELEASE_DIR/artifacts.json" \
+        --artifact "$RELEASE_DIR/$DEB_FILE"
     echo -e "${GREEN}=========================================="
     echo "✓ Debian package created successfully!"
     echo -e "==========================================${NC}"

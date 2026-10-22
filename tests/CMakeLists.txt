@@ -161,6 +161,8 @@ endif()
 
 if(QUALPF_BUILD_PRODUCT_TESTS)
     find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    add_test(NAME qualpf.distribution.consistency COMMAND "${Python3_EXECUTABLE}" -B
+        "${PROJECT_SOURCE_DIR}/tools/validation/check_distribution.py" --self-test)
     if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         message(FATAL_ERROR "Product tests require the complete root Qt build")
     endif()

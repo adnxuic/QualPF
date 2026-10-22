@@ -1,0 +1,35 @@
+# Runs inside CPack, after generator selection; never blocks an ordinary build.
+set(_qualpf_args --root "@PROJECT_SOURCE_DIR@" --build "@CMAKE_BINARY_DIR@")
+if("@QUALPF_DISTRIBUTION_AUDIT_ONLY@")
+    list(APPEND _qualpf_args --audit-only)
+else()
+    list(APPEND _qualpf_args --release)
+endif()
+if(CPACK_GENERATOR STREQUAL "DEB")
+    list(APPEND _qualpf_args --kind DEB "--contact-email=@QUALPF_RELEASE_CONTACT_EMAIL@")
+endif()
+execute_process(COMMAND "@Python3_EXECUTABLE@" -B "@QUALPF_DISTRIBUTION_CHECKER@" ${_qualpf_args}
+    RESULT_VARIABLE _qualpf_status OUTPUT_VARIABLE _qualpf_output ERROR_VARIABLE _qualpf_error)
+if(NOT _qualpf_status EQUAL 0)
+    message(FATAL_ERROR "QualPF package preflight failed: ${_qualpf_output}${_qualpf_error}")
+endif()
+
+if(NOT CPACK_INSTALL_CMAKE_PROJECTS AND CPACK_GENERATOR STREQUAL "TGZ")
+    # Export only tracked inputs and independently pinned preferred generator
+    # inputs. Never sweep ignored local files into a source package.
+    string(RANDOM LENGTH 12 ALPHABET 0123456789abcdef _qualpf_export_id)
+    set(_qualpf_export "@CMAKE_BINARY_DIR@/source-export/${_qualpf_export_id}")
+    execute_process(COMMAND "@Python3_EXECUTABLE@" -B "@QUALPF_DISTRIBUTION_CHECKER@"
+        ${_qualpf_args} --prepare-source "${_qualpf_export}"
+        RESULT_VARIABLE _qualpf_status OUTPUT_VARIABLE _qualpf_output ERROR_VARIABLE _qualpf_error)
+    if(NOT _qualpf_status EQUAL 0)
+        message(FATAL_ERROR "QualPF corresponding-source export failed: ${_qualpf_output}${_qualpf_error}")
+    endif()
+    set(CPACK_INSTALLED_DIRECTORIES "${_qualpf_export};/")
+    set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${_qualpf_export};/")
+    set(CPACK_IGNORE_FILES "")
+    set(CPACK_SOURCE_IGNORE_FILES "")
+    set(CPACK_PRE_BUILD_SCRIPTS "")
+else()
+    set(CPACK_PRE_BUILD_SCRIPTS "@CMAKE_BINARY_DIR@/configured_files/DistributionStage.cmake")
+endif()

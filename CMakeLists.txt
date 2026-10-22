@@ -25,6 +25,7 @@ add_subdirectory(apps/pfsm-benchmark)
 add_subdirectory(tests)
 
 include(cmake/packaging/Install.cmake)
+include(cmake/packaging/Distribution.cmake)
 include(cmake/packaging/Linux.cmake)
 include(cmake/packaging/QtDeployment.cmake)
 include(cmake/packaging/CPack.cmake)

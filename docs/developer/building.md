@@ -65,7 +65,9 @@ ctest --preset windows-gnu
 
 Before regression verification, provision the 15 sealed reference ZIPs with
 `python -B tools/validation/restore_reference_archives.py`. The main tree and
-source packages contain their manifests and consumers, while payloads remain in
+source packages contain their manifests and consumers. The symmetry generator ZIP
+is also a preferred modification input in corresponding-source exports; other
+payloads remain in
 the protected local development history and pinned main ancestor. See
 [independent reference prerequisites](../../tests/README.md#independent-references)
 for shallow clones and source archives. Missing/changed data remains a failure.
@@ -95,14 +97,15 @@ cmake --build build/linux-gnu --parallel
 ctest --test-dir build/linux-gnu -L normal --output-on-failure
 ```
 
-The normal development suite has 122 CTest registrations (including all 89 pre-remediation
+The normal development suite has 126 CTest registrations (including all 89 pre-remediation
 identities, six SQL/provenance/payload/CLI/QXP regressions, two geometric FWHM
 Core/Application tests, two configured FWHM Application/GUI tests, two PFSM Core/Application
 contracts, a headless PFSM CLI contract, frozen-input adapter checks and native
 PFSM GUI integration, four PFSM/RIR Core/Application/GUI/export contracts, and
 the candidate-recall comparator and shadow/enabled workflow/reuse controls, plus
 initial peak Application/GUI checks and background options/display controls, plus
-workflow settings/isolation, three scaled GUI checks and QXP v3 restoration).
+workflow settings/isolation, three scaled GUI checks and QXP v3 restoration, plus
+three scaled About/offline-notice checks and distribution rejection controls).
 Numerical property tests can take several minutes. Preserve existing timeouts and
 avoid competing large builds while running them. PFSM uses OpenMP across candidate cards with
 Eigen's internal parallelism disabled; Classical numerical compilation is unchanged.

@@ -10,18 +10,23 @@ PROG_NAME=$(grep -m1 'EXECUTABLE_NAME' "$REPO_DIR/CMakeLists.txt" | sed 's/.*set
 if command -v python3 >/dev/null 2>&1 && python3 -c 'import mkdocs' >/dev/null 2>&1; then
     python3 -m mkdocs build --strict -f "$REPO_DIR/docs/mkdocs.yml"
 else
-    echo "MkDocs unavailable; reusing any existing locally generated HTML manual."
+    echo "MkDocs unavailable; source delivery contains the tracked manual sources."
 fi
 if command -v pandoc >/dev/null 2>&1 && command -v xelatex >/dev/null 2>&1; then
     bash "$REPO_DIR/docs/make_pdf.sh"
 else
-    echo "Pandoc/XeLaTeX unavailable; reusing any existing locally generated PDF manual."
+    echo "Pandoc/XeLaTeX unavailable; source delivery contains the tracked manual sources."
 fi
 cmake -S "$REPO_DIR" -B "$BUILD_DIR" "$@"
 cpack --config "$BUILD_DIR/CPackSourceConfig.cmake" -G TGZ -B "$BUILD_DIR/packages"
-ARCHIVE="$BUILD_DIR/packages/${PROG_NAME}-${VERSION}-Source.tar.gz"
+SOURCE_NAME=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["source_artifact"])' \
+    "$BUILD_DIR/configured_files/distribution-build.json")
+ARCHIVE="$BUILD_DIR/packages/$SOURCE_NAME"
 test -f "$ARCHIVE"
 RELEASE_DIR="$REPO_DIR/releases/$VERSION/source"
 mkdir -p "$RELEASE_DIR"
 cp "$ARCHIVE" "$RELEASE_DIR/"
+python3 -B "$REPO_DIR/tools/validation/check_distribution.py" --root "$REPO_DIR" \
+    --build "$BUILD_DIR" --record-artifacts "$RELEASE_DIR/artifacts.json" \
+    --artifact "$RELEASE_DIR/$(basename "$ARCHIVE")"
 echo "Source package: $RELEASE_DIR/$(basename "$ARCHIVE")"

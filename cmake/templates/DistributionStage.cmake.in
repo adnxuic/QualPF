@@ -1,0 +1,28 @@
+set(_qualpf_args --root "@PROJECT_SOURCE_DIR@" --build "@CMAKE_BINARY_DIR@"
+    --stage "${CPACK_TEMPORARY_DIRECTORY}" --kind "${CPACK_GENERATOR}")
+if("@QUALPF_DISTRIBUTION_AUDIT_ONLY@")
+    list(APPEND _qualpf_args --audit-only)
+else()
+    list(APPEND _qualpf_args --release)
+endif()
+if(NOT "@QUALPF_DISTRIBUTION_RUNTIME_REVIEW@" STREQUAL "")
+    list(APPEND _qualpf_args --review "@QUALPF_DISTRIBUTION_RUNTIME_REVIEW@")
+endif()
+if(NOT "@QUALPF_CORRESPONDING_SOURCE_ARCHIVE@" STREQUAL "")
+    list(APPEND _qualpf_args --source-artifact "@QUALPF_CORRESPONDING_SOURCE_ARCHIVE@")
+endif()
+# The checker finds the unique installed prefix even in component IFW staging.
+execute_process(COMMAND "@Python3_EXECUTABLE@" -B "@QUALPF_DISTRIBUTION_CHECKER@"
+    ${_qualpf_args} --output "@CMAKE_BINARY_DIR@/packages/distribution-inventory.json"
+    RESULT_VARIABLE _qualpf_status OUTPUT_VARIABLE _qualpf_output ERROR_VARIABLE _qualpf_error)
+if(NOT _qualpf_status EQUAL 0)
+    message(FATAL_ERROR "QualPF staged payload failed: ${_qualpf_output}${_qualpf_error}")
+endif()
+file(GLOB_RECURSE _qualpf_build_records "${CPACK_TEMPORARY_DIRECTORY}/distribution-build.json")
+list(LENGTH _qualpf_build_records _qualpf_record_count)
+if(NOT _qualpf_record_count EQUAL 1)
+    message(FATAL_ERROR "Ambiguous staged QualPF distribution metadata")
+endif()
+list(GET _qualpf_build_records 0 _qualpf_build_record)
+get_filename_component(_qualpf_materials "${_qualpf_build_record}" DIRECTORY)
+file(COPY "@CMAKE_BINARY_DIR@/packages/distribution-inventory.json" DESTINATION "${_qualpf_materials}")

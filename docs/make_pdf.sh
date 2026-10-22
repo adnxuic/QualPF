@@ -1,12 +1,14 @@
 #!/bin/bash
 # Generate QualPF PDF manual from Markdown sources.
-# Requires: pandoc, xelatex (texlive-xetex)
+# Requires: pandoc, xelatex (texlive-xetex), python3
 #
 # Usage: bash make_pdf.sh [output.pdf]
 
 set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 OUT="${1:-${SCRIPT_DIR}/qualpf_manual.pdf}"
+PUBLISHER=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["product"]["publisher"])' \
+  "${SCRIPT_DIR}/../deploy/distribution.json")
 
 pandoc \
   "${SCRIPT_DIR}/user/index.md" \
@@ -36,6 +38,10 @@ pandoc \
   -V mainfont="DejaVu Serif" \
   -V sansfont="DejaVu Sans" \
   -V monofont="DejaVu Sans Mono" \
-  --metadata title="QualPF Manual"
+  --metadata title="QualPF Manual" \
+  --metadata author="${PUBLISHER}"
 
-echo "PDF generated: ${OUT}"
+python3 -B "${SCRIPT_DIR}/../tools/validation/check_distribution.py" \
+  --root "${SCRIPT_DIR}/.." --write-manual-proof --manual-file "${OUT}" \
+  --manual-proof "${SCRIPT_DIR}/../build/documentation/qualpf_manual-provenance.json"
+echo "PDF generated with source provenance: ${OUT}"

@@ -156,7 +156,7 @@ int runApplication(int argc, char *argv[])
 
     qualpf::infrastructure::QtPlatformServices platform;
     QCommandLineParser parser;
-    parser.setApplicationDescription(QCoreApplication::translate("main","Software for qualitative phase analysis from powder diffraction data:"));
+    parser.setApplicationDescription(APP_DESCRIPTION);
     QString errorMessage;
     qualpf::application::StartupOptions opt;
     DbBuildOptions dbopt;

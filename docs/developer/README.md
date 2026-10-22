@@ -21,6 +21,7 @@ contracts a change must preserve. For program operation, start with the
 | Settings and persistence | [Workflow settings](architecture/workflow-settings.md), [QPF format](architecture/project-format.md), [compatibility allowlist](architecture/compatibility-allowlist.json) |
 | Regression coverage | [Tests](../../tests/README.md), [coverage index](../../tests/coverage.json) |
 | Contributions and documentation | [Contribution workflow](building.md#contribution-workflow), [documentation ownership](../README.md#maintaining-documentation), [changelog](../../CHANGELOG.md) |
+| Independent release and legal materials | [Distribution and corresponding source](releasing.md) |
 
 ## Contracts and evidence
 

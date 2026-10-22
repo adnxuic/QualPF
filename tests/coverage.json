@@ -2,6 +2,7 @@
   "schema": "qualpf.current-test-coverage.v1",
   "preserved_entry_commit": "8fdf0a71d7eef8b6801e5336720c19b3c936e18f",
   "current_normal_tests": [
+    "qualpf.distribution.consistency",
     "qualpf.gui.about.scale100",
     "qualpf.gui.about.scale150",
     "qualpf.gui.about.scale200",
