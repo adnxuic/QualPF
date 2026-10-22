@@ -462,6 +462,10 @@
    <addaction name="actionCancel_Search"/>
   </widget>
   <action name="actionTestDatabase">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/database-check.png</normaloff>:/icons/database-check.png</iconset>
+   </property>
    <property name="text">
     <string>Test Database</string>
    </property>
@@ -543,6 +547,10 @@
    </property>
   </action>
   <action name="actionRange">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/range.png</normaloff>:/icons/range.png</iconset>
+   </property>
    <property name="text">
     <string>Range</string>
    </property>
@@ -554,6 +562,10 @@
    </property>
   </action>
   <action name="actionBackground">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/background.png</normaloff>:/icons/background.png</iconset>
+   </property>
    <property name="text">
     <string>Generate Background</string>
    </property>
@@ -577,16 +589,28 @@
    </property>
   </action>
   <action name="actionPeak_Search">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/peak-search.png</normaloff>:/icons/peak-search.png</iconset>
+   </property>
    <property name="text">
     <string>Peak Search</string>
    </property>
   </action>
   <action name="actionPeak_Search_Conditions">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/peak-search-options.png</normaloff>:/icons/peak-search-options.png</iconset>
+   </property>
    <property name="text">
     <string>Peak Search Options</string>
    </property>
   </action>
   <action name="actionInitialPeakSearch">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/initial-peaks.png</normaloff>:/icons/initial-peaks.png</iconset>
+   </property>
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -595,11 +619,19 @@
    </property>
   </action>
   <action name="actionInitialPeakSearchOptions">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/initial-peaks-options.png</normaloff>:/icons/initial-peaks-options.png</iconset>
+   </property>
    <property name="text">
     <string>Initial Peak Search Options</string>
    </property>
   </action>
   <action name="actionFwhmEstimation">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/fwhm.png</normaloff>:/icons/fwhm.png</iconset>
+   </property>
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -608,16 +640,28 @@
    </property>
   </action>
   <action name="actionFwhmEstimationOptions">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/fwhm-options.png</normaloff>:/icons/fwhm-options.png</iconset>
+   </property>
    <property name="text">
     <string>FWHM Estimation Options...</string>
    </property>
   </action>
   <action name="actionRestartPreprocessing">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/restart-preprocessing.png</normaloff>:/icons/restart-preprocessing.png</iconset>
+   </property>
    <property name="text">
     <string>Restart preprocessing...</string>
    </property>
   </action>
   <action name="actionAddInferredPeak">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/inferred-peak.png</normaloff>:/icons/inferred-peak.png</iconset>
+   </property>
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -626,6 +670,10 @@
    </property>
   </action>
   <action name="actionDeleteAllPeaks">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/delete-all-peaks.png</normaloff>:/icons/delete-all-peaks.png</iconset>
+   </property>
    <property name="text">
     <string>Delete all peaks</string>
    </property>
@@ -640,11 +688,19 @@
    </property>
   </action>
   <action name="actionLoad_Peaks">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/load-peaks.png</normaloff>:/icons/load-peaks.png</iconset>
+   </property>
    <property name="text">
     <string>Load Peaks</string>
    </property>
   </action>
   <action name="actionSave_Peaks">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/save-peaks.png</normaloff>:/icons/save-peaks.png</iconset>
+   </property>
    <property name="text">
     <string>Save Peaks</string>
    </property>
@@ -659,9 +715,17 @@
    </property>
   </action>
   <action name="actionBackgroundOptions">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/background-options.png</normaloff>:/icons/background-options.png</iconset>
+   </property>
    <property name="text"><string>Background Options</string></property>
   </action>
   <action name="actionSubtract_Background">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/subtract-background.png</normaloff>:/icons/subtract-background.png</iconset>
+   </property>
    <property name="checkable"><bool>true</bool></property>
    <property name="checked"><bool>false</bool></property>
    <property name="toolTip"><string>Display the observed and fitted curves without background</string></property>
@@ -679,6 +743,10 @@
    </property>
   </action>
   <action name="actionManage_Databases">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/manage-databases.png</normaloff>:/icons/manage-databases.png</iconset>
+   </property>
    <property name="text">
     <string>Manage Databases</string>
    </property>
@@ -702,6 +770,10 @@
    </property>
   </action>
   <action name="actionPFSM">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/pfsm.png</normaloff>:/icons/pfsm.png</iconset>
+   </property>
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -710,11 +782,19 @@
    </property>
   </action>
   <action name="actionPFSMOptions">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/pfsm-options.png</normaloff>:/icons/pfsm-options.png</iconset>
+   </property>
    <property name="text">
     <string>PFSM Options</string>
    </property>
   </action>
   <action name="actionRecalculate_FOM">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/recalculate-fom.png</normaloff>:/icons/recalculate-fom.png</iconset>
+   </property>
    <property name="text">
     <string>Recalculate FOMs</string>
    </property>
@@ -735,16 +815,28 @@
    </property>
   </action>
   <action name="actionExport_Background">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/export-background.png</normaloff>:/icons/export-background.png</iconset>
+   </property>
    <property name="text">
     <string>Export Background</string>
    </property>
   </action>
   <action name="actionSmoothing">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/smoothing.png</normaloff>:/icons/smoothing.png</iconset>
+   </property>
    <property name="text">
     <string>Smoothing</string>
    </property>
   </action>
   <action name="actionK_alpha2_Stripping">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/kalpha2.png</normaloff>:/icons/kalpha2.png</iconset>
+   </property>
    <property name="text">
     <string>K-α2 Stripping</string>
    </property>
@@ -875,6 +967,10 @@
    </property>
   </action>
   <action name="actionOpen_Project">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/open-project.png</normaloff>:/icons/open-project.png</iconset>
+   </property>
    <property name="text">
     <string>Open Project</string>
    </property>
@@ -886,31 +982,55 @@
    </property>
   </action>
   <action name="actionDocumentation_HTML">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/help-html.png</normaloff>:/icons/help-html.png</iconset>
+   </property>
    <property name="text">
     <string>QualX Reference Documentation (HTML)</string>
    </property>
   </action>
   <action name="actionDocumentation_PDF">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/help-pdf.png</normaloff>:/icons/help-pdf.png</iconset>
+   </property>
    <property name="text">
     <string>Documentation (PDF)</string>
    </property>
   </action>
   <action name="actionCheck_for_Updates">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/check-updates.png</normaloff>:/icons/check-updates.png</iconset>
+   </property>
    <property name="text">
     <string>Check for Updates</string>
    </property>
   </action>
   <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/about.png</normaloff>:/icons/about.png</iconset>
+   </property>
    <property name="text">
     <string>About</string>
    </property>
   </action>
   <action name="actionImage_Powder_Pattern">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/export-image.png</normaloff>:/icons/export-image.png</iconset>
+   </property>
    <property name="text">
     <string>Export Image</string>
    </property>
   </action>
   <action name="actionPrint">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/print.png</normaloff>:/icons/print.png</iconset>
+   </property>
    <property name="text">
     <string>Print...</string>
    </property>
@@ -924,11 +1044,19 @@
    </property>
   </action>
   <action name="actionExport_Diffraction_Pattern">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/export-pattern.png</normaloff>:/icons/export-pattern.png</iconset>
+   </property>
    <property name="text">
     <string>Export Diffraction Pattern</string>
    </property>
   </action>
   <action name="actionDefault_Layout">
+   <property name="icon">
+    <iconset resource="resources/resource.qrc">
+     <normaloff>:/icons/default-layout.png</normaloff>:/icons/default-layout.png</iconset>
+   </property>
    <property name="text">
     <string>Default Layout</string>
    </property>

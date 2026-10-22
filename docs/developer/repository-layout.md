@@ -12,6 +12,7 @@
 | `tests/data`, `tests/regression/references`, `tests/reference` | Stable independent inputs/provenance and their hash manifest |
 | `cmake/modules`, `cmake/templates`, `cmake/packaging` | Build policy/dependencies/options, generated headers and Windows/Linux deployment |
 | `tools/architecture`, `tools/validation`, `tools/agent`, `tools/crystallography` | Current boundary/build capture, product/baseline validation, Agent context and numerical-table reproduction |
+| `tools/gui`, `src/gui/resources/icons` | Offline icon export helper, editable SVG masters and committed PNG action resources |
 | `share/qualx`, `src/gui/resources`, `deploy`, `third_party` | Consumed runtime/GUI/deployment data and third-party sources; original resource naming/attribution remains |
 | `scripts`, `install.sh` | Existing platform build/install/package helpers |
 | `docs/user` | User manual: installation, operation, parameters and result interpretation |

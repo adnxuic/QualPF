@@ -18,6 +18,7 @@
 #include <QLineEdit>
 #include <QComboBox>
 #include <QPushButton>
+#include <QIcon>
 #include <QHBoxLayout>
 
 #include <algorithm>
@@ -44,11 +45,11 @@ QuantWidget::QuantWidget(QWidget *parent)
     m_status->setTextInteractionFlags(Qt::TextSelectableByMouse);
     ui->verticalLayout->insertWidget(0, m_status);
     auto *actions = new QHBoxLayout;
-    m_editRir = new QPushButton(tr("Edit RIR…"), this);
+    m_editRir = new QPushButton(QIcon(":/icons/edit-rir.png"), tr("Edit RIR…"), this);
     m_editRir->setObjectName("editRir");
-    m_restoreRir = new QPushButton(tr("Restore reference RIR"), this);
+    m_restoreRir = new QPushButton(QIcon(":/icons/restore-rir.png"), tr("Restore reference RIR"), this);
     m_restoreRir->setObjectName("restoreRir");
-    m_exportCsv = new QPushButton(tr("Export CSV…"), this);
+    m_exportCsv = new QPushButton(QIcon(":/icons/export-csv.png"), tr("Export CSV…"), this);
     m_exportCsv->setObjectName("exportQuantificationCsv");
     actions->addWidget(m_editRir); actions->addWidget(m_restoreRir); actions->addWidget(m_exportCsv); actions->addStretch();
     ui->verticalLayout->insertLayout(1, actions);
@@ -101,7 +102,7 @@ QuantWidget::QuantWidget(QWidget *parent)
     connect(m_clearSelAction, &QAction::triggered, ui->tableView, &QAbstractItemView::clearSelection);
     ui->tableView->addAction(m_clearSelAction);
 
-    m_removePhaseAction = new QAction(tr("Remove Phase"), this);
+    m_removePhaseAction = new QAction(QIcon(":/images/images/delete_entry.png"), tr("Remove Phase"), this);
     connect(m_removePhaseAction, &QAction::triggered, this, &QuantWidget::removeSelectedPhase);
 
     ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);

@@ -12,6 +12,7 @@
 #include <QLocale>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QIcon>
 #include <QScrollArea>
 #include <QSpinBox>
 #include <QStackedWidget>
@@ -63,9 +64,11 @@ WorkflowSettingsDialog::WorkflowSettingsDialog(Workspace &workspace,QWidget *par
     status_=new QLabel(this);status_->setWordWrap(true);status_->setObjectName("workflowSettingsStatus");layout->addWidget(status_);
     auto *buttons=new QDialogButtonBox(this);buttons->setObjectName("workflowSettingsButtons");
     auto *restore=buttons->addButton(tr("Restore Page Defaults"),QDialogButtonBox::ResetRole);
+    restore->setIcon(QIcon(":/icons/restore-defaults.png"));
     restore->setObjectName("restoreWorkflowPage");connect(restore,&QPushButton::clicked,this,&WorkflowSettingsDialog::restorePage);
     buttons->addButton(QDialogButtonBox::Cancel);
     auto *saveButton=buttons->addButton(tr("Save Defaults"),QDialogButtonBox::ActionRole);
+    saveButton->setIcon(QIcon(":/icons/save-defaults.png"));
     saveButton->setObjectName("saveWorkflowSettings");saveButton->setDefault(true);connect(saveButton,&QPushButton::clicked,this,[this]{save();});
     connect(buttons,&QDialogButtonBox::rejected,this,&QDialog::reject);layout->addWidget(buttons);
     connect(flows_,&QListWidget::currentRowChanged,this,[this](int row){

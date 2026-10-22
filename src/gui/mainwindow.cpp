@@ -63,6 +63,7 @@
 #include <QDebug>
 #include <bit>
 #include <QInputDialog>
+#include <QIcon>
 
 
 
@@ -462,7 +463,7 @@ void MainWindow::actionsSetup()
     connect(ui->actionImage_Powder_Pattern, &QAction::triggered, this, &MainWindow::onActionImagePowderPatternTriggered);
     connect(ui->actionExit, &QAction::triggered, this, &QWidget::close);
 
-    auto *legacyCifAction = new QAction(tr("Import Powder CIF (Legacy)…"), this);
+    auto *legacyCifAction = new QAction(QIcon(":/icons/import-cif.png"), tr("Import Powder CIF (Legacy)…"), this);
     for (auto *menu : findChildren<QMenu *>()) {
         if (menu->actions().contains(ui->actionImportDiffractionPattern)) {
             menu->insertAction(ui->actionImportDiffractionPattern, legacyCifAction);

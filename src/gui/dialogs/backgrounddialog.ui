@@ -186,6 +186,10 @@
             </item>
             <item>
              <widget class="QPushButton" name="applyFilterButton">
+              <property name="icon">
+               <iconset resource="../resources/resource.qrc">
+                <normaloff>:/icons/apply.png</normaloff>:/icons/apply.png</iconset>
+              </property>
               <property name="text">
                <string>Apply</string>
               </property>
@@ -206,6 +210,10 @@
             </item>
             <item>
              <widget class="QPushButton" name="resetFilterButton">
+              <property name="icon">
+               <iconset resource="../resources/resource.qrc">
+                <normaloff>:/icons/restart-preprocessing.png</normaloff>:/icons/restart-preprocessing.png</iconset>
+              </property>
               <property name="text">
                <string>Reset</string>
               </property>
@@ -277,7 +285,9 @@
   <tabstop>applyFilterButton</tabstop>
   <tabstop>resetFilterButton</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../resources/resource.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

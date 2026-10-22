@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QPlainTextEdit>
 #include <QPushButton>
+#include <QIcon>
 #include <QTreeWidget>
 #include <QVBoxLayout>
 #include <type_traits>
@@ -76,11 +77,11 @@ WorkflowDock::WorkflowDock(Workspace &workspace, QWidget *parent)
     status_->setWordWrap(true);
     layout->addWidget(status_);
     auto *buttons = new QHBoxLayout;
-    auto *details = new QPushButton(tr("Details"), body);
+    auto *details = new QPushButton(QIcon(":/icons/details.png"), tr("Details"), body);
     details->setObjectName("workflowDetails");
     buttons->addWidget(details);
     buttons->addStretch();
-    undo_ = new QPushButton(tr("Undo Selected"), body);
+    undo_ = new QPushButton(QIcon(":/icons/undo.png"), tr("Undo Selected"), body);
     undo_->setObjectName("workflowUndo");
     buttons->addWidget(undo_);
     layout->addLayout(buttons);

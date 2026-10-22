@@ -11,6 +11,7 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QIcon>
 #include <QLabel>
 #include <QLayout>
 #include <QMessageBox>
@@ -82,7 +83,7 @@ bool PreprocessingDialog::preview() {
         diagnostic->setVisible(!status || !summary.isEmpty());
         auto *details = dialog_.findChild<QPushButton *>("peakRejectionDetails");
         if (!details) {
-            details = new QPushButton(QObject::tr("Candidate details..."), &dialog_);
+            details = new QPushButton(QIcon(":/icons/details.png"), QObject::tr("Candidate details..."), &dialog_);
             details->setObjectName("peakRejectionDetails");
             dialog_.layout()->addWidget(details);
         }

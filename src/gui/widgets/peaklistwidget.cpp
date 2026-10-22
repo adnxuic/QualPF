@@ -5,6 +5,7 @@
 #include "gui/state/workspace_context.h"
 #include "gui/state/preprocessing_product.h"
 #include "gui/dialogs/manual_peak_dialog.h"
+#include <QIcon>
 
 
 
@@ -42,7 +43,7 @@ void PeakListWidget::createContextMenu(QPoint pos)
     QMenu *menu=new QMenu(this);
     menu->addAction(addPeakAction);
     if (indexMenu.isValid()) {
-        menu->addAction(tr("Modify measured peak..."), this, [this,indexMenu] {
+        menu->addAction(QIcon(":/icons/edit-peak.png"), tr("Modify measured peak..."), this, [this,indexMenu] {
             if (tableSource != qualpf::gui::workspaceContext(this).searchSession().snapshot()) { updatePeakListTable(); return; }
             if (auto *mw = qobject_cast<MainWindow *>(window()))
                 qualpf::gui::editManualPeak(*mw, std::size_t(peakListProxyModel->mapToSource(indexMenu).row()), {}, true);
@@ -146,9 +147,9 @@ void PeakListWidget::createPeakListModel()
 
 void PeakListWidget::createContextMenuActions()
 {
-    deletePeakAction = new QAction("Delete Peaks", this);
+    deletePeakAction = new QAction(QIcon(":/images/images/delpeak.xpm"), "Delete Peaks", this);
     connect(deletePeakAction, &QAction::triggered, this, &PeakListWidget::deletePeaks);
-    addPeakAction = new QAction("Add Peak", this);
+    addPeakAction = new QAction(QIcon(":/images/images/addpeak.xpm"), "Add Peak", this);
     connect(addPeakAction, &QAction::triggered, this, &PeakListWidget::addPeak);
     clearSelectionAction = new QAction(tr("Clear Selection"), this);
     clearSelectionAction->setShortcut(QKeySequence(Qt::Key_Escape));

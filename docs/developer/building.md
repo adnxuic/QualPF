@@ -7,6 +7,13 @@ MinGW and the corresponding Qt `bin` on PATH. Linux GNU uses installed C++/Qt/
 Eigen/Boost development packages. Configuration downloads no dependencies.
 Developers supply optional GoogleTest; Google Benchmark remains a reserved entry.
 
+## GUI icon resources
+
+GUI action icons are committed as PNG resources with high-density companions.
+Normal builds need no image-generation tools or Qt SVG. For editable SVG masters,
+offline PNG regeneration and contact sheets, see the
+[action icon guide](../../src/gui/resources/icons/README.md).
+
 ## Shared presets and local SDKs
 
 `CMakePresets.json` provides `windows-gnu`, `windows-msvc` and `linux-gnu`.

@@ -10,6 +10,14 @@ reports are no longer used for routine development.
 
 ## [Unreleased]
 
+### Added
+
+- Added colorful icons to 32 previously text-only menu actions, Legacy CIF import,
+  workflow settings and common file, peak, restraint, RIR and history controls.
+  Preserved existing icons, labels, shortcuts and action behavior. Editable SVG
+  masters and 24px/48px PNG resources include an offline export and preview helper;
+  normal builds require no additional Qt module.
+
 ### Changed
 
 - Reduced tracked history to necessary acceptance records and portable indexes.

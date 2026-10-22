@@ -35,6 +35,10 @@
    </item>
    <item>
     <widget class="QPushButton" name="browseButton">
+     <property name="icon">
+      <iconset resource="../resources/resource.qrc">
+       <normaloff>:/icons/browse.png</normaloff>:/icons/browse.png</iconset>
+     </property>
      <property name="text">
       <string>Browse</string>
      </property>
@@ -42,6 +46,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources/resource.qrc"/>
+ </resources>
  <connections/>
 </ui>

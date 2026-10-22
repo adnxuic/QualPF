@@ -413,6 +413,10 @@
      </item>
      <item>
       <widget class="QPushButton" name="loadCardsButton">
+       <property name="icon">
+        <iconset resource="../resources/resource.qrc">
+         <normaloff>:/images/images/load_entry.png</normaloff>:/images/images/load_entry.png</iconset>
+       </property>
        <property name="text">
         <string>Load Cards</string>
        </property>
@@ -420,6 +424,10 @@
      </item>
      <item>
       <widget class="QPushButton" name="loadMergeButton">
+       <property name="icon">
+        <iconset resource="../resources/resource.qrc">
+         <normaloff>:/icons/merge-cards.png</normaloff>:/icons/merge-cards.png</iconset>
+       </property>
        <property name="text">
         <string>Load and Merge Cards</string>
        </property>
@@ -430,6 +438,10 @@
      </item>
      <item>
       <widget class="QPushButton" name="searchButton">
+       <property name="icon">
+        <iconset resource="../resources/resource.qrc">
+         <normaloff>:/icons/search-restraints.png</normaloff>:/icons/search-restraints.png</iconset>
+       </property>
        <property name="text">
         <string>Search with Restraints</string>
        </property>
@@ -440,6 +452,10 @@
      </item>
      <item>
       <widget class="QPushButton" name="cancelRestraintsButton">
+       <property name="icon">
+        <iconset resource="../resources/resource.qrc">
+         <normaloff>:/icons/clear-restraints.png</normaloff>:/icons/clear-restraints.png</iconset>
+       </property>
        <property name="text">
         <string>Cancel All Restraints</string>
        </property>
@@ -464,6 +480,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../resources/resource.qrc"/>
+ </resources>
  <connections/>
 </ui>

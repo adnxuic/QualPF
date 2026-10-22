@@ -67,6 +67,10 @@
      </item>
      <item>
       <widget class="QPushButton" name="addButton">
+       <property name="icon">
+        <iconset resource="../resources/resource.qrc">
+         <normaloff>:/icons/database-add.png</normaloff>:/icons/database-add.png</iconset>
+       </property>
        <property name="toolTip">
         <string>Add an existing QualX database (.sq) to the list</string>
        </property>

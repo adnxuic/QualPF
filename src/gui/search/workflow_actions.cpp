@@ -6,13 +6,21 @@
 #include "qualpf/application/workflow.h"
 #include "ui_mainwindow.h"
 #include <QMenuBar>
+#include <QIcon>
 using namespace qualpf;
 using namespace qualpf::application;
 void MainWindow::createWorkflowUi() {
     auto *menu=new QMenu(tr("Setting"),this);menu->setObjectName("menuSetting");
     menuBar()->insertMenu(ui->menuHelp->menuAction(),menu);
     for(auto flow:workflows) {
-        auto *action=menu->addAction(QString::fromUtf8(workflowName(flow))+"...");action->setObjectName("settingWorkflow"+QString::number(int(flow)));
+        QIcon icon;
+        switch (flow) {
+        case WorkflowId::preprocessing: icon = QIcon(":/icons/preprocessing-options.png"); break;
+        case WorkflowId::csm: icon = QIcon(":/images/images/search_match_options.png"); break;
+        case WorkflowId::pfsm: icon = QIcon(":/icons/pfsm-options.png"); break;
+        case WorkflowId::peak_search: icon = QIcon(":/icons/peak-search-options.png"); break;
+        }
+        auto *action=menu->addAction(icon,QString::fromUtf8(workflowName(flow))+"...");action->setObjectName("settingWorkflow"+QString::number(int(flow)));
         connect(action,&QAction::triggered,this,[this,flow]{openWorkflowDefaults(flow);});
     }
     workflowDock_=new qualpf::gui::WorkflowDock(context().workspace(),this);addDockWidget(Qt::RightDockWidgetArea,workflowDock_);
