@@ -282,7 +282,7 @@ Fresh verification uses the intended revision and records its actual source,
 reference, runner and toolchain inputs. Configure/build and normal tests never
 restore full migration archives or execute old runners. Original PFSM, QPF and
 platform checkpoint outcomes are retained in the
-[historical build guide](../../history/development/building.md); they are not a
+[historical build guide](../../history/README.md#build-and-maintenance-records); they are not a
 claim that the current tree passed those runs.
 
 The product build now requires Python 3 for the mandatory strict boundary target.
@@ -321,7 +321,11 @@ ignored build tree and report GCC/MSVC/Linux validation separately.
 ## Documentation checks
 
 Run `python -B tools/validation/check_documentation.py --self-test` for current
-links, directory ownership, user navigation/PDF coverage and frozen history bytes.
+links, directory ownership, user navigation/PDF coverage, retained evidence bytes
+and archive-index consistency. Use `python -B tools/validation/history_archive.py
+--archive <zip>` separately to verify full external evidence, or add `--restore-to
+<new-directory>` for checked recovery. Ordinary build and documentation checks do
+not require this archive.
 Build the website with `python -m mkdocs build --strict -f docs/mkdocs.yml` after
 installing `docs/requirements.txt`. See [documentation ownership](../README.md).
 Generated website and PDF outputs are ignored; the website publishes users' guides

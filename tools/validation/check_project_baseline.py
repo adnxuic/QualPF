@@ -9,6 +9,8 @@ import shutil
 import tempfile
 import unittest
 
+from history_archive import CATALOG as HISTORY_CATALOG, validate_catalog
+
 ROOT = Path(__file__).resolve().parents[2]
 BASELINE = "docs/developer/project-baseline.json"
 COMPLETE = "CPP_ARCHITECTURE_REFACTOR_COMPLETE"
@@ -155,6 +157,18 @@ def check(root=ROOT):
     for field in RECOVERY_FIELDS:
         documents[field] = read_reference(root, recovery.get(field), f"baseline.recovery.{field}", errors,
                                           as_json=field in ("inventory", "recovery_index", "validation_index"))
+    # The full multi-megabyte disposition list is independently archived. Its
+    # identity fields remain checked here, and archive verification compares
+    # this projection with the actual frozen JSON, not a regenerated result.
+    catalog = documents["inventory"]
+    if recovery.get("inventory") != HISTORY_CATALOG:
+        errors.append("baseline.recovery.inventory: expected the compact history catalog")
+    if isinstance(catalog, dict):
+        errors.extend(validate_catalog(catalog))
+        documents["inventory"] = catalog.get("recovery_inventory")
+        if (not isinstance(documents["inventory"], dict) or documents["inventory"].get("source_path")
+                != "history/development/repository-consolidation/inventory.json"):
+            errors.append("baseline.recovery.inventory: wrong archived source binding")
     consolidation = state.get("repository_consolidation", {})
     consolidation = consolidation if isinstance(consolidation, dict) else {}
     for field in ("inventory", "recovery_index"):
@@ -243,6 +257,15 @@ def self_test():
                 path.write_text(json.dumps(document), encoding="utf-8")
                 self.assertTrue(check(root))
                 path.write_text("null", encoding="utf-8")
+                self.assertTrue(check(root))
+                shutil.copyfile(ROOT / state["recovery"]["recovery_index"], path)
+                inventory_path = root / state["recovery"]["inventory"]
+                inventory = json.loads(inventory_path.read_bytes())
+                inventory["recovery_inventory"]["entry_commit"] = "d" * 40
+                inventory_path.write_text(json.dumps(inventory), encoding="utf-8")
+                self.assertTrue(check(root))
+                inventory["recovery_inventory"]["source_path"] = "history/missing-inventory.json"
+                inventory_path.write_text(json.dumps(inventory), encoding="utf-8")
                 self.assertTrue(check(root))
                 for unsafe in ("../outside.json", "/outside.json", "C:/outside.json", "folder\\outside.json"):
                     errors = []

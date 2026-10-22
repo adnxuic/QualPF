@@ -6,7 +6,7 @@ and canonical Session with execution-thread read-only SQL. Its normal
 SQLite fixture; real COD data are not a normal-test dependency.
 
 This page describes the developer tool. The [numerical contract](pfsm.md) owns
-scientific behavior and limitations. The [original benchmark record](../../../history/numerical/pfsm-benchmark.md)
+scientific behavior and limitations. The [original benchmark record](../../../history/README.md#pfsm-benchmark-evidence)
 preserves every recorded run, failed comparison, qualification and acceptance scope.
 
 ## Current candidate-recall entry points
@@ -170,7 +170,7 @@ Controlled comparisons must bind implementation, inputs, references, compiler,
 options and environment. Retain all failed runs and use independent scientific
 comparisons; faster execution alone is not numerical or identification acceptance.
 
-The [original record](../../../history/numerical/pfsm-benchmark.md) contains dated
+The [original record](../../../history/README.md#pfsm-benchmark-evidence) contains dated
 performance cohorts, development and holdout assessments, original failures and
 unresolved inputs. [Conditional mass assessment](../../../history/numerical/pfsm-quantification-assessment.json)
 is separate from identification acceptance and establishes no new accuracy tolerance.

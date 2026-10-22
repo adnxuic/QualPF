@@ -237,7 +237,7 @@ share/qualx/            consumed runtime data with original names/attribution
 deploy/                 current Windows/Linux packaging resources
 docs/user/              user manual with unchanged page URLs
 docs/developer/         architecture, numerical contracts and developer guides
-history/                original reports, frozen evidence and recovery index
+history/                necessary acceptance records and independent archive index
 .agent/                 AI working rules, documentation navigation and task handoff
 build/<configuration>/  ignored local caches, binaries and test logs
 releases/               ignored local package outputs

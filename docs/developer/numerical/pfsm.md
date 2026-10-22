@@ -9,7 +9,7 @@ OpenMP workflow is specified in [Search-Match contracts](../architecture/search-
 Real-data acceptance remains separate evidence and cannot be inferred from the
 synthetic numerical tests.
 The separately authorized single-pattern phase-width experiment is an isolated
-diagnostic, described in the [original benchmark record](../../../history/numerical/pfsm-benchmark.md). It changes
+diagnostic, described in the [original benchmark record](../../../history/README.md#pfsm-benchmark-evidence). It changes
 the common-width assumption only inside that experiment; its prototype and
 synthetic evidence do not replace this product contract or authorize adoption.
 The completed 464-card conditional round places the missing Bi2Mo3O12 card at
@@ -26,7 +26,7 @@ fixed-shift NNLS/KKT verification; these are not nonlinear global-optimality or
 automatic-identification proofs. Final Rwp_net remains 20.39--54.88%. The assessment
 changes no model or tolerance and does not reopen the closed development failure
 experiments or resolve their retained nonpasses. Full evidence and limitations
-remain in the [original benchmark record](../../../history/numerical/pfsm-benchmark.md).
+remain in the [original benchmark record](../../../history/README.md#pfsm-benchmark-evidence).
 
 ## Candidate recall versus formal fitting
 
@@ -283,7 +283,7 @@ parallel barrier. Neither the Taylor representation nor the recall approximation
 has a no-miss guarantee. Protection and full fallback are reported separately
 from pure local recovery.
 
-The [complete v2 replay and enabled assessment](../../../history/numerical/pfsm-benchmark.md#completed-v2-replay-cohort-2026-10-14)
+The [complete v2 replay and enabled assessment](../../../history/README.md#pfsm-benchmark-evidence)
 records 263/263 exact new formal round comparisons and five supplemental
 configurations. Pure reviewed Top-20 retains 256/258 executed reviews; channel
 and unresolved-risk protection remain necessary. Nine full-pool fallbacks include
@@ -343,7 +343,7 @@ the 500-card recall retains Top-5 in 263/263 rounds, while local reranking to 20
 loses members in seven rounds/cases. Baseline/off/shadow formal rankings and
 baseline curves agree for each failed case; all 263 rounds preserve surviving
 formal evidence and baseline curves. Enabled confirms the selection losses. The
-[benchmark evidence](../../../history/numerical/pfsm-benchmark.md#experimental-fast-pfsm-modes) preserves
+[benchmark evidence](../../../history/README.md#pfsm-benchmark-evidence) preserves
 the excluded identities and ranks. This fixed configuration fails preservation
 admission and remains experimental. The five supplemental initial-search groups
 (two long spectra in direct/cache modes and the 88,312-card full library) preserve
@@ -597,7 +597,7 @@ separate observations of the same compositions, not independent mixture recipes.
 Library RIR provenance/radiation remain unverified. These substantial errors
 qualify current fixed-profile estimates; phase identification success and a
 verified joint fit do not certify mass accuracy. The model and tolerances remain
-unchanged. The [assessment protocol](../../../history/numerical/pfsm-benchmark.md#conditional-pfsmrir-quantification-assessment)
+unchanged. The [assessment protocol](../../../history/README.md#pfsm-benchmark-evidence)
 describes reproduction; raw fits, CSV and original failed runs remain under
 `build/pfsm/quantification-01`.
 

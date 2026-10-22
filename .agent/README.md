@@ -25,6 +25,10 @@ authorized maintenance task and do not authorize PFSM.
 
 Keep only README.md, POLICY.md, WORKFLOW.md, CONTEXT_MAP.md, TASK_STATE.json and
 .gitattributes here. Record notable completed changes in [CHANGELOG.md](../CHANGELOG.md).
+Keep necessary acceptance records and indexes in `history/`; full historical logs
+and raw evidence belong in its verified independent archive. Do not remove a
+repository evidence copy until archive and recovery verification pass. Ordinary
+checks must remain independent of archive availability.
 Product contracts and decisions belong to their owning documentation; ordinary
 tasks need no Phase documents or separate completion reports. Raw logs belong to
 the existing validation locations or ignored build directories. Do not add an archive or a

@@ -17,8 +17,9 @@ works on the repository; they are not product manuals.
 Keep user actions and observable behavior in `user/`, and implementation contracts
 and reproducible developer instructions in `developer/`. Link to the owning guide
 instead of copying its rules. Keep AI startup, task navigation and handoff in
-`.agent/`. Historical reports belong in `history/`; never rewrite frozen evidence
-to describe today's implementation.
+`.agent/`. Keep necessary acceptance records and recovery indexes in `history/`; store full
+logs and raw historical evidence in the verified independent archive. Never rewrite
+frozen evidence to describe today's implementation.
 
 Current prose uses English, UTF-8 and LF. Historical evidence retains its original
 language and bytes. Record notable completed changes in [CHANGELOG.md](../CHANGELOG.md).

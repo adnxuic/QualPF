@@ -1,78 +1,147 @@
 # History and recovery
 
-This directory preserves historical snapshots. Start with the
-[developer guide](../docs/developer/README.md) for current contracts and
-[user manual](../docs/user/index.md) for program operation. Historical STOP records,
-owners, commands and test counts describe their recorded revision only.
+The repository retains necessary acceptance records and a portable archive index.
+Complete logs, old maintenance reports, disposition inventories and original mixed
+guides are stored independently. Current contracts belong to the
+[developer guide](../docs/developer/README.md); program operation belongs to the
+[user manual](../docs/user/index.md).
 
-## Relocated originals
-
-[relocations.json](relocations.json) maps original repository paths to preserved
-files, with the source commit, Git blob identity, original byte length and SHA-256.
-The old deferred-defect `.gitattributes` is stored as `gitattributes.original`
-so its text-normalization rules cannot change the preserved CRLF evidence on
-checkout. Its original name and exact bytes remain in the map.
-Original Markdown links and paths inside these files are intentionally unchanged.
-Resolve a relative reference against the file's original path, then look up that
-path in the map. For older paths not in the map, use the protected snapshots and
-phase locators below. Source-commit Git blobs remain the authority for original
-tracked content; working-tree bytes and Git bytes may differ in line endings.
-
-Do not repair frozen reports with today's paths, translate them, alter failed
-comparisons or use their PASS labels as fresh validation. Current navigation lives
-in this index; run `python -B tools/validation/check_documentation.py` to verify
-the relocated bytes. This is a preservation check, not a new scientific gate.
-
-Mixed documents have both a preserved original and an extracted current guide:
-[strict layers](architecture/strict-layer-convergence.md),
-[benchmark evidence](numerical/pfsm-benchmark.md),
-[build checkpoints](development/building.md),
-[repository publication](development/repository-layout.md) and
-[architecture decisions](architecture/decisions.md).
-The [conditional PFSM assessment](numerical/pfsm-quantification-assessment.json)
-also retains its original inputs, values and qualifications.
-
-QualPF derives from IC-CNR's QualX3 implementation and retains its LGPL-3.0
-license and attribution; see [LICENSE](../LICENSE), the README acknowledgments
-and the original source/resource headers. Fortran-to-C++ migration completed as
-Milestone F (`FORTRAN_MIGRATION_COMPLETE`) at implementation `f386bfa4`.
-Windows GNU/MSVC and Linux GNU were accepted; macOS product releases are retired.
-The subsequent architecture implementation was independently accepted as
-`CPP_ARCHITECTURE_REFACTOR_COMPLETE` at `2610439f`. Original acceptance reports,
-approvals, failures and compiler/source fingerprints are historical authority.
-
-Current development starts with [architecture](../docs/developer/architecture/README.md),
-[numerical policy](../docs/developer/numerical/policy.md), [building](../docs/developer/building.md) and
-[CHANGELOG.md](../CHANGELOG.md). Phase numbering ended with the refactoring;
-this page is a historical lookup and recovery entry. Historical STOP records and
-pending outcomes apply to their original snapshots, not current task status.
-The normal suite is independent of migration execution facilities. Final
-architecture reacceptance and subsequent strict-layer validation are recorded in
-the [project baseline](../docs/developer/project-baseline.json). Those acceptance
-snapshots predate PFSM; current PFSM contracts and qualifications are maintained
-in the [PFSM guide](../docs/developer/numerical/pfsm.md).
+Historical PASS, FAIL, STOP, ownership and test-count statements apply to their
+recorded revisions. Archiving changes neither acceptance nor scientific meaning.
 
 ## Retained reports
 
-These documents retain their original scope, outcomes and evidence. They are not
-templates or a task queue for new development. Routine change history belongs in
-the changelog; keep current guides and contracts in their owning areas.
+The following 16 originals remain byte-identical in the source tree:
 
-- [Independent architecture reacceptance](architecture/milestone-a/a01/independent-review.md),
-  [gate](architecture/milestone-a/a01/gate.json) and [acceptance matrix](architecture/milestone-a/a01/acceptance-matrix.md)
-- [Original blocked architecture review](architecture/milestone-a/independent-review.md)
-- [Strict-layer refinement and validation](architecture/strict-layer-convergence.md)
-  and [independent Linux closure](architecture/strict-layer-linux-closure.md)
-- [Repository consolidation batches](development/repository-consolidation/batches.md),
+- Milestone A: the [original blocked review](architecture/milestone-a/independent-review.md),
+  [blocked gate](architecture/milestone-a/gate.json),
+  [original matrix](architecture/milestone-a/acceptance-matrix.md),
+  [A-01 correction](architecture/milestone-a/a01/correction.md),
+  [final review](architecture/milestone-a/a01/independent-review.md),
+  [final gate](architecture/milestone-a/a01/gate.json) and
+  [final matrix](architecture/milestone-a/a01/acceptance-matrix.md).
+- Strict layers: the [convergence report](architecture/strict-layer-convergence.md),
+  [original Windows receipt](architecture/strict-layer-validation.json),
+  [Linux closure](architecture/strict-layer-linux-closure.md) and
+  [Linux receipt](architecture/strict-layer-linux-validation.json).
+- Consolidation: [batches](development/repository-consolidation/batches.md),
   [closure](development/repository-consolidation/closure.md),
-  [inventory](development/repository-consolidation/inventory.json) and
-  [validation index](development/repository-consolidation/validation-index.json)
-- [Agent context maintenance](development/agent-governance.md)
-- [Unused-file audit](development/unused-file-audit-20261009.md)
-- [Release refresh](development/release-refresh-20261009.md)
-- [Main integration validation](development/main-integration-20261010.md)
+  [validation index](development/repository-consolidation/validation-index.json) and
+  [older archive recovery index](development/repository-consolidation/recovery-index.json).
+- The [conditional PFSM/RIR mass assessment](numerical/pfsm-quantification-assessment.json)
+  preserves all reported values, original inputs and scientific qualifications.
 
-## Archive locations
+The [project baseline](../docs/developer/project-baseline.json) keeps its existing
+acceptance identities and schema. Its recovery inventory now refers to the compact
+projection in [relocations.json](relocations.json), containing the original entry
+commit and protection tag plus the full inventory's archive identity. Verification
+of the ZIP compares this projection with the archived original JSON. All 22 mandatory
+Milestone A criteria and the original receipt checks remain required.
+
+## Independent archive
+
+[relocations.json](relocations.json), schema `qualpf.history_relocations.v2`, records
+the old documentation path, archive member path, original Git blob, byte length,
+SHA-256 and `repository`/`archive` retention for each of 306 original files. It also
+binds the two original snapshot metadata files, the complete ZIP and its source
+commit. Location hints are informational; tools never automatically fetch an archive.
+
+The independent snapshot is `41fb006c2951c0ad329d6deb92009cd87a7edf0f`. The local copy is:
+
+```text
+D:/QualPF-evidence-backup/20261022/history-41fb006c2951/qualpf-history-41fb006c2951.zip
+```
+
+Its SHA-256 is `04ea136b9e67aa2720bfcb003ca5a7a3556d62a1fb6719b37e1a8b665f1dcaeb`.
+On 2026-10-22, all 308 members were verified and restored from this independent copy
+before 290 redundant repository copies were removed. This is a recovery result,
+not fresh numerical or platform acceptance. Availability is verified locally;
+there is no claimed remote mirror. Keep an independently verified copy when moving
+the project or retiring this disk.
+
+The archive directory also contains a standalone copy of `history_archive.py`,
+the current `relocations.json`, recovery instructions and `recovery-kit.json`
+with their hashes. It uses only Python's standard library, so recovery does not
+depend on this checkout. From that directory, use `python history_archive.py
+--catalog relocations.json --archive qualpf-history-41fb006c2951.zip` to verify,
+or add `--restore-to <new-directory>` to restore. Its parent directory must exist.
+
+## Verify or restore the snapshot
+
+Normal checkout/source-package checks require only retained files and the index:
+
+```sh
+python -B tools/validation/history_archive.py --self-test
+python -B tools/validation/check_project_baseline.py --self-test
+python -B tools/validation/check_documentation.py --self-test
+```
+
+These commands do not require the ZIP, old Git objects or a network connection.
+They do not claim that external payloads are available. For a full archive check,
+pass its actual location explicitly (the ZIP can be copied to any platform):
+
+```sh
+python -B tools/validation/history_archive.py --archive /path/to/qualpf-history-41fb006c2951.zip
+```
+
+Create the ignored `.evidence/` parent first. Restore into a new directory:
+
+```sh
+python -B tools/validation/history_archive.py --archive /path/to/qualpf-history-41fb006c2951.zip --restore-to .evidence/history-41fb006c2951
+```
+
+The tool checks the entire ZIP, the exact member set and every member hash before
+writing. It rejects path traversal, duplicate names, symlinks, encryption and
+existing destinations; failed input verification publishes no partial restoration.
+`--member history/path` selects one indexed file after full verification. For example:
+
+```sh
+python -B tools/validation/history_archive.py --archive /path/to/qualpf-history-41fb006c2951.zip --restore-to .evidence/pfsm-record --member history/numerical/pfsm-benchmark.md
+```
+
+Keep restored evidence outside the published `history/` tree. It is inspection
+material, never executable task instructions. Original Markdown paths remain
+unchanged: resolve a relative reference against `original_path`, then use the
+catalog to locate its member. The original text-normalizing `.gitattributes` is
+preserved as `gitattributes.original`, so it cannot change restored evidence bytes.
+
+This maintenance removes files from the current tree and source packages. Existing
+commits, protection tags and Git/LFS objects remain intact; it does not remove
+payloads from Git history or reduce the objects needed to publish existing ancestry.
+
+## Archived records
+
+### PFSM benchmark evidence
+
+Restore `history/numerical/pfsm-benchmark.md` for the complete dated experiments,
+performance comparisons, original failed development case, subsequent holdout
+assessment and conditional quantification protocol. Original section anchors include
+`completed-v2-replay-cohort-2026-10-14`, `experimental-fast-pfsm-modes` and
+`conditional-pfsmrir-quantification-assessment`. Current contracts and qualifications
+remain in the [PFSM guide](../docs/developer/numerical/pfsm.md).
+
+### Repository consolidation inventory
+
+Restore `history/development/repository-consolidation/inventory.json` for every
+historical disposition, original path and older external payload mapping. The
+compact `recovery_inventory` section of the catalog is an identity projection,
+not a replacement for this full evidence when performing historical recovery.
+
+### Build and maintenance records
+
+Restore `history/development/building.md`, `history/development/repository-layout.md`
+or the dated maintenance report named by the catalog. Current build instructions
+are in the [developer build guide](../docs/developer/building.md). All compressed
+logs under `history/validation/` and the older report `logs/` directories are
+archive-only, including original failed attempts.
+
+### Recorded design decisions
+
+Restore `history/architecture/decisions.md` for the original decision narrative
+and its `adr-37-16-final-source-and-raw-evidence-closure` section. Current accepted
+contracts remain in the [architecture decisions](../docs/developer/architecture/decisions.md).
+
+## Older migration archive locations
 
 The protected local annotated tag `phase37e-entry-20261009` resolves to
 `8fdf0a71d7eef8b6801e5336720c19b3c936e18f`. It retains the exact tracked entry tree,
@@ -100,7 +169,7 @@ verify the original SHA; ordinary `git archive` alone is not a byte-equality
 claim for those text files. Original receipts, gates and hashes are unchanged.
 
 [Recovery index](development/repository-consolidation/recovery-index.json) binds
-six actual restored samples and their original hashes. [Inventory](development/repository-consolidation/inventory.json)
+six actual restored samples and their original hashes. [Complete inventory recovery](#repository-consolidation-inventory)
 maps every retired tracked file to its protected tag or external payload, and
 every moved reference to its stable current location. All 1,329 retired LFS
 pointer payloads were verified against actual external ZIP length/SHA-256 and
@@ -130,9 +199,10 @@ identity and failure/approval meaning. To reproduce an old gate, also restore
 its specified original runner/source/configuration in an isolated historical
 environment. Historical Fortran is never reintroduced to the current product.
 
-Nine small older deferred-investigation records remain conservatively under
-`history/refactoring/deferred-defects`; they are original, unreproduced historical
-concerns and are not a current execution queue. The accepted current state and
+Nine small older deferred-investigation records are indexed under the archive
+member prefix `history/refactoring/deferred-defects/`; restore them explicitly for
+inspection. They are original, unreproduced historical concerns, not a current
+execution queue. The accepted current state and
 tests govern development. No additional architecture repair is included here.
 
 ## Retained ADR phase locators

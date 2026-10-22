@@ -165,7 +165,7 @@ one another. Preserve independent numerical inputs and original failures.
 The historical CMake boundary-helper name remains a forwarding entry only for
 immutable reference consumers, as recorded in the compatibility allowlist.
 
-The [original decision record](../../../history/architecture/decisions.md#adr-37-16-final-source-and-raw-evidence-closure)
+The [original decision record](../../../history/README.md#recorded-design-decisions)
 retains its accepted revision, historical test counts and STOP/PFSM scope. Those
 outcomes apply to that checkpoint rather than the current development task.
 

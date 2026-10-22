@@ -29,8 +29,9 @@ Historical identifiers on an ADR do not make its accepted numerical contract
 obsolete. The [project baseline](project-baseline.json) indexes recorded acceptance;
 it is not a current progress report or a claim of fresh validation.
 
-Use the [history index](../../history/README.md) for original reports, failures,
-qualification scopes and recovery. Historical owners, test counts and STOP records
+Use the [history index](../../history/README.md) for retained acceptance records
+and explicit recovery of archived reports, logs and failures. Ordinary checks work
+without the external archive; archive availability requires a separate explicit check. Historical owners, test counts and STOP records
 apply to their recorded revisions. Current behavior follows the owning guide and
 implementation; contradictions require investigation, not silent changes to evidence.
 

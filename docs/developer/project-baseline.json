@@ -31,7 +31,7 @@
     "protection_tag": "phase37e-entry-20261009"
   },
   "recovery": {
-    "inventory": "history/development/repository-consolidation/inventory.json",
+    "inventory": "history/relocations.json",
     "recovery_index": "history/development/repository-consolidation/recovery-index.json",
     "batch_report": "history/development/repository-consolidation/batches.md",
     "closure_report": "history/development/repository-consolidation/closure.md",

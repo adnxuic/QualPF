@@ -12,6 +12,11 @@ reports are no longer used for routine development.
 
 ### Changed
 
+- Reduced tracked history to necessary acceptance records and portable indexes.
+  Archived complete original reports and logs independently with archive/member
+  hashes and verified recovery. Normal checks remain offline; explicit recovery
+  rejects corrupt archives, unsafe paths and overwrites without changing evidence.
+
 - Separated user and developer documentation from AI working instructions, with
   task-based developer navigation for agents. Preserved original reports and
   evidence under `history/`, with relocation and integrity checks. Completed user

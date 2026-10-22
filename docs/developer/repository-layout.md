@@ -17,9 +17,9 @@
 | `docs/user` | User manual: installation, operation, parameters and result interpretation |
 | `docs/developer` | Developer guides: architecture, scientific contracts, formats, build and test |
 | `AGENTS.md`, `.agent` | Agent working rules, task-specific navigation and one mutable handoff; product acceptance lives in project-baseline.json |
-| `history` | Preserved historical reports and evidence, with a recovery and relocation index |
+| `history` | Necessary acceptance records and portable recovery/retention indexes; full raw history is archived independently |
 | Retained acceptance, consolidation and dated maintenance reports | Historical snapshots indexed by migration history; no Phase workflow for new development |
-| `history/refactoring/deferred-defects` | Nine conservatively retained original investigation records; no current execution dependency |
+| Archived `history/refactoring/deferred-defects` members | Nine original investigation records, recoverable from the independent ZIP; no normal-build dependency |
 | `build`, `releases` | Ignored local builds/logs/packages; never source prerequisites |
 | `references` | Ignored local design drafts; current contracts belong in `docs`, frozen scientific references in `tests` |
 
@@ -58,5 +58,5 @@ scientific `.lib`, `.out`, `.zip`, database and measured-input files eligible
 for explicit review; broad extension exclusions would hide required inputs.
 
 Earlier repository publication and integration instructions are preserved in
-[the original layout record](../../history/development/repository-layout.md).
+[the original layout record](../../history/README.md#build-and-maintenance-records).
 They describe their authorized historical tasks, not a pending publication queue.

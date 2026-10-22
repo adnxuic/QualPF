@@ -1,5 +1,5 @@
 {
-  "schema": "qualpf.history_relocations.v1",
+  "schema": "qualpf.history_relocations.v2",
   "source_commit": "9aac1e25585160c5383f575a0dc7ce507ea3b60b",
   "files": [
     {
@@ -7,2142 +7,2490 @@
       "path": "history/architecture/decisions.md",
       "size": 20313,
       "sha256": "01113341383ac7e055d128cf84f340578c102ed0069a3c1361d43522d8628c0e",
-      "git_blob": "364a6bd75159dab1422ad7eb985854472e37df72"
+      "git_blob": "364a6bd75159dab1422ad7eb985854472e37df72",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/acceptance-matrix.md",
       "path": "history/architecture/milestone-a/a01/acceptance-matrix.md",
       "size": 4925,
       "sha256": "94e19963ba75d76616290379aa450bf1424bb2dfcb6019fdd5a46b4fad8b4b50",
-      "git_blob": "e8e0bc339e2d6057154d2968435dff387ff705d2"
+      "git_blob": "e8e0bc339e2d6057154d2968435dff387ff705d2",
+      "storage": "repository",
+      "retention_reason": "Original acceptance, correction, qualification or recovery receipt used by the current baseline or scientific guide"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/correction.md",
       "path": "history/architecture/milestone-a/a01/correction.md",
       "size": 4020,
       "sha256": "c306c3f199c0deffa1b6624b42664ac91d72666573cc6e89ad162440b73da311",
-      "git_blob": "c9ce6b5374ade67734b6d4ce061fb011cf9d6465"
+      "git_blob": "c9ce6b5374ade67734b6d4ce061fb011cf9d6465",
+      "storage": "repository",
+      "retention_reason": "Original acceptance, correction, qualification or recovery receipt used by the current baseline or scientific guide"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/gate.json",
       "path": "history/architecture/milestone-a/a01/gate.json",
       "size": 61936,
       "sha256": "728c4ec109cdac5086270c78a5029a25974f9372fb5de00fd56fb27940546d4d",
-      "git_blob": "a796a80427f511379c52a90e5230762ee9919df5"
+      "git_blob": "a796a80427f511379c52a90e5230762ee9919df5",
+      "storage": "repository",
+      "retention_reason": "Original acceptance, correction, qualification or recovery receipt used by the current baseline or scientific guide"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/independent-review.md",
       "path": "history/architecture/milestone-a/a01/independent-review.md",
       "size": 9472,
       "sha256": "7a99664b1c987efa9afc52deb3690f30201bf9537235c0b96b64e80767755c32",
-      "git_blob": "05792a4630f0597198cc343fd5b57e5bb182bd07"
+      "git_blob": "05792a4630f0597198cc343fd5b57e5bb182bd07",
+      "storage": "repository",
+      "retention_reason": "Original acceptance, correction, qualification or recovery receipt used by the current baseline or scientific guide"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/.gitattributes",
       "path": "history/architecture/milestone-a/a01/logs/.gitattributes",
       "size": 11,
       "sha256": "a014fdbe6f6fb5e6c9c39c828bcbe0332b7544cd81c510dd7489b52da5b0a808",
-      "git_blob": "818997bd2ff32cb3fdafe30f2d3e226a301521fe"
+      "git_blob": "818997bd2ff32cb3fdafe30f2d3e226a301521fe",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/audit_authority.py.gz",
       "path": "history/architecture/milestone-a/a01/logs/audit_authority.py.gz",
       "size": 1163,
       "sha256": "9c91d5bd93c6c5773a93a1c28732833f980c7f7ee94c69f2c1648ced936e60d4",
-      "git_blob": "731449d4e050ae37312b0b7a5836e2f754a886a4"
+      "git_blob": "731449d4e050ae37312b0b7a5836e2f754a886a4",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/authority.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/authority.json.gz",
       "size": 486,
       "sha256": "91cb211ba86ab0bbb975214200aa95680ac994f6d2ed207cc427b925ccf5f55f",
-      "git_blob": "8c1c16629cba5b1bae89458a57f613c5b5c02fe7"
+      "git_blob": "8c1c16629cba5b1bae89458a57f613c5b5c02fe7",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/boundaries.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/boundaries.json.gz",
       "size": 77844,
       "sha256": "5a3ccb03f4c7509bb0221ceee9e804f75322c1caac902a2400d880e1598e8b13",
-      "git_blob": "e18b718487893d93d75b0b009be33410de36f16c"
+      "git_blob": "e18b718487893d93d75b0b009be33410de36f16c",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/development-linux-gnu-cli-attempt1.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/development-linux-gnu-cli-attempt1.json.gz",
       "size": 874,
       "sha256": "c77adf80e64091d2a87d4a20cb3c248109bcc982a0b93befd9fe5a10546ee775",
-      "git_blob": "afa2faa2f72b248a458cab0bbdacbd7f965b2f4d"
+      "git_blob": "afa2faa2f72b248a458cab0bbdacbd7f965b2f4d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/development-linux-gnu-cli-attempt1.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/development-linux-gnu-cli-attempt1.log.gz",
       "size": 1306,
       "sha256": "beca747d3af698d37620020b5982ef791df75783f51990f8527a9f2e64d76d18",
-      "git_blob": "d8e951e17bdd7c6eddd61f340a17ec3375f127ae"
+      "git_blob": "d8e951e17bdd7c6eddd61f340a17ec3375f127ae",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/development-linux-gnu-cli-attempt1.xml.gz",
       "path": "history/architecture/milestone-a/a01/logs/development-linux-gnu-cli-attempt1.xml.gz",
       "size": 965,
       "sha256": "d058324b2ebcfd62dd8db2cc6624d46744eb1dd13b7b30055fba66c3b96bd4eb",
-      "git_blob": "116fc53d9b440632a759ab838bf6dde40a14fd43"
+      "git_blob": "116fc53d9b440632a759ab838bf6dde40a14fd43",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/development-windows-gnu-cli-attempt1.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/development-windows-gnu-cli-attempt1.json.gz",
       "size": 1111,
       "sha256": "a61903eb7ecd4809b988cddf9a487a16b307588d3259b8d5350e7b24c1e11469",
-      "git_blob": "224406f5cf0d350794b15712b83ab5f512f3328b"
+      "git_blob": "224406f5cf0d350794b15712b83ab5f512f3328b",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/development-windows-gnu-cli-attempt1.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/development-windows-gnu-cli-attempt1.log.gz",
       "size": 1360,
       "sha256": "9592dfd7744f13a0c26b1e04b5b27fabf43a4f02c8801d94c49ee9f926a908a9",
-      "git_blob": "f4e3a0eb65e6cfeed53545a6c493b49ddcb4ce23"
+      "git_blob": "f4e3a0eb65e6cfeed53545a6c493b49ddcb4ce23",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/development-windows-gnu-cli-attempt1.xml.gz",
       "path": "history/architecture/milestone-a/a01/logs/development-windows-gnu-cli-attempt1.xml.gz",
       "size": 925,
       "sha256": "c79f7ee0a067e0bd709767ef4f42f3e05bc16aca238772e96426283611c4d74f",
-      "git_blob": "109228bc583ea83d8a5e782a6aa7ec9c22a231c0"
+      "git_blob": "109228bc583ea83d8a5e782a6aa7ec9c22a231c0",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/development-windows-msvc-cli-attempt1.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/development-windows-msvc-cli-attempt1.json.gz",
       "size": 1109,
       "sha256": "d00abb58202b92abc6a224ab79ca2c2001743d026a258c93ad09a94860479191",
-      "git_blob": "2c6c66740fc2a81423acdbceff1475747699dbc5"
+      "git_blob": "2c6c66740fc2a81423acdbceff1475747699dbc5",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/development-windows-msvc-cli-attempt1.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/development-windows-msvc-cli-attempt1.log.gz",
       "size": 1360,
       "sha256": "441fd945ad29f08984c1eb1e9dd3a7ee7abb14fa8b1b665c9de4daa62082718c",
-      "git_blob": "cf79665a3c256bb2f8cd075e6c639e7a37f260ba"
+      "git_blob": "cf79665a3c256bb2f8cd075e6c639e7a37f260ba",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/development-windows-msvc-cli-attempt1.xml.gz",
       "path": "history/architecture/milestone-a/a01/logs/development-windows-msvc-cli-attempt1.xml.gz",
       "size": 923,
       "sha256": "1bff0f9d4e40be14dba9c42897135848b781ff93efba761dee23fc537f3303d4",
-      "git_blob": "0d08190b8767f5fda12d7417a657a48a418c9e83"
+      "git_blob": "0d08190b8767f5fda12d7417a657a48a418c9e83",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/historical-recovery.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/historical-recovery.json.gz",
       "size": 1479,
       "sha256": "abb4fe4b933b81d9b02c9e48644626c57986b9c6b5aa8df35bf9a8d06a19fa73",
-      "git_blob": "22df4a6c0a9275daf02b70f83c093f63dbeb1060"
+      "git_blob": "22df4a6c0a9275daf02b70f83c093f63dbeb1060",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/linux-gnu-binding.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/linux-gnu-binding.json.gz",
       "size": 1452,
       "sha256": "d3bb0e57388325b196347e2bc727e27beb7abb25de5c24ef6cdebc839b4bb827",
-      "git_blob": "05335f714da5bea1dbe75564c495cf94057b7650"
+      "git_blob": "05335f714da5bea1dbe75564c495cf94057b7650",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/linux-gnu-build.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/linux-gnu-build.log.gz",
       "size": 214,
       "sha256": "2b4751fda4534d21f5fef8966f981fe67f36332dabbf6a14e216f0dce3fb8489",
-      "git_blob": "bb86621194fc568353befacd53a20bb746fd2ceb"
+      "git_blob": "bb86621194fc568353befacd53a20bb746fd2ceb",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/linux-gnu-cli.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/linux-gnu-cli.json.gz",
       "size": 1763,
       "sha256": "857d4b269947bf83529b3174973f836761058c5c6f8fdf9a52ae65e88a3894d1",
-      "git_blob": "c488d3e3cb5c114479475ce0dcae53ee0aede82e"
+      "git_blob": "c488d3e3cb5c114479475ce0dcae53ee0aede82e",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/linux-gnu-configure.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/linux-gnu-configure.log.gz",
       "size": 172,
       "sha256": "aa224c541894ce2e7877e32bb698a315e342dce41f13f5876ac51dd1cc8c7b99",
-      "git_blob": "5e4fb72b23bbc7bf84b455f236a07c6f004c94f3"
+      "git_blob": "5e4fb72b23bbc7bf84b455f236a07c6f004c94f3",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/linux-gnu-final-quality-mount-attempt1.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/linux-gnu-final-quality-mount-attempt1.log.gz",
       "size": 767,
       "sha256": "9075b4c5603e0120553292bb2c4718c0df645f08e526ea3775a4e425f1de7c53",
-      "git_blob": "6b209a7e47d5223480bb4c243007d8215e8917b2"
+      "git_blob": "6b209a7e47d5223480bb4c243007d8215e8917b2",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/linux-gnu-final-quality.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/linux-gnu-final-quality.log.gz",
       "size": 239,
       "sha256": "1c270123bbd8551eb7647cc058c726d2df7db40f1d456c1bedbdb6fc1b9229d8",
-      "git_blob": "6cb2a5d2ea8434c7320f004527aae74e8219c2e7"
+      "git_blob": "6cb2a5d2ea8434c7320f004527aae74e8219c2e7",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/linux-gnu-independent-cli-clock-attempt1.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/linux-gnu-independent-cli-clock-attempt1.json.gz",
       "size": 1237,
       "sha256": "4cd23d44ada557f60573d01758eaaf002c26475074c4640aa3b8c283c410821b",
-      "git_blob": "f205e86986f0d60c1571d4ba80390961932ad7b2"
+      "git_blob": "f205e86986f0d60c1571d4ba80390961932ad7b2",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/linux-gnu-independent-cli-clock-attempt1.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/linux-gnu-independent-cli-clock-attempt1.log.gz",
       "size": 172,
       "sha256": "b56f042f85545114aed6c802e1dd5f05524777331c642e557d111fc04ffbb3d6",
-      "git_blob": "628232004802723c65d8e82b6f968e9ae0a636c5"
+      "git_blob": "628232004802723c65d8e82b6f968e9ae0a636c5",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/linux-gnu-independent-cli-clock-attempt2.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/linux-gnu-independent-cli-clock-attempt2.json.gz",
       "size": 1505,
       "sha256": "f97b404e1eae6e4a0dbdce00c8903b3f05499ee327bab25815031d7841d72c4e",
-      "git_blob": "fb494bdb3a52fa1e16515632e3bd2342595ea735"
+      "git_blob": "fb494bdb3a52fa1e16515632e3bd2342595ea735",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/linux-gnu-independent-cli-clock-attempt2.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/linux-gnu-independent-cli-clock-attempt2.log.gz",
       "size": 168,
       "sha256": "73808c41a80ad71d10d38fa6598b4029cf7112c635790c44181ce66c280580e1",
-      "git_blob": "1bec7e5dbc7303e8b5315c4370054367a7f14586"
+      "git_blob": "1bec7e5dbc7303e8b5315c4370054367a7f14586",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/linux-gnu-independent-cli.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/linux-gnu-independent-cli.json.gz",
       "size": 1678,
       "sha256": "070bfa00f4ed49b5b9fdf37cac636a238c2db4d8113c097ae47ec9e4a5e2e8fa",
-      "git_blob": "5d6c720b6d56efd2090b1095cad235e4fdd2b602"
+      "git_blob": "5d6c720b6d56efd2090b1095cad235e4fdd2b602",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/linux-gnu-independent-cli.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/linux-gnu-independent-cli.log.gz",
       "size": 120,
       "sha256": "58e469927b115ee74c59274f82663c9195ad7c9e05c6f8d76f7e9d0eeb418f03",
-      "git_blob": "56142eca115f31070b5e38ec88f814dd1e20da63"
+      "git_blob": "56142eca115f31070b5e38ec88f814dd1e20da63",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/linux-gnu-tests.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/linux-gnu-tests.json.gz",
       "size": 3892,
       "sha256": "ff79be113141a58992ea2a35af18d8718ee85b922f6e92246957a29e4a67a168",
-      "git_blob": "e50088cb4ce982e5a94adb2b6dab1b84b3fba6df"
+      "git_blob": "e50088cb4ce982e5a94adb2b6dab1b84b3fba6df",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/linux-gnu-workflows.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/linux-gnu-workflows.log.gz",
       "size": 5923,
       "sha256": "b3aa24c7f03c4d68ab1e7307e67fc134cce21dbfdbe45ca738d449bd5f1f82c1",
-      "git_blob": "d85ed2b79743bab030512f2252c59a72c85c6fe4"
+      "git_blob": "d85ed2b79743bab030512f2252c59a72c85c6fe4",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/linux-gnu-workflows.xml.gz",
       "path": "history/architecture/milestone-a/a01/logs/linux-gnu-workflows.xml.gz",
       "size": 3584,
       "sha256": "d147a2f6c7d2242133a06187ea54efd97e7388a61bf25f7b170d5d1d263a6413",
-      "git_blob": "a870ff1cc97eaca70933640fc158acc516c6db5a"
+      "git_blob": "a870ff1cc97eaca70933640fc158acc516c6db5a",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/linux-gnu-zero-fortran.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/linux-gnu-zero-fortran.json.gz",
       "size": 4645,
       "sha256": "6d6eb46f3cd4ee8480dca3b8756c638f5b0896f754b1f8975b1d0e1f0ceaff90",
-      "git_blob": "214c3937f949218cc5c53f30df8fdb417083d45a"
+      "git_blob": "214c3937f949218cc5c53f30df8fdb417083d45a",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/linux-gnu-zero-fortran.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/linux-gnu-zero-fortran.log.gz",
       "size": 68,
       "sha256": "c38f375eac4165f6787480796b36764806a2ef84ba724437d9202ff6185a9211",
-      "git_blob": "77115c012ccb2db7c3f015d04e2a6bc8b9e00ac2"
+      "git_blob": "77115c012ccb2db7c3f015d04e2a6bc8b9e00ac2",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/msvc_static_scan.py.gz",
       "path": "history/architecture/milestone-a/a01/logs/msvc_static_scan.py.gz",
       "size": 969,
       "sha256": "03dd88ea8604d67db2ffe187c4ba4e9c1afd4f86dfbd83217d10ccf9c043c03b",
-      "git_blob": "ed290b7763124d3c769c8e6de223bc2959db87bc"
+      "git_blob": "ed290b7763124d3c769c8e6de223bc2959db87bc",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/negative-control-original-cli-regression-002.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/negative-control-original-cli-regression-002.json.gz",
       "size": 999,
       "sha256": "be81ccccbd8893af5f0e3a3a1cc52f4b66190b5fdb5aee0c85606dcad641cf61",
-      "git_blob": "13b435379fdcdfddaa25632bdf944548b7c4979e"
+      "git_blob": "13b435379fdcdfddaa25632bdf944548b7c4979e",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/negative-control-original-cli-regression-002.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/negative-control-original-cli-regression-002.log.gz",
       "size": 619,
       "sha256": "2abcc71724c8674852a14cbb9bb66c8f13ef44e648258f2f7625db9a9830f24f",
-      "git_blob": "a901611a6eb605350e1a5e51f97d28800491d287"
+      "git_blob": "a901611a6eb605350e1a5e51f97d28800491d287",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/negative-control-original-cli-regression.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/negative-control-original-cli-regression.json.gz",
       "size": 935,
       "sha256": "c5939b36a33a3e928f85af28c885cac3ddf5ae061c972b7bcef8e300dd5e3896",
-      "git_blob": "935e6325840e104a20ef5e4c63ea2f58151098ca"
+      "git_blob": "935e6325840e104a20ef5e4c63ea2f58151098ca",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/negative-control-original-cli-regression.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/negative-control-original-cli-regression.log.gz",
       "size": 1134,
       "sha256": "e0f6fbab1642a4e3767730c52fd4cf205156738c60c4a9e50308627a81796928",
-      "git_blob": "4f5b121b4a954b4516ef2bddea52ff7f99967384"
+      "git_blob": "4f5b121b4a954b4516ef2bddea52ff7f99967384",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/package-and-recovery.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/package-and-recovery.log.gz",
       "size": 184,
       "sha256": "1ffc8ae3e199204f5519b88d78493c6d17d43ed3039d2590277a936e1262bb84",
-      "git_blob": "a1ab15467afa9d09d55785a3a9f3acab1d2a4db7"
+      "git_blob": "a1ab15467afa9d09d55785a3a9f3acab1d2a4db7",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/platform_audit.py.gz",
       "path": "history/architecture/milestone-a/a01/logs/platform_audit.py.gz",
       "size": 2137,
       "sha256": "65d2bd41c4be4afcb1f531b0b421c1dc7ce1a6e28e66b3633a0bbbd5e5ca271c",
-      "git_blob": "1fd161420357bc078a960e804e0f9222be29719d"
+      "git_blob": "1fd161420357bc078a960e804e0f9222be29719d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/review_cli.py.gz",
       "path": "history/architecture/milestone-a/a01/logs/review_cli.py.gz",
       "size": 2177,
       "sha256": "a2776bb765c9658d9ed720825a285e94c75a8ded7e5687b765f0e64b7fdac5fc",
-      "git_blob": "23d52a03077bec5cde3fb6912439893d31202118"
+      "git_blob": "23d52a03077bec5cde3fb6912439893d31202118",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/source-package-check.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/source-package-check.json.gz",
       "size": 352,
       "sha256": "2fc4317f14188e5bf8a34e256df2d2e6e84cec83d0ad6421fc0b4ec99121f53e",
-      "git_blob": "0f27c4a1c61cb563ad9bd91424a6e537345f3faf"
+      "git_blob": "0f27c4a1c61cb563ad9bd91424a6e537345f3faf",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/source-package-configure.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/source-package-configure.log.gz",
       "size": 562,
       "sha256": "f7c8a7c78a09135fb3559a456d4f089bb8067c709d8c374e8a16eab45ede302a",
-      "git_blob": "235a1118b401be38ce025661a7b74f737d0652b1"
+      "git_blob": "235a1118b401be38ce025661a7b74f737d0652b1",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/source-package.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/source-package.log.gz",
       "size": 182,
       "sha256": "71f6065496d39857b380733b2a8627d223d2b6acfbf50e9dcaec093d462116b0",
-      "git_blob": "751d933dedce9799826cbfc875db6c5ea388f5af"
+      "git_blob": "751d933dedce9799826cbfc875db6c5ea388f5af",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/toolchains-linux.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/toolchains-linux.json.gz",
       "size": 775,
       "sha256": "970218c04c760a7d70e50fdaf265a51677299eb90fa6cd38a1c3770b150aaaf9",
-      "git_blob": "371dfd9a8951f7ffd56f3f9a9fbfbc9cfa34d487"
+      "git_blob": "371dfd9a8951f7ffd56f3f9a9fbfbc9cfa34d487",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/toolchains-windows.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/toolchains-windows.json.gz",
       "size": 530,
       "sha256": "3ba76abba8a9d3160b385bbb453dc0fe48edb0c1d6ea653c12f001e2f1e196a1",
-      "git_blob": "8e4389e709844a7292829b136103a29ffc2a5bc5"
+      "git_blob": "8e4389e709844a7292829b136103a29ffc2a5bc5",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/toolchains.py.gz",
       "path": "history/architecture/milestone-a/a01/logs/toolchains.py.gz",
       "size": 1183,
       "sha256": "b4606b2e5e3b0667b879636caf637f09d9e0719d6820dd32de832fae44653f98",
-      "git_blob": "f04265137cbc261a7469fcea20798981a05538aa"
+      "git_blob": "f04265137cbc261a7469fcea20798981a05538aa",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-final-quality.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-final-quality.log.gz",
       "size": 242,
       "sha256": "6eea049bddfae46c1989710cb40b6afca29c86a69b06591ad5d14cc001b7754d",
-      "git_blob": "b7c6d5aa44786e5d90db3a84b6193695355f171e"
+      "git_blob": "b7c6d5aa44786e5d90db3a84b6193695355f171e",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-gnu-binding.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-gnu-binding.json.gz",
       "size": 1463,
       "sha256": "39abcab89a686a7327a4b82d430577841acce0fde3c899c987e7de47875f4504",
-      "git_blob": "6b45bc790a73350a202015b9f115bdb5abc244e2"
+      "git_blob": "6b45bc790a73350a202015b9f115bdb5abc244e2",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-gnu-build.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-gnu-build.log.gz",
       "size": 223,
       "sha256": "4477e24d3ccb8453f0f2532c29b55908534610d34720e70ca291769f350824e9",
-      "git_blob": "75cc103e3dcfddb7e77672e50925c1aec2967cc3"
+      "git_blob": "75cc103e3dcfddb7e77672e50925c1aec2967cc3",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-gnu-cli.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-gnu-cli.json.gz",
       "size": 1364,
       "sha256": "2ab9b47049b7ac8addaec8881cacd68c65607089e8b4cc52abd7ec44b726f01b",
-      "git_blob": "c586fce7385201c818618eb113649ce8474a4164"
+      "git_blob": "c586fce7385201c818618eb113649ce8474a4164",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-gnu-configure-shell-attempt1.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-gnu-configure-shell-attempt1.log.gz",
       "size": 119,
       "sha256": "d8647d62b93a248020b809b178e290782bd2069b37fc8d677b8869f1e3518f5d",
-      "git_blob": "1d4b2c4223dc7eceba8a20ff5eb3120ecd8abeb8"
+      "git_blob": "1d4b2c4223dc7eceba8a20ff5eb3120ecd8abeb8",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-gnu-configure.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-gnu-configure.log.gz",
       "size": 257,
       "sha256": "d75c4e23a10f55cb5efc7de3aa9254b52bcd117a3b0f69cb947fdccbbcaf5994",
-      "git_blob": "c31b8f7f8cab289da6732a2106961c80cdc584c7"
+      "git_blob": "c31b8f7f8cab289da6732a2106961c80cdc584c7",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-gnu-independent-cli.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-gnu-independent-cli.json.gz",
       "size": 1250,
       "sha256": "2789325ccb29e5242a54cb63913607adc1527399e7cc0f061fc4ec7b46e962b9",
-      "git_blob": "aceb24d7c7bce4385274df338e0c128aebf1b4ae"
+      "git_blob": "aceb24d7c7bce4385274df338e0c128aebf1b4ae",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-gnu-independent-cli.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-gnu-independent-cli.log.gz",
       "size": 121,
       "sha256": "bc9c87093f5d84a1c58309ce9257d39e67ac62f4bac00ff9fc3f69f6b33852f6",
-      "git_blob": "e78555d91e3303c905da6e5b516683bba540c007"
+      "git_blob": "e78555d91e3303c905da6e5b516683bba540c007",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-gnu-tests.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-gnu-tests.json.gz",
       "size": 4113,
       "sha256": "e1197c9b1e4d445bda36e1c8a461a50207b9eb4202d47756d02500a89ce1b785",
-      "git_blob": "3479e639a6bbd23db9015dc703504e55a8ec1180"
+      "git_blob": "3479e639a6bbd23db9015dc703504e55a8ec1180",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-gnu-workflows-fixture-attempt1.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-gnu-workflows-fixture-attempt1.log.gz",
       "size": 4579,
       "sha256": "b81946062bba3d1c22301d447e2a8c9541148f2bad97ceb9b58e5d120be0716b",
-      "git_blob": "db6b2a739e6a6efaf6b9424c1d252bbc09871f8d"
+      "git_blob": "db6b2a739e6a6efaf6b9424c1d252bbc09871f8d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-gnu-workflows-fixture-attempt1.xml.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-gnu-workflows-fixture-attempt1.xml.gz",
       "size": 2803,
       "sha256": "50368f57ae0a154e9154692151eeb10fa505de5bf28d3a3470d22a22ee42e83a",
-      "git_blob": "12495dcd8015acd205fb7bc796c8d5f7529452e8"
+      "git_blob": "12495dcd8015acd205fb7bc796c8d5f7529452e8",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-gnu-workflows-registry-attempt2.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-gnu-workflows-registry-attempt2.log.gz",
       "size": 5405,
       "sha256": "8d88200dceddbe7c9f46bab7cf8efc86d19b2570ebe4278a4e419cde0bb9702b",
-      "git_blob": "8c4aa50249b207314d2743e032484bfece9e2d3d"
+      "git_blob": "8c4aa50249b207314d2743e032484bfece9e2d3d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-gnu-workflows-registry-attempt2.xml.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-gnu-workflows-registry-attempt2.xml.gz",
       "size": 3239,
       "sha256": "bc5c2b5a1bba867645b0acb17a80e14716649f75383ca8d05772d3fbf3bd0cf5",
-      "git_blob": "1eca4e2d86dcad22de3a277723f041a8119fe0f0"
+      "git_blob": "1eca4e2d86dcad22de3a277723f041a8119fe0f0",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-gnu-workflows.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-gnu-workflows.log.gz",
       "size": 5327,
       "sha256": "f65afb617fac70aee747b5d9451a0cdaeaccc185348ac8ef714cb1da544d40dc",
-      "git_blob": "75659d555dac9142b4d60bb36cb73733881b692b"
+      "git_blob": "75659d555dac9142b4d60bb36cb73733881b692b",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-gnu-workflows.xml.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-gnu-workflows.xml.gz",
       "size": 3253,
       "sha256": "f2618530b0906fc1f83775e12804d7bc492538ad65fe07d6015334b6400474ee",
-      "git_blob": "8fbda9b8ae016c4d6e221efea1e0e99e694aaadd"
+      "git_blob": "8fbda9b8ae016c4d6e221efea1e0e99e694aaadd",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-gnu-zero-fortran.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-gnu-zero-fortran.json.gz",
       "size": 4647,
       "sha256": "1e9db5c3b3f3abc16895aee1d2f45ad2688b433ccfaeae3c9c2f39c117256345",
-      "git_blob": "8f32b2b47ad7d78fda6f2d0ae71290b6c019f5ac"
+      "git_blob": "8f32b2b47ad7d78fda6f2d0ae71290b6c019f5ac",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-gnu-zero-fortran.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-gnu-zero-fortran.log.gz",
       "size": 69,
       "sha256": "9d5cad1b4489659bdb2683ae54f7862545872df05a88a4cc6a1f7dd8c7c6a2c8",
-      "git_blob": "22f9bd9d0f1f1965952bb177a20c5a09562d0e45"
+      "git_blob": "22f9bd9d0f1f1965952bb177a20c5a09562d0e45",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-msvc-binding.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-msvc-binding.json.gz",
       "size": 1461,
       "sha256": "44aa550aa7503e72e087200b164f1eee9d32a1cad94967ae2e951dad680add67",
-      "git_blob": "7b3fed38c764102d76951ae9a52b0d696a46ec90"
+      "git_blob": "7b3fed38c764102d76951ae9a52b0d696a46ec90",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-msvc-build.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-msvc-build.log.gz",
       "size": 223,
       "sha256": "840e6bfab94dcdbbcdb3a6865e7b8c2997cc5ea96dd80db64500efea5dcc33b9",
-      "git_blob": "940f1e3565ef2c9c3b25ef81f6ac6fa2c405ae1f"
+      "git_blob": "940f1e3565ef2c9c3b25ef81f6ac6fa2c405ae1f",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-msvc-cli.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-msvc-cli.json.gz",
       "size": 1364,
       "sha256": "b346576ae8466ea685f0282c9dc2ce4532f02196a5fe6916b5bf41345f401bb8",
-      "git_blob": "b2d9cfcf1e399618266a29117799ab84f4d3eb82"
+      "git_blob": "b2d9cfcf1e399618266a29117799ab84f4d3eb82",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-msvc-configure.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-msvc-configure.log.gz",
       "size": 258,
       "sha256": "77fce405b0ac5f67c6ac486bc135b6fcd0d310605c881613ee47c728f54a5546",
-      "git_blob": "5b3ef7c341cab5263f50aa900a05563f24aa8a8a"
+      "git_blob": "5b3ef7c341cab5263f50aa900a05563f24aa8a8a",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-msvc-independent-cli.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-msvc-independent-cli.json.gz",
       "size": 1249,
       "sha256": "774c46b33a388d830df135ee461c79c68a836fa50c9fd58888ea65046f20fec6",
-      "git_blob": "c687538ac698b31de60fcccfdae18f253364eb75"
+      "git_blob": "c687538ac698b31de60fcccfdae18f253364eb75",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-msvc-independent-cli.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-msvc-independent-cli.log.gz",
       "size": 121,
       "sha256": "bc9c87093f5d84a1c58309ce9257d39e67ac62f4bac00ff9fc3f69f6b33852f6",
-      "git_blob": "e78555d91e3303c905da6e5b516683bba540c007"
+      "git_blob": "e78555d91e3303c905da6e5b516683bba540c007",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-msvc-static-symbols.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-msvc-static-symbols.json.gz",
       "size": 17136,
       "sha256": "f9493b1b8cb1739a9302c09a3be550e6d798e25b741d32372831abe4e6adb433",
-      "git_blob": "d6f693e78757e0cd18ce0de204f640e6a1ebada6"
+      "git_blob": "d6f693e78757e0cd18ce0de204f640e6a1ebada6",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-msvc-tests.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-msvc-tests.json.gz",
       "size": 4119,
       "sha256": "5f5ba560d672bb420315f49b46ad6dd9d30d6ee3dd835033efb13aacb9e00708",
-      "git_blob": "2a1641f06ccf45ebc99921e12d3464440b5acd44"
+      "git_blob": "2a1641f06ccf45ebc99921e12d3464440b5acd44",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-msvc-workflows-registry-attempt1.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-msvc-workflows-registry-attempt1.log.gz",
       "size": 5410,
       "sha256": "cc052a21c336eb7a7b8c3b5d542bef58f00c2a34d1a0addc274aa8eb3a595698",
-      "git_blob": "176bf515fe36df1cde33f189f70541a4833c0f04"
+      "git_blob": "176bf515fe36df1cde33f189f70541a4833c0f04",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-msvc-workflows-registry-attempt1.xml.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-msvc-workflows-registry-attempt1.xml.gz",
       "size": 3234,
       "sha256": "9a4d1687f5288c66dfd6f14017a68aacb26854e4b9fa28caf0164a18407179a2",
-      "git_blob": "28465ff2e3981d1e4565abc1ed36b19bae704c41"
+      "git_blob": "28465ff2e3981d1e4565abc1ed36b19bae704c41",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-msvc-workflows.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-msvc-workflows.log.gz",
       "size": 5324,
       "sha256": "5bf405b7185fb272266a5f0219ed051a511dd64994d6828d6d01e052d21c79ff",
-      "git_blob": "6a978db781284ca59d2a48d7b3ee2ccbb5157905"
+      "git_blob": "6a978db781284ca59d2a48d7b3ee2ccbb5157905",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-msvc-workflows.xml.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-msvc-workflows.xml.gz",
       "size": 3251,
       "sha256": "ac0c53a925d0d3bd48464fc5c76b1edde159e4fdbd83000af61096077d492cee",
-      "git_blob": "4b2f446e781f4973a8d435a40dd638d5853fff58"
+      "git_blob": "4b2f446e781f4973a8d435a40dd638d5853fff58",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-msvc-zero-fortran.json.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-msvc-zero-fortran.json.gz",
       "size": 5128,
       "sha256": "a2839339bf245035a03ed1ad81a8fee7edf330b054239c228bfad9b6313d3746",
-      "git_blob": "c9d48122f7c7b16ab4cd83e11083b692b1e0ef26"
+      "git_blob": "c9d48122f7c7b16ab4cd83e11083b692b1e0ef26",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/a01/logs/windows-msvc-zero-fortran.log.gz",
       "path": "history/architecture/milestone-a/a01/logs/windows-msvc-zero-fortran.log.gz",
       "size": 69,
       "sha256": "9b897263c8201ab70d1acca031520bb9ce35e8053e5241f6456ab785fbb4868e",
-      "git_blob": "9de8f7dd80c10ad13c44dadf904b27ec8f6b32c6"
+      "git_blob": "9de8f7dd80c10ad13c44dadf904b27ec8f6b32c6",
+      "storage": "archive"
     },
     {
       "original_path": "docs/architecture/milestone-a/acceptance-matrix.md",
       "path": "history/architecture/milestone-a/acceptance-matrix.md",
       "size": 5731,
       "sha256": "91a2900d4c01199b41021ba34bc6797c37df82e386d8406670afe4ad55c38012",
-      "git_blob": "ec84866504b8f0d049d04bf5b37df849d430766c"
+      "git_blob": "ec84866504b8f0d049d04bf5b37df849d430766c",
+      "storage": "repository",
+      "retention_reason": "Original acceptance, correction, qualification or recovery receipt used by the current baseline or scientific guide"
     },
     {
       "original_path": "docs/architecture/milestone-a/gate.json",
       "path": "history/architecture/milestone-a/gate.json",
       "size": 27054,
       "sha256": "1774b0b04769e8ed3cc79a92491a18f09a515743da0aaa764eaf57945f0ed7c0",
-      "git_blob": "a571af37468e9eec8595efd9f539cb19fd64c6a4"
+      "git_blob": "a571af37468e9eec8595efd9f539cb19fd64c6a4",
+      "storage": "repository",
+      "retention_reason": "Original acceptance, correction, qualification or recovery receipt used by the current baseline or scientific guide"
     },
     {
       "original_path": "docs/architecture/milestone-a/independent-review.md",
       "path": "history/architecture/milestone-a/independent-review.md",
       "size": 15768,
       "sha256": "3720f39725486fe3d0bda1117f46c79fa58e2f3c71a79b743501efdf3eb0c344",
-      "git_blob": "82b2659e397d1dbb48a23eca917b77253c2bbb60"
+      "git_blob": "82b2659e397d1dbb48a23eca917b77253c2bbb60",
+      "storage": "repository",
+      "retention_reason": "Original acceptance, correction, qualification or recovery receipt used by the current baseline or scientific guide"
     },
     {
       "original_path": "docs/architecture/strict-layer-convergence.md",
       "path": "history/architecture/strict-layer-convergence.md",
       "size": 15492,
       "sha256": "12552bbc97dd6e067dfdad17f9bbb8c133d1c4ec0b5c6fd98634e3a18da423e0",
-      "git_blob": "93d8d47b65fb1b9ac0ac204c8ce5887190748c0c"
+      "git_blob": "93d8d47b65fb1b9ac0ac204c8ce5887190748c0c",
+      "storage": "repository",
+      "retention_reason": "Original acceptance, correction, qualification or recovery receipt used by the current baseline or scientific guide"
     },
     {
       "original_path": "docs/architecture/strict-layer-linux-closure.md",
       "path": "history/architecture/strict-layer-linux-closure.md",
       "size": 5417,
       "sha256": "0b1f934dd8cf2b907d89d595bf23d8ca7ba823e6bcb4444b51ca5152cbddd5d4",
-      "git_blob": "dd78b852b63f081b8e84d3f0ebe5793e4cc790ee"
+      "git_blob": "dd78b852b63f081b8e84d3f0ebe5793e4cc790ee",
+      "storage": "repository",
+      "retention_reason": "Original acceptance, correction, qualification or recovery receipt used by the current baseline or scientific guide"
     },
     {
       "original_path": "docs/architecture/strict-layer-linux-validation.json",
       "path": "history/architecture/strict-layer-linux-validation.json",
       "size": 41756,
       "sha256": "23bed4c464824f0fe7c8c7629062507f9a558422733afbf8582c162485f1cd4a",
-      "git_blob": "009931f0ba1c19634eb2eb2542e5dceb15f49a34"
+      "git_blob": "009931f0ba1c19634eb2eb2542e5dceb15f49a34",
+      "storage": "repository",
+      "retention_reason": "Original acceptance, correction, qualification or recovery receipt used by the current baseline or scientific guide"
     },
     {
       "original_path": "docs/architecture/strict-layer-validation.json",
       "path": "history/architecture/strict-layer-validation.json",
       "size": 43396,
       "sha256": "e40cf464bf40a69119a58ea844fae9f10bc1d4c1ed8fb3a71a3a916b41b3c85d",
-      "git_blob": "8e0855cd9f2017f5a2538e0b5fd16071c39441f3"
+      "git_blob": "8e0855cd9f2017f5a2538e0b5fd16071c39441f3",
+      "storage": "repository",
+      "retention_reason": "Original acceptance, correction, qualification or recovery receipt used by the current baseline or scientific guide"
     },
     {
       "original_path": "docs/development/agent-governance.md",
       "path": "history/development/agent-governance.md",
       "size": 5904,
       "sha256": "ce4014d5b5fac29c2ceb56cdde51286923bf1d28f04992c6d6e7649e5a64d304",
-      "git_blob": "8fd93f7d9916f9b3f1cf30960761e7e4c1fb1bd3"
+      "git_blob": "8fd93f7d9916f9b3f1cf30960761e7e4c1fb1bd3",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/building.md",
       "path": "history/development/building.md",
       "size": 22254,
       "sha256": "b3f3dc78bfdd03cfbf8f019af6afab6b73866ac939bd2bd2b477ac0217647c1d",
-      "git_blob": "44929114ea21c3fabf7c56d0ec93669db1397e32"
+      "git_blob": "44929114ea21c3fabf7c56d0ec93669db1397e32",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/main-integration-20261010.md",
       "path": "history/development/main-integration-20261010.md",
       "size": 7995,
       "sha256": "d37c2e4fb07b3b07d117d3b5bdb6e191728b4075e8368b83168680d10ec9eef1",
-      "git_blob": "d54aaa64f317e1fe003189f6b49be76aebd9ce6d"
+      "git_blob": "d54aaa64f317e1fe003189f6b49be76aebd9ce6d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/release-refresh-20261009.md",
       "path": "history/development/release-refresh-20261009.md",
       "size": 2876,
       "sha256": "79c310fb19573422e633adec2c23440c5c638f35d43d9c372560f76096675490",
-      "git_blob": "6d7ca9ce269699ea7adb42d6e1b4674807bd3c21"
+      "git_blob": "6d7ca9ce269699ea7adb42d6e1b4674807bd3c21",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/batches.md",
       "path": "history/development/repository-consolidation/batches.md",
       "size": 8024,
       "sha256": "788d4bc369ea4984a5c13907d940344b0247b0657872367841f3154e189792f5",
-      "git_blob": "72745e4bccb297b2c18890eb2c4ca5c319318433"
+      "git_blob": "72745e4bccb297b2c18890eb2c4ca5c319318433",
+      "storage": "repository",
+      "retention_reason": "Original acceptance, correction, qualification or recovery receipt used by the current baseline or scientific guide"
     },
     {
       "original_path": "docs/development/repository-consolidation/closure.md",
       "path": "history/development/repository-consolidation/closure.md",
       "size": 8455,
       "sha256": "17355b3b913d110e5c7905836ce33f39eb76c51fbc634d88c1c9f9ebc42bd922",
-      "git_blob": "e7e9ca9e6525b56a00c767b6d0d3355942ceacef"
+      "git_blob": "e7e9ca9e6525b56a00c767b6d0d3355942ceacef",
+      "storage": "repository",
+      "retention_reason": "Original acceptance, correction, qualification or recovery receipt used by the current baseline or scientific guide"
     },
     {
       "original_path": "docs/development/repository-consolidation/inventory.json",
       "path": "history/development/repository-consolidation/inventory.json",
       "size": 2254254,
       "sha256": "17d0c0f513ee8795b7c96dc3ebb9baa7abae5f51313240f97974ae140f9aa3ab",
-      "git_blob": "af014b6e8ea347bff31293c23078c21d4b0ea633"
+      "git_blob": "af014b6e8ea347bff31293c23078c21d4b0ea633",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/.gitattributes",
       "path": "history/development/repository-consolidation/logs/.gitattributes",
       "size": 11,
       "sha256": "a014fdbe6f6fb5e6c9c39c828bcbe0332b7544cd81c510dd7489b52da5b0a808",
-      "git_blob": "818997bd2ff32cb3fdafe30f2d3e226a301521fe"
+      "git_blob": "818997bd2ff32cb3fdafe30f2d3e226a301521fe",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/archive-readiness.log.gz",
       "path": "history/development/repository-consolidation/logs/archive-readiness.log.gz",
       "size": 121,
       "sha256": "3ee9e6ef966d5decdc89e5a1afa72a31ceaba16378febea16202ec023e4f6691",
-      "git_blob": "4cf61cde1e76e4cccff89668cdd68cd063d8c8ed"
+      "git_blob": "4cf61cde1e76e4cccff89668cdd68cd063d8c8ed",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/checkout-architecture.json.gz",
       "path": "history/development/repository-consolidation/logs/checkout-architecture.json.gz",
       "size": 77537,
       "sha256": "10597844266bd88abbbfb3b93cd22727c606c9dc1e5531d717e59a4403bf035c",
-      "git_blob": "ef83c1028a0297d51e9efccc982ee00f93b434c5"
+      "git_blob": "ef83c1028a0297d51e9efccc982ee00f93b434c5",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/checkout-architecture.log.gz",
       "path": "history/development/repository-consolidation/logs/checkout-architecture.log.gz",
       "size": 125,
       "sha256": "6627b42ed15dd21070544e5618746d2b6409fc66ee864a1c66f0c741603f84a0",
-      "git_blob": "438972a95bb08d33ba97475e646f29b9a3a63acc"
+      "git_blob": "438972a95bb08d33ba97475e646f29b9a3a63acc",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/e2-pattern-repaired.log.gz",
       "path": "history/development/repository-consolidation/logs/e2-pattern-repaired.log.gz",
       "size": 330,
       "sha256": "6164fa9cdb470679b53ff8f56805328e4d155e54c544c1a7de5a6936dbdfc423",
-      "git_blob": "5fd392b2d465031f0aeaf56afaf32ce23f4481c8"
+      "git_blob": "5fd392b2d465031f0aeaf56afaf32ce23f4481c8",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/e2-pattern-repaired.xml.gz",
       "path": "history/development/repository-consolidation/logs/e2-pattern-repaired.xml.gz",
       "size": 369,
       "sha256": "74ceda134c750e6ef629af32f258c94a91837abb26a2bb9038bd50251cafbb99",
-      "git_blob": "4af09db9d44d5cd4d11b10dba036507a185bac1d"
+      "git_blob": "4af09db9d44d5cd4d11b10dba036507a185bac1d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/e2-reference-tests.log.gz",
       "path": "history/development/repository-consolidation/logs/e2-reference-tests.log.gz",
       "size": 1690,
       "sha256": "ed8ac4eb55eecd68347099d0fe3958704265b4750633dcdfe96353d43de8ba59",
-      "git_blob": "811a9afaa608531925f79f1ed52130a8591e9bc6"
+      "git_blob": "811a9afaa608531925f79f1ed52130a8591e9bc6",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/e2-reference-tests.xml.gz",
       "path": "history/development/repository-consolidation/logs/e2-reference-tests.xml.gz",
       "size": 4720,
       "sha256": "810abcbc9370f280cfc76242b8d4f276d3538cc911c9d399ed747bd09700def4",
-      "git_blob": "5a7ea39feb905fddb47150259859e088a95691e0"
+      "git_blob": "5a7ea39feb905fddb47150259859e088a95691e0",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/git-recovery-proof.json.gz",
       "path": "history/development/repository-consolidation/logs/git-recovery-proof.json.gz",
       "size": 255,
       "sha256": "aa0c3d2c24a51f41068fd4a6392b94dae2861134a5fbe09eb08022b32cd0bc81",
-      "git_blob": "b93471dd22731a31221c629d9125295130dbdaa2"
+      "git_blob": "b93471dd22731a31221c629d9125295130dbdaa2",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/linux-gnu-build.log.gz",
       "path": "history/development/repository-consolidation/logs/linux-gnu-build.log.gz",
       "size": 9066,
       "sha256": "70003c3160a15ac4a5b7492720561bbdf28399c5397a7b0e03b51b3c4e228954",
-      "git_blob": "f3d0f259adede92a95eefbeeaa0a8c50e3520e4d"
+      "git_blob": "f3d0f259adede92a95eefbeeaa0a8c50e3520e4d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/linux-gnu-cli-version.log.gz",
       "path": "history/development/repository-consolidation/logs/linux-gnu-cli-version.log.gz",
       "size": 152,
       "sha256": "350216f26f260e3043352984b3d0724ca1572fb7deea0ea6f79d4ab390755ec8",
-      "git_blob": "900a4acff4559ce47e673e0e4266e3b8f52ef6f4"
+      "git_blob": "900a4acff4559ce47e673e0e4266e3b8f52ef6f4",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/linux-gnu-commands-used.json.gz",
       "path": "history/development/repository-consolidation/logs/linux-gnu-commands-used.json.gz",
       "size": 246,
       "sha256": "402f637234a1c85e08e008bfd4410aa1dffb3df839d89afa2c6cf523395e05a9",
-      "git_blob": "29f1302510fe33cb0749dc3ae1702e620adec58c"
+      "git_blob": "29f1302510fe33cb0749dc3ae1702e620adec58c",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/linux-gnu-commands.json.gz",
       "path": "history/development/repository-consolidation/logs/linux-gnu-commands.json.gz",
       "size": 10917,
       "sha256": "20d9af90a36fb8d6242db9a0a4e544f4ceb04d8507f7c3ebdab6c32e9b5f902d",
-      "git_blob": "6cdf57384564d3f3dbf1bcb48299c6bd4f1f225d"
+      "git_blob": "6cdf57384564d3f3dbf1bcb48299c6bd4f1f225d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/linux-gnu-configure.log.gz",
       "path": "history/development/repository-consolidation/logs/linux-gnu-configure.log.gz",
       "size": 502,
       "sha256": "19298b223509abc6d475d3a80ec94c564e90e4f1258c754f8d32c6c314f16340",
-      "git_blob": "92363ba911b3fe7a7ce823f24777f6975b671661"
+      "git_blob": "92363ba911b3fe7a7ce823f24777f6975b671661",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/linux-gnu-fingerprint.json.gz",
       "path": "history/development/repository-consolidation/logs/linux-gnu-fingerprint.json.gz",
       "size": 78325,
       "sha256": "1fd074bbd27508a1d9fc304bb88aab7c7abd4b27e1811098b644859f62d0eb52",
-      "git_blob": "a702a722b5e60cc9b1215aa22a68f500ae637ddf"
+      "git_blob": "a702a722b5e60cc9b1215aa22a68f500ae637ddf",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/linux-gnu-fresh-start.json.gz",
       "path": "history/development/repository-consolidation/logs/linux-gnu-fresh-start.json.gz",
       "size": 133,
       "sha256": "aac6032230ec5b67fc92322cf31bdadce1a09dff65d2c0bf89ee9c4c06c97839",
-      "git_blob": "a51ff64d68c785f7539def4c6958c3a255c6eb10"
+      "git_blob": "a51ff64d68c785f7539def4c6958c3a255c6eb10",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/linux-gnu-package-dependencies.json.gz",
       "path": "history/development/repository-consolidation/logs/linux-gnu-package-dependencies.json.gz",
       "size": 384,
       "sha256": "266e626d7eda12e81aebf587a6e53e0b199c3543d280857b5b74e14a915cee6c",
-      "git_blob": "1ed93ab9eb05a0db253ef1827086fee4bceff71d"
+      "git_blob": "1ed93ab9eb05a0db253ef1827086fee4bceff71d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/linux-gnu-package-rebuild.log.gz",
       "path": "history/development/repository-consolidation/logs/linux-gnu-package-rebuild.log.gz",
       "size": 42,
       "sha256": "e70903157d36ba1fe44e4dc8ba7fb65266258bf6689cc0a85d03762fa77758f0",
-      "git_blob": "098c62b53e40630e126f5279bd36a24774ba85c3"
+      "git_blob": "098c62b53e40630e126f5279bd36a24774ba85c3",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/linux-gnu-package-reconfigure.log.gz",
       "path": "history/development/repository-consolidation/logs/linux-gnu-package-reconfigure.log.gz",
       "size": 172,
       "sha256": "a18455269db704512971740d07ff3e452bbf9838d6b82f6f604e8b9de8ace7cd",
-      "git_blob": "c2bf55144c0c179b74c51bc070b6d23325bf072b"
+      "git_blob": "c2bf55144c0c179b74c51bc070b6d23325bf072b",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/linux-gnu-qtfree-build.log.gz",
       "path": "history/development/repository-consolidation/logs/linux-gnu-qtfree-build.log.gz",
       "size": 1778,
       "sha256": "7305d3115b11d8dfaa8187fda2976132d3ee32505f62e344746027b2f7beafd0",
-      "git_blob": "b443b86e61fefdf412bade97eae0c3fb9b07bef1"
+      "git_blob": "b443b86e61fefdf412bade97eae0c3fb9b07bef1",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/linux-gnu-qtfree-configure.log.gz",
       "path": "history/development/repository-consolidation/logs/linux-gnu-qtfree-configure.log.gz",
       "size": 216,
       "sha256": "dd26b25b6c0c51e8854b4404182ba283735c63682fbef1536fd67a0b19b6b61c",
-      "git_blob": "e2dcf3d5cb835c0085e9061cd9a346ca8b234e17"
+      "git_blob": "e2dcf3d5cb835c0085e9061cd9a346ca8b234e17",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/linux-gnu-qtfree-test.log.gz",
       "path": "history/development/repository-consolidation/logs/linux-gnu-qtfree-test.log.gz",
       "size": 81,
       "sha256": "b8f06510f167b8ce5a460e65d303519d0c857fceb1186e704c513cb770bc1393",
-      "git_blob": "56f515d52b535cda33be01cb74c4e8ce0ece819f"
+      "git_blob": "56f515d52b535cda33be01cb74c4e8ce0ece819f",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/linux-gnu-test.log.gz",
       "path": "history/development/repository-consolidation/logs/linux-gnu-test.log.gz",
       "size": 1897,
       "sha256": "4385e4be10d40137a10bbb580d8c8fb095f83a681539f8f2ea1b08b30c5af359",
-      "git_blob": "bcab867be50d3f5a705712d479edf591fe1ba0b9"
+      "git_blob": "bcab867be50d3f5a705712d479edf591fe1ba0b9",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/linux-gnu-tests.xml.gz",
       "path": "history/development/repository-consolidation/logs/linux-gnu-tests.xml.gz",
       "size": 8175,
       "sha256": "761349bc92424a42efbc7ad839df0381f68d3f996a74a29ae480c2abbac0c98c",
-      "git_blob": "e56de909546de843b713b4a52cdff2cd5711cc6d"
+      "git_blob": "e56de909546de843b713b4a52cdff2cd5711cc6d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/linux-gnu-zero-fortran.json.gz",
       "path": "history/development/repository-consolidation/logs/linux-gnu-zero-fortran.json.gz",
       "size": 4581,
       "sha256": "ad0dd0810ee021ebd4b300fa48b78624fd5583673a85d2be99bb090d3845ad23",
-      "git_blob": "832aadb34af2bc7378595eedc3dac624aacc397e"
+      "git_blob": "832aadb34af2bc7378595eedc3dac624aacc397e",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/linux-gnu-zero-fortran.log.gz",
       "path": "history/development/repository-consolidation/logs/linux-gnu-zero-fortran.log.gz",
       "size": 68,
       "sha256": "cf1b3ec12e31bd37f4dbb49bd40c0e0d0271d16d2c5f801e7aea2895ca568414",
-      "git_blob": "99cab81ccaafac5ca86127fa72565cddad012806"
+      "git_blob": "99cab81ccaafac5ca86127fa72565cddad012806",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/post-package-source-inputs.json.gz",
       "path": "history/development/repository-consolidation/logs/post-package-source-inputs.json.gz",
       "size": 75415,
       "sha256": "40a0a03f46c04bd35a5e212f6464b816f4274a8c3c4000b6686ae86551c60d4b",
-      "git_blob": "c4d7746b36a425717a16f0f996dd52c486eb39e0"
+      "git_blob": "c4d7746b36a425717a16f0f996dd52c486eb39e0",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/restoration-final.log.gz",
       "path": "history/development/repository-consolidation/logs/restoration-final.log.gz",
       "size": 602,
       "sha256": "9a68bb39583407de26b9697f2ff2ea7e58f1be3d99d8a0be7fe8c400a211e8ad",
-      "git_blob": "bf707a82aa0da06d8d575526d84a7e9ce122e091"
+      "git_blob": "bf707a82aa0da06d8d575526d84a7e9ce122e091",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/restoration-repaired.log.gz",
       "path": "history/development/repository-consolidation/logs/restoration-repaired.log.gz",
       "size": 706,
       "sha256": "11a0ebf1f865528e66cff99792ac2f9eeafc2f107e35d9c6b80c8d6b69edc128",
-      "git_blob": "c0c4bdaf29c16c0347db45ba8545a41941dd214b"
+      "git_blob": "c0c4bdaf29c16c0347db45ba8545a41941dd214b",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/restoration.log.gz",
       "path": "history/development/repository-consolidation/logs/restoration.log.gz",
       "size": 669,
       "sha256": "7cb059da5608cf30273e929703a26fada0ba51cf10849fd294cfb5c323bf6482",
-      "git_blob": "01b8261b51f8b8920327f565758079c4768833c6"
+      "git_blob": "01b8261b51f8b8920327f565758079c4768833c6",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/source-inputs.json.gz",
       "path": "history/development/repository-consolidation/logs/source-inputs.json.gz",
       "size": 75411,
       "sha256": "2108cca361d2db8592d62340f0a75364b56ab17948da422da90958922757dd61",
-      "git_blob": "738d6426d02670177839ceca8be77c13c0ffb05b"
+      "git_blob": "738d6426d02670177839ceca8be77c13c0ffb05b",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/source-package-final.json.gz",
       "path": "history/development/repository-consolidation/logs/source-package-final.json.gz",
       "size": 422,
       "sha256": "aa18cbf73f6ba3a897949028c479d56a385110a25b5fa7f8ce612a0568972006",
-      "git_blob": "555f7fe7322c8ac503909d452c94dd8625a7b8db"
+      "git_blob": "555f7fe7322c8ac503909d452c94dd8625a7b8db",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/source-package-final.log.gz",
       "path": "history/development/repository-consolidation/logs/source-package-final.log.gz",
       "size": 185,
       "sha256": "b95f66aea81883907a95a36a35f90c898e5435e825967245c13d3dfb260c1617",
-      "git_blob": "c9a4e0441baf163291e290772d8fbdaaf8fb34c1"
+      "git_blob": "c9a4e0441baf163291e290772d8fbdaaf8fb34c1",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/source-package-original.log.gz",
       "path": "history/development/repository-consolidation/logs/source-package-original.log.gz",
       "size": 182,
       "sha256": "32cfaf48085e5e448af2ed6af48a8fafec21e7ec846ff4a1e66409b11ecfc7ae",
-      "git_blob": "37a2cee1a6af4e7fc468fca4ea5f884a6f385c25"
+      "git_blob": "37a2cee1a6af4e7fc468fca4ea5f884a6f385c25",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-build.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-build.log.gz",
       "size": 10025,
       "sha256": "ca3c7b657448436a9bfe6f9a4f927bf5eb3ebb37f08011db2824321897048c49",
-      "git_blob": "17eb12916df9a6a804e03a3ea936b15f45045573"
+      "git_blob": "17eb12916df9a6a804e03a3ea936b15f45045573",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-commands-used.json.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-commands-used.json.gz",
       "size": 568,
       "sha256": "b7c315b15813de8323ac97bbca9c297d533aa8945498fa912754bc60ee733cd0",
-      "git_blob": "f4db6d83f85b5545feec3f7b727c01ff3cf671a8"
+      "git_blob": "f4db6d83f85b5545feec3f7b727c01ff3cf671a8",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-commands.json.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-commands.json.gz",
       "size": 13768,
       "sha256": "fa627bbca41708e11c1e72d2ac8dbcbd943f60cfff7fa943281fae0bb65298ca",
-      "git_blob": "5bc0d28079a529edbc2d7d5f9e221112c7bf85e3"
+      "git_blob": "5bc0d28079a529edbc2d7d5f9e221112c7bf85e3",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-configure.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-configure.log.gz",
       "size": 561,
       "sha256": "5d49ad942076104fe1c86a2039d1b7218001f1d693e7f24d0ade8e4e3435dc1d",
-      "git_blob": "3c6a02cac1675eb46b807ec8df7495a885348606"
+      "git_blob": "3c6a02cac1675eb46b807ec8df7495a885348606",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-fingerprint.json.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-fingerprint.json.gz",
       "size": 81699,
       "sha256": "d3472164c12fd5517e6024b96482b1d542fa660cba506b270dfca903da54bbee",
-      "git_blob": "ff14bc085f7c3345308e71220b611ac5676c3606"
+      "git_blob": "ff14bc085f7c3345308e71220b611ac5676c3606",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-fresh-start.json.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-fresh-start.json.gz",
       "size": 186,
       "sha256": "2bca5f9c00f6807a814db4d59149a00382625dd292c3e85b01b2e33415b1faf7",
-      "git_blob": "77fd01189a9339f0eaa53cd59bc6babcd990520d"
+      "git_blob": "77fd01189a9339f0eaa53cd59bc6babcd990520d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-install.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-install.log.gz",
       "size": 1069,
       "sha256": "576d1671cbe6aeb931c247cf5f16c915aaf9e4b81a1cdc3f535f549655cc584e",
-      "git_blob": "13ec1cb774f76e073b6a77ef2e6f3f795838a9c4"
+      "git_blob": "13ec1cb774f76e073b6a77ef2e6f3f795838a9c4",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-package-dependencies.json.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-package-dependencies.json.gz",
       "size": 388,
       "sha256": "26bdb24909bb3a26f0533edcd08df64625be7c19705b24141624c72fb6bdc01c",
-      "git_blob": "83d57664e38745341f45f2ca65d85811c9738ba0"
+      "git_blob": "83d57664e38745341f45f2ca65d85811c9738ba0",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-package-rebuild.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-package-rebuild.log.gz",
       "size": 43,
       "sha256": "ab8058d9d653b7d03790bb49e201dc7d63f954b3acb7ff123b28c911b0dcd548",
-      "git_blob": "b482feceb133ec4f05de74dace98b17ff1a6195d"
+      "git_blob": "b482feceb133ec4f05de74dace98b17ff1a6195d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-package-reconfigure.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-package-reconfigure.log.gz",
       "size": 257,
       "sha256": "2626750cd692d6875662b4c5bb7c3663d1be0231b5d146e12f782ec68ea2b431",
-      "git_blob": "85595c7105e810eac80a4d924ce2032b909c0d0e"
+      "git_blob": "85595c7105e810eac80a4d924ce2032b909c0d0e",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-qtfree-build.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-qtfree-build.log.gz",
       "size": 3302,
       "sha256": "699f69bbff1fb82ed8270f8fcfaad672276e1b52787da558a7da7043fb0675af",
-      "git_blob": "8f0ec71b9e631c061793b4d3315275ddb5f9ef21"
+      "git_blob": "8f0ec71b9e631c061793b4d3315275ddb5f9ef21",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-qtfree-configure.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-qtfree-configure.log.gz",
       "size": 286,
       "sha256": "50df81aa371ba9c846760c8f4dff70dde086c15f25373578de934f6fac7c311b",
-      "git_blob": "1a4b1ab4f3c58eef4c56b01b3ee3cff9269b5000"
+      "git_blob": "1a4b1ab4f3c58eef4c56b01b3ee3cff9269b5000",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-qtfree-test.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-qtfree-test.log.gz",
       "size": 82,
       "sha256": "f13b25d190c2326c7ee58c9a1ea22991bddc4ce0a53daae3d25a00c31c965a41",
-      "git_blob": "91d5f8b51d15c3d221ca67e049a842592e96369c"
+      "git_blob": "91d5f8b51d15c3d221ca67e049a842592e96369c",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-stage-cli-original.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-stage-cli-original.log.gz",
       "size": 263,
       "sha256": "8f6f0741f8f6209c69db4414fecc3f933585e402fd9b5e7d70ed73f584e27d50",
-      "git_blob": "bdf06d86a3aad467f9026d0c29882939590aa580"
+      "git_blob": "bdf06d86a3aad467f9026d0c29882939590aa580",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-stage-cli.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-stage-cli.log.gz",
       "size": 292,
       "sha256": "9fe3082f289a9845dcb37a6411530fe4d621bba28f71c7264b373eac70f6a800",
-      "git_blob": "92522fd1f7b145fca4a681c880fb3f5ac5cdef98"
+      "git_blob": "92522fd1f7b145fca4a681c880fb3f5ac5cdef98",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-stage-database-original.json.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-stage-database-original.json.gz",
       "size": 1037,
       "sha256": "cddc14aa8b5f9182f426c545aa4138315ad689faf963dbfb4b6f31ecdf2dd142",
-      "git_blob": "6cce09699bd2d38f44c0171efc28aee58323e9ad"
+      "git_blob": "6cce09699bd2d38f44c0171efc28aee58323e9ad",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-stage-database.json.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-stage-database.json.gz",
       "size": 688,
       "sha256": "09a7ffdd210e7936d7f70f3c0b450f12d5c57eb472dcfae6e49b237a1ab00c3b",
-      "git_blob": "d6b2a610eb32fa036262562415b460c51359d158"
+      "git_blob": "d6b2a610eb32fa036262562415b460c51359d158",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-stage-multiblock.json.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-stage-multiblock.json.gz",
       "size": 1188,
       "sha256": "0cc91752d52b46cfdad55f6959a00e14b8ef076f064b2e82af93ef12d13d5905",
-      "git_blob": "2127104ee04160ce9098ff52fa3ba9807d335667"
+      "git_blob": "2127104ee04160ce9098ff52fa3ba9807d335667",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-test.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-test.log.gz",
       "size": 2052,
       "sha256": "026505317605c979db97883842d0adb8ae1c934ea128b2b59aade696b620308e",
-      "git_blob": "c904cc11121c98f00a0ed882a677af53fd8615f5"
+      "git_blob": "c904cc11121c98f00a0ed882a677af53fd8615f5",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-tests.xml.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-tests.xml.gz",
       "size": 7479,
       "sha256": "192a535bf07f6d69eff2a8032a9ddbba5aef8456c3a6b5da7944160b0aa595b4",
-      "git_blob": "93bc4eec206ce81eed13f039fbfebad4954d6cf0"
+      "git_blob": "93bc4eec206ce81eed13f039fbfebad4954d6cf0",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-zero-fortran.json.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-zero-fortran.json.gz",
       "size": 4578,
       "sha256": "2b65081035f2334fb948aad1c842041e714da6a1879304fb5b8c2ae293438121",
-      "git_blob": "0e6b74a3a779d7e63f15afe45ae1fc15fd698684"
+      "git_blob": "0e6b74a3a779d7e63f15afe45ae1fc15fd698684",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-gnu-zero-fortran.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-gnu-zero-fortran.log.gz",
       "size": 69,
       "sha256": "4380baa70723bbcd6631715e75f5b9762a1b6db953f0fe34894d4f318b63393c",
-      "git_blob": "ae8e5d774366ce7c6d97cdb062517d43eeda58ce"
+      "git_blob": "ae8e5d774366ce7c6d97cdb062517d43eeda58ce",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-msvc-build.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-msvc-build.log.gz",
       "size": 6559,
       "sha256": "b2119012cf23ac8b3129786e3e9b88acd1e09cc57dd9527d00b0fdade69911f1",
-      "git_blob": "524b5cf0d128d5221459557c637eb71f8aaa36ca"
+      "git_blob": "524b5cf0d128d5221459557c637eb71f8aaa36ca",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-msvc-commands-used.json.gz",
       "path": "history/development/repository-consolidation/logs/windows-msvc-commands-used.json.gz",
       "size": 665,
       "sha256": "5d1af9f7c1a1045e5cae219fabd6da74404a738823c89b58eb3d8431981c5b1b",
-      "git_blob": "9bbc3c4ffafe7e5fa96504eab6697bbb20f78213"
+      "git_blob": "9bbc3c4ffafe7e5fa96504eab6697bbb20f78213",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-msvc-commands.json.gz",
       "path": "history/development/repository-consolidation/logs/windows-msvc-commands.json.gz",
       "size": 14287,
       "sha256": "02019f0130135866422911e65fbfe85dcb2ce63df55a96fc2a4a3d2170d8570d",
-      "git_blob": "03419a856e203d18931b8b01c5142c4ac987e9c7"
+      "git_blob": "03419a856e203d18931b8b01c5142c4ac987e9c7",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-msvc-configure.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-msvc-configure.log.gz",
       "size": 631,
       "sha256": "821d9dfd8c9dd6829213382a8e937667c5f335fcefa30031d4d8b5b6f0c1e6ad",
-      "git_blob": "43601f049a835ef0fdf2ae7ac7ce988a077de75d"
+      "git_blob": "43601f049a835ef0fdf2ae7ac7ce988a077de75d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-msvc-fingerprint.json.gz",
       "path": "history/development/repository-consolidation/logs/windows-msvc-fingerprint.json.gz",
       "size": 81676,
       "sha256": "8ae4976613079f69d87752f20dd61d4950cb279c7f1449f7387b3a181ed52873",
-      "git_blob": "51cca184029429a1e731775f43d838dfe740fdf0"
+      "git_blob": "51cca184029429a1e731775f43d838dfe740fdf0",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-msvc-fresh-start.json.gz",
       "path": "history/development/repository-consolidation/logs/windows-msvc-fresh-start.json.gz",
       "size": 186,
       "sha256": "d74c303de550ee2b45f0e1a72890521eeece0ca723fa2dbfab9831a59a99a380",
-      "git_blob": "f87640fc8de3135111fa58a052155a287915739b"
+      "git_blob": "f87640fc8de3135111fa58a052155a287915739b",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-msvc-package-dependencies.json.gz",
       "path": "history/development/repository-consolidation/logs/windows-msvc-package-dependencies.json.gz",
       "size": 406,
       "sha256": "56f45c27f177cda59c157e885cf41de47ebae95e1f012de0bcd159f5d81fd62b",
-      "git_blob": "152a68ae2cfe78c1705c32f71b84804d59a89fbf"
+      "git_blob": "152a68ae2cfe78c1705c32f71b84804d59a89fbf",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-msvc-package-rebuild.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-msvc-package-rebuild.log.gz",
       "size": 43,
       "sha256": "ab8058d9d653b7d03790bb49e201dc7d63f954b3acb7ff123b28c911b0dcd548",
-      "git_blob": "b482feceb133ec4f05de74dace98b17ff1a6195d"
+      "git_blob": "b482feceb133ec4f05de74dace98b17ff1a6195d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-msvc-package-reconfigure.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-msvc-package-reconfigure.log.gz",
       "size": 257,
       "sha256": "01e12d3fbe28fdc0918c94e34eb14c388849c5d9e1c46122c169492a723bbc3b",
-      "git_blob": "ac34ec2bcaacaa86147215468e23f4a2879a29eb"
+      "git_blob": "ac34ec2bcaacaa86147215468e23f4a2879a29eb",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-msvc-qtfree-build.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-msvc-qtfree-build.log.gz",
       "size": 2163,
       "sha256": "259828c8cc76af8482e4853f24a7f3e8fb72f99c654109b49a586731ab9c4d61",
-      "git_blob": "d5ab01d8132961c59b102accb8ed620182125ff0"
+      "git_blob": "d5ab01d8132961c59b102accb8ed620182125ff0",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-msvc-qtfree-configure.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-msvc-qtfree-configure.log.gz",
       "size": 315,
       "sha256": "4007dcb0bd4f399cf788e9c5b6c0be0838bc5490e1bce244b0afedc3bd0ee824",
-      "git_blob": "3bb1e6528212323933986b1f97d68bb278a2f9f6"
+      "git_blob": "3bb1e6528212323933986b1f97d68bb278a2f9f6",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-msvc-qtfree-test.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-msvc-qtfree-test.log.gz",
       "size": 82,
       "sha256": "f13b25d190c2326c7ee58c9a1ea22991bddc4ce0a53daae3d25a00c31c965a41",
-      "git_blob": "91d5f8b51d15c3d221ca67e049a842592e96369c"
+      "git_blob": "91d5f8b51d15c3d221ca67e049a842592e96369c",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-msvc-static-symbols.json.gz",
       "path": "history/development/repository-consolidation/logs/windows-msvc-static-symbols.json.gz",
       "size": 17023,
       "sha256": "9f8d0ae39e71fa69f7ee1342f5b2417ba154d3669518eab1be295cd4cf2557c0",
-      "git_blob": "e6d7a37371d2d26efabfa2cfabc302e7799b794d"
+      "git_blob": "e6d7a37371d2d26efabfa2cfabc302e7799b794d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-msvc-static-symbols.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-msvc-static-symbols.log.gz",
       "size": 105,
       "sha256": "b450c6343c5f0b7697d1e2363da17b52d648e3c24cce1463fea65c90d757ca1e",
-      "git_blob": "834de9a6315fe9395c04052e427203fc6f2b5ff0"
+      "git_blob": "834de9a6315fe9395c04052e427203fc6f2b5ff0",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-msvc-test.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-msvc-test.log.gz",
       "size": 2040,
       "sha256": "892701087e280af10213b20eede14e3edcb55e1cc6c0b6b70906edd1db6fe700",
-      "git_blob": "025e6c07a00b650f3a7fb43b6fc13d5d1d419ffe"
+      "git_blob": "025e6c07a00b650f3a7fb43b6fc13d5d1d419ffe",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-msvc-tests.xml.gz",
       "path": "history/development/repository-consolidation/logs/windows-msvc-tests.xml.gz",
       "size": 7488,
       "sha256": "a1a81fc261cb3a0465f8127dc658fe14df0cd0c50417676a95364e010f596216",
-      "git_blob": "d924a40f55db4014c74c2a8f091efc08f62c7582"
+      "git_blob": "d924a40f55db4014c74c2a8f091efc08f62c7582",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-msvc-zero-fortran.json.gz",
       "path": "history/development/repository-consolidation/logs/windows-msvc-zero-fortran.json.gz",
       "size": 5067,
       "sha256": "fbe6375d7b8e1b7c05a53ad097f68f3698253bb6b483a004803025422d1752b4",
-      "git_blob": "f62d1095fede8529343e14f620ea50e0c7dfc91f"
+      "git_blob": "f62d1095fede8529343e14f620ea50e0c7dfc91f",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/logs/windows-msvc-zero-fortran.log.gz",
       "path": "history/development/repository-consolidation/logs/windows-msvc-zero-fortran.log.gz",
       "size": 751,
       "sha256": "86b6b8ee848a39834e9d3d4bcb02cac58b65e4d78372ddefb23482f8b4b4f1fd",
-      "git_blob": "c86dd35643bfc382acb67c3da18b82db4c9e6c4a"
+      "git_blob": "c86dd35643bfc382acb67c3da18b82db4c9e6c4a",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/repository-consolidation/recovery-index.json",
       "path": "history/development/repository-consolidation/recovery-index.json",
       "size": 24300,
       "sha256": "4308d5f5741b2dc35f7ab8c18ec5322a84869c7267137f863f291df35f9d1fa9",
-      "git_blob": "84b24da401b80c871a46230b5d05c2b0b836611c"
+      "git_blob": "84b24da401b80c871a46230b5d05c2b0b836611c",
+      "storage": "repository",
+      "retention_reason": "Original acceptance, correction, qualification or recovery receipt used by the current baseline or scientific guide"
     },
     {
       "original_path": "docs/development/repository-consolidation/validation-index.json",
       "path": "history/development/repository-consolidation/validation-index.json",
       "size": 28918,
       "sha256": "68817cd0c58293518182fd9ecb5cc9e5a24ece85622bf763611751ab0ecee994",
-      "git_blob": "88f662e5e0e0d8b39219b4b9d76d0a80b02f6c6a"
+      "git_blob": "88f662e5e0e0d8b39219b4b9d76d0a80b02f6c6a",
+      "storage": "repository",
+      "retention_reason": "Original acceptance, correction, qualification or recovery receipt used by the current baseline or scientific guide"
     },
     {
       "original_path": "docs/development/repository-layout.md",
       "path": "history/development/repository-layout.md",
       "size": 5577,
       "sha256": "d3dd6117d27bb333a2714af1367b6a899992b0a1e6a904d79dbaa86d6ede79e1",
-      "git_blob": "33a0accdee5498a658cd0678ffc37db2c3644683"
+      "git_blob": "33a0accdee5498a658cd0678ffc37db2c3644683",
+      "storage": "archive"
     },
     {
       "original_path": "docs/development/unused-file-audit-20261009.md",
       "path": "history/development/unused-file-audit-20261009.md",
       "size": 5372,
       "sha256": "5f6bba0b94696c516b4b8b90fda5b608b51dd3d0f08b9960975a80d736b6f332",
-      "git_blob": "85636a53fad7e05ae5a91ee5d496ce14f2dc3152"
+      "git_blob": "85636a53fad7e05ae5a91ee5d496ce14f2dc3152",
+      "storage": "archive"
     },
     {
       "original_path": "docs/migration-history.md",
       "path": "history/migration-history.md",
       "size": 10543,
       "sha256": "f69704ff3d7055c61c5f0e2ab7be457e7b2e21235f946c1974c803980bb0b33d",
-      "git_blob": "35d53f8841e0ad161a407734b3399e5fbb08384a"
+      "git_blob": "35d53f8841e0ad161a407734b3399e5fbb08384a",
+      "storage": "archive"
     },
     {
       "original_path": "docs/numerical/pfsm-benchmark.md",
       "path": "history/numerical/pfsm-benchmark.md",
       "size": 190960,
       "sha256": "4590f0fe29a8fee9055de6dd9ff01779c69e0288d5d3fa8702fb92ef439808b2",
-      "git_blob": "3475e9e2163c4949c111058795f616468f3cc825"
+      "git_blob": "3475e9e2163c4949c111058795f616468f3cc825",
+      "storage": "archive"
     },
     {
       "original_path": "docs/numerical/pfsm-quantification-assessment.json",
       "path": "history/numerical/pfsm-quantification-assessment.json",
       "size": 26173,
       "sha256": "b58ba7a711e2b402818244dad0eec79aa703d2896ad894c6530a52c9d567d920",
-      "git_blob": "173a7b8bd57673afdf0b900f7182fb5ee6225c64"
+      "git_blob": "173a7b8bd57673afdf0b900f7182fb5ee6225c64",
+      "storage": "repository",
+      "retention_reason": "Original acceptance, correction, qualification or recovery receipt used by the current baseline or scientific guide"
     },
     {
       "original_path": "docs/refactoring/deferred-defects/.gitattributes",
       "path": "history/refactoring/deferred-defects/gitattributes.original",
       "size": 14,
       "sha256": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
-      "git_blob": "fcadb2cf97913f58a2523f535336e725c6b59d1f"
+      "git_blob": "fcadb2cf97913f58a2523f535336e725c6b59d1f",
+      "storage": "archive"
     },
     {
       "original_path": "docs/refactoring/deferred-defects/README.md",
       "path": "history/refactoring/deferred-defects/README.md",
       "size": 1041,
       "sha256": "962ba3859f2887957f59b2c10debb6cb8521c941fcb9f6d61b3f5706ced78f1a",
-      "git_blob": "267c6d66870c2b992f9346362c5c6b485cc975c6"
+      "git_blob": "267c6d66870c2b992f9346362c5c6b485cc975c6",
+      "storage": "archive"
     },
     {
       "original_path": "docs/refactoring/deferred-defects/phase31c-recovery-20261004.json",
       "path": "history/refactoring/deferred-defects/phase31c-recovery-20261004.json",
       "size": 5822,
       "sha256": "2435188963e6145e1aee7162c465a2efedfb17250f733dee08531963d5d7a3ee",
-      "git_blob": "7d5f2e9be8b39ef89012379b2f0f0ab52c36397e"
+      "git_blob": "7d5f2e9be8b39ef89012379b2f0f0ab52c36397e",
+      "storage": "archive"
     },
     {
       "original_path": "docs/refactoring/deferred-defects/phase36c-build-profile.json",
       "path": "history/refactoring/deferred-defects/phase36c-build-profile.json",
       "size": 802,
       "sha256": "d1fa8971b3722350f4ed03df790350e01e228145beee0bc37d2f498d6a7beed3",
-      "git_blob": "d273cc22cf3a524e7572b2be8e10b4d294767a0c"
+      "git_blob": "d273cc22cf3a524e7572b2be8e10b4d294767a0c",
+      "storage": "archive"
     },
     {
       "original_path": "docs/refactoring/deferred-defects/phase36c-existing-CIF-platform-differences.json",
       "path": "history/refactoring/deferred-defects/phase36c-existing-CIF-platform-differences.json",
       "size": 1164,
       "sha256": "3a43185523a3a2116e2ee329f1e4764e1410bea6dbfc40883b80aa059a63cb0f",
-      "git_blob": "9b4dd481bdfe03e64c966e7aa716de0dd9c9059d"
+      "git_blob": "9b4dd481bdfe03e64c966e7aa716de0dd9c9059d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/refactoring/deferred-defects/phase36c-msvc-localized-include-dependencies.json",
       "path": "history/refactoring/deferred-defects/phase36c-msvc-localized-include-dependencies.json",
       "size": 966,
       "sha256": "dbead450b2f823fdf4d335796f149ff0d5dea69acbbbba04be8f27003d1283d1",
-      "git_blob": "b89ba3272943fd2351a18fd2b1e2b58a7d71fef9"
+      "git_blob": "b89ba3272943fd2351a18fd2b1e2b58a7d71fef9",
+      "storage": "archive"
     },
     {
       "original_path": "docs/refactoring/deferred-defects/phase36d-CIF-angle-cause-successor.json",
       "path": "history/refactoring/deferred-defects/phase36d-CIF-angle-cause-successor.json",
       "size": 1698,
       "sha256": "9d8c8619ccdb4d566b3f134f3e49638b224cf0ad017de8751c04a89ccb283f4b",
-      "git_blob": "e7dce0a63cbb4f76b45a6c5dfb6b98fa408d28ca"
+      "git_blob": "e7dce0a63cbb4f76b45a6c5dfb6b98fa408d28ca",
+      "storage": "archive"
     },
     {
       "original_path": "docs/refactoring/deferred-defects/phase36d-existing-search-return-warning.json",
       "path": "history/refactoring/deferred-defects/phase36d-existing-search-return-warning.json",
       "size": 1585,
       "sha256": "d7f070622c742c5e9e05021c0cd968d35e08adc8669c3747e7e2e57a3a0e30a8",
-      "git_blob": "dd1c21a535131cdc6a631943d67355a1b0d6041d"
+      "git_blob": "dd1c21a535131cdc6a631943d67355a1b0d6041d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/refactoring/deferred-defects/phase36d-optional-sql-plugin-imports.json",
       "path": "history/refactoring/deferred-defects/phase36d-optional-sql-plugin-imports.json",
       "size": 1696,
       "sha256": "d66fe22d2ce25e6ecf90378ea6ef508668054a962555d1d99a92ded40a91eab0",
-      "git_blob": "723976a9d1f32a9f8fdd93af1fe086a71c1c0aa4"
+      "git_blob": "723976a9d1f32a9f8fdd93af1fe086a71c1c0aa4",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/build-orchestration-attempt.json.gz",
       "path": "history/validation/strict-layer-linux/build-orchestration-attempt.json.gz",
       "size": 379,
       "sha256": "fd796941747ddcf3bdabc8a4710a48b3215f2ef5d1a2a29378344e7b8be90e2f",
-      "git_blob": "17ccace5832312e50ee67f14be608f883770f9db"
+      "git_blob": "17ccace5832312e50ee67f14be608f883770f9db",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/commands.log.gz",
       "path": "history/validation/strict-layer-linux/commands.log.gz",
       "size": 707,
       "sha256": "413588a5d24224ae0361fed167d9b4da66eb9a7141172357842acf41c255fa8a",
-      "git_blob": "b11a89b10fbdcbf805d21fd7d4d43b74b446f588"
+      "git_blob": "b11a89b10fbdcbf805d21fd7d4d43b74b446f588",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/deb-cli_metadata.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/deb-cli_metadata.stderr.log.gz",
       "size": 2581,
       "sha256": "9c6834f9b4ff502dae33666d894f7df09691830fcd5b2e404d8731e52ac37a43",
-      "git_blob": "d3d44c9b72100009c85a3ffcd51b7e5178cb7f6f"
+      "git_blob": "d3d44c9b72100009c85a3ffcd51b7e5178cb7f6f",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/deb-cli_metadata.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/deb-cli_metadata.stdout.log.gz",
       "size": 105,
       "sha256": "aa6c8ffd20b8732c8000448c115c06f827ac7ca087108f818532e4cf89c44eaf",
-      "git_blob": "c2a0e1bf792129056f5a37d1f0fd7ec342d7602e"
+      "git_blob": "c2a0e1bf792129056f5a37d1f0fd7ec342d7602e",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/deb-gui_pattern.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/deb-gui_pattern.stderr.log.gz",
       "size": 3192,
       "sha256": "8258f6c3cc69d1b663c57842fd3b4edb1241310aba3f7a83570a8d2238631873",
-      "git_blob": "e585d95ee313292519bdc0cf5857e44ade63958c"
+      "git_blob": "e585d95ee313292519bdc0cf5857e44ade63958c",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/deb-gui_pattern.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/deb-gui_pattern.stdout.log.gz",
       "size": 20,
       "sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e",
-      "git_blob": "ae211a2cb77f6830fe3b183a87963fc514435a29"
+      "git_blob": "ae211a2cb77f6830fe3b183a87963fc514435a29",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/deb-gui_search.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/deb-gui_search.stderr.log.gz",
       "size": 3320,
       "sha256": "b713bf6507da180a504c96d65cc833fb203cde6acf745ed08df5ba9621daff85",
-      "git_blob": "cfa015f50e2fe57659aaca86ec936c4a6d7098a7"
+      "git_blob": "cfa015f50e2fe57659aaca86ec936c4a6d7098a7",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/deb-gui_search.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/deb-gui_search.stdout.log.gz",
       "size": 20,
       "sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e",
-      "git_blob": "ae211a2cb77f6830fe3b183a87963fc514435a29"
+      "git_blob": "ae211a2cb77f6830fe3b183a87963fc514435a29",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/deb-gui_xcb_search.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/deb-gui_xcb_search.stderr.log.gz",
       "size": 4360,
       "sha256": "6de9cde278b7f43db7f454bc740ce7526dc9f2e8f4effc72088b355f6f117b50",
-      "git_blob": "53d3f2b6e19f17c2b923b93c15ebf0d2810e2ce3"
+      "git_blob": "53d3f2b6e19f17c2b923b93c15ebf0d2810e2ce3",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/deb-gui_xcb_search.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/deb-gui_xcb_search.stdout.log.gz",
       "size": 20,
       "sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e",
-      "git_blob": "ae211a2cb77f6830fe3b183a87963fc514435a29"
+      "git_blob": "ae211a2cb77f6830fe3b183a87963fc514435a29",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/deb-install.log.gz",
       "path": "history/validation/strict-layer-linux/deb-install.log.gz",
       "size": 2466,
       "sha256": "036c83a22ffc95aabe9a2766af09b89adea5c7798becbbf2970184b4be0360b0",
-      "git_blob": "4eeb77247ed9273f8220929b417ce7464283563e"
+      "git_blob": "4eeb77247ed9273f8220929b417ce7464283563e",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/deb-installed-cli.json.gz",
       "path": "history/validation/strict-layer-linux/deb-installed-cli.json.gz",
       "size": 1766,
       "sha256": "5c2840d7e27e398a93f0ba7e7d3e8de16c751be351abcce238eb15386246da1f",
-      "git_blob": "54897dde5f0752b62148f58005fbd7c021061bbb"
+      "git_blob": "54897dde5f0752b62148f58005fbd7c021061bbb",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/deb-package.json.gz",
       "path": "history/validation/strict-layer-linux/deb-package.json.gz",
       "size": 1042,
       "sha256": "a1c5cfacf103aa5116a777f6ad8e1f891e95584ae3ca78c1b9aeaae14e937869",
-      "git_blob": "6bd6e3d0f709f3c3d32409d47fa7f28436f1ea51"
+      "git_blob": "6bd6e3d0f709f3c3d32409d47fa7f28436f1ea51",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/deb-runtime.json.gz",
       "path": "history/validation/strict-layer-linux/deb-runtime.json.gz",
       "size": 15941,
       "sha256": "c7c3af9fba91b4ded0c4b259905ad5c58c72491135b7afd5e3f3ef6390b2e333",
-      "git_blob": "f5e0a51bb31ab0b7407d42a90f44c47b26a9a7dd"
+      "git_blob": "f5e0a51bb31ab0b7407d42a90f44c47b26a9a7dd",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/deb-sqlite_create.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/deb-sqlite_create.stderr.log.gz",
       "size": 2538,
       "sha256": "f5128ab58de48feaa7d020c32d011646cd061956e61b380dbb5ee426d6c0dcd2",
-      "git_blob": "48b08ae41b40f17c86a91bf0f85b4d58973f2cf2"
+      "git_blob": "48b08ae41b40f17c86a91bf0f85b4d58973f2cf2",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/deb-sqlite_create.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/deb-sqlite_create.stdout.log.gz",
       "size": 139,
       "sha256": "4c9917817d343c91e7bf1c8419640d49181cfc85e7deab09d2bbed30d714080f",
-      "git_blob": "8af2d17990556809d4df8e384c0a82393c40c191"
+      "git_blob": "8af2d17990556809d4df8e384c0a82393c40c191",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/deb-version.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/deb-version.stderr.log.gz",
       "size": 2178,
       "sha256": "5a0470740fb08fadd0b5ae253961d19e6298f205d2382bb96fc99ab089ca9bbd",
-      "git_blob": "e47528eebce15d6bfb0cb279525f13fd299172e0"
+      "git_blob": "e47528eebce15d6bfb0cb279525f13fd299172e0",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/deb-version.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/deb-version.stdout.log.gz",
       "size": 152,
       "sha256": "a2e08e9cec78fc0ba261784cfaaf4a5246de815bfee650ff9a3bc1d73940263a",
-      "git_blob": "217c14b07696feebf0dfba99b115f00b58f5b52a"
+      "git_blob": "217c14b07696feebf0dfba99b115f00b58f5b52a",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/deb_install.py.gz",
       "path": "history/validation/strict-layer-linux/deb_install.py.gz",
       "size": 923,
       "sha256": "63f040c88d8d265b57c6ea8b0130fee7bff68f51d6496a3e2aaf6bc4a3f223ce",
-      "git_blob": "cd65dfc9e05feee31f4370c8e4dbd6c59658ed06"
+      "git_blob": "cd65dfc9e05feee31f4370c8e4dbd6c59658ed06",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/entry.json.gz",
       "path": "history/validation/strict-layer-linux/entry.json.gz",
       "size": 355,
       "sha256": "27d4c6c6f72847040075a8af9f8c6546632fa5da900881f1592e42bc3ea59323",
-      "git_blob": "2cf8394c3994cdfe4580c339b71a9c1f8ceba60d"
+      "git_blob": "2cf8394c3994cdfe4580c339b71a9c1f8ceba60d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/environment-runtime.json.gz",
       "path": "history/validation/strict-layer-linux/environment-runtime.json.gz",
       "size": 138,
       "sha256": "0a30560684de12b7f0f7dcd67faa4c977fce4a0170afa6786db8aaaac6b041b7",
-      "git_blob": "a73ac198eeccc8347c0586fa1f5f50cdd77018bb"
+      "git_blob": "a73ac198eeccc8347c0586fa1f5f50cdd77018bb",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/environment.json.gz",
       "path": "history/validation/strict-layer-linux/environment.json.gz",
       "size": 935,
       "sha256": "3d9c558076448e830bb843fd19b755dd15ba5be7a0a81a0d9010057b3c32f0ba",
-      "git_blob": "d419c58d3ae194dde9612a4d5273452801ca9691"
+      "git_blob": "d419c58d3ae194dde9612a4d5273452801ca9691",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/install_retry-attempt2.sh.gz",
       "path": "history/validation/strict-layer-linux/install_retry-attempt2.sh.gz",
       "size": 240,
       "sha256": "01e207d60d3bbfb230cd5ea9699d3dd8aa3a6fb30f2948519520def7de593f96",
-      "git_blob": "d4201884afead9f969f461d1aff547f5d34bfc1c"
+      "git_blob": "d4201884afead9f969f461d1aff547f5d34bfc1c",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/install_retry.sh.gz",
       "path": "history/validation/strict-layer-linux/install_retry.sh.gz",
       "size": 240,
       "sha256": "af744ef13407c4147b1825699a1f7e67c7f6252df353c4d475f3d12b73765327",
-      "git_blob": "f7f182569c6da2ec71e38b8d90147e8dac5bd7e3"
+      "git_blob": "f7f182569c6da2ec71e38b8d90147e8dac5bd7e3",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/installed-cli.json.gz",
       "path": "history/validation/strict-layer-linux/installed-cli.json.gz",
       "size": 1752,
       "sha256": "9493d898f39274b7713eab93b5bbd8d6d5885aebce26c32929f9fdc92901d73c",
-      "git_blob": "0bfbddfcd57f1a4ca2357ee1266559e4f330065c"
+      "git_blob": "0bfbddfcd57f1a4ca2357ee1266559e4f330065c",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-build-completion.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-build-completion.log.gz",
       "size": 166,
       "sha256": "9607d68e473dd87cc6c1d72bf51d5a0bf4f4382fb851e280c0a06129eb20b57c",
-      "git_blob": "a77e39713e6acf97ac0b38e512b58829eb28b3a9"
+      "git_blob": "a77e39713e6acf97ac0b38e512b58829eb28b3a9",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-build.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-build.log.gz",
       "size": 3215,
       "sha256": "7fae29afda4dccdeada0a018563e8512bda95e9df2a48ed10a4a5ec68d03a99e",
-      "git_blob": "9a24ccf1b3040c4907804df21368be38738b5ab9"
+      "git_blob": "9a24ccf1b3040c4907804df21368be38738b5ab9",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-cache.txt.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-cache.txt.gz",
       "size": 9531,
       "sha256": "cda8168cd0dad89b0213eeeb882821c1337ed2d56f40d94df3c850d36028501a",
-      "git_blob": "7e18f895f3bf0cbaacab9f30160cc3e7dbd33830"
+      "git_blob": "7e18f895f3bf0cbaacab9f30160cc3e7dbd33830",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-capture.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-capture.log.gz",
       "size": 87,
       "sha256": "bd9b86b084e9772e1199ee4cd68e433ff9bc0b231510453eff6134800a363133",
-      "git_blob": "e970c2b9cdae6bf5b553ddefe9cc4b464fa7de70"
+      "git_blob": "e970c2b9cdae6bf5b553ddefe9cc4b464fa7de70",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-commands.json.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-commands.json.gz",
       "size": 11408,
       "sha256": "d42a0e9d98eba4ef98b7041dfb8d01855a28d2be07571982d93f0c7477d130f9",
-      "git_blob": "087a7ba50622bd486098a9367b2310fdda168f48"
+      "git_blob": "087a7ba50622bd486098a9367b2310fdda168f48",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-compiler.cmake.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-compiler.cmake.gz",
       "size": 1761,
       "sha256": "f1537cf42ab85ebb801800ae58d346c219acbc766fb6c38a2de08ed95e72d5ad",
-      "git_blob": "3a72f3eb4572966d86735be144cc44126b9bfcef"
+      "git_blob": "3a72f3eb4572966d86735be144cc44126b9bfcef",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-configure.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-configure.log.gz",
       "size": 503,
       "sha256": "1218a1323f7db090f1e299ed34af2c4da506c1cad7a49a3a47824eee1953c63f",
-      "git_blob": "0c4554c4afc45f03ebfbd4a62779753fa281cb5d"
+      "git_blob": "0c4554c4afc45f03ebfbd4a62779753fa281cb5d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-deb-build.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-deb-build.log.gz",
       "size": 198,
       "sha256": "f344dae11a5f9a63b1b1e5e0e8f286cb50c439f95dc226479a97648ed5bcaac1",
-      "git_blob": "15d2e2e29e526043da6d964c21cb43abb27063b8"
+      "git_blob": "15d2e2e29e526043da6d964c21cb43abb27063b8",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-deb-cache.txt.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-deb-cache.txt.gz",
       "size": 9525,
       "sha256": "8037978fda3f0495d10a39470c2021bd5df7a2d467b3ea4e6c1b776467197ff3",
-      "git_blob": "7c1ba288819a5e2229c747a416de3f71c6a8839f"
+      "git_blob": "7c1ba288819a5e2229c747a416de3f71c6a8839f",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-deb-configure.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-deb-configure.log.gz",
       "size": 172,
       "sha256": "f0dab146ca3a2c8466fc34c404c648e8f5984544f5e166d8e9ee5de3373ac589",
-      "git_blob": "819ed4d83f438fcaba2e5582c8f402fffc953078"
+      "git_blob": "819ed4d83f438fcaba2e5582c8f402fffc953078",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-deb-package.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-deb-package.log.gz",
       "size": 164,
       "sha256": "ed5f9b1849b255f28e8c911b54a4047de17e3253f66f2f420053233bfa5d7a5f",
-      "git_blob": "732592322ab9748b5bedec18144ef1b54456dc7a"
+      "git_blob": "732592322ab9748b5bedec18144ef1b54456dc7a",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-deb-runtime.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-deb-runtime.log.gz",
       "size": 226,
       "sha256": "62ee1854bde10d11bdbc50a36cb1f9676d817b3eda8e960d09c6ddb1a2ea2ab3",
-      "git_blob": "f126d4f5199f4e1c9f43b2af47faf85e912515d8"
+      "git_blob": "f126d4f5199f4e1c9f43b2af47faf85e912515d8",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-final-references.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-final-references.log.gz",
       "size": 63,
       "sha256": "f5c3676890a68ae15872f94495b375dbb37a575a9efabcb154ee59197775d585",
-      "git_blob": "f212f1f1ef2a882e7dfc2c8894f24fb89284a2c4"
+      "git_blob": "f212f1f1ef2a882e7dfc2c8894f24fb89284a2c4",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-fingerprint.json.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-fingerprint.json.gz",
       "size": 80645,
       "sha256": "eeddf0a794121897d8fe7c66eef726a7e2223f713978f57723982f6c055148af",
-      "git_blob": "322e26505213a40814aba7184aef3228e8e4baa0"
+      "git_blob": "322e26505213a40814aba7184aef3228e8e4baa0",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-fresh-start.json.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-fresh-start.json.gz",
       "size": 133,
       "sha256": "2cfb84c49efe8f18b182eb24d55dc952468213d36f895bbb01168572839e84fc",
-      "git_blob": "1110899456fbf70407049c3df7226ffdfb1d2a2d"
+      "git_blob": "1110899456fbf70407049c3df7226ffdfb1d2a2d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-install.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-install.log.gz",
       "size": 2394,
       "sha256": "67e79a0f312ecf835d8ae13e69b945d6ae8ef0167c0d71315cef71d0bf251574",
-      "git_blob": "8ca77f6b11c308b2a7d91c091563851af01fe5f7"
+      "git_blob": "8ca77f6b11c308b2a7d91c091563851af01fe5f7",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-installed-cli.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-installed-cli.log.gz",
       "size": 106,
       "sha256": "9f646b595b26f36956e09b658ce73af329334afc8c47563f5c185fcbcb5873ea",
-      "git_blob": "f61ad408d917eac3e5bfa95d5c9dd39aa812f886"
+      "git_blob": "f61ad408d917eac3e5bfa95d5c9dd39aa812f886",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-installed-runtime-02.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-installed-runtime-02.log.gz",
       "size": 290,
       "sha256": "8d90acb82bf485eb2d1d46538aad6f06ccfec344a7a36bb744e7371ad73040c4",
-      "git_blob": "5a5d7f258dfbd529c19edcb1b0107cbd4a445676"
+      "git_blob": "5a5d7f258dfbd529c19edcb1b0107cbd4a445676",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-installed-runtime-03.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-installed-runtime-03.log.gz",
       "size": 119,
       "sha256": "788045e07bd63d50d66ddd19422206ef6095fedf3f5f3d6ab82bbd295ce75664",
-      "git_blob": "d98da83d90e6641c508fc00682c8d104262dfb3d"
+      "git_blob": "d98da83d90e6641c508fc00682c8d104262dfb3d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-installed-runtime-attempt1.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-installed-runtime-attempt1.log.gz",
       "size": 171,
       "sha256": "0f1a3d19c8c5b263bf43a3cd47a799d3852da77c5e9cd0f5acdf52bfaf8bfc16",
-      "git_blob": "415b1ad79306c89b29746ffaaaff07fe258215b8"
+      "git_blob": "415b1ad79306c89b29746ffaaaff07fe258215b8",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-installed-runtime.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-installed-runtime.log.gz",
       "size": 171,
       "sha256": "0f1a3d19c8c5b263bf43a3cd47a799d3852da77c5e9cd0f5acdf52bfaf8bfc16",
-      "git_blob": "415b1ad79306c89b29746ffaaaff07fe258215b8"
+      "git_blob": "415b1ad79306c89b29746ffaaaff07fe258215b8",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-normal-list.json.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-normal-list.json.gz",
       "size": 4126,
       "sha256": "a068b70d9fa66a33ba4e26e2709023215de7cee2067591607478c98877d3ef68",
-      "git_blob": "e4d519e07b881bd233962e506ba170a3f1a127a5"
+      "git_blob": "e4d519e07b881bd233962e506ba170a3f1a127a5",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-package-binding.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-package-binding.log.gz",
       "size": 145,
       "sha256": "6b30be266e399a5529eeeb636b81b40f010ad7ba3e45502a4fc3fb2fcac2be54",
-      "git_blob": "593a3765f8b4f88d09ffeedbe824362723650457"
+      "git_blob": "593a3765f8b4f88d09ffeedbe824362723650457",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-packaged-zero-fortran.json.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-packaged-zero-fortran.json.gz",
       "size": 8308,
       "sha256": "bdd78ca6a13d55ef4eb66f0350437db1a1cc8960cb4ad45904897ab11b6ed1bf",
-      "git_blob": "1e0b1365db988bb48cb853796c9f28d0211612da"
+      "git_blob": "1e0b1365db988bb48cb853796c9f28d0211612da",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-packaged-zero-fortran.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-packaged-zero-fortran.log.gz",
       "size": 518,
       "sha256": "ceeb5b4d1715244c9e0015fed7930e9758a3be200bbc84a11c9d076174a9fc6c",
-      "git_blob": "3bd94b42b39d4170b0aaa556ec686944f2699ddf"
+      "git_blob": "3bd94b42b39d4170b0aaa556ec686944f2699ddf",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-public-headers.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-public-headers.log.gz",
       "size": 91,
       "sha256": "7d5141ea686d53a7b1374d08a9ed8f207e69867ee98c50d33258182b16fbb4a0",
-      "git_blob": "d759463527f02440f4f145e561d310e1e0965b23"
+      "git_blob": "d759463527f02440f4f145e561d310e1e0965b23",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-qtfree-build.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-qtfree-build.log.gz",
       "size": 1879,
       "sha256": "1c509b73a68c9c6bef397c48cfd973c9fbfa26c1570422a93dbbd2326610e27d",
-      "git_blob": "31b3a583f18d79c8fa39f7c56f52221abb43e62c"
+      "git_blob": "31b3a583f18d79c8fa39f7c56f52221abb43e62c",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-qtfree-completion.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-qtfree-completion.log.gz",
       "size": 157,
       "sha256": "4ab1b97a2c5abff04863fc6527ee726de79d86dabcf390a808d3d0d57f64fae4",
-      "git_blob": "24fc515b27046af9717166e664f4c3b07b56d824"
+      "git_blob": "24fc515b27046af9717166e664f4c3b07b56d824",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-qtfree-configure.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-qtfree-configure.log.gz",
       "size": 216,
       "sha256": "dd26b25b6c0c51e8854b4404182ba283735c63682fbef1536fd67a0b19b6b61c",
-      "git_blob": "e2dcf3d5cb835c0085e9061cd9a346ca8b234e17"
+      "git_blob": "e2dcf3d5cb835c0085e9061cd9a346ca8b234e17",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-qtfree-test.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-qtfree-test.log.gz",
       "size": 155,
       "sha256": "40bb4c59d657f03fa955a22b0291042178a6634e170d0ce388bf4ae20a8f422c",
-      "git_blob": "579e42350f141b9376afee0fffa54526b78aba94"
+      "git_blob": "579e42350f141b9376afee0fffa54526b78aba94",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-qtfree-tests.xml.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-qtfree-tests.xml.gz",
       "size": 281,
       "sha256": "37637f057c20f88216f73a8688ae8c026e4916953f9056ada56d54632be78aa9",
-      "git_blob": "d931284328c00a0df14a6aaa3bf9101f7cc08240"
+      "git_blob": "d931284328c00a0df14a6aaa3bf9101f7cc08240",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-qualpf-build.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-qualpf-build.log.gz",
       "size": 6377,
       "sha256": "1e84f9e9a18cf62b3b559126ae0eb4970cfc9ce25ccfec2df0b6cf734ae779f0",
-      "git_blob": "98cc0adb3b2b6cc1cf240b28fb9b98270a75cf65"
+      "git_blob": "98cc0adb3b2b6cc1cf240b28fb9b98270a75cf65",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-qualpf-completion.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-qualpf-completion.log.gz",
       "size": 166,
       "sha256": "9607d68e473dd87cc6c1d72bf51d5a0bf4f4382fb851e280c0a06129eb20b57c",
-      "git_blob": "a77e39713e6acf97ac0b38e512b58829eb28b3a9"
+      "git_blob": "a77e39713e6acf97ac0b38e512b58829eb28b3a9",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-reference-entry.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-reference-entry.log.gz",
       "size": 63,
       "sha256": "f5c3676890a68ae15872f94495b375dbb37a575a9efabcb154ee59197775d585",
-      "git_blob": "f212f1f1ef2a882e7dfc2c8894f24fb89284a2c4"
+      "git_blob": "f212f1f1ef2a882e7dfc2c8894f24fb89284a2c4",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-references.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-references.log.gz",
       "size": 63,
       "sha256": "f5c3676890a68ae15872f94495b375dbb37a575a9efabcb154ee59197775d585",
-      "git_blob": "f212f1f1ef2a882e7dfc2c8894f24fb89284a2c4"
+      "git_blob": "f212f1f1ef2a882e7dfc2c8894f24fb89284a2c4",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-standalone-build.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-standalone-build.log.gz",
       "size": 907,
       "sha256": "27d56592d0e62afc16f148c553481624ea9090198d7404acb39afb80295bf043",
-      "git_blob": "98861a94dce3cf1b6aa6089cc81a8fa7b5508799"
+      "git_blob": "98861a94dce3cf1b6aa6089cc81a8fa7b5508799",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-standalone-configure.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-standalone-configure.log.gz",
       "size": 318,
       "sha256": "9442c67f8091c58ad9c34082ccabe5976816b8ffae6ac8996e82894e3d2dc577",
-      "git_blob": "7b937944694a30ce558e48fb8cc0c71206d96dae"
+      "git_blob": "7b937944694a30ce558e48fb8cc0c71206d96dae",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-standalone-test.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-standalone-test.log.gz",
       "size": 224,
       "sha256": "ac23acfa7cdbedc48da031b885ed3f8a3c754b4865d4c3d52a5d17bdee65bd4c",
-      "git_blob": "95b1870453cbb3428373f9c4be09121efbb51adc"
+      "git_blob": "95b1870453cbb3428373f9c4be09121efbb51adc",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-standalone-tests.xml.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-standalone-tests.xml.gz",
       "size": 911,
       "sha256": "bee633423359dafa29ca08becf52ddc568ecce17a912b6cf7be247b498e74553",
-      "git_blob": "e418c5e2eff55d0d6bccd35083c72e97f5972376"
+      "git_blob": "e418c5e2eff55d0d6bccd35083c72e97f5972376",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-strict-deb.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-strict-deb.log.gz",
       "size": 147,
       "sha256": "4f6d3742e428cb97b7f25a092093621b125a456667ef611dfd318f2c997e4868",
-      "git_blob": "17371e6d748be685802a73ff97fb2b9814e1fc57"
+      "git_blob": "17371e6d748be685802a73ff97fb2b9814e1fc57",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-strict.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-strict.log.gz",
       "size": 147,
       "sha256": "4f6d3742e428cb97b7f25a092093621b125a456667ef611dfd318f2c997e4868",
-      "git_blob": "17371e6d748be685802a73ff97fb2b9814e1fc57"
+      "git_blob": "17371e6d748be685802a73ff97fb2b9814e1fc57",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-targets.json.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-targets.json.gz",
       "size": 149476,
       "sha256": "e5ae4ddd96521e0977925a42b3a14f81dc593bd2a25010658e65b40fd9c439c2",
-      "git_blob": "c8c7338b65759629a588b6b2b9a69bef15073f56"
+      "git_blob": "c8c7338b65759629a588b6b2b9a69bef15073f56",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-test.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-test.log.gz",
       "size": 2021,
       "sha256": "856d2ae721027724e54b60d87b3119af906aa3284bd365c8c79e116401843d7b",
-      "git_blob": "9243d7844ec585e39156c1c3bf7e20102c401c63"
+      "git_blob": "9243d7844ec585e39156c1c3bf7e20102c401c63",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-tests.xml.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-tests.xml.gz",
       "size": 8720,
       "sha256": "d82f226b43e959c8266cefbc1b6240758e6f4b2528864773fe8c1227fb2bca5d",
-      "git_blob": "4d94209ad48accc859eca1c9109e5e0573c3ce36"
+      "git_blob": "4d94209ad48accc859eca1c9109e5e0573c3ce36",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-zero-fortran.json.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-zero-fortran.json.gz",
       "size": 8192,
       "sha256": "9493a543a147c9f68ecc653e16da475ef25debc4368763e602e5d4488c3a3f3a",
-      "git_blob": "cc4a6a411dd0f71db6244b36a31dd3322752cf16"
+      "git_blob": "cc4a6a411dd0f71db6244b36a31dd3322752cf16",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/linux-gnu-zero-fortran.log.gz",
       "path": "history/validation/strict-layer-linux/linux-gnu-zero-fortran.log.gz",
       "size": 518,
       "sha256": "a401d51d881594d339a87473c827e069632317d0d7195da89df9249794ca7bae",
-      "git_blob": "9d8820d647e765919ea246e4834a050263be9d47"
+      "git_blob": "9d8820d647e765919ea246e4834a050263be9d47",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/package-binding.json.gz",
       "path": "history/validation/strict-layer-linux/package-binding.json.gz",
       "size": 1055,
       "sha256": "c8ac58c0dc220d622b7f4583fc7d3202430db2a7076c41432dd3401cc4da830e",
-      "git_blob": "329a6bee0a80ebc803a1c7f6884b86b57aed0087"
+      "git_blob": "329a6bee0a80ebc803a1c7f6884b86b57aed0087",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/package_binding.py.gz",
       "path": "history/validation/strict-layer-linux/package_binding.py.gz",
       "size": 1259,
       "sha256": "842b85a66d55d999543ec399fbed7e103cab1671c13c210bc477d2ea42bdd759",
-      "git_blob": "84106933bd9945dc15449532f0bdc99a6dbc4465"
+      "git_blob": "84106933bd9945dc15449532f0bdc99a6dbc4465",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/package_finish.sh.gz",
       "path": "history/validation/strict-layer-linux/package_finish.sh.gz",
       "size": 301,
       "sha256": "689110db15a7ef2d8b3198e1e85a0f0017e80c2321fd4ddb1a9930d0061cd5f5",
-      "git_blob": "b07f9595b505d05a81193fdac2e50b93f03ff5d5"
+      "git_blob": "b07f9595b505d05a81193fdac2e50b93f03ff5d5",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-02-cli_metadata.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/portable-02-cli_metadata.stderr.log.gz",
       "size": 2552,
       "sha256": "2178441500bd7a42392d0f6aead783885976e5049c71de9f9e51522ccb673bc8",
-      "git_blob": "3e713bcff7505925a84bae5e3afa4646c06dcb96"
+      "git_blob": "3e713bcff7505925a84bae5e3afa4646c06dcb96",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-02-cli_metadata.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/portable-02-cli_metadata.stdout.log.gz",
       "size": 105,
       "sha256": "aa6c8ffd20b8732c8000448c115c06f827ac7ca087108f818532e4cf89c44eaf",
-      "git_blob": "c2a0e1bf792129056f5a37d1f0fd7ec342d7602e"
+      "git_blob": "c2a0e1bf792129056f5a37d1f0fd7ec342d7602e",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-02-gui_pattern.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/portable-02-gui_pattern.stderr.log.gz",
       "size": 3968,
       "sha256": "d6a9b1c41644797a6513a1f46b8cb0a49186be0fd614ce921ec063b70a645546",
-      "git_blob": "c69ae268f53f60fa506b8e987f7f5b1e882a05c9"
+      "git_blob": "c69ae268f53f60fa506b8e987f7f5b1e882a05c9",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-02-gui_pattern.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/portable-02-gui_pattern.stdout.log.gz",
       "size": 20,
       "sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e",
-      "git_blob": "ae211a2cb77f6830fe3b183a87963fc514435a29"
+      "git_blob": "ae211a2cb77f6830fe3b183a87963fc514435a29",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-02-gui_search.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/portable-02-gui_search.stderr.log.gz",
       "size": 4092,
       "sha256": "9995852711160d27d3b0f4b3fcafc297b356615fe0b18c1c8ed2c91ba0b87d50",
-      "git_blob": "5f0e6ec2306c993511017be2c92d21178752d442"
+      "git_blob": "5f0e6ec2306c993511017be2c92d21178752d442",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-02-gui_search.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/portable-02-gui_search.stdout.log.gz",
       "size": 20,
       "sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e",
-      "git_blob": "ae211a2cb77f6830fe3b183a87963fc514435a29"
+      "git_blob": "ae211a2cb77f6830fe3b183a87963fc514435a29",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-02-gui_xcb_search.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/portable-02-gui_xcb_search.stderr.log.gz",
       "size": 4090,
       "sha256": "1bed8ad9260a5a927685cdafff229345793605d9c293372433725b0477f92cc1",
-      "git_blob": "ff8b7c65542c7ebfc975f04bc14c84afb926fd6d"
+      "git_blob": "ff8b7c65542c7ebfc975f04bc14c84afb926fd6d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-02-gui_xcb_search.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/portable-02-gui_xcb_search.stdout.log.gz",
       "size": 20,
       "sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e",
-      "git_blob": "ae211a2cb77f6830fe3b183a87963fc514435a29"
+      "git_blob": "ae211a2cb77f6830fe3b183a87963fc514435a29",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-02-runtime.json.gz",
       "path": "history/validation/strict-layer-linux/portable-02-runtime.json.gz",
       "size": 15133,
       "sha256": "781f8ccd01cc5c5fccc6845b1199f972967217bbcb326c07637b361b061e36db",
-      "git_blob": "26ab8af3981e201460412c2dc2a4f25db097167e"
+      "git_blob": "26ab8af3981e201460412c2dc2a4f25db097167e",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-02-sqlite_create.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/portable-02-sqlite_create.stderr.log.gz",
       "size": 2507,
       "sha256": "7275cdebeb01826c7385e6511bcca37ef66327f7399e83c433c43a8e6bfbc4f1",
-      "git_blob": "526cfc62c7c7efe593bd129352f40161eb062ed4"
+      "git_blob": "526cfc62c7c7efe593bd129352f40161eb062ed4",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-02-sqlite_create.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/portable-02-sqlite_create.stdout.log.gz",
       "size": 143,
       "sha256": "3efe0916adcb93719cdc2120872d2784c7717629d020809740b0b5f733f272ab",
-      "git_blob": "230c3a877324e070f4a036660823b62b8757304e"
+      "git_blob": "230c3a877324e070f4a036660823b62b8757304e",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-02-version.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/portable-02-version.stderr.log.gz",
       "size": 2117,
       "sha256": "532a86f56246d3cd3d7138a3af655f11c4b1d0902675e9437bce3f149f31beef",
-      "git_blob": "8f0d7cfe97ea425624d605f228a90875e0b1252f"
+      "git_blob": "8f0d7cfe97ea425624d605f228a90875e0b1252f",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-02-version.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/portable-02-version.stdout.log.gz",
       "size": 152,
       "sha256": "b36afedab1a750150d312394c757ae80c06caf20a4a2597eaf64017891ad8e37",
-      "git_blob": "7dc8339691c20e2dd74073b3306aa928c39cfb71"
+      "git_blob": "7dc8339691c20e2dd74073b3306aa928c39cfb71",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-03-cli_metadata.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/portable-03-cli_metadata.stderr.log.gz",
       "size": 2553,
       "sha256": "66ada45eead249219a91f4e3311cbd7883b53a29c0fffd92c01e9ce3c71a46f6",
-      "git_blob": "15598b0f70027cd1bc30a7f4dea6176d1c608f37"
+      "git_blob": "15598b0f70027cd1bc30a7f4dea6176d1c608f37",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-03-cli_metadata.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/portable-03-cli_metadata.stdout.log.gz",
       "size": 105,
       "sha256": "aa6c8ffd20b8732c8000448c115c06f827ac7ca087108f818532e4cf89c44eaf",
-      "git_blob": "c2a0e1bf792129056f5a37d1f0fd7ec342d7602e"
+      "git_blob": "c2a0e1bf792129056f5a37d1f0fd7ec342d7602e",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-03-gui_pattern.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/portable-03-gui_pattern.stderr.log.gz",
       "size": 3963,
       "sha256": "e024c9d6d8a5f1d1f692111f93d4b6504763702b84250b1869c7c3e678f71f32",
-      "git_blob": "baa65da30fc24efe5c5b43fe12d3a6f7e6f88f0b"
+      "git_blob": "baa65da30fc24efe5c5b43fe12d3a6f7e6f88f0b",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-03-gui_pattern.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/portable-03-gui_pattern.stdout.log.gz",
       "size": 20,
       "sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e",
-      "git_blob": "ae211a2cb77f6830fe3b183a87963fc514435a29"
+      "git_blob": "ae211a2cb77f6830fe3b183a87963fc514435a29",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-03-gui_search.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/portable-03-gui_search.stderr.log.gz",
       "size": 4089,
       "sha256": "5ac35775ef50b79d3d9fa20c9790a81bc1a87461fd1ccb9e1997d6f4c3f2dff4",
-      "git_blob": "9f186d28b242bb379e5413b5d3bac86c11f6da30"
+      "git_blob": "9f186d28b242bb379e5413b5d3bac86c11f6da30",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-03-gui_search.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/portable-03-gui_search.stdout.log.gz",
       "size": 20,
       "sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e",
-      "git_blob": "ae211a2cb77f6830fe3b183a87963fc514435a29"
+      "git_blob": "ae211a2cb77f6830fe3b183a87963fc514435a29",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-03-gui_xcb_search.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/portable-03-gui_xcb_search.stderr.log.gz",
       "size": 4088,
       "sha256": "86632ba8253bc430c656fadc65e6fa4037d85dfdfb14551e576b2bd9569f6246",
-      "git_blob": "74b70cfca14ae0b95768a6d5ea14c6936bcd5b1f"
+      "git_blob": "74b70cfca14ae0b95768a6d5ea14c6936bcd5b1f",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-03-gui_xcb_search.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/portable-03-gui_xcb_search.stdout.log.gz",
       "size": 20,
       "sha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e",
-      "git_blob": "ae211a2cb77f6830fe3b183a87963fc514435a29"
+      "git_blob": "ae211a2cb77f6830fe3b183a87963fc514435a29",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-03-runtime.json.gz",
       "path": "history/validation/strict-layer-linux/portable-03-runtime.json.gz",
       "size": 15936,
       "sha256": "f6fbd2fe5fa0e6063dfe8fc01b933aabd8fcd36c30941b0c392ca86821761b8f",
-      "git_blob": "d3711e35133ce5e2664660ba394294db2a52c8d5"
+      "git_blob": "d3711e35133ce5e2664660ba394294db2a52c8d5",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-03-sqlite_create.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/portable-03-sqlite_create.stderr.log.gz",
       "size": 2507,
       "sha256": "443ab664dc5d9968d7e61671a59e30ee85a84d95456ff5cf5304795edc5c146c",
-      "git_blob": "a0d0e9ce4e3b1d4baf425572fc9939f05259c341"
+      "git_blob": "a0d0e9ce4e3b1d4baf425572fc9939f05259c341",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-03-sqlite_create.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/portable-03-sqlite_create.stdout.log.gz",
       "size": 143,
       "sha256": "2919cf3bb9505a17cb3b0bac52ba591d8a1952700b024f79ec92171373a2934c",
-      "git_blob": "0f89b2c33ca43f29dafecfa1d8d498dc105961f9"
+      "git_blob": "0f89b2c33ca43f29dafecfa1d8d498dc105961f9",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-03-version.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/portable-03-version.stderr.log.gz",
       "size": 2118,
       "sha256": "457e550cd7ed6c46dddb845eab56c762394f611775484f7af50a7571f21594e5",
-      "git_blob": "d37feaa9d59376b4a7666a9cee6544eeeaf06af6"
+      "git_blob": "d37feaa9d59376b4a7666a9cee6544eeeaf06af6",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-03-version.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/portable-03-version.stdout.log.gz",
       "size": 152,
       "sha256": "b36afedab1a750150d312394c757ae80c06caf20a4a2597eaf64017891ad8e37",
-      "git_blob": "7dc8339691c20e2dd74073b3306aa928c39cfb71"
+      "git_blob": "7dc8339691c20e2dd74073b3306aa928c39cfb71",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-cli_metadata.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/portable-cli_metadata.stderr.log.gz",
       "size": 2552,
       "sha256": "b27e396193dd600641e3a1f0a9651ae9a14415f69e722682ff1a213d75b3cc2f",
-      "git_blob": "f2b10b67cb8b8ec3b2d7426b626f8592e774efd0"
+      "git_blob": "f2b10b67cb8b8ec3b2d7426b626f8592e774efd0",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-cli_metadata.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/portable-cli_metadata.stdout.log.gz",
       "size": 105,
       "sha256": "aa6c8ffd20b8732c8000448c115c06f827ac7ca087108f818532e4cf89c44eaf",
-      "git_blob": "c2a0e1bf792129056f5a37d1f0fd7ec342d7602e"
+      "git_blob": "c2a0e1bf792129056f5a37d1f0fd7ec342d7602e",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-gui_offscreen_search.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/portable-gui_offscreen_search.stderr.log.gz",
       "size": 2809,
       "sha256": "b6b965d9cf9823617d1a9401237f2d03b760773248d53d367c55a092ac8dace2",
-      "git_blob": "3c78fa39fdc5469a61a6629174b23956355a7ba2"
+      "git_blob": "3c78fa39fdc5469a61a6629174b23956355a7ba2",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-gui_offscreen_search.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/portable-gui_offscreen_search.stdout.log.gz",
       "size": 105,
       "sha256": "aa6c8ffd20b8732c8000448c115c06f827ac7ca087108f818532e4cf89c44eaf",
-      "git_blob": "c2a0e1bf792129056f5a37d1f0fd7ec342d7602e"
+      "git_blob": "c2a0e1bf792129056f5a37d1f0fd7ec342d7602e",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-runtime.json.gz",
       "path": "history/validation/strict-layer-linux/portable-runtime.json.gz",
       "size": 502,
       "sha256": "ad6ad2966bdb24efe580c4288f018a5a4195b8c79885b4036d1f43c40085ecd5",
-      "git_blob": "9b043bcae0462c001d67903cfe07d2a3901bd07a"
+      "git_blob": "9b043bcae0462c001d67903cfe07d2a3901bd07a",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-sqlite_create.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/portable-sqlite_create.stderr.log.gz",
       "size": 2507,
       "sha256": "f1d8824e87b6377f3f5a69fc7fa6a8db7b800c6d85baca829d3bc7ae084ffe56",
-      "git_blob": "56356f1f9573f67f7e1f94b8d455fc96febbfb43"
+      "git_blob": "56356f1f9573f67f7e1f94b8d455fc96febbfb43",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-sqlite_create.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/portable-sqlite_create.stdout.log.gz",
       "size": 141,
       "sha256": "f46084468dfd27d537a3e5bac70bf74b8d34ccabf3fbb579daaaf8768ec03b27",
-      "git_blob": "8614f11941231bd1c22eb8198365cd759c2f88a6"
+      "git_blob": "8614f11941231bd1c22eb8198365cd759c2f88a6",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-version.stderr.log.gz",
       "path": "history/validation/strict-layer-linux/portable-version.stderr.log.gz",
       "size": 2117,
       "sha256": "8c2a2088527fa6051eab9a98e273f2de7b7333c752e8d87d37ad9ed1ebd581b6",
-      "git_blob": "9de0cd729b62854bbc2ff46d10e79618beddba7d"
+      "git_blob": "9de0cd729b62854bbc2ff46d10e79618beddba7d",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/portable-version.stdout.log.gz",
       "path": "history/validation/strict-layer-linux/portable-version.stdout.log.gz",
       "size": 152,
       "sha256": "b36afedab1a750150d312394c757ae80c06caf20a4a2597eaf64017891ad8e37",
-      "git_blob": "7dc8339691c20e2dd74073b3306aa928c39cfb71"
+      "git_blob": "7dc8339691c20e2dd74073b3306aa928c39cfb71",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/public-headers.json.gz",
       "path": "history/validation/strict-layer-linux/public-headers.json.gz",
       "size": 881,
       "sha256": "29bd7899db5c0733454b597a474244792fc69dfb219d54a29d768a470662bf66",
-      "git_blob": "e5e106d1c99faa6348dc0935ac585058da06507a"
+      "git_blob": "e5e106d1c99faa6348dc0935ac585058da06507a",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/public_headers.py.gz",
       "path": "history/validation/strict-layer-linux/public_headers.py.gz",
       "size": 741,
       "sha256": "a187ac54e87acfcde2f67243fcbaaf2eb03280dc7c2818c49e53f2e8689df77f",
-      "git_blob": "64d0b3b85140e1711cae770ecf9cf04db92db06a"
+      "git_blob": "64d0b3b85140e1711cae770ecf9cf04db92db06a",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/runner.sh.gz",
       "path": "history/validation/strict-layer-linux/runner.sh.gz",
       "size": 2025,
       "sha256": "3243cb437a9a7528e157e3d7f9c387a3d81bd0eb4ea30dd5d743a0e73b22aa40",
-      "git_blob": "8035d509120d23c0d6f6c3c7bf098a58e1639764"
+      "git_blob": "8035d509120d23c0d6f6c3c7bf098a58e1639764",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/runtime-attempt-assessment.json.gz",
       "path": "history/validation/strict-layer-linux/runtime-attempt-assessment.json.gz",
       "size": 726,
       "sha256": "4f5cfb27ccab4433619f1e3483849137dd599404ac4e1ab17fa6e87d4b22fbf1",
-      "git_blob": "1e523863757de66e737a65f8fd0161dd995d1985"
+      "git_blob": "1e523863757de66e737a65f8fd0161dd995d1985",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/runtime_smoke-attempt1.py.gz",
       "path": "history/validation/strict-layer-linux/runtime_smoke-attempt1.py.gz",
       "size": 2452,
       "sha256": "530bee9c68a0cc4e9ebeff7fda88451ad0819f372a7cc76d1933e8650796c5be",
-      "git_blob": "9c44d207fe19df3d721c83b6e6e7ada817791e88"
+      "git_blob": "9c44d207fe19df3d721c83b6e6e7ada817791e88",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/runtime_smoke-attempt2.py.gz",
       "path": "history/validation/strict-layer-linux/runtime_smoke-attempt2.py.gz",
       "size": 2496,
       "sha256": "363b4cd90b679f9ac55a6cc819a4755cf8b2526430ec2725337792ff0abfb7c1",
-      "git_blob": "bac1201d1203fe4807b002d6fb66063420630900"
+      "git_blob": "bac1201d1203fe4807b002d6fb66063420630900",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/runtime_smoke.py.gz",
       "path": "history/validation/strict-layer-linux/runtime_smoke.py.gz",
       "size": 2723,
       "sha256": "f394fddedfd0ef76ea517a8e0e8a8f878dd8caba5a806be3c136a7e266974265",
-      "git_blob": "bf9dd7771242075094fe2e76dafd009bf9a10f4b"
+      "git_blob": "bf9dd7771242075094fe2e76dafd009bf9a10f4b",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/source-inputs.json.gz",
       "path": "history/validation/strict-layer-linux/source-inputs.json.gz",
       "size": 77637,
       "sha256": "838ade18a4bdfc69eb3e85d1265102e74161f438f261e09b543b84e959ef7d24",
-      "git_blob": "761dabad1716fda41173003febff0cf399365baa"
+      "git_blob": "761dabad1716fda41173003febff0cf399365baa",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/strict-deb.json.gz",
       "path": "history/validation/strict-layer-linux/strict-deb.json.gz",
       "size": 7470,
       "sha256": "27cdbdee80754b6d1fc87ac77d3058ea38fb3f7bc10376c2d4d358a5ef4d3c87",
-      "git_blob": "a5d961673847dfa5eabaad43e046417c14f918d5"
+      "git_blob": "a5d961673847dfa5eabaad43e046417c14f918d5",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/strict.json.gz",
       "path": "history/validation/strict-layer-linux/strict.json.gz",
       "size": 7470,
       "sha256": "27cdbdee80754b6d1fc87ac77d3058ea38fb3f7bc10376c2d4d358a5ef4d3c87",
-      "git_blob": "a5d961673847dfa5eabaad43e046417c14f918d5"
+      "git_blob": "a5d961673847dfa5eabaad43e046417c14f918d5",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/unrelated-files.json.gz",
       "path": "history/validation/strict-layer-linux/unrelated-files.json.gz",
       "size": 128,
       "sha256": "8150f3cdd141853aa7e408abf78bbb6cf69afc9ec668d0ecdce46c538533823a",
-      "git_blob": "1d844346071a06db8cb492b58f4559985a9d4c27"
+      "git_blob": "1d844346071a06db8cb492b58f4559985a9d4c27",
+      "storage": "archive"
     },
     {
       "original_path": "docs/validation/strict-layer-linux/windows-reuse.json.gz",
       "path": "history/validation/strict-layer-linux/windows-reuse.json.gz",
       "size": 304,
       "sha256": "535aeca3ab51a3ce1d51239b22539a8a6e762b7246876707f9b6bc3f833e3e3e",
-      "git_blob": "88c2a21f0891c6943ad0d4a0672743909ca7e847"
+      "git_blob": "88c2a21f0891c6943ad0d4a0672743909ca7e847",
+      "storage": "archive"
     }
-  ]
+  ],
+  "archive": {
+    "filename": "qualpf-history-41fb006c2951.zip",
+    "size": 1964384,
+    "sha256": "04ea136b9e67aa2720bfcb003ca5a7a3556d62a1fb6719b37e1a8b665f1dcaeb",
+    "source_commit": "41fb006c2951c0ad329d6deb92009cd87a7edf0f",
+    "location_hints": [
+      "D:/QualPF-evidence-backup/20261022/history-41fb006c2951/qualpf-history-41fb006c2951.zip"
+    ]
+  },
+  "snapshot_files": [
+    {
+      "path": "history/README.md",
+      "size": 12971,
+      "sha256": "ff28a2373d8ca4dd2ccded0273dee5a80c89e7de1af0f9839e877cf9ea6e3e60"
+    },
+    {
+      "path": "history/relocations.json",
+      "size": 110627,
+      "sha256": "31695499592a0ccfc04687dd1836ae405ce9e6a33be36d3505f8c5e9527febe1"
+    }
+  ],
+  "recovery_inventory": {
+    "source_path": "history/development/repository-consolidation/inventory.json",
+    "entry_commit": "8fdf0a71d7eef8b6801e5336720c19b3c936e18f",
+    "protection_tag": "phase37e-entry-20261009"
+  }
 }

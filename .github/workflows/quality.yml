@@ -16,6 +16,8 @@ jobs:
         run: python -B tools/agent/check_current_context.py --self-test
       - name: Check documentation ownership and preserved history
         run: python -B tools/validation/check_documentation.py --self-test
+      - name: Check history archive index and recovery negative controls
+        run: python -B tools/validation/history_archive.py --self-test
       - name: Check accepted project baseline
         run: python -B tools/validation/check_project_baseline.py --self-test
       - name: Check architecture boundaries

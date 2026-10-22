@@ -1,5 +1,83 @@
 {
   "schema": "qualpf.agent_task_state.v1",
   "baseline_ref": "docs/developer/project-baseline.json",
-  "active_task": null
+  "active_task": {
+    "id": "history-archive-retention",
+    "goal": "Retain necessary acceptance evidence and indexes; independently archive and verify full history",
+    "in_scope": [
+      "history/**",
+      "docs/**",
+      "tools/validation/*",
+      ".agent/*",
+      "README.md",
+      "CHANGELOG.md",
+      ".github/workflows/quality.yml",
+      ".gitattributes",
+      "tests/data/pfsm-quantification/README.md"
+    ],
+    "out_of_scope": [
+      "Product behavior, scientific assertions and reference resources",
+      "Push, history rewriting, pruning or removal of existing backup data"
+    ],
+    "status": "in_progress",
+    "base_commit": "41fb006c2951c0ad329d6deb92009cd87a7edf0f",
+    "checkpoint_commit": null,
+    "completed": [
+      "Saved independently hash-bound archive and standalone recovery kit",
+      "Restored and compared all 308 archive members before removing 290 redundant tracked files",
+      "Retained 16 exact acceptance originals and portable archive index; updated offline checks and navigation"
+    ],
+    "next_action": "Verify committed source package without external archive/Git requirements, then clear task handoff",
+    "blockers": [],
+    "checks": [
+      {
+        "command": "python -B tools/validation/history_archive.py --self-test",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/history-trim/archive-tests.log"
+      },
+      {
+        "command": "python -B tools/validation/history_archive.py --archive <independent ZIP> --restore-to build/history-trim/recovery-final",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/history-trim/recovery-final.log"
+      },
+      {
+        "command": "python -B tools/validation/check_project_baseline.py --self-test",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/history-trim/baseline.log"
+      },
+      {
+        "command": "python -B tools/validation/check_documentation.py --self-test",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/history-trim/documentation.log"
+      },
+      {
+        "command": "python -B tools/agent/check_current_context.py --self-test",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/history-trim/agent.log"
+      },
+      {
+        "command": "python -B tools/validation/check_product_identity.py --self-test",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/history-trim/identity.log"
+      },
+      {
+        "command": "python -B tools/validation/check_references.py",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/history-trim/references.log"
+      },
+      {
+        "command": "python -m mkdocs build --strict -f docs/mkdocs.yml",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/history-trim/mkdocs.log"
+      }
+    ]
+  }
 }

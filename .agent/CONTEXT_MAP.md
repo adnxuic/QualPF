@@ -21,7 +21,7 @@ the relevant evidence and report the discrepancy before changing accepted behavi
 | Change records and development documentation | [Changelog](../CHANGELOG.md), [contribution workflow](../docs/developer/building.md#contribution-workflow) | Update Unreleased and affected current guides for the authorized task |
 | Product identity and legacy settings import | [Compatibility allowlist](../docs/developer/architecture/compatibility-allowlist.json) | [Identity checker](../tools/validation/check_product_identity.py), [reviewed identity exceptions](../tools/validation/product-identity.json) |
 | Recorded project acceptance | [Project baseline](../docs/developer/project-baseline.json), [architecture entry](../docs/developer/architecture/README.md) | [Baseline checker](../tools/validation/check_project_baseline.py) |
-| Historical approval or frozen evidence | [Historical reports and recovery](../history/README.md) | Use its protected snapshot/catalog workflow only for the affected authority |
+| Historical approval or frozen evidence | [Historical reports and recovery](../history/README.md) | Use its protected snapshot/catalog workflow only for the affected authority; [archive tool](../tools/validation/history_archive.py) verifies or restores an explicitly supplied ZIP |
 | Documentation organization and publication | [Documentation ownership](../docs/README.md), [developer entry](../docs/developer/README.md) | [Documentation checker](../tools/validation/check_documentation.py), [MkDocs](../docs/mkdocs.yml), [PDF inputs](../docs/make_pdf.sh) |
 | Agent rules and task handoff | [POLICY](POLICY.md), [WORKFLOW](WORKFLOW.md), [TASK_STATE](TASK_STATE.json) | [Context checker](../tools/agent/check_current_context.py) |
 

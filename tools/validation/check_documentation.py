@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check documentation ownership, local navigation and preserved historical bytes."""
+"""Check documentation ownership, local navigation and retained evidence/indexes."""
 import argparse
 import hashlib
 import json
@@ -9,8 +9,10 @@ import sys
 import tempfile
 import unittest
 
+from history_archive import check_local
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "agent"))
-from check_current_context import check_links, relative, unique_object
+from check_current_context import check_links, unique_object
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = "history/relocations.json"
@@ -37,40 +39,7 @@ def current_markdown(root):
 
 def historical_files(root, errors):
     document = json.loads((root / MANIFEST).read_text(encoding="utf-8"), object_pairs_hook=unique_object)
-    if (not isinstance(document, dict) or document.get("schema") != "qualpf.history_relocations.v1"
-            or not re.fullmatch(r"[0-9a-f]{40}", str(document.get("source_commit", "")))
-            or not isinstance(document.get("files"), list) or not document["files"]):
-        errors.append("invalid history relocation manifest")
-        return
-    originals, destinations = set(), set()
-    for row in document["files"]:
-        if not isinstance(row, dict):
-            errors.append("invalid history relocation row")
-            continue
-        old, new = row.get("original_path"), row.get("path")
-        if (not relative(old) or not old.startswith("docs/") or not relative(new)
-                or not new.startswith("history/") or new in {MANIFEST, "history/README.md"}
-                or not re.fullmatch(r"[0-9a-f]{64}", str(row.get("sha256", "")))
-                or not re.fullmatch(r"[0-9a-f]{40}", str(row.get("git_blob", "")))
-                or type(row.get("size")) is not int or row["size"] < 0):
-            errors.append("invalid/unsafe historical identity: " + str(new))
-            continue
-        if old in originals or new in destinations:
-            errors.append("duplicate historical relocation: " + new)
-        originals.add(old)
-        destinations.add(new)
-        path = root / new
-        if not path.resolve().is_relative_to(root) or not path.is_file():
-            errors.append("missing/unsafe historical file: " + new)
-            continue
-        data = path.read_bytes()
-        if len(data) != row["size"] or hashlib.sha256(data).hexdigest() != row["sha256"]:
-            errors.append("changed historical bytes: " + new)
-    for path in (root / "history").rglob("*"):
-        if path.is_file():
-            name = path.relative_to(root).as_posix()
-            if name not in destinations | {MANIFEST, "history/README.md"}:
-                errors.append("unindexed historical file: " + name)
+    errors.extend(check_local(root, document))
 
 
 def check(root=ROOT):
@@ -131,9 +100,15 @@ def self_test():
             self.put("docs/make_pdf.sh", '"${SCRIPT_DIR}/user/index.md"\n')
             content = b"original failure\r\n"
             self.put("history/development/original.md", content)
-            self.manifest = dict(schema="qualpf.history_relocations.v1", source_commit="a" * 40,
+            self.manifest = dict(schema="qualpf.history_relocations.v2", source_commit="a" * 40,
+                                 archive=dict(filename="evidence.zip",size=1,sha256="c"*64,source_commit="b"*40,location_hints=[]),
+                                 snapshot_files=[dict(path=p,size=1,sha256="d"*64) for p in (MANIFEST,"history/README.md")],
+                                 recovery_inventory=dict(source_path="history/development/inventory.json",entry_commit="a"*40,protection_tag="original"),
                                  files=[dict(original_path="docs/development/original.md", path="history/development/original.md",
-                                             size=len(content), sha256=hashlib.sha256(content).hexdigest(), git_blob="b" * 40)])
+                                             size=len(content), sha256=hashlib.sha256(content).hexdigest(), git_blob="b" * 40,
+                                             storage="repository",retention_reason="Original acceptance"),
+                                        dict(original_path="docs/development/inventory.json",path="history/development/inventory.json",
+                                             size=1,sha256="e"*64,git_blob="c"*40,storage="archive")])
             self.put(MANIFEST, json.dumps(self.manifest))
 
         def put(self, name, content):
@@ -167,10 +142,10 @@ def self_test():
 
         def test_frozen_bytes_and_safe_mapping(self):
             self.put("history/development/original.md", b"original failure\n")
-            self.assertTrue(any("changed historical bytes" in e for e in check(self.root)))
+            self.assertTrue(any("changed retained history bytes" in e for e in check(self.root)))
             self.manifest["files"][0]["path"] = "history/../../outside.md"
             self.put(MANIFEST, json.dumps(self.manifest))
-            self.assertTrue(any("unsafe historical" in e for e in check(self.root)))
+            self.assertTrue(any("unsafe history member" in e for e in check(self.root)))
 
         def test_missing_duplicate_and_unindexed_evidence(self):
             (self.root / "history/development/original.md").unlink()
@@ -178,8 +153,11 @@ def self_test():
             self.put(MANIFEST, json.dumps(self.manifest))
             self.put("history/extra.md", "unindexed")
             errors = check(self.root)
-            for token in ("missing/unsafe historical", "duplicate historical", "unindexed historical"):
-                self.assertTrue(any(token in e for e in errors), token)
+            self.assertTrue(any("duplicate historical" in e for e in errors))
+            self.manifest["files"].pop()
+            self.put(MANIFEST, json.dumps(self.manifest))
+            for token in ("missing/unsafe retained", "unindexed or archived-only"):
+                self.assertTrue(any(token in e for e in check(self.root)), token)
 
     return unittest.TextTestRunner(verbosity=0).run(unittest.defaultTestLoader.loadTestsFromTestCase(Controls)).wasSuccessful()
 
@@ -198,5 +176,5 @@ if __name__ == "__main__":
     for error in errors:
         print("FAIL:", error)
     if not errors:
-        print("PASS: documentation ownership, navigation, PDF inputs and preserved history")
+        print("PASS: documentation ownership, navigation, PDF inputs, retained history and archive index")
     raise SystemExit(bool(errors))
