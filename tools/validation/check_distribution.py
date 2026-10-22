@@ -182,6 +182,12 @@ def release_errors(data, info):
     return errors
 
 
+def build_identity_errors(info, revision, current_version):
+    if info.get("source_revision") != revision or info.get("version") != current_version:
+        return ["build metadata is stale for the current revision/version; reconfigure and rebuild before packaging"]
+    return []
+
+
 def excluded_source(name, data):
     if name in data["excluded_legacy_assets"]:
         return True
@@ -394,6 +400,11 @@ def ifw_metadata_errors(root, stage, info, data):
                             ("ForcedInstallation", "true")):
         if package.findtext(field) != expected:
             errors.append("IFW component metadata mismatch: " + field)
+    script = relative(package_dir, package.findtext("Script") or "").read_text(encoding="utf-8")
+    if re.search(r"if\s*\(\s*true\s*\)", script) and "vc_redist.x64.exe" in script:
+        runtimes = list(stage.glob("packages/*/data/bin/vc_redist.x64.exe"))
+        if not any(path.is_file() for path in runtimes):
+            errors.append("MSVC IFW runtime bootstrap is missing; package from the matching Visual Studio developer shell")
     licenses = package.findall("Licenses/License")
     if len(licenses) != 1 or licenses[0].get("name") != data["product"]["license"]:
         errors.append("IFW installer does not display the application license")
@@ -433,6 +444,10 @@ def self_test():
             self.assertTrue(release_errors(data, info))
             info["source_dirty"], info["audit_only"] = False, True
             self.assertTrue(release_errors(data, info))
+            info["version"] = "1.0.0"
+            self.assertEqual(build_identity_errors(info, "a" * 40, "1.0.0"), [])
+            self.assertTrue(build_identity_errors(info, "b" * 40, "1.0.0"))
+            self.assertTrue(build_identity_errors(info, "a" * 40, "1.0.1"))
 
         def test_stage_notices_and_runtime_hash_binding(self):
             with tempfile.TemporaryDirectory() as directory:
@@ -536,7 +551,8 @@ def self_test():
                     (config / staged).write_bytes(original.encode())
                 config_text = '<Installer><Publisher>adnxuic</Publisher><Version>1.0.0</Version><InstallerApplicationIcon>cm_appicon</InstallerApplicationIcon><InstallerWindowIcon>cm_winicon.png</InstallerWindowIcon></Installer>'
                 (config / "config.xml").write_text(config_text, encoding="utf-8")
-                package = '<Package><Version>1.0.0</Version><Description>description</Description><ForcedInstallation>true</ForcedInstallation><Licenses><License name="GPL-3.0-only" file="LICENSE"/></Licenses></Package>'
+                package = '<Package><Version>1.0.0</Version><Description>description</Description><ForcedInstallation>true</ForcedInstallation><Script>installscript.qs</Script><Licenses><License name="GPL-3.0-only" file="LICENSE"/></Licenses></Package>'
+                (meta / "installscript.qs").write_text('if (false) { execute("vc_redist.x64.exe"); }', encoding="utf-8")
                 (meta / "package.xml").write_text(package, encoding="utf-8")
                 data, info = dict(product=dict(publisher="adnxuic", description="description", license="GPL-3.0-only")), dict(version="1.0.0")
                 self.assertEqual(ifw_metadata_errors(root, stage, info, data), [])
@@ -546,6 +562,12 @@ def self_test():
                 self.assertTrue(any("canonical GPL" in error for error in ifw_metadata_errors(root, stage, info, data)))
                 (meta / "package.xml").write_text(package.replace('<Licenses><License name="GPL-3.0-only" file="LICENSE"/></Licenses>', ''), encoding="utf-8")
                 self.assertTrue(any("display" in error for error in ifw_metadata_errors(root, stage, info, data)))
+                (meta / "installscript.qs").write_text('if (true) { execute("vc_redist.x64.exe"); }', encoding="utf-8")
+                self.assertTrue(any("runtime bootstrap" in error for error in ifw_metadata_errors(root, stage, info, data)))
+                runtime = stage / "packages/Unspecified/data/bin/vc_redist.x64.exe"
+                runtime.parent.mkdir(parents=True)
+                runtime.write_bytes(b"MZ runtime fixture")
+                self.assertFalse(any("runtime bootstrap" in error for error in ifw_metadata_errors(root, stage, info, data)))
     return unittest.TextTestRunner(verbosity=1).run(unittest.defaultTestLoader.loadTestsFromTestCase(Controls)).wasSuccessful()
 
 
@@ -592,8 +614,7 @@ def main():
     if args.build:
         info = read_json(args.build / "configured_files/distribution-build.json")
         revision, dirty = source_identity(root)
-        if args.release and revision != info["source_revision"]:
-            errors.append("build metadata is stale for the current committed revision")
+        errors.extend(build_identity_errors(info, revision, version(root)))
         info["source_dirty"] = info["source_dirty"] or dirty
     if args.kind == "DEB" and email_error(args.contact_email):
         errors.append(email_error(args.contact_email))

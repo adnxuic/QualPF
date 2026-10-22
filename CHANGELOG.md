@@ -17,6 +17,7 @@ reports are no longer used for routine development.
   explicit audit package labels and formal-release rejection of unresolved rights.
   DEB packaging now requires a real supplied maintainer contact email. Generated
   PDF manuals are installed only with matching documentation-source provenance.
+  IFW checks reject a missing MSVC runtime bootstrap and stale build identities.
 
 - Added GPL-3.0-only origin/modification notices, third-party license texts and a
   distribution rights inventory that keeps unresolved data, artwork and runtime

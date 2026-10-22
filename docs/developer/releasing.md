@@ -41,6 +41,8 @@ build metadata, missing corresponding source and incomplete package reviews.
 `-audit` filenames, audit provenance and a separate audit installer title/path.
 This flag does not waive licenses or clear redistribution. No tool here uploads
 or publishes artifacts.
+Both modes reject stale build revision/version metadata; reconfigure and rebuild
+after committing before pairing binary and source artifacts.
 
 ## Local package inspection
 
@@ -76,6 +78,9 @@ component labels are review aids, not inferred grants.
 IFW post-build checks also inspect generated installer/component XML, the displayed
 canonical license and the actual copied product icons. Component options are set
 in one call so later script configuration cannot discard the license.
+MSVC packaging must also run in the matching Visual Studio developer shell.
+If deployment omits the VC++ runtime bootstrap required by the installer script,
+the generated-IFW check rejects the artifact, including in audit mode.
 
 An existing local PDF is preserved but installed only with matching documentation
 input/PDF hashes from `docs/make_pdf.sh`. The generated proof stays under
