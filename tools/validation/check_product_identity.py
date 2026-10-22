@@ -57,6 +57,8 @@ def check(root=ROOT, build=None):
     if identity["publisher"] != "adnxuic" or identity["license"] != "GPL-3.0-only":
         errors.append("unexpected independent publisher or application license")
     readme = (root / "README.md").read_text(encoding="utf-8-sig")
+    if identity["description"] not in readme:
+        errors.append("README description contradicts distribution identity")
     if "GPL-3.0-only" not in readme or "License-LGPL" in readme or "GNU Lesser General Public License" in readme:
         errors.append("README application license contradicts distribution identity")
     packaging = (root / "cmake/packaging/CPack.cmake").read_text(encoding="utf-8-sig")
@@ -74,6 +76,10 @@ def check(root=ROOT, build=None):
         errors.append("AppImage staging must use the independent QualPF icon")
     if "https://ccorrado71.github.io/qualx3/" in gui or "softwareic/expo/contact-us" in gui:
         errors.append("product help/support points at another product")
+    help_ui = ET.parse(root / "src/gui/mainwindow.ui")
+    help_action = help_ui.find(".//action[@name='actionDocumentation_HTML']/property[@name='text']/string")
+    if help_action is None or help_action.text != "User Manual (HTML)":
+        errors.append("HTML Help must identify the current user manual")
     if build is not None:
         cache = (build / "CMakeCache.txt").read_text(encoding="utf-8-sig")
         if "CMAKE_PROJECT_NAME:STATIC=QualPF" not in cache:
@@ -96,7 +102,7 @@ def self_test():
             with tempfile.TemporaryDirectory() as directory:
                 root = Path(directory)
                 names = {"CMakeLists.txt", "CMakePresets.json", "README.md", ".gitignore",
-                         "docs/mkdocs.yml", "docs/make_pdf.sh", "src/gui/mainwindow.cpp",
+                         "docs/mkdocs.yml", "docs/make_pdf.sh", "src/gui/mainwindow.cpp", "src/gui/mainwindow.ui",
                          "tools/validation/product-identity.json", "deploy/distribution.json",
                          "cmake/packaging/CPack.cmake", "src/gui/resources/resource.qrc",
                          "scripts/package/build_appimage.sh"}
@@ -115,6 +121,10 @@ def self_test():
                 readme.write_text("QualPF uses the GNU Lesser General Public License\n", encoding="utf-8")
                 self.assertTrue(any("README application license" in error for error in check(root)[0]))
                 readme.write_bytes(original)
+                description = json.loads((root / "deploy/distribution.json").read_bytes())["product"]["description"]
+                readme.write_text(original.decode().replace(description, "Crystal structure solution"), encoding="utf-8")
+                self.assertTrue(any("README description" in error for error in check(root)[0]))
+                readme.write_bytes(original)
                 cpack = root / "cmake/packaging/CPack.cmake"
                 original_cpack = cpack.read_bytes()
                 cpack.write_text(original_cpack.decode().replace('${QUALPF_PUBLISHER}', 'Corrado Cuocci'), encoding="utf-8")
@@ -125,6 +135,11 @@ def self_test():
                 resource.write_text(original_qrc.decode().replace("</qresource>", "<file>images/qualx.png</file></qresource>", 1), encoding="utf-8")
                 self.assertTrue(any("legacy brand image" in error for error in check(root)[0]))
                 resource.write_bytes(original_qrc)
+                ui = root / "src/gui/mainwindow.ui"
+                original_ui = ui.read_bytes()
+                ui.write_text(original_ui.decode().replace("User Manual (HTML)", "QualX Reference Documentation (HTML)"), encoding="utf-8")
+                self.assertTrue(any("HTML Help" in error for error in check(root)[0]))
+                ui.write_bytes(original_ui)
                 inventory["allowed_old_name_lines"]["src/infrastructure/settings/settings_migration.cpp"] = []
                 (root / "tools/validation/product-identity.json").write_text(json.dumps(inventory), encoding="utf-8")
                 self.assertTrue(any("settings_migration.cpp" in error for error in check(root)[0]))

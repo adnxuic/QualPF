@@ -987,7 +987,7 @@
      <normaloff>:/icons/help-html.png</normaloff>:/icons/help-html.png</iconset>
    </property>
    <property name="text">
-    <string>QualX Reference Documentation (HTML)</string>
+    <string>User Manual (HTML)</string>
    </property>
   </action>
   <action name="actionDocumentation_PDF">

@@ -1,6 +1,6 @@
 cmake_policy(VERSION 3.20)
 set(_qualpf_args --root "@PROJECT_SOURCE_DIR@" --build "@CMAKE_BINARY_DIR@"
-    --record-artifacts "@CMAKE_BINARY_DIR@/packages/${CPACK_PACKAGE_FILE_NAME}-artifacts.json")
+    --record-artifacts "${CPACK_PACKAGE_DIRECTORY}/${CPACK_PACKAGE_FILE_NAME}-artifacts.json")
 foreach(_qualpf_artifact IN LISTS CPACK_PACKAGE_FILES)
     list(APPEND _qualpf_args --artifact "${_qualpf_artifact}")
 endforeach()

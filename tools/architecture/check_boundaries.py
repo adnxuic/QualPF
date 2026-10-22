@@ -66,6 +66,8 @@ def source_manifest(root=ROOT):
     prefixes = ('src/', 'apps/', 'cmake/', 'tests/', 'third_party/', 'configured/', 'tools/', 'share/', 'deploy/')
     exact = {'CMakeLists.txt', 'CMakePresets.json', '.gitattributes', 'AGENTS.md'}
     try:
+        if not (root / '.git').exists():
+            raise OSError('No project Git metadata')
         names = subprocess.check_output(['git', 'ls-files', '--cached', '--others', '--exclude-standard'],
                                         cwd=root, text=True, encoding='utf-8', stderr=subprocess.DEVNULL).splitlines()
     except (OSError, subprocess.CalledProcessError):
@@ -175,9 +177,8 @@ def self_test():
             path = archive / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(b'original')
-        # Force the archive path even if the test temporary directory happens
-        # to be inside an unrelated Git checkout.
-        with patch.object(subprocess, 'check_output', side_effect=OSError('No Git metadata')):
+        # A source archive must never borrow a parent checkout's file list.
+        with patch.object(subprocess, 'check_output', return_value='src/borrowed.cpp\n') as lookup:
             initial = source_manifest(archive)
             assert set(initial) == source_names
             (archive / 'tests/data/reference.cif').write_bytes(b'changed')
@@ -187,6 +188,7 @@ def self_test():
             assert 'src/added.cpp' in source_manifest(archive)
             (archive / 'src/owned.cpp').unlink()
             assert 'src/owned.cpp' not in source_manifest(archive)
+            lookup.assert_not_called()
     engine_call = r'\bSearchEngine\s*\{[^{}]*\}\s*\.\s*run\s*\('
     assert re.search(engine_call, 'SearchEngine{}.run(input, reader, context)')
     assert re.search(engine_call, 'SearchEngine{task.algorithms}.run(input, reader, context)')

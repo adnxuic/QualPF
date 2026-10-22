@@ -70,27 +70,37 @@ def git(root, *args):
     return subprocess.check_output(["git", "-C", str(root), *args], stderr=subprocess.PIPE)
 
 
+def extra_product_sources(root, files):
+    return [path.relative_to(root).as_posix()
+            for folder in ("apps", "src", "third_party", "cmake")
+            for path in (root / folder).rglob("*")
+            if path.is_file() and path.suffix not in {".pyc", ".pyo"}
+            and path.relative_to(root).as_posix() not in files]
+
+
 def source_identity(root):
     if (root / ".git").exists():
         revision = git(root, "rev-parse", "HEAD").decode().strip()
-        dirty = bool(git(root, "status", "--porcelain", "--untracked-files=no").strip())
+        dirty = bool(git(root, "status", "--porcelain", "--untracked-files=normal").strip())
         return revision, dirty
     if (root / STAMP).is_file():
         stamp = read_json(root / STAMP)
-        dirty = bool(stamp["source_dirty"]) or any(
+        dirty = bool(stamp["source_dirty"]) or bool(extra_product_sources(root, stamp["files"])) or any(
             not relative(root, name).is_file() or digest(relative(root, name)) != expected
             for name, expected in stamp["files"].items())
         return stamp["source_revision"], dirty
     return "unknown", True
 
 
-def build_info(root, compiler="unknown", qt="unknown", audit=False, eigen="unknown", boost="unknown"):
+def build_info(root, compiler="unknown", qt="unknown", audit=False, eigen="unknown", boost="unknown",
+               cmake="unknown", generator="unknown", build_tool="unknown"):
     revision, dirty = source_identity(root)
     release_version = version(root)
     product = read_json(root / MANIFEST)["product"]
     return dict(schema="qualpf.distribution_build.v1", product="QualPF", version=release_version,
                 license=product["license"], publisher=product["publisher"], source_revision=revision,
                 source_dirty=dirty, compiler=compiler, qt=qt, eigen=eigen, boost=boost,
+                cmake=cmake, generator=generator, build_tool=build_tool,
                 audit_only=audit, source_artifact=f"qualpf-{release_version}-Source{'-audit' if audit else ''}.tar.gz")
 
 
@@ -237,6 +247,8 @@ def check_source_tree(root, data):
             errors.append("excluded legacy input in source delivery: " + name)
     if (root / ".git").exists():
         errors.append("source delivery must not depend on Git metadata")
+    errors.extend("unlisted product input in source delivery: " + name
+                  for name in extra_product_sources(root, stamp["files"]))
     return errors
 
 
@@ -245,7 +257,7 @@ def runtime_component(name):
     base = Path(lower).name
     if base in {"qualpf", "qualpf.exe"}:
         return "qualpf-additions"
-    if any(token in base for token in ("vcruntime", "msvcp", "vc_redist", "concrt")):
+    if any(token in base for token in ("vcruntime", "msvcp", "vc_redist", "concrt", "vcomp")):
         return "msvc-runtime"
     if any(token in base for token in ("libgcc", "libstdc++", "libgomp", "libwinpthread")):
         return "gnu-mingw-runtime"
@@ -471,6 +483,15 @@ def self_test():
                 (root / "table.inc").write_bytes(b"modified table")
                 self.assertTrue(any("changed/missing" in error for error in check_source_tree(root, data)))
 
+        def test_added_source_marks_delivered_revision_dirty(self):
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                write_json(root / STAMP, dict(source_revision="a" * 40, source_dirty=False, files={}))
+                self.assertEqual(source_identity(root), ("a" * 40, False))
+                (root / "src").mkdir()
+                (root / "src/added.cpp").write_bytes(b"new product source")
+                self.assertEqual(source_identity(root), ("a" * 40, True))
+
         def test_stale_generated_manual(self):
             with tempfile.TemporaryDirectory() as directory:
                 root = Path(directory)
@@ -548,6 +569,9 @@ def main():
     parser.add_argument("--qt-version", default="unknown")
     parser.add_argument("--eigen-version", default="unknown")
     parser.add_argument("--boost-version", default="unknown")
+    parser.add_argument("--cmake-version", default="unknown")
+    parser.add_argument("--generator", default="unknown")
+    parser.add_argument("--build-tool", default="unknown")
     parser.add_argument("--output", type=Path)
     parser.add_argument("--record-artifacts", type=Path)
     parser.add_argument("--artifact", action="append", type=Path, default=[])
@@ -563,7 +587,8 @@ def main():
     errors, data = check_inputs(root)
     if args.prepare_source and not (args.release or args.audit_only):
         errors.append("source export requires explicit --release or --audit-only")
-    info = build_info(root, args.compiler, args.qt_version, args.audit_only, args.eigen_version, args.boost_version)
+    info = build_info(root, args.compiler, args.qt_version, args.audit_only, args.eigen_version,
+                      args.boost_version, args.cmake_version, args.generator, args.build_tool)
     if args.build:
         info = read_json(args.build / "configured_files/distribution-build.json")
         revision, dirty = source_identity(root)

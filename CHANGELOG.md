@@ -38,6 +38,8 @@ reports are no longer used for routine development.
   Publisher, support, license and help metadata share one distribution inventory;
   AppImage staging now uses the QualPF icon. Added methodological acknowledgment
   of Match!'s public PFSM documentation, separate from code provenance/licensing.
+  The HTML Help action now identifies the current user manual. Source archive
+  checks bind delivered inputs independently of any parent Git checkout.
 
 - Introduced a QualPF application icon showing a discrete diffraction line
   broadening into a continuous PFSM peak. Updated the Qt window icon, multi-size

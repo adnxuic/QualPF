@@ -49,10 +49,19 @@ if(EXISTS "${QUALPF_CORE_BOOST_INCLUDE_DIR}/boost/version.hpp")
     math(EXPR qualpf_boost_patch "${qualpf_boost_number} % 100")
     set(QUALPF_BOOST_VERSION "${qualpf_boost_major}.${qualpf_boost_minor}.${qualpf_boost_patch}")
 endif()
+set(QUALPF_BUILD_TOOL_VERSION "unknown")
+if(EXISTS "${CMAKE_MAKE_PROGRAM}")
+    execute_process(COMMAND "${CMAKE_MAKE_PROGRAM}" --version
+        OUTPUT_VARIABLE distribution_tool_version OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+    string(REGEX MATCH "^[^\r\n]+" distribution_tool_version "${distribution_tool_version}")
+    get_filename_component(distribution_tool_name "${CMAKE_MAKE_PROGRAM}" NAME)
+    set(QUALPF_BUILD_TOOL_VERSION "${distribution_tool_name} ${distribution_tool_version}")
+endif()
 set(distribution_arguments --root "${PROJECT_SOURCE_DIR}"
     --write-build-info "${CMAKE_BINARY_DIR}/configured_files/distribution-build.json"
     --compiler "${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION} (${CMAKE_SYSTEM_NAME}/${CMAKE_SYSTEM_PROCESSOR})"
-    --qt-version "${Qt6_VERSION}" --eigen-version "${QUALPF_EIGEN_VERSION}" --boost-version "${QUALPF_BOOST_VERSION}")
+    --qt-version "${Qt6_VERSION}" --eigen-version "${QUALPF_EIGEN_VERSION}" --boost-version "${QUALPF_BOOST_VERSION}"
+    --cmake-version "${CMAKE_VERSION}" --generator "${CMAKE_GENERATOR}" --build-tool "${QUALPF_BUILD_TOOL_VERSION}")
 if(QUALPF_DISTRIBUTION_AUDIT_ONLY)
     list(APPEND distribution_arguments --audit-only)
 endif()

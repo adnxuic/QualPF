@@ -32,16 +32,21 @@
     ],
     "status": "in_progress",
     "base_commit": "744612d19dc1b3f78856e5c68bc990ea39871f3b",
-    "checkpoint_commit": "6f3f84fe2089d9da25cd8ea340389940395364ba",
+    "checkpoint_commit": "322351d93000ae13b15f8a98b50b7cea186f1754",
     "completed": [
       "Recorded upstream GPLv3 grant evidence, component obligations, historical installer agreement identity and unresolved scientific-data/artwork rights.",
       "Added application/third-party notices and full supplemental license texts; corrected current README license and maintainer.",
       "Implemented shared independent metadata, QualPF 1.0.0, native scalable About and offline legal resources; preserved internal settings identities.",
       "Added README methodological acknowledgment of Match public PFSM documentation, distinct from code provenance; fixed AppImage icon staging and product help/support routes.",
       "Integrated staged/runtime inventories, tracked corresponding-source exports with preferred generator inputs, source/tool/artifact hashes and formal/audit package rejection controls; stale generated PDF inputs are excluded.",
-      "Generated and inspected IFW/TGZ audit artifacts; repaired CPack script policies and component-option replacement that omitted the installer GPL; added generated XML/license/icon rejection tests."
+      "Generated and inspected IFW/TGZ audit artifacts; repaired CPack script policies and component-option replacement that omitted the installer GPL; added generated XML/license/icon rejection tests.",
+      "Verified clean audit IFW/source artifacts at commit 322351d9 with exact revision/version/toolchain and SHA-256 sidecars; actual GUI displayed canonical GPL and independent branding.",
+      "Verified installed native startup, SQLite creation/search and unchanged legacy settings import with system-only PATH; offline About/legal texts rendered and task-owned installation/shortcuts were removed (user completed the final maintenance window after a computer-control policy block).",
+      "Checked delivered source identities and all four table generators without Git metadata; fixed source boundary binding under a parent checkout and current HTML Help wording.",
+      "Completed GCC normal suite: 124/126 in the restricted sandbox; both unchanged native-registry/loopback controls passed with native permissions. Original failures remain recorded.",
+      "Final help/source-binding fixes passed all 31 affected GCC GUI/CLI/distribution/native controls after rebuilding; source and artifact identities additionally record CMake, generator and build-tool versions."
     ],
-    "next_action": "Build and inspect actual IFW/TGZ audit artifacts at a clean commit, compile the extracted source without Git, validate installer isolation and complete supported Windows normal regressions.",
+    "next_action": "Verify the final GUI/source-export repairs, locally commit, rebuild clean audit artifacts, compile the complete extracted product and run the supported MSVC normal suite with native permissions.",
     "blockers": [
       "Formal distribution still requires scientific-data/inherited-asset rights and package-specific runtime/source reviews.",
       "DEB contact email is not supplied. The local WSL is Ubuntu 22.04 without Qt, and the Docker engine is unavailable; supported Linux validation remains pending."
@@ -130,6 +135,42 @@
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": "build/distribution-readiness/cpack-ifw-02.log"
+      },
+      {
+        "command": "ctest --test-dir build/distribution-readiness/windows-gnu -L normal",
+        "result": "FAIL",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/distribution-readiness/gnu-raw/windows-gnu-tests.xml"
+      },
+      {
+        "command": "ctest --test-dir build/distribution-readiness/windows-gnu -R qualpf.settings.migration|qualpf.platform.update",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/distribution-readiness/gnu-raw/native-permissions-retest-01.xml"
+      },
+      {
+        "command": "installed QualPF native startup/database/settings/offline notices and uninstall",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/distribution-readiness/uninstall-observations-02.json"
+      },
+      {
+        "command": "bash packaging syntax and native Linux environment inspection",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/distribution-readiness/linux-environment-02.log"
+      },
+      {
+        "command": "Linux GCC supported build and actual DEB/AppImage validation",
+        "result": "NOT_VERIFIED",
+        "kind": "NOT_RUN",
+        "evidence_ref": "build/distribution-readiness/linux-environment-02.log"
+      },
+      {
+        "command": "ctest --test-dir build/distribution-readiness/windows-gnu -R qualpf.gui|qualpf.cli|qualpf.settings|qualpf.platform|qualpf.distribution|qualpf.project",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/distribution-readiness/gnu-raw/final-gui-controls-02.xml"
       }
     ]
   }

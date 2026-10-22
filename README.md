@@ -2,7 +2,7 @@
 
 QualPF is a modified project derived from [QualX3](https://github.com/ccorrado71/qualx3), originally developed by IC-CNR.
 
-**Qualitative phase analysis software for X-ray powder diffraction patterns**, based on QualX3 originally developed at the [Institute of Crystallography (IC-CNR), Bari](https://www.ic.cnr.it/).
+**Qualitative phase identification from powder X-ray diffraction data**, based on QualX3 originally developed at the [Institute of Crystallography (IC-CNR), Bari](https://www.ic.cnr.it/).
 
 QualPF helps identify the crystalline phases present in a powder diffraction pattern by comparing it against large reference databases (PDF-2, COD) and crystallographic data imported from CIF files.
 

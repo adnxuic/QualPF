@@ -109,6 +109,10 @@ three scaled About/offline-notice checks and distribution rejection controls).
 Numerical property tests can take several minutes. Preserve existing timeouts and
 avoid competing large builds while running them. PFSM uses OpenMP across candidate cards with
 Eigen's internal parallelism disabled; Classical numerical compilation is unchanged.
+Native Windows validation needs access to its UUID-owned registry fixtures and
+loopback test server. A restricted application sandbox can reject these operations;
+retain its failures and rerun the unchanged native controls in a regular Windows
+test shell. Do not replace the native settings store or waive networking assertions.
 
 Workflow settings and QXP v3 verification is retained under
 `build/workflow-settings`:

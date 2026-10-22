@@ -111,6 +111,9 @@ python -B tools/crystallography/generate_space_groups.py --check
 
 Supply normal SDK paths. Modifying/rebuilding the source remains possible;
 modified delivered inputs become dirty rather than blocking an ordinary build.
+New product sources also mark the delivered revision dirty. Source-boundary checks
+use archive contents directly, including when extraction occurs under another Git
+checkout; they cannot borrow the parent's index and report zero bound inputs.
 
 After rights clearance, configure audit mode OFF and supply:
 
