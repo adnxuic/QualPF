@@ -76,10 +76,10 @@ echo ""
 echo -e "${YELLOW}Step 3/5: Assembling AppDir metadata...${NC}"
 mkdir -p "$APPDIR/usr/share/applications"
 # Windows checkouts can use CRLF; desktop Icon/Exec values must not retain CR.
-sed 's/\r$//' "$SRC_DIR/deploy/linux/qualx.appimage.desktop" \
+sed 's/\r$//' "$BUILD_DIR/cmake/${PROG_NAME}.appimage.desktop" \
     > "$APPDIR/usr/share/applications/qualpf.desktop"
 chmod 644 "$APPDIR/usr/share/applications/qualpf.desktop"
-install -Dm644 "$SRC_DIR/deploy/linux/icons/256x256/qualx.png" \
+install -Dm644 "$SRC_DIR/deploy/linux/icons/256x256/qualpf.png" \
     "$APPDIR/usr/share/icons/hicolor/256x256/apps/qualpf.png"
 echo -e "${GREEN}✓ Metadata assembled${NC}"
 echo ""

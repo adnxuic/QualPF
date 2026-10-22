@@ -23,6 +23,7 @@
 #include "ui_mainwindow.h"
 #include <QSignalBlocker>
 #include "config.h"
+#include "gui/support/qt_utils.h"
 #include "gui/state/workspace_context.h"
 #include "gui/export/pattern_export_service.h"
 #include "gui/import/powder_cif_import_service.h"
@@ -283,10 +284,10 @@ void MainWindow::createDialogs()
     m_restraintsDialog = new RestraintsDialog(this);
     smoothingDialog    = new SmoothingDialog(this);
     plotStyleDialog    = new PlotStyleDialog(this);
-    aboutDialog = new AboutDialog(this);
-    aboutDialog->setWebsiteUrl("https://www.ba.ic.cnr.it/softwareic/qualx/");
-    aboutDialog->setContactsUrl("https://www.ba.ic.cnr.it/softwareic/expo/contact-us/");
-    aboutDialog->setCitationUrl("https://doi.org/10.1017/S0885715617000240");
+    const auto versionInfo = getVersionInfo(context().platform());
+    aboutDialog = new AboutDialog(qualpf::gui::Preferences(context().preferences()).fileName(),
+        tr("Created on %1\n%2\n%3").arg(versionInfo.data,
+            versionInfo.compilersString, versionInfo.qtVersionInfo), this);
 
     connect(&context().searchSession(), &qualpf::gui::SessionView::changed, this,
             [this, previous = context().searchSession().snapshot()]() mutable {
@@ -2504,7 +2505,7 @@ void MainWindow::onActionLoadAddTriggered()
 void MainWindow::onActionDocumentationHtmlTriggered()
 {
     if (closingRequested_) return;
-    QDesktopServices::openUrl(QUrl("https://ccorrado71.github.io/qualx3/"));
+    QDesktopServices::openUrl(QUrl(APP_DOCUMENTATION));
 }
 
 void MainWindow::onActionDocumentationPdfTriggered()

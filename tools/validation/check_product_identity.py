@@ -7,6 +7,7 @@ import re
 import shutil
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
 OLD_NAME = re.compile(r"qualx" + "pf", re.IGNORECASE)
@@ -42,7 +43,7 @@ def check(root=ROOT, build=None):
             if OLD_NAME.search(line) and line.strip() not in allowed.get(name, ()):
                 errors.append(f"obsolete product identity: {name}:{number}")
     cmake = (root / "CMakeLists.txt").read_text(encoding="utf-8-sig")
-    if not re.search(r"project\(QualPF\s+VERSION\s+1\.0\.5\s+LANGUAGES\s+CXX\)", cmake):
+    if not re.search(r"project\(QualPF\s+VERSION\s+1\.0\.0\s+LANGUAGES\s+CXX\)", cmake):
         errors.append("unexpected product project/version/language")
     if 'set(EXECUTABLE_NAME "qualpf")' not in cmake:
         errors.append("unexpected executable identity")
@@ -52,6 +53,27 @@ def check(root=ROOT, build=None):
     gui = (root / "src/gui/mainwindow.cpp").read_text(encoding="utf-8")
     if re.search(r'setUrl\([^;]*qualx3/updates', gui):
         errors.append("current product update entry points to an upstream product feed")
+    identity = json.loads((root / "deploy/distribution.json").read_bytes())["product"]
+    if identity["publisher"] != "adnxuic" or identity["license"] != "GPL-3.0-only":
+        errors.append("unexpected independent publisher or application license")
+    readme = (root / "README.md").read_text(encoding="utf-8-sig")
+    if "GPL-3.0-only" not in readme or "License-LGPL" in readme or "GNU Lesser General Public License" in readme:
+        errors.append("README application license contradicts distribution identity")
+    packaging = (root / "cmake/packaging/CPack.cmake").read_text(encoding="utf-8-sig")
+    if 'set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE")' not in packaging:
+        errors.append("installer must use the canonical GPL license")
+    for line in packaging.splitlines():
+        if re.search(r'CPACK_(?:PACKAGE_VENDOR|IFW_PACKAGE_PUBLISHER|DEBIAN_PACKAGE_MAINTAINER)', line) and re.search(r'Corrado|Institute of Crystallography|cnr\.it', line, re.IGNORECASE):
+            errors.append("upstream author/institution incorrectly identified as publisher")
+    qrc = ET.parse(root / "src/gui/resources/resource.qrc")
+    excluded = {"images/qualx.png", "images/about.png", "images/logo_CNR_compatto.png", "images/logo_IC.png"}
+    if any((entry.text or "").strip() in excluded for entry in qrc.iter("file")):
+        errors.append("legacy brand image remains in active GUI resources")
+    appimage = (root / "scripts/package/build_appimage.sh").read_text(encoding="utf-8-sig")
+    if "icons/256x256/qualx.png" in appimage or "icons/256x256/qualpf.png" not in appimage:
+        errors.append("AppImage staging must use the independent QualPF icon")
+    if "https://ccorrado71.github.io/qualx3/" in gui or "softwareic/expo/contact-us" in gui:
+        errors.append("product help/support points at another product")
     if build is not None:
         cache = (build / "CMakeCache.txt").read_text(encoding="utf-8-sig")
         if "CMAKE_PROJECT_NAME:STATIC=QualPF" not in cache:
@@ -60,6 +82,9 @@ def check(root=ROOT, build=None):
         for value in ('APP_NAME = "qualpf"', 'APP_DISPLAY_NAME = "QualPF"'):
             if value not in config:
                 errors.append("generated product identity missing: " + value)
+        for key, name in (("publisher", "PUBLISHER"), ("license", "LICENSE"), ("support", "SUPPORT"), ("documentation", "DOCUMENTATION")):
+            if f'APP_{name} = "{identity[key]}"' not in config:
+                errors.append("generated distribution identity missing: " + key)
         if not any((build / "src" / name).is_file() for name in ("qualpf", "qualpf.exe")):
             errors.append("current executable missing from build")
     return errors, len(files)
@@ -72,7 +97,9 @@ def self_test():
                 root = Path(directory)
                 names = {"CMakeLists.txt", "CMakePresets.json", "README.md", ".gitignore",
                          "docs/mkdocs.yml", "docs/make_pdf.sh", "src/gui/mainwindow.cpp",
-                         "tools/validation/product-identity.json"}
+                         "tools/validation/product-identity.json", "deploy/distribution.json",
+                         "cmake/packaging/CPack.cmake", "src/gui/resources/resource.qrc",
+                         "scripts/package/build_appimage.sh"}
                 inventory = json.loads((ROOT / "tools/validation/product-identity.json").read_bytes())
                 names.update(inventory["allowed_old_name_lines"])
                 for name in names:
@@ -85,6 +112,19 @@ def self_test():
                 readme.write_text(OLD_NAME.pattern + "\n", encoding="utf-8")
                 self.assertTrue(any("obsolete product identity: README.md" in error for error in check(root)[0]))
                 readme.write_bytes(original)
+                readme.write_text("QualPF uses the GNU Lesser General Public License\n", encoding="utf-8")
+                self.assertTrue(any("README application license" in error for error in check(root)[0]))
+                readme.write_bytes(original)
+                cpack = root / "cmake/packaging/CPack.cmake"
+                original_cpack = cpack.read_bytes()
+                cpack.write_text(original_cpack.decode().replace('${QUALPF_PUBLISHER}', 'Corrado Cuocci'), encoding="utf-8")
+                self.assertTrue(any("incorrectly identified as publisher" in error for error in check(root)[0]))
+                cpack.write_bytes(original_cpack)
+                resource = root / "src/gui/resources/resource.qrc"
+                original_qrc = resource.read_bytes()
+                resource.write_text(original_qrc.decode().replace("</qresource>", "<file>images/qualx.png</file></qresource>", 1), encoding="utf-8")
+                self.assertTrue(any("legacy brand image" in error for error in check(root)[0]))
+                resource.write_bytes(original_qrc)
                 inventory["allowed_old_name_lines"]["src/infrastructure/settings/settings_migration.cpp"] = []
                 (root / "tools/validation/product-identity.json").write_text(json.dumps(inventory), encoding="utf-8")
                 self.assertTrue(any("settings_migration.cpp" in error for error in check(root)[0]))

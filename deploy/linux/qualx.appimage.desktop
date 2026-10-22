@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=QualPF
-Comment=Software for qualitative X-ray powder diffraction analysis
+Comment=@QUALPF_DESCRIPTION@
 Exec=qualpf %f
 Terminal=false
 Icon=qualpf

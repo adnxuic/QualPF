@@ -34,5 +34,5 @@ Register both PNG sizes when adding an icon. Keep SVGs self-contained, without
 text, external images, scripts or font dependencies. Preserve the existing
 resource URLs and control behavior when assigning icons. Menu-bar titles,
 recent-file rows, visibility checkboxes and standard dialog buttons retain their
-existing presentation. The large legacy `images/about.png` remains an About
-dialog illustration; `about.svg` is the small menu icon.
+existing presentation. The large legacy `images/about.png` is retained only for
+provenance and is not embedded in the product; `about.svg` is the small menu icon.

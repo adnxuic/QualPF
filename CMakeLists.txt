@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 get_filename_component(ProjectId ${CMAKE_CURRENT_LIST_DIR} NAME)
 string(REPLACE " " "_" ProjectId ${ProjectId})
-project(QualPF VERSION 1.0.5 LANGUAGES CXX)
+project(QualPF VERSION 1.0.0 LANGUAGES CXX)
 
 if(NOT WIN32 AND NOT CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(FATAL_ERROR "QualPF supports Windows and Linux.")
@@ -10,6 +10,7 @@ endif()
 set(EXECUTABLE_NAME "qualpf")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
+include(cmake/packaging/ProductIdentity.cmake)
 include(QualpfBuildPolicy)
 include(cmake/packaging/QtDeploymentOptions.cmake)
 include(QualpfQtDependencies)

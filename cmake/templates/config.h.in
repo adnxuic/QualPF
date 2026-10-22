@@ -5,6 +5,13 @@
 static const QString APP_NAME = "@EXECUTABLE_NAME@";
 static const QString APP_DISPLAY_NAME = "@PROJECT_NAME@";
 static const QString APP_VERSION = "@PROJECT_VERSION@";
+static const QString APP_PUBLISHER = "@QUALPF_PUBLISHER@";
+static const QString APP_LICENSE = "@QUALPF_LICENSE@";
+static const QString APP_HOMEPAGE = "@QUALPF_HOMEPAGE@";
+static const QString APP_SUPPORT = "@QUALPF_SUPPORT@";
+static const QString APP_DOCUMENTATION = "@QUALPF_DOCUMENTATION@";
+static const QString APP_DESCRIPTION = "@QUALPF_DESCRIPTION@";
+static const QString APP_COPYRIGHT = "@QUALPF_COPYRIGHT@";
 static const QString BUILD_TYPE = "@CMAKE_BUILD_TYPE@";
 static const QString CPP_COMPILER = "@CMAKE_CXX_COMPILER@";
 static const int  APP_VERSION_MAJOR{ @PROJECT_VERSION_MAJOR@ };

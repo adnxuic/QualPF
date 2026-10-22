@@ -7,6 +7,11 @@
 /LICENSES/GCC-exception-3.1.txt -whitespace
 /deploy/distribution.json text eol=lf
 /third_party/qcustomplot/README.md text eol=lf
+/src/gui/dialogs/aboutdialog.* text eol=lf
+/tests/integration/gui/aboutdialog_test.cpp text eol=lf
+/cmake/packaging/ProductIdentity.cmake text eol=lf
+/cmake/templates/legal.qrc.in text eol=lf
+/src/gui/resources/resource.qrc text eol=lf
 /tests/data/symmetry-reference-manifest.json -text
 /tests/data/pfsm-quantification/real-inputs.json -text -whitespace
 /tests/data/symmetry-reference.zip binary

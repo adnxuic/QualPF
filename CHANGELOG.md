@@ -24,6 +24,15 @@ reports are no longer used for routine development.
 
 ### Changed
 
+- Set the independent QualPF product version to 1.0.0; retained earlier upstream
+  version entries as historical release records.
+
+- Replaced the inherited About illustration and institutional logos with an
+  independent, scalable QualPF view and offline GPL/origin/third-party texts.
+  Publisher, support, license and help metadata share one distribution inventory;
+  AppImage staging now uses the QualPF icon. Added methodological acknowledgment
+  of Match!'s public PFSM documentation, separate from code provenance/licensing.
+
 - Introduced a QualPF application icon showing a discrete diffraction line
   broadening into a continuous PFSM peak. Updated the Qt window icon, multi-size
   Windows executable icon, Linux launcher assets and documentation branding.

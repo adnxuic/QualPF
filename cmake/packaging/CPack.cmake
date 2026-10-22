@@ -56,17 +56,19 @@ foreach(index RANGE 0 ${QUALPF_REFERENCE_ARCHIVE_LAST})
     list(APPEND CPACK_SOURCE_IGNORE_FILES "${QUALPF_CPACK_SOURCE_ROOT}/${archive}$")
 endforeach()
 
-set(CPACK_RESOURCE_FILE_LICENSE  ${CMAKE_CURRENT_SOURCE_DIR}/deploy/Windows/licence.txt)
-set(CPACK_PACKAGE_VENDOR "Institute of Crystallography - CNR")
-set(CPACK_PACKAGE_CONTACT "corrado.cuocci@ic.cnr.it")
-set(CPACK_PACKAGE_DESCRIPTION "Automatic solution and refinement of crystal structures")
+set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE")
+set(CPACK_PACKAGE_VENDOR "${QUALPF_PUBLISHER}")
+set(CPACK_PACKAGE_CONTACT "${QUALPF_SUPPORT}")
+set(CPACK_PACKAGE_HOMEPAGE_URL "${QUALPF_HOMEPAGE}")
+set(CPACK_PACKAGE_DESCRIPTION "${QUALPF_DESCRIPTION}")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${QUALPF_DESCRIPTION}")
 
 if(WIN32)
     set(CPACK_GENERATOR "IFW")
     # Discover QtIFW on PATH, or set CPACK_IFW_ROOT in CMakeUserPresets.json.
     set(CPACK_IFW_PACKAGE_NAME "${PROJECT_NAME}")
     set(CPACK_IFW_PACKAGE_TITLE "${PROJECT_NAME}")
-    set(CPACK_IFW_PACKAGE_PUBLISHER "Corrado Cuocci")
+    set(CPACK_IFW_PACKAGE_PUBLISHER "${QUALPF_PUBLISHER}")
     set(CPACK_IFW_PACKAGE_WIZARD_STYLE "Aero")
     set(CPACK_IFW_TARGET_DIRECTORY "@ApplicationsDir@/${PROJECT_NAME}")
     set(CPACK_IFW_PACKAGE_CONTROL_SCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/deploy/Windows/controlscript.qs")
@@ -80,8 +82,8 @@ if(WIN32)
     cpack_ifw_configure_component(${COMPONENT_NAME_MAIN} ESSENTIAL FORCED_INSTALLATION)
 
     # Adds license info to package.xml file
-    # Also copies licence.txt to 'meta' directory to display the license text in the installer.
-    cpack_ifw_configure_component(${COMPONENT_NAME_MAIN} LICENSES "${PROJECT_NAME} License" ${CPACK_RESOURCE_FILE_LICENSE})
+    # The same canonical GPL text is embedded in the app and installed as LICENSE.
+    cpack_ifw_configure_component(${COMPONENT_NAME_MAIN} LICENSES "${QUALPF_LICENSE}" ${CPACK_RESOURCE_FILE_LICENSE})
 
     # Generate only the C++ runtime choice; retain IFW's @TargetDir@ and other
     # path tokens verbatim rather than expanding them as CMake variables.
@@ -135,7 +137,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
     set(CPACK_DEBIAN_FILE_NAME "${EXECUTABLE_NAME}-${PROJECT_VERSION}-${DISTRO_CODENAME}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}.deb")
     set(CPACK_DEBIAN_PACKAGE_NAME "${EXECUTABLE_NAME}")
-    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Corrado Cuocci <corrado.cuocci@ic.cnr.it>")
+    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "${QUALPF_PUBLISHER} <${QUALPF_RELEASE_CONTACT_EMAIL}>")
     set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt6core6 | libqt6core6t64, libqt6gui6 | libqt6gui6t64, libqt6widgets6 | libqt6widgets6t64, libqt6sql6 | libqt6sql6t64, libqt6sql6-sqlite, libqt6printsupport6 | libqt6printsupport6t64, libqt6network6 | libqt6network6t64, libqt6opengl6 | libqt6opengl6t64, libqt6openglwidgets6 | libqt6openglwidgets6t64")
     set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
     set(CPACK_SOURCE_GENERATOR "TGZ")

@@ -29,6 +29,7 @@ QualPF helps identify the crystalline phases present in a powder diffraction pat
 - [Documentation](#documentation)
 - [Repository structure](#repository-structure)
 - [Citing QualX](#citing-qualx)
+- [Algorithmic Background and Acknowledgment](#algorithmic-background-and-acknowledgment)
 - [License](#license)
 - [Authors and acknowledgments](#authors-and-acknowledgments)
 - [Contributing](#contributing)
@@ -262,6 +263,28 @@ If you use QualX in your research, please cite one of the following works:
 3. Altomare, A., Cuocci, C., Giacovazzo, C., Moliterni, A. and Rizzi, R.,
    *'QUALX: A computer program for qualitative analysis using powder diffraction data'* (2008). *J. Appl. Cryst.* **41**(4), 815–817.
    [https://doi.org/10.1107/S0021889808016956](https://doi.org/10.1107/S0021889808016956)
+
+### Algorithmic Background and Acknowledgment
+
+QualPF's profile-based search-match approach was informed by the publicly
+available documentation of the Profile Fitting Search-Match (PFSM) method in
+[Match!](https://www.crystalimpact.com/match/), developed by Crystal Impact.
+The general approach compares calculated reference diffraction profiles with
+experimental diffraction data and ranks candidate phases according to profile
+agreement.
+
+QualPF implements its own numerical workflow and C++ code. This acknowledgment
+refers to the methodological inspiration and does not imply that QualPF
+reproduces Match!'s internal implementation. QualPF is an independent project
+and is not affiliated with or endorsed by Crystal Impact. QualPF's specific
+design and qualifications are documented in the
+[PFSM numerical contract](docs/developer/numerical/pfsm.md); its code licensing
+and provenance are documented separately below and in [NOTICE.md](NOTICE.md).
+
+**References:**
+
+- [Match! — Profile Fitting Search-Match](https://www.crystalimpact.de/match/help/idh_searchmatch_profile_fitting.htm)
+- [Match! — Figure-of-Merit Calculation](https://crystalimpact.com/match/help/idh_searchmatch_fom.htm)
 
 ## License
 

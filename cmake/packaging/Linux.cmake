@@ -1,6 +1,11 @@
 # Linux: Desktop integration (icons + .desktop file)
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     configure_file(
+        ${CMAKE_SOURCE_DIR}/deploy/linux/qualx.appimage.desktop
+        ${CMAKE_BINARY_DIR}/${EXECUTABLE_NAME}.appimage.desktop
+        @ONLY
+    )
+    configure_file(
         ${CMAKE_SOURCE_DIR}/deploy/linux/qualx.desktop.in
         ${CMAKE_BINARY_DIR}/${EXECUTABLE_NAME}.desktop
         @ONLY
@@ -11,6 +16,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         set(PROJECT_NAME \"${PROJECT_NAME}\")
         set(PROJECT_VERSION \"${PROJECT_VERSION}\")
         set(EXECUTABLE_NAME \"${EXECUTABLE_NAME}\")
+        set(QUALPF_DESCRIPTION \"${QUALPF_DESCRIPTION}\")
         configure_file(\"${CMAKE_SOURCE_DIR}/deploy/linux/qualx.desktop.in\"
                        \"${CMAKE_BINARY_DIR}/${EXECUTABLE_NAME}.desktop\" @ONLY)
         file(INSTALL DESTINATION \"\${CMAKE_INSTALL_PREFIX}/share/applications\"

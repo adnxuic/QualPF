@@ -33,5 +33,8 @@ the master-derived output without rewriting it. `--preview` writes light/dark
 size sheets in the chosen local directory. Normal builds and packages consume
 the committed assets and require neither the generator nor Node.js.
 
-Original upstream artwork remains in its original paths. This application mark
-is separate from the colorful menu/action icon collection in `../icons`.
+Original upstream artwork remains in its original paths for provenance, outside
+the active brand resources and source delivery. Inherited non-brand graphics still
+require the separate rights review recorded in `deploy/distribution.json`.
+This application mark is separate from the colorful menu/action icon collection
+in `../icons`.

@@ -164,6 +164,33 @@ if(QUALPF_BUILD_PRODUCT_TESTS)
     if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         message(FATAL_ERROR "Product tests require the complete root Qt build")
     endif()
+    qt_add_resources(QUALPF_ABOUT_TEST_RESOURCES
+        "${PROJECT_SOURCE_DIR}/src/gui/resources/resource.qrc"
+        "${CMAKE_BINARY_DIR}/configured_files/legal.qrc")
+    add_executable(qualpf_about_dialog_tests integration/gui/aboutdialog_test.cpp
+        "${PROJECT_SOURCE_DIR}/src/gui/dialogs/aboutdialog.cpp"
+        "${PROJECT_SOURCE_DIR}/src/gui/dialogs/aboutdialog.h" ${QUALPF_ABOUT_TEST_RESOURCES})
+    qualpf_configure_qt_boundary(qualpf_about_dialog_tests Widgets)
+    target_compile_definitions(qualpf_about_dialog_tests PRIVATE
+        QUALPF_ABOUT_SOURCE_ROOT="${PROJECT_SOURCE_DIR}")
+    if(WIN32)
+        set(qualpf_about_platform windows)
+    else()
+        set(qualpf_about_platform offscreen)
+    endif()
+    foreach(scale 100 150 200)
+        if(scale EQUAL 150)
+            set(scale_factor 1.5)
+        elseif(scale EQUAL 200)
+            set(scale_factor 2)
+        else()
+            set(scale_factor 1)
+        endif()
+        add_test(NAME qualpf.gui.about.scale${scale} COMMAND qualpf_about_dialog_tests
+            "${CMAKE_CURRENT_BINARY_DIR}/distribution/about-${scale}.png")
+        set_tests_properties(qualpf.gui.about.scale${scale} PROPERTIES
+            ENVIRONMENT "QT_QPA_PLATFORM=${qualpf_about_platform};QT_SCALE_FACTOR=${scale_factor}" TIMEOUT 30)
+    endforeach()
     add_executable(qualpf_product_probe product/workflow/probe.cpp)
     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         target_sources(qualpf_product_probe PRIVATE product/support/pattern_link_guard.cpp)

@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=@PROJECT_NAME@
-Comment=Software for qualitative X-ray powder diffraction analysis
+Comment=@QUALPF_DESCRIPTION@
 Exec=@CMAKE_INSTALL_PREFIX@/bin/@EXECUTABLE_NAME@ %f
 Terminal=false
 Icon=@EXECUTABLE_NAME@

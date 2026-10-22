@@ -1,6 +1,6 @@
 site_name: QualPF Documentation
 site_description: Qualitative X-ray Powder Diffraction Analysis Software
-site_author: IC-CNR Bari
+site_author: adnxuic
 docs_dir: user
 site_dir: site
 use_directory_urls: false

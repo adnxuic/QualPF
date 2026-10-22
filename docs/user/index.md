@@ -43,12 +43,16 @@ If you use QualX in your research, please cite one of the following works:
    *'QUALX: A computer program for qualitative analysis using powder diffraction data'* (2008). *J. Appl. Cryst.* **41**(4), 815–817.
    [https://doi.org/10.1107/S0021889808016956](https://doi.org/10.1107/S0021889808016956)
 
-## Contact
+## License and support
 
-IC-CNR Bari — [https://www.ic.cnr.it/](https://www.ic.cnr.it/)
+QualPF is independently maintained and published by **adnxuic** under
+**GPL-3.0-only**. It derives from QualX3, originally developed at IC-CNR, Bari;
+original authorship and the research references above are retained. No official
+QualX distribution status or institutional endorsement is claimed.
 
-| Name | Email |
-|------|-------|
-| Corrado Cuocci | [corrado.cuocci@cnr.it](mailto:corrado.cuocci@cnr.it) |
-| Angela Altomare | [angela.altomare@cnr.it](mailto:angela.altomare@cnr.it) |
-| Anna Moliterni | [annagrazia.moliterni@cnr.it](mailto:annagrazia.moliterni@cnr.it) |
+Use [QualPF Issues](https://github.com/adnxuic/QualPF/issues) for QualPF support.
+**Help → About → License and notices** displays the application license, origin
+and third-party notices offline. There is no warranty to the extent permitted
+by law. Database licenses and the documented qualifications of search/RIR results
+remain applicable. Local packages marked **audit** have unresolved distribution
+obligations and are not cleared releases.

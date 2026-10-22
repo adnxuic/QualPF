@@ -75,7 +75,6 @@ add_library(qualpf_gui OBJECT
     dialogs/pfsm_options_dialog.h
     dialogs/aboutdialog.cpp
     dialogs/aboutdialog.h
-    dialogs/aboutdialog.ui
     dialogs/backgrounddialog.cpp
     dialogs/backgrounddialog.h
     dialogs/backgrounddialog.ui
@@ -203,7 +202,8 @@ add_library(qualpf_gui OBJECT
 qualpf_configure_qt_boundary(qualpf_gui Widgets PrintSupport)
 
 # Generate exactly one resource translation unit. Resource URLs stay unchanged.
-qt_add_resources(QUALPF_GUI_RESOURCES resources/resource.qrc)
+qt_add_resources(QUALPF_GUI_RESOURCES resources/resource.qrc
+    "${CMAKE_BINARY_DIR}/configured_files/legal.qrc")
 target_sources(qualpf_gui PRIVATE ${QUALPF_GUI_RESOURCES})
 
 

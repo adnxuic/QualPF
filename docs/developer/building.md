@@ -19,6 +19,14 @@ assets share one preserved raster master. Its sizes, consumers and offline expor
 command are documented in the
 [application icon guide](../../src/gui/resources/branding/README.md).
 
+Publisher, application license, project/support/manual URLs and description come
+from `deploy/distribution.json`; settings namespaces remain compatibility keys.
+The native Qt About view embeds the canonical GPL text, origin/third-party notices
+and supplemental licenses and does not require network access. Its three scaled
+checks render hidden native Windows windows (or Linux offscreen windows).
+Methodological acknowledgment of Match!'s public PFSM documentation is separate
+from code provenance and the numerical acceptance contracts.
+
 ## Shared presets and local SDKs
 
 `CMakePresets.json` provides `windows-gnu`, `windows-msvc` and `linux-gnu`.
