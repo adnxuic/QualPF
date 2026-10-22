@@ -87,6 +87,15 @@ that operating-system component. Staging records/rejects a reintroduced copy for
 formal distribution. The other graphics runtimes above describe the retained
 MSVC development audit, which is excluded from formal release.
 
+Actual IFW extraction also exposed different same-named GCC/winpthreads DLLs
+in its two components: Qt deployment had copied `D:/mingv/mingw64/bin` through
+the host PATH, while the application component used the selected compiler SDK.
+Flat installation had overwritten these copies and concealed the conflict.
+MinGW Qt deployment now disables compiler-runtime copying; the existing
+compiler-matched deployer remains their single source. IFW staging rejects
+different bytes targeting the same installed path even in audit mode. The
+original conflicting installer and failed byte comparisons remain retained.
+
 ## Offline dependency materials
 
 [`deploy/dependency-sources.json`](../../deploy/dependency-sources.json) pins ten

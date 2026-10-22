@@ -284,6 +284,10 @@ reports are no longer used for routine development.
 
 ### Fixed
 
+- Prevent Qt deployment from adding PATH-selected MinGW runtime DLLs alongside
+  the compiler-matched IFW component. Reject conflicting bytes targeting the same
+  installed path, including in audit packages.
+
 - Excluded the three integral-recall elapsed-time fields from PFSM performance
   scientific comparisons, preventing timing-only differences from aborting A/B
   validation while preserving exact evidence checks and original reports.

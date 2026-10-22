@@ -1,6 +1,11 @@
 # Qt deployment script (must be before install commands to allow overriding)
 if(Qt6_VERSION VERSION_GREATER_EQUAL 6.5)
     set(_qualpf_deploy_options)
+    if(MINGW)
+        # Compiler-matched runtimes are installed by QualpfWindowsRuntime.
+        # windeployqt can otherwise take different same-named DLLs from PATH.
+        list(APPEND _qualpf_deploy_options NO_COMPILER_RUNTIME)
+    endif()
     if(MINGW AND Qt6_VERSION VERSION_GREATER_EQUAL 6.7)
         # The supported Windows platform supplies this system component. Do not
         # redistribute an older SDK copy with separate Microsoft SDK terms.

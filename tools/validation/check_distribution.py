@@ -361,6 +361,7 @@ def stage_inventory(root, stage, data, review=None, kind=None):
         except (OSError, ValueError, KeyError, TypeError) as error:
             errors.append("missing/stale dependency source/notice bundle: " + str(error))
     files = []
+    installed_destinations = {}
     review = review or {}
     excluded_names = {Path(name).name for name in data.get("excluded_legacy_assets", [])}
     for file in sorted(path for path in prefix.rglob("*") if path.is_file()):
@@ -379,6 +380,14 @@ def stage_inventory(root, stage, data, review=None, kind=None):
         executable = file.suffix.lower() in {".exe", ".dll"} or re.search(r"\.so(?:\.[0-9]+)*$", file.name) or magic == b"\x7fELF"
         component = runtime_component(name) if executable else "material"
         value = dict(path=name, bytes=file.stat().st_size, sha256=digest(file), component=component)
+        if kind == "IFW":
+            destination = re.search(r"(?:^|/)packages/[^/]+/data/(.+)$", name)
+            if destination:
+                key = destination[1].lower()  # Windows destinations are case-insensitive.
+                prior = installed_destinations.get(key)
+                if prior and prior["sha256"] != value["sha256"]:
+                    errors.append("conflicting installed payload: " + prior["path"] + " and " + name)
+                installed_destinations[key] = value
         if component in data.get("release_policy", {}).get("excluded_runtime_components", []):
             errors.append("runtime excluded from formal distribution by owner policy: " + name)
         if file.name.lower() in data.get("release_policy", {}).get("excluded_windows_system_payloads", []):
@@ -620,6 +629,27 @@ def self_test():
                 self.assertTrue(any("owner policy" in error for error in report["review_blockers"]))
                 self.assertTrue(any("operating-system DLL" in error for error in report["review_blockers"]))
 
+        def test_ifw_component_destination_conflict(self):
+            with tempfile.TemporaryDirectory() as directory:
+                root, stage = Path(directory) / "source", Path(directory) / "stage"
+                materials = stage / "packages/QualPF/data/share/qualpf"
+                for name in (*LICENSE_FILES, MANIFEST):
+                    for base in (root, materials):
+                        target = base / name
+                        target.parent.mkdir(parents=True, exist_ok=True)
+                        target.write_bytes(b"original notice")
+                write_json(materials / "distribution-build.json", dict(source_revision="a" * 40))
+                first = stage / "packages/QualPF/data/bin/libgcc_s_seh-1.dll"
+                second = stage / "packages/Unspecified/data/bin/LIBGCC_S_SEH-1.DLL"
+                for path in (first, second):
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_bytes(b"matching compiler runtime")
+                report, _ = stage_inventory(root, stage, dict(components=[]), kind="IFW")
+                self.assertFalse(any("conflicting installed" in item for item in report["review_blockers"]))
+                second.write_bytes(b"different PATH runtime")
+                report, _ = stage_inventory(root, stage, dict(components=[]), kind="IFW")
+                self.assertTrue(any("conflicting installed" in item for item in report["review_blockers"]))
+
         def test_preferred_source_and_legacy_exclusion(self):
             with tempfile.TemporaryDirectory() as directory:
                 root = Path(directory)
@@ -817,7 +847,8 @@ def main():
             else:
                 errors.extend(source_archive_errors(args.source_artifact, info, root, data))
         # Missing/stale legal texts are technical failures even in an audit package.
-        errors.extend(error for error in report["review_blockers"] if error.startswith(("missing/stale", "excluded legacy", "excluded material")))
+        errors.extend(error for error in report["review_blockers"] if error.startswith((
+            "missing/stale", "excluded legacy", "excluded material", "conflicting installed")))
         if args.output:
             write_json(args.output, report)
         print(f"Inventory: {len(report['files'])} files; {len(report['review_blockers'])} package review blockers")
