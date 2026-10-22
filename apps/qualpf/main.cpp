@@ -140,7 +140,7 @@ int runApplication(int argc, char *argv[])
     bool isGuiApp = (qobject_cast<QApplication*>(QCoreApplication::instance()) != 0);
 
     if (isGuiApp) {
-    QApplication::setWindowIcon(QIcon(":/images/images/qualx.png"));
+    QApplication::setWindowIcon(QIcon(":/branding/qualpf.png"));
     QGuiApplication::setApplicationDisplayName(APP_DISPLAY_NAME);
     }
     qApp->setApplicationVersion(APP_VERSION);

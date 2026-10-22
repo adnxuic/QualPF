@@ -27,6 +27,7 @@ include("${PROJECT_SOURCE_DIR}/cmake/packaging/MinGWRuntime.cmake")
 qualpf_stage_mingw_runtime(${EXECUTABLE_NAME})
 target_include_directories(${EXECUTABLE_NAME} PRIVATE
     "${PROJECT_SOURCE_DIR}/src/gui/resources/images"
+    "${PROJECT_SOURCE_DIR}/src/gui/resources/branding"
 )
 
 if (WIN32)
@@ -39,6 +40,8 @@ set_target_properties(${EXECUTABLE_NAME} PROPERTIES
 
 #Setting the Application Icon
 if (WIN32)
-    set(app_icon_resource_windows "${PROJECT_SOURCE_DIR}/src/gui/resources/images/qualx.rc")
+    set(app_icon_resource_windows "${PROJECT_SOURCE_DIR}/src/gui/resources/branding/qualpf.rc")
     target_sources(${EXECUTABLE_NAME} PRIVATE ${app_icon_resource_windows})
+    set_property(SOURCE ${app_icon_resource_windows} APPEND PROPERTY OBJECT_DEPENDS
+        "${PROJECT_SOURCE_DIR}/src/gui/resources/branding/qualpf.ico")
 endif()

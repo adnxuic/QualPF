@@ -14,6 +14,11 @@ Normal builds need no image-generation tools or Qt SVG. For editable SVG masters
 offline PNG regeneration and contact sheets, see the
 [action icon guide](../../src/gui/resources/icons/README.md).
 
+The PFSM application mark, Windows ICO, Linux launcher icons and documentation
+assets share one preserved raster master. Its sizes, consumers and offline export
+command are documented in the
+[application icon guide](../../src/gui/resources/branding/README.md).
+
 ## Shared presets and local SDKs
 
 `CMakePresets.json` provides `windows-gnu`, `windows-msvc` and `linux-gnu`.

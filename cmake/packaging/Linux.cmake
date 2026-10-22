@@ -17,7 +17,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
              TYPE FILE FILES \"${CMAKE_BINARY_DIR}/${EXECUTABLE_NAME}.desktop\")
         " COMPONENT ${COMPONENT_NAME_MAIN})
     foreach(SIZE 16 32 48 256)
-        install(FILES ${CMAKE_SOURCE_DIR}/deploy/linux/icons/${SIZE}x${SIZE}/qualx.png
+        install(FILES ${CMAKE_SOURCE_DIR}/deploy/linux/icons/${SIZE}x${SIZE}/qualpf.png
                 DESTINATION share/icons/hicolor/${SIZE}x${SIZE}/apps
                 RENAME ${EXECUTABLE_NAME}.png COMPONENT ${COMPONENT_NAME_MAIN})
     endforeach()
@@ -36,7 +36,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
                  DESTINATION \"\${APPS_DIR}\")
 
             foreach(SIZE 16 32 48 256)
-                set(SRC \"${CMAKE_SOURCE_DIR}/deploy/linux/icons/\${SIZE}x\${SIZE}/qualx.png\")
+                set(SRC \"${CMAKE_SOURCE_DIR}/deploy/linux/icons/\${SIZE}x\${SIZE}/qualpf.png\")
                 if(EXISTS \"\${SRC}\")
                     set(DEST \"\${ICON_BASE}/\${SIZE}x\${SIZE}/apps\")
                     file(MAKE_DIRECTORY \"\${DEST}\")

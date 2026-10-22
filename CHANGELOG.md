@@ -20,6 +20,10 @@ reports are no longer used for routine development.
 
 ### Changed
 
+- Introduced a QualPF application icon showing a discrete diffraction line
+  broadening into a continuous PFSM peak. Updated the Qt window icon, multi-size
+  Windows executable icon, Linux launcher assets and documentation branding.
+
 - Reduced tracked history to necessary acceptance records and portable indexes.
   Archived complete original reports and logs independently with archive/member
   hashes and verified recovery. Normal checks remain offline; explicit recovery

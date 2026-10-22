@@ -34,6 +34,9 @@
         <file>images/logo_IC.png</file>
         <file>images/stop.png</file>
     </qresource>
+    <qresource prefix="/branding">
+        <file alias="qualpf.png">branding/qualpf.png</file>
+    </qresource>
     <qresource prefix="/icons">
         <file alias="about.png">icons/about.png</file>
         <file alias="about@2x.png">icons/about@2x.png</file>
