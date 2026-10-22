@@ -1,6 +1,6 @@
 # Current C++ tests
 
-The normal development configuration registers 122 CTest entries, including
+The normal development configuration registers 127 CTest entries, including
 Classical/PFSM numerical and workflow contracts, independent references,
 settings, QPF persistence, GUI/CLI, SQL, export, lifetime and architecture checks.
 [Coverage](coverage.json)
@@ -66,7 +66,10 @@ generated from C++. See [numerical policy](../docs/developer/numerical/policy.md
 [data provenance](data-guide.md). Logical historical keys are resolved locally
 by `reference_paths.py`, without restoring full phase packages.
 
-The 15 sealed ZIPs are excluded from the main tree and source packages.
+The 15 sealed ZIPs are excluded from the main tracked tree. Source delivery
+additionally carries `symmetry-reference.zip` as the space-group generator's
+preferred input, subject to its unresolved rights review; the other 14 are
+independent test oracles, excluded from source delivery.
 [Archive locations](reference/archives.json) records their byte lengths and
 SHA-256 hashes, the immutable source commit already present in main history,
 and the local protection tag. Original branch/tag data and all reference
@@ -90,7 +93,13 @@ python -B tools/validation/restore_reference_archives.py
 
 Source archives without Git metadata require these same independently supplied
 payloads at their recorded paths. Verify them with `--verify-only`; no generated
-product output can substitute for a missing reference.
+product output can substitute for a missing reference. Full regressions also
+need the original `tests/real_example_data` and historical powder examples under
+applicable permission. These are excluded from delivery: in particular, the
+retained `CoO.cif` has a PAULING FILE/SpringerMaterials All Rights Reserved notice.
+The development checkout preserves its bytes and assertions. Missing originals
+remain test failures, not skipped checks. An ordinary application build needs
+none of these optional example fixtures.
 
 ```sh
 python -B tools/validation/check_references.py

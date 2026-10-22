@@ -3,8 +3,12 @@ find_package(Python3 COMPONENTS Interpreter REQUIRED)
 
 set(QUALPF_DISTRIBUTION_RUNTIME_REVIEW "" CACHE FILEPATH "Package-specific runtime/source review JSON")
 set(QUALPF_CORRESPONDING_SOURCE_ARCHIVE "" CACHE FILEPATH "Exact corresponding-source TGZ for a release binary")
+set(QUALPF_DEPENDENCY_BUNDLE_DIR "" CACHE PATH "Verified offline dependency source/notice bundle; never fetched during configuration")
 set(QUALPF_DISTRIBUTION_CHECKER "${PROJECT_SOURCE_DIR}/tools/validation/check_distribution.py")
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${QUALPF_DISTRIBUTION_CHECKER}")
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+    "${PROJECT_SOURCE_DIR}/tools/validation/prepare_dependency_bundle.py"
+    "${PROJECT_SOURCE_DIR}/deploy/dependency-sources.json")
 
 # A new commit must refresh the generated provenance even when source bytes did
 # not otherwise trigger configuration. Source archives use their portable stamp.
@@ -78,6 +82,28 @@ install(FILES "${PROJECT_SOURCE_DIR}/LICENSE" "${PROJECT_SOURCE_DIR}/NOTICE.md"
     DESTINATION "share/${EXECUTABLE_NAME}" COMPONENT "${PROJECT_NAME}")
 install(DIRECTORY "${PROJECT_SOURCE_DIR}/LICENSES" DESTINATION "share/${EXECUTABLE_NAME}"
     COMPONENT "${PROJECT_NAME}")
+if(QUALPF_DEPENDENCY_BUNDLE_DIR)
+    execute_process(COMMAND "${Python3_EXECUTABLE}" -B
+        "${PROJECT_SOURCE_DIR}/tools/validation/prepare_dependency_bundle.py"
+        --root "${PROJECT_SOURCE_DIR}" --verify-bundle "${QUALPF_DEPENDENCY_BUNDLE_DIR}"
+        RESULT_VARIABLE dependency_bundle_status OUTPUT_VARIABLE dependency_bundle_output
+        ERROR_VARIABLE dependency_bundle_error)
+    if(NOT dependency_bundle_status EQUAL 0)
+        message(FATAL_ERROR "Dependency source/notice bundle is invalid: ${dependency_bundle_output}${dependency_bundle_error}")
+    endif()
+    install(CODE "
+        execute_process(COMMAND \"${Python3_EXECUTABLE}\" -B
+            \"${PROJECT_SOURCE_DIR}/tools/validation/prepare_dependency_bundle.py\"
+            --root \"${PROJECT_SOURCE_DIR}\" --verify-bundle \"${QUALPF_DEPENDENCY_BUNDLE_DIR}\"
+            RESULT_VARIABLE dependency_bundle_status OUTPUT_VARIABLE dependency_bundle_output
+            ERROR_VARIABLE dependency_bundle_error)
+        if(NOT dependency_bundle_status EQUAL 0)
+            message(FATAL_ERROR \"Dependency bundle changed before installation: \${dependency_bundle_output}\${dependency_bundle_error}\")
+        endif()
+    " COMPONENT "${PROJECT_NAME}")
+    install(DIRECTORY "${QUALPF_DEPENDENCY_BUNDLE_DIR}/"
+        DESTINATION "share/${EXECUTABLE_NAME}/DEPENDENCIES" COMPONENT "${PROJECT_NAME}")
+endif()
 install(FILES "${QUALPF_DISTRIBUTION_MANIFEST}" DESTINATION "share/${EXECUTABLE_NAME}/deploy"
     COMPONENT "${PROJECT_NAME}")
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")

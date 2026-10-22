@@ -16,6 +16,8 @@ reports are no longer used for routine development.
   Windows Qt/installer runtime origins, and verified versioned dependency source
   archives. Preserved separate winpthreads, MinGW CRT, IFW, libarchive and OpenSSL
   notices; unresolved compilation grants and modified runtime source stay blocked.
+  Added optional offline dependency bundles with original notices, full source
+  archives and actual Eigen/Boost header sources, checked again during staging.
 
 - Added checked distribution staging, actual payload/artifact SHA-256 inventories,
   tracked-only corresponding-source export with preferred generator inputs,
@@ -41,6 +43,11 @@ reports are no longer used for routine development.
   Recorded the supplied DEB maintainer email without filling the empty build
   configuration default. Excluded inactive inherited documentation brand assets
   from source delivery while retaining their originals.
+  MinGW deployment uses the supported Windows system D3D compiler instead of
+  redistributing the older SDK copy.
+  Excluded the reserved PAULING FILE/SpringerMaterials CIF fixture and uncleared
+  historical powder demonstrations from delivery; preserved development originals,
+  frozen references and numerical assertions.
 
 - Set the independent QualPF product version to 1.0.0; retained earlier upstream
   version entries as historical release records.

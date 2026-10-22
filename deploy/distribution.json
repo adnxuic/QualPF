@@ -207,11 +207,11 @@
       "source": "Retained QualX3 tables, scientific references and frozen exact generator inputs",
       "version": "hash-pinned current scientific manifests; no numerical changes",
       "copyright": "Original table/data authors; independent redistribution scope not established by citations alone",
-      "license": "unresolved for parts of the retained data and examples",
+      "license": "unresolved for parts of the delivered tables; optional uncleared examples are excluded",
       "modifications": "Accepted generated C++ tables and preserved binary32/exact-rational semantics",
       "license_files": [],
       "status": "blocked",
-      "obligations": "Establish grants for AtomProperties.xen, syminfo.lib, scattering/NIST source tables, symmetry source catalogue and example data. Preserve all accepted bytes while reviewing. Per-input findings and required owner information: deploy/rights-review.json and docs/developer/distribution-rights.md."
+      "obligations": "Establish grants for AtomProperties.xen, syminfo.lib, scattering/NIST source tables and the exact symmetry catalogue. Optional powder examples and the reserved CIF are excluded from delivery; permission is needed if reintroduced. Preserve all accepted bytes while reviewing. Per-input findings and required owner information: deploy/rights-review.json and docs/developer/distribution-rights.md."
     },
     {
       "id": "inherited-artwork-docs",
@@ -305,7 +305,16 @@
       "msvc-runtime"
     ],
     "deb_maintainer_email": "uncercalculate@163.com",
-    "basis": "Owner decision on 2026-10-22: MinGW formal Windows distribution; retain MSVC for development validation. Pass the real DEB email explicitly; the CMake cache default stays empty."
+    "basis": "Owner decision on 2026-10-22: MinGW formal Windows distribution; retain MSVC for development validation. Pass the real DEB email explicitly; the CMake cache default stays empty.",
+    "excluded_windows_system_payloads": [
+      "d3dcompiler_47.dll"
+    ]
   },
-  "rights_review": "deploy/rights-review.json"
+  "rights_review": "deploy/rights-review.json",
+  "excluded_distribution_materials": [
+    "share/qualx/examples/CPD2.dat",
+    "share/qualx/examples/example1.dat",
+    "share/qualx/examples/MIXT_5.dat",
+    "tests/real_example_data/03_reference_structures/CoO.cif"
+  ]
 }

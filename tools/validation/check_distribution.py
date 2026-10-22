@@ -145,6 +145,9 @@ def check_inputs(root):
     for name in data["source_inputs"]["tracked_generator_inputs"]:
         if not relative(root, name).is_file():
             errors.append("missing preferred table modification input: " + name)
+    preferred = set(data["source_inputs"]["tracked_generator_inputs"] + data["source_inputs"]["generator_archives"])
+    if preferred.intersection(data.get("excluded_distribution_materials", [])):
+        errors.append("required preferred modification inputs cannot be excluded to bypass their grants")
     errors.extend(rights_review_errors(root, data))
     return errors, data
 
@@ -173,6 +176,11 @@ def rights_review_errors(root, data):
         if entry["path"] in seen or entry.get("status") not in {"reviewed", "blocked", "partial"}:
             errors.append("duplicate/invalid material rights entry: " + entry["path"])
         seen.add(entry["path"])
+        excluded = entry.get("delivery") == "excluded"
+        if excluded and entry["path"] not in data.get("excluded_distribution_materials", []):
+            errors.append("material claims exclusion without a distribution rule: " + entry["path"])
+        if excluded and not path.exists():
+            continue  # A portable source export deliberately omits this original.
         raw = path.read_bytes()
         if entry.get("hash_mode") == "lf":
             raw = raw.replace(b"\r\n", b"\n")
@@ -186,7 +194,8 @@ def rights_review_errors(root, data):
                 errors.append("material license missing: " + name)
     statuses = {entry["id"]: entry["status"] for entry in data["components"]}
     for component, entries in (("scientific-data", science), ("inherited-artwork-docs", images)):
-        if statuses.get(component) == "reviewed" and any(entry["status"] != "reviewed" for entry in entries):
+        if statuses.get(component) == "reviewed" and any(entry["status"] != "reviewed" and
+                entry.get("delivery") != "excluded" for entry in entries):
             errors.append("unresolved material grants cannot clear component: " + component)
     return errors
 
@@ -236,10 +245,10 @@ def build_identity_errors(info, revision, current_version):
 
 
 def excluded_source(name, data):
-    if name in data["excluded_legacy_assets"]:
+    if name in data["excluded_legacy_assets"] or name in data.get("excluded_distribution_materials", []):
         return True
     if name.startswith("tests/real_example_data/"):
-        return name != "tests/real_example_data/03_reference_structures/CoO.cif"
+        return True
     parts = Path(name).parts
     return any(part in {".git", "__pycache__"} for part in parts) or name.endswith((".pyc", ".pyo"))
 
@@ -298,6 +307,9 @@ def check_source_tree(root, data):
     for name in data["excluded_legacy_assets"]:
         if relative(root, name).exists():
             errors.append("excluded legacy input in source delivery: " + name)
+    for name in data.get("excluded_distribution_materials", []):
+        if relative(root, name).exists():
+            errors.append("excluded uncleared material in source delivery: " + name)
     if (root / ".git").exists():
         errors.append("source delivery must not depend on Git metadata")
     errors.extend("unlisted product input in source delivery: " + name
@@ -342,6 +354,12 @@ def stage_inventory(root, stage, data, review=None, kind=None):
     if pdf.is_file():
         errors.extend("missing/stale installed PDF provenance: " + error
                       for error in manual_errors(root, pdf, materials / "docs/qualpf_manual.provenance.json"))
+    if (materials / "DEPENDENCIES").is_dir():
+        from prepare_dependency_bundle import verify
+        try:
+            verify(root, materials / "DEPENDENCIES")
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            errors.append("missing/stale dependency source/notice bundle: " + str(error))
     files = []
     review = review or {}
     excluded_names = {Path(name).name for name in data.get("excluded_legacy_assets", [])}
@@ -350,6 +368,10 @@ def stage_inventory(root, stage, data, review=None, kind=None):
         relative(prefix, name)  # reject links escaping the stage
         if file.name in excluded_names:
             errors.append("excluded legacy asset in runtime delivery: " + name)
+        for excluded in data.get("excluded_distribution_materials", []):
+            installed_name = excluded.replace("share/qualx/", "share/qualpf/", 1)
+            if name == installed_name or name.endswith("/" + installed_name):
+                errors.append("excluded material in runtime delivery: " + name)
         if file.name == INVENTORY:
             continue  # never hash the inventory into itself
         with file.open("rb") as stream:
@@ -359,19 +381,32 @@ def stage_inventory(root, stage, data, review=None, kind=None):
         value = dict(path=name, bytes=file.stat().st_size, sha256=digest(file), component=component)
         if component in data.get("release_policy", {}).get("excluded_runtime_components", []):
             errors.append("runtime excluded from formal distribution by owner policy: " + name)
+        if file.name.lower() in data.get("release_policy", {}).get("excluded_windows_system_payloads", []):
+            errors.append("operating-system DLL must not be redistributed in this package: " + name)
         if executable and component != "qualpf-additions":
             value["review_status"] = "pending"
+            source_terms_verified = False
             accepted = review.get("files", {}).get(name, {})
             if accepted.get("sha256") == value["sha256"] and accepted.get("component") == component:
                 notices = accepted.get("notices", [])
                 source_terms = accepted.get("source_artifacts", [])
                 if accepted.get("copyright") and notices and all(relative(prefix, notice).is_file() for notice in notices):
-                    if source_terms and all(relative(prefix, item["path"]).is_file() and digest(relative(prefix, item["path"])) == item["sha256"] for item in source_terms):
+                    source_terms_verified = bool(source_terms) and all(
+                        relative(prefix, item["path"]).is_file() and digest(relative(prefix, item["path"])) == item["sha256"]
+                        for item in source_terms)
+                    if source_terms_verified:
                         value["review_status"] = "reviewed"
                     elif accepted.get("source_exception"):
                         value["review_status"] = "reviewed"
             if value["review_status"] != "reviewed":
                 errors.append("unreviewed shipped runtime: " + name)
+            else:
+                value["copyright"] = accepted["copyright"]
+                value["notices"] = notices
+                if source_terms_verified:
+                    value["source_artifacts"] = source_terms
+                else:
+                    value["source_exception"] = accepted["source_exception"]
         files.append(value)
     if review and review.get("source_revision") != info["source_revision"]:
         errors.append("runtime review belongs to a different source revision")
@@ -379,13 +414,21 @@ def stage_inventory(root, stage, data, review=None, kind=None):
     if kind in {"IFW", "AppImage"}:
         required_reviews.add("package-runtimes")
     for component in data["components"]:
-        if component["status"] == "package-review" and component["id"] in required_reviews:
+        if component["id"] in required_reviews:
             entry = review.get("components", {}).get(component["id"], {})
             if not entry.get("version") or not entry.get("copyright") or not entry.get("notices"):
                 errors.append("missing package-specific header/SDK review: " + component["id"])
             elif not all(relative(prefix, name).is_file() for name in entry["notices"]):
                 errors.append("missing package-specific SDK notice: " + component["id"])
+            elif info.get(component["id"]) and entry["version"] != info[component["id"]]:
+                errors.append("package-specific SDK version differs from the build: " + component["id"])
+            elif component["id"] in {"qt", "eigen"}:
+                sources = entry.get("source_artifacts", [])
+                if not sources or not all(relative(prefix, item["path"]).is_file() and
+                        digest(relative(prefix, item["path"])) == item["sha256"] for item in sources):
+                    errors.append("missing/changed package-specific corresponding source: " + component["id"])
     report = dict(schema="qualpf.distribution_inventory.v1", build=info, files=files,
+                  component_reviews=review.get("components", {}),
                   review_blockers=errors,
                   rights_blockers=[entry["id"] for entry in data["components"] if entry["status"] == "blocked"])
     return report, materials
@@ -569,6 +612,13 @@ def self_test():
                 (materials / "qualx.png").write_bytes(b"old brand")
                 report, _ = stage_inventory(root, stage, data)
                 self.assertTrue(any("legacy asset" in error for error in report["review_blockers"]))
+                data["release_policy"] = dict(excluded_runtime_components=["msvc-runtime"],
+                                               excluded_windows_system_payloads=["d3dcompiler_47.dll"])
+                (stage / "bin/vc_redist.x64.exe").write_bytes(b"VC runtime")
+                (stage / "bin/D3Dcompiler_47.dll").write_bytes(b"system DLL copy")
+                report, _ = stage_inventory(root, stage, data)
+                self.assertTrue(any("owner policy" in error for error in report["review_blockers"]))
+                self.assertTrue(any("operating-system DLL" in error for error in report["review_blockers"]))
 
         def test_preferred_source_and_legacy_exclusion(self):
             with tempfile.TemporaryDirectory() as directory:
@@ -585,6 +635,41 @@ def self_test():
                 self.assertTrue(any("legacy" in error for error in check_source_tree(root, data)))
                 (root / "table.inc").write_bytes(b"modified table")
                 self.assertTrue(any("changed/missing" in error for error in check_source_tree(root, data)))
+                data["excluded_distribution_materials"] = ["restricted.cif"]
+                (root / "restricted.cif").write_bytes(b"reserved independent test input")
+                self.assertTrue(excluded_source("restricted.cif", data))
+                self.assertTrue(excluded_source("tests/real_example_data/03_reference_structures/CoO.cif", data))
+                self.assertTrue(any("uncleared material" in error for error in check_source_tree(root, data)))
+
+        def test_sdk_source_and_version_binding(self):
+            with tempfile.TemporaryDirectory() as directory:
+                root, stage = Path(directory) / "root", Path(directory) / "stage"
+                materials = stage / "share/qualpf"
+                for name in (*LICENSE_FILES, MANIFEST):
+                    for base in (root, materials):
+                        file = base / name
+                        file.parent.mkdir(parents=True, exist_ok=True)
+                        file.write_bytes(b"original legal fixture")
+                write_json(materials / "distribution-build.json", dict(source_revision="a" * 40, qt="6.8.3"))
+                runtime = stage / "bin/Qt6Core.dll"
+                runtime.parent.mkdir()
+                runtime.write_bytes(b"runtime fixture")
+                source = materials / "source.tar.gz"
+                source.write_bytes(b"independent corresponding-source fixture")
+                entry = dict(version="6.8.3", copyright="fixture authors", notices=["share/qualpf/LICENSE"],
+                             source_artifacts=[dict(path="share/qualpf/source.tar.gz", sha256=digest(source))])
+                review = dict(source_revision="a" * 40, components=dict(qt=entry),
+                              files={"bin/Qt6Core.dll": dict(entry, sha256=digest(runtime), component="qt")})
+                data = dict(components=[dict(id="qt", status="package-review")])
+                report, _ = stage_inventory(root, stage, data, review)
+                self.assertEqual(report["review_blockers"], [])
+                entry["version"] = "6.9.0"
+                report, _ = stage_inventory(root, stage, data, review)
+                self.assertTrue(any("SDK version differs" in error for error in report["review_blockers"]))
+                entry["version"] = "6.8.3"
+                source.write_bytes(b"changed source")
+                report, _ = stage_inventory(root, stage, data, review)
+                self.assertTrue(any("corresponding source" in error for error in report["review_blockers"]))
 
         def test_added_source_marks_delivered_revision_dirty(self):
             with tempfile.TemporaryDirectory() as directory:
@@ -732,7 +817,7 @@ def main():
             else:
                 errors.extend(source_archive_errors(args.source_artifact, info, root, data))
         # Missing/stale legal texts are technical failures even in an audit package.
-        errors.extend(error for error in report["review_blockers"] if error.startswith(("missing/stale", "excluded legacy")))
+        errors.extend(error for error in report["review_blockers"] if error.startswith(("missing/stale", "excluded legacy", "excluded material")))
         if args.output:
             write_json(args.output, report)
         print(f"Inventory: {len(report['files'])} files; {len(report['review_blockers'])} package review blockers")

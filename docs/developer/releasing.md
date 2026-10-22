@@ -100,7 +100,10 @@ information into a new package. HTML Help always points to the current guide.
 
 The source exporter copies tracked files only, plus independently hash-verified
 preferred generator inputs. Local presets, caches, untracked/private examples,
-the old agreement and superseded brand images stay outside delivery. Originals
+the old agreement and superseded brand images stay outside delivery. The three
+historical powder examples (`CPD2.dat`, `example1.dat`, `MIXT_5.dat`) and all
+`tests/real_example_data` are excluded too: the retained `CoO.cif` explicitly
+reserves PAULING FILE/SpringerMaterials rights. Originals
 remain in the repository/protected history; no historical bytes or Git objects
 are removed by packaging.
 
@@ -141,7 +144,8 @@ After rights clearance, configure audit mode OFF and supply:
   not a source exception.
 - That review's `components` object identifies actual Qt/Eigen/Boost versions,
   copyrights and installed notices. IFW/AppImage also require `package-runtimes`
-  review covering the final container/runtime. Notices must cover the selected
+  review covering the final container/runtime. Qt/Eigen reviews also bind
+  hash-verified corresponding-source artifacts. Notices must cover the selected
   kit and embedded dependencies, not just generic license texts.
 - For DEB, the actual public maintainer email in `QUALPF_RELEASE_CONTACT_EMAIL`.
   Never fabricate it or borrow an upstream author's address.
@@ -153,12 +157,13 @@ does not authorize scientific model, precision, compiler-flag or PFSM changes.
 
 ## Local 1.0.0 audit scope
 
-The local audit artifacts checked on 22 October 2026 identify clean payload
+The earlier local audit artifacts checked on 22 October 2026 identify clean payload
 revision `a8bc3dbec1f80dfb916474e7f856a46c0c127d1d`. Both Windows IFW packages
 and the corresponding-source TGZ have matching version/revision records and
 verified SHA-256 sidecars. Later documentation-only commits do not change that
-recorded payload identity. These are audit artifacts; the rights and runtime
-source reviews above remain prerequisites for formal distribution.
+recorded payload identity. They precede the follow-up material exclusions and
+MinGW-only release decision and remain historical audit evidence. The rights
+and runtime source reviews above remain prerequisites for formal distribution.
 
 | Configuration or action | Executed scope and qualification |
 | --- | --- |
@@ -168,8 +173,21 @@ source reviews above remain prerequisites for formal distribution.
 | Source TGZ without Git metadata | The product built through all 279 steps in a fresh directory; all four maintained table generators reproduced their committed outputs, and the executable reported version 1.0.0. |
 | IFW packages | Final generated MinGW/MSVC metadata, canonical displayed GPL, copied icons, notices and payload identities passed inspection. The MSVC payload includes the required runtime bootstrap. |
 | Native installation lifecycle | MinGW revision `322351d9` was installed and checked for startup with system-only PATH, database access, unchanged legacy settings import, shortcuts, offline notices and uninstall. The task installation and shortcuts were removed and settings preserved. Final revision checks above cover subsequent Help and packaging controls. An actual MSVC installation/uninstall remains **NOT_VERIFIED**. |
-| Supported Linux GCC / DEB / AppImage | **NOT_VERIFIED**: the available WSL Ubuntu 22.04 lacks the supported SDK and the Docker engine is unavailable. Shell syntax was checked, but supported native builds, regressions, extracted package contents and installed behavior still require execution. No real DEB maintainer email has been supplied. |
+| Supported Linux GCC / DEB / AppImage | **NOT_VERIFIED**: the available WSL Ubuntu 22.04 lacks the supported SDK and the Docker engine is unavailable. Shell syntax was checked, but supported native builds, regressions, extracted package contents and installed behavior still require execution. The owner has now supplied `uncercalculate@163.com`; pass it explicitly when building DEB. |
 
 Original diagnostics and local package/test evidence remain under the ignored
 `build/distribution-readiness` directory. None of these artifacts was uploaded
 or published; passing local checks does not close the recorded authorization gaps.
+
+The follow-up [material/source review](distribution-rights.md) records the
+current MinGW-only formal policy, excluded optional examples and offline
+dependency bundle. Its fresh MinGW staging checks bind 18 runtime files and
+Eigen/Boost header sources; three GCC DLL bindings and the IFW container review
+remain incomplete. The six affected distribution/About/startup controls passed
+with the documented SDK DLL paths, and the installed application passed startup,
+SQLite and settings migration checks using only Windows system directories on
+PATH. The original missing-DLL test run remains retained. The full normal suite
+now registers 127 entries; this follow-up does not claim a fresh full matrix run.
+After the material exclusions, a fresh export without Git metadata completed all
+279 application build steps and all four maintained generator checks. Original
+diagnostics and follow-up evidence remain in `build/distribution-rights`.

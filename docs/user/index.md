@@ -19,6 +19,10 @@ diffraction patterns against reference databases.
 - Quantitative phase analysis (RIR method)
 - Project save/load (.qpf format)
 
+Installation packages omit the inherited demonstration patterns whose
+redistribution rights remain unconfirmed. Use diffraction data you are entitled
+to use and install reference databases under their separate terms.
+
 ## Quick Links
 
 - [Installation](installation.md)

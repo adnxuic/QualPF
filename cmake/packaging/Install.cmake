@@ -7,7 +7,10 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/share/qualx/
 set(COMPONENT_NAME_MAIN "${PROJECT_NAME}")
 install(TARGETS ${EXECUTABLE_NAME}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT ${COMPONENT_NAME_MAIN})
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/share/qualx/ DESTINATION share/${EXECUTABLE_NAME} COMPONENT ${COMPONENT_NAME_MAIN})
+# Historical example rights are unresolved. Development keeps the originals;
+# delivery carries only the required resource files, not those optional examples.
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/share/qualx/files/
+    DESTINATION share/${EXECUTABLE_NAME}/files COMPONENT ${COMPONENT_NAME_MAIN})
 # install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/DB DESTINATION . COMPONENT ${COMPONENT_NAME_MAIN})
 
 # Include a generated manual only when it matches the current documentation.

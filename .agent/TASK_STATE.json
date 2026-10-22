@@ -10,12 +10,17 @@
       "NOTICE.md",
       "THIRD_PARTY_NOTICES.md",
       "docs/developer/**",
+      "docs/user/index.md",
       "CHANGELOG.md",
       "tools/validation/**",
       "cmake/packaging/**",
       ".agent/TASK_STATE.json",
       "cmake/templates/**",
-      ".gitattributes"
+      ".gitattributes",
+      "tests/CMakeLists.txt",
+      "tests/coverage.json",
+      "tests/README.md",
+      ".github/workflows/quality.yml"
     ],
     "out_of_scope": [
       "Scientific/PFSM or Core/Application API changes",
@@ -24,18 +29,24 @@
     ],
     "status": "in_progress",
     "base_commit": "8f2921d531293a233a996042324a37be3c940d3c",
-    "checkpoint_commit": null,
+    "checkpoint_commit": "1cde820f8bc4f0aa1027759d04bb199fa7e4ee9c",
     "completed": [
       "Read current distribution contracts and inspected the existing unresolved component inventory and local audit artifacts.",
       "Recorded six scientific input scopes and 29 active inherited image origins; NIST SRD66 remains reserved and the CCP4/MULTEM candidates differ from retained tables.",
       "Retained original winpthreads, CRT, IFW, libarchive and OpenSSL notices; split MIT/BSD winpthreads from GCC exceptions.",
       "Recorded the real supplied DEB email and owner decision for MinGW formal distribution with MSVC development validation; added formal package policy controls.",
-      "Acquired eight versioned official source archives with official checksums; matched actual deployed Qt DLLs/plugins to selected SDKs and QtBase source commit to the SDK SBOM."
+      "Acquired ten hash-pinned upstream source/build archives, including the ten named GCC patches as a qualified vendor snapshot candidate; preserved actual SDK configuration and full Eigen/Boost headers.",
+      "Added optional hash-verified offline source/notice bundles, source-SBOM difference preservation and per-runtime/component source bindings.",
+      "Excluded the reserved PAULING FILE/SpringerMaterials CIF and three uncleared powder demonstrations from delivery while preserving development originals and assertions.",
+      "Fresh MinGW staging excludes the examples, old system D3D DLL and VC redistributable; 18 runtime files and the Qt/Eigen/Boost component materials are bound, with four package review blockers retained.",
+      "Installed system-only-PATH startup, SQLite and legacy settings checks passed; all six affected distribution/About/startup regressions passed with the documented DLL paths.",
+      "No-Git source export, all 279 product build steps and all four maintained generator checks passed; strict MkDocs, identity/baseline/context/documentation checks and all 169 original reference hashes passed."
     ],
-    "next_action": "Finish the verified notices/policy batch, prepare an offline dependency source/notice bundle and bind actual runtime review results without publishing.",
+    "next_action": "Commit the verified delivery/source batch, then prepare and inspect qualified clean-revision local MinGW/source audit artifacts without publishing.",
     "blockers": [
       "Exact scientific compilation and inherited asset grants remain unresolved; the owner has no private grants and requested public-source findings.",
-      "GCC vendor patch/build provenance, IFW static build provenance and graphics runtime terms remain package review obligations."
+      "Three GCC DLL vendor source/build bindings and IFW static container provenance remain incomplete; MinGW application selection does not prove the installer lacks a static MSVC CRT.",
+      "Supported Linux GCC/DEB/AppImage execution and final package acceptance remain unverified on this host."
     ],
     "checks": [
       {
@@ -67,6 +78,42 @@
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": "build/distribution-rights/gnu-legal-startup-native-01.xml"
+      },
+      {
+        "command": "ctest affected distribution/About/startup controls with native permissions but without the documented SDK DLL paths",
+        "result": "FAIL",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/distribution-rights/gnu-final-controls-03.xml"
+      },
+      {
+        "command": "ctest affected distribution/About/startup controls with the documented SDK DLL paths and native permissions",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/distribution-rights/gnu-final-controls-04.xml"
+      },
+      {
+        "command": "python -B build/distribution-rights/stage_runtime_smoke_02.py",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/distribution-rights/stage-smoke-02/observations.json"
+      },
+      {
+        "command": "python -B tools/validation/check_distribution.py --root build/distribution-rights/source-export-01 --source-tree",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/distribution-rights/source-tree-01.log"
+      },
+      {
+        "command": "python -m mkdocs build --strict -f docs/mkdocs.yml",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/distribution-rights/manual-build-02.log"
+      },
+      {
+        "command": "cmake --build build/distribution-rights/source-build-01 --target qualpf --parallel 4",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/distribution-rights/source-build-01.log"
       }
     ]
   }

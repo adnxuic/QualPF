@@ -1,0 +1,154 @@
+{
+  "schema": "qualpf.dependency_sources.v1",
+  "scope": "Verified public source cache inputs, not a release clearance or proof of unrecorded vendor patches. Archives stay outside Git and are copied into an optional offline dependency bundle.",
+  "sources": [
+    {
+      "id": "qtifw-4.8.1",
+      "url": "https://download.qt.io/official_releases/qt-installer-framework/4.8.1/installer-framework-everywhere-src-4.8.1.tar.xz",
+      "checksum_url": "https://download.qt.io/official_releases/qt-installer-framework/4.8.1/installer-framework-everywhere-src-4.8.1.tar.xz.sha256",
+      "bytes": 3383360,
+      "sha256": "150265e124ebfb6947fecff0e6b727f91576090b775459354b00f92b85321558",
+      "file": "installer-framework-everywhere-src-4.8.1.tar.xz",
+      "scope": "IFW installer/maintenance code",
+      "source_status": "upstream-acquired; exact staged runtime/source/build review required"
+    },
+    {
+      "id": "qtbase-6.8.3",
+      "url": "https://download.qt.io/archive/qt/6.8/6.8.3/submodules/qtbase-everywhere-src-6.8.3.tar.xz",
+      "checksum_url": "https://download.qt.io/archive/qt/6.8/6.8.3/submodules/qtbase-everywhere-src-6.8.3.tar.xz.sha256",
+      "bytes": 48426536,
+      "sha256": "56001b905601bb9023d399f3ba780d7fa940f3e4861e496a7c490331f49e0b80",
+      "file": "qtbase-everywhere-src-6.8.3.tar.xz",
+      "scope": "application Qt DLLs and plugins",
+      "source_status": "upstream-acquired; exact staged runtime/source/build review required",
+      "git_commit": "c07c2d5a527a644d36e7853d55132ae38921682f"
+    },
+    {
+      "id": "qtsvg-6.8.3",
+      "url": "https://download.qt.io/archive/qt/6.8/6.8.3/submodules/qtsvg-everywhere-src-6.8.3.tar.xz",
+      "checksum_url": "https://download.qt.io/archive/qt/6.8/6.8.3/submodules/qtsvg-everywhere-src-6.8.3.tar.xz.sha256",
+      "bytes": 2009072,
+      "sha256": "35eb516460f00f264eb504baa253432384351cf23fb9980a5857190e8deef438",
+      "file": "qtsvg-everywhere-src-6.8.3.tar.xz",
+      "scope": "observed MSVC development audit payload only",
+      "source_status": "upstream-acquired; exact staged runtime/source/build review required",
+      "git_commit": "c75099a75e81df35e7347a65e301bbf1011831a5"
+    },
+    {
+      "id": "qtbase-6.6.0",
+      "url": "https://download.qt.io/archive/qt/6.6/6.6.0/submodules/qtbase-everywhere-src-6.6.0.tar.xz",
+      "checksum_url": "https://download.qt.io/archive/qt/6.6/6.6.0/submodules/qtbase-everywhere-src-6.6.0.tar.xz.sha256",
+      "bytes": 48350308,
+      "sha256": "039d53312acb5897a9054bd38c9ccbdab72500b71fdccdb3f4f0844b0dd39e0e",
+      "file": "qtbase-everywhere-src-6.6.0.tar.xz",
+      "scope": "IFW embedded Qt base",
+      "source_status": "upstream-acquired; exact staged runtime/source/build review required",
+      "git_commit": "33f5e985e480283bb0ca9dea5f82643e825ba87c"
+    },
+    {
+      "id": "qtdeclarative-6.6.0",
+      "url": "https://download.qt.io/archive/qt/6.6/6.6.0/submodules/qtdeclarative-everywhere-src-6.6.0.tar.xz",
+      "checksum_url": "https://download.qt.io/archive/qt/6.6/6.6.0/submodules/qtdeclarative-everywhere-src-6.6.0.tar.xz.sha256",
+      "bytes": 34331124,
+      "sha256": "1b539bb0a918c8f0307fd07bd4ef0334bf7f8934bbc2eabfc04c433a7d7fa331",
+      "file": "qtdeclarative-everywhere-src-6.6.0.tar.xz",
+      "scope": "IFW embedded QML/JavaScript engine",
+      "source_status": "upstream-acquired; exact staged runtime/source/build review required",
+      "git_commit": "26410978b7384fd6997ec2474d28ff280d83dce8"
+    },
+    {
+      "id": "qtsvg-6.6.0",
+      "url": "https://download.qt.io/archive/qt/6.6/6.6.0/submodules/qtsvg-everywhere-src-6.6.0.tar.xz",
+      "checksum_url": "https://download.qt.io/archive/qt/6.6/6.6.0/submodules/qtsvg-everywhere-src-6.6.0.tar.xz.sha256",
+      "bytes": 1651728,
+      "sha256": "33da25fef51102f564624a7ea3e57cb4a0a31b7b44783d1af5749ac36d3c72de",
+      "file": "qtsvg-everywhere-src-6.6.0.tar.xz",
+      "scope": "IFW Qt SVG candidate source",
+      "source_status": "upstream-acquired; exact staged runtime/source/build review required",
+      "git_commit": "da7e04eaa56c54d5486e39d2e0bd0ddb2a62b74b"
+    },
+    {
+      "id": "gcc-13.1.0",
+      "url": "https://ftp.gnu.org/gnu/gcc/gcc-13.1.0/gcc-13.1.0.tar.xz",
+      "checksum_url": "https://gcc.gnu.org/pub/gcc/releases/gcc-13.1.0/sha512.sum",
+      "bytes": 87451196,
+      "sha256": "61d684f0aa5e76ac6585ad8898a2427aade8979ed5e7f85492286c4dfc13ee86",
+      "sha512": "6cf06dfc48f57f5e67f7efe3248019329a14d690c728d9f2f7ef5fa0d58f1816f309586ba7ea2eac20d0b60a2d1b701f68392e9067dd46f827ba0efd7192db33",
+      "file": "gcc-13.1.0.tar.xz",
+      "scope": "GCC runtime base; ten SDK patches/build scripts remain required",
+      "source_status": "upstream-acquired; exact staged runtime/source/build review required"
+    },
+    {
+      "id": "openssl-3.0.14",
+      "url": "https://www.openssl.org/source/old/3.0/openssl-3.0.14.tar.gz",
+      "checksum_url": "https://www.openssl.org/source/old/3.0/openssl-3.0.14.tar.gz.sha256",
+      "bytes": 15305497,
+      "sha256": "eeca035d4dd4e84fc25846d952da6297484afa0650a6f84c682e39df3a4123ca",
+      "file": "openssl-3.0.14.tar.gz",
+      "scope": "IFW embedded OpenSSL",
+      "source_status": "upstream-acquired; exact staged runtime/source/build review required"
+    },
+    {
+      "id": "mingw-builds-20230524",
+      "url": "https://codeload.github.com/niXman/mingw-builds/tar.gz/7ff96692a8032d893781523b311ac9b6cbbda0a1",
+      "file": "mingw-builds-20230524-7ff96692a803.tar.gz",
+      "git_commit": "7ff96692a8032d893781523b311ac9b6cbbda0a1",
+      "sha256": "cb92e4c9df87cd3536a4f9318620a3153bae3de813207aded08a6747ba2d0fc1",
+      "bytes": 578807,
+      "scope": "Candidate MinGW-builds snapshot at the public release date; contains the ten patches named by the SDK, but the vendor build commit is not attested.",
+      "source_status": "candidate vendor-source reconstruction; not a completed exact binary/source review",
+      "gcc_patch_inputs": [
+        {
+          "path": "patches/gcc/gcc-5.1-iconv.patch",
+          "sha256": "4cb3b893be90c93318dcf978902a1aa527f7df5d0b375fda92b2f0a14e09de90"
+        },
+        {
+          "path": "patches/gcc/gcc-4.8-libstdc++export.patch",
+          "sha256": "21191b4fd57ce5f230fcc97b4d9ae31bdc387d7c7c8e39436aa7e4268d278d3d"
+        },
+        {
+          "path": "patches/gcc/gcc-12-fix-for-windows-not-minding-non-existant-parent-dirs.patch",
+          "sha256": "874ad353f8388ac85659b472677d0026b7b57e7a52a76764dc14b8652f94709c"
+        },
+        {
+          "path": "patches/gcc/gcc-5.1.0-make-xmmintrin-header-cplusplus-compatible.patch",
+          "sha256": "a253ff798060bf19780bd695b4d96187932a247b2e0c9a9b92b4c92efa55b69f"
+        },
+        {
+          "path": "patches/gcc/gcc-5-dwarf-regression.patch",
+          "sha256": "0768864eba737cf7be59e8469d039a2246e015e40ba139cd2d20aa798c3362ef"
+        },
+        {
+          "path": "patches/gcc/gcc-12-ktietz-libgomp.patch",
+          "sha256": "845d348aff07de4721492ed7834474a97730d664cb29fd6008831f0fa4cc7a7c"
+        },
+        {
+          "path": "patches/gcc/gcc-libgomp-ftime64.patch",
+          "sha256": "d71ba65929207fa851b0741af3b2efa849b9bea4894d58d59b3eba843789f1da"
+        },
+        {
+          "path": "patches/gcc/0020-libgomp-Don-t-hard-code-MS-printf-attributes.patch",
+          "sha256": "276ecc392c777d4b17d771a987e80dca50ff25d8f65671d5de139be73997064b"
+        },
+        {
+          "path": "patches/gcc/gcc-10-libgcc-ldflags.patch",
+          "sha256": "8b5c8267189d043e489264167ecf2f5472906b5ff54e88802a4b39b3cfb45cd5"
+        },
+        {
+          "path": "patches/gcc/gcc-12-replace-abort-with-fancy_abort.patch",
+          "sha256": "95160ecb5aac3422c0610ea52f8efe1f87e62feb5e2bf50c8be0ad7136d7c3da"
+        }
+      ]
+    },
+    {
+      "id": "mingw-w64-v11",
+      "url": "https://codeload.github.com/mingw-w64/mingw-w64/tar.gz/f9500e2d85b9400c0982518663660a127e1dc61a",
+      "file": "mingw-w64-v11-f9500e2d85b9.tar.gz",
+      "git_commit": "f9500e2d85b9400c0982518663660a127e1dc61a",
+      "sha256": "62b5ba3cb76d916b4e0017da8b878a7020e2929d9d07efbd2aebeaf8ecf73b5d",
+      "bytes": 13932525,
+      "scope": "MinGW-w64 v11.0.0 CRT/winpthreads source; exact SDK snapshot still needs vendor binding.",
+      "source_status": "candidate vendor-source reconstruction; not a completed exact binary/source review"
+    }
+  ]
+}

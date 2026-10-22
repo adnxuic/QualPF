@@ -75,6 +75,54 @@
       "license_files": [
         "LICENSES/spglib-BSD-3-Clause.txt"
       ]
+    },
+    {
+      "id": "excluded-cpd2",
+      "path": "share/qualx/examples/CPD2.dat",
+      "sha256": "edc7b8b1f35fc62c83a03c59abd7d202a44665c158feb44dd97b2f116e85c751",
+      "hash_mode": "lf",
+      "status": "blocked",
+      "delivery": "excluded",
+      "finding": "Inherited measured powder pattern; no file-specific author or redistribution grant located. Not needed to build the product; excluded from installers and corresponding-source exports until cleared.",
+      "primary_sources": [
+        "https://github.com/ccorrado71/qualx3/tree/f98a51da8435fef0f730b513e76c820fb879865d/share/qualx/examples"
+      ]
+    },
+    {
+      "id": "excluded-example1",
+      "path": "share/qualx/examples/example1.dat",
+      "sha256": "020f884bd419645ac33272b0d4880d18a5eb24758257f2403a4e1e3853b773d3",
+      "hash_mode": "lf",
+      "status": "blocked",
+      "delivery": "excluded",
+      "finding": "Inherited measured powder pattern; no file-specific author or redistribution grant located. Not needed to build the product; excluded from installers and corresponding-source exports until cleared.",
+      "primary_sources": [
+        "https://github.com/ccorrado71/qualx3/tree/f98a51da8435fef0f730b513e76c820fb879865d/share/qualx/examples"
+      ]
+    },
+    {
+      "id": "excluded-mixt_5",
+      "path": "share/qualx/examples/MIXT_5.dat",
+      "sha256": "0f6c7c54063f2d2ddc602e266eecdc849abc9f466dd9af57aef9f4035b230391",
+      "hash_mode": "lf",
+      "status": "blocked",
+      "delivery": "excluded",
+      "finding": "Inherited measured powder pattern; no file-specific author or redistribution grant located. Not needed to build the product; excluded from installers and corresponding-source exports until cleared.",
+      "primary_sources": [
+        "https://github.com/ccorrado71/qualx3/tree/f98a51da8435fef0f730b513e76c820fb879865d/share/qualx/examples"
+      ]
+    },
+    {
+      "id": "excluded-coo",
+      "path": "tests/real_example_data/03_reference_structures/CoO.cif",
+      "sha256": "2b4850c8553e623344052cc6f91e4b04044fc1353632e9127c55a68a215a0443",
+      "hash_mode": "lf",
+      "status": "blocked",
+      "delivery": "excluded",
+      "finding": "The file explicitly identifies PAULING FILE Multinaries Edition 2012 / SpringerMaterials Release 2014, copyright Springer, MPDS and NIMS, All Rights Reserved. It is an independent test input, not a licensed public example; excluded from source delivery.",
+      "primary_sources": [
+        "https://materials.springer.com/"
+      ]
     }
   ],
   "inherited_images": [
@@ -321,5 +369,10 @@
   "decisions": {
     "windows_formal_distribution": "MinGW only; MSVC development validation retained",
     "deb_maintainer_email": "uncercalculate@163.com"
-  }
+  },
+  "upstream_official_references": [
+    "https://www.ic.cnr.it/en/software/qualx-2/",
+    "https://www.ba.ic.cnr.it/softwareic/qualx/"
+  ],
+  "upstream_official_reference_scope": "Official CNR pages link to the QualX3 GitHub releases. This corroborates repository provenance, not an asset-specific grant or permission for externally authored tables."
 }

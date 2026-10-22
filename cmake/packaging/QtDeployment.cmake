@@ -1,10 +1,17 @@
 # Qt deployment script (must be before install commands to allow overriding)
 if(Qt6_VERSION VERSION_GREATER_EQUAL 6.5)
+    set(_qualpf_deploy_options)
+    if(MINGW AND Qt6_VERSION VERSION_GREATER_EQUAL 6.7)
+        # The supported Windows platform supplies this system component. Do not
+        # redistribute an older SDK copy with separate Microsoft SDK terms.
+        list(APPEND _qualpf_deploy_options DEPLOY_TOOL_OPTIONS --no-system-d3d-compiler)
+    endif()
     # Generate the deployment script for the target
     qt_generate_deploy_app_script(
         TARGET ${EXECUTABLE_NAME}
         OUTPUT_SCRIPT deploy_script
         NO_UNSUPPORTED_PLATFORM_ERROR
+        ${_qualpf_deploy_options}
     )
 endif()
 

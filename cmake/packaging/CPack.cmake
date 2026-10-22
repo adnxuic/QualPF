@@ -36,24 +36,10 @@ list(APPEND CPACK_SOURCE_IGNORE_FILES
     "[/][.]pytest_cache[/]"
     "[/][.](mypy|ruff)_cache[/]"
     "[/]([.]DS_Store|Thumbs[.]db|desktop[.]ini)$")
-# Local example collections stay private; retain only the independent CoO fixture.
-file(GLOB_RECURSE QUALPF_LOCAL_EXAMPLES LIST_DIRECTORIES true CONFIGURE_DEPENDS
-    RELATIVE "${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/tests/real_example_data/*")
-foreach(example IN LISTS QUALPF_LOCAL_EXAMPLES)
-    if(NOT example STREQUAL "tests/real_example_data/03_reference_structures" AND
-       NOT example STREQUAL "tests/real_example_data/03_reference_structures/CoO.cif")
-        set(example_is_directory false)
-        if(IS_DIRECTORY "${PROJECT_SOURCE_DIR}/${example}")
-            set(example_is_directory true)
-        endif()
-        qualpf_cpack_escape_regex(example "${example}")
-        if(example_is_directory)
-            list(APPEND CPACK_SOURCE_IGNORE_FILES "${QUALPF_CPACK_SOURCE_ROOT}/${example}[/]")
-        else()
-            list(APPEND CPACK_SOURCE_IGNORE_FILES "${QUALPF_CPACK_SOURCE_ROOT}/${example}$")
-        endif()
-    endif()
-endforeach()
+# Independent numerical evidence does not imply redistribution permission.
+# CoO.cif is a reserved SpringerMaterials/PAULING FILE compilation; keep all
+# original local examples outside source delivery without changing their bytes.
+list(APPEND CPACK_SOURCE_IGNORE_FILES "${QUALPF_CPACK_SOURCE_ROOT}/tests/real_example_data[/]")
 # The tracked-only exporter includes the preferred symmetry generator input;
 # other sealed archives remain independent test prerequisites outside delivery.
 set(QUALPF_REFERENCE_ARCHIVES "${PROJECT_SOURCE_DIR}/tests/reference/archives.json")
@@ -67,6 +53,13 @@ foreach(index RANGE 0 ${QUALPF_REFERENCE_ARCHIVE_LAST})
         qualpf_cpack_escape_regex(archive "${archive}")
         list(APPEND CPACK_SOURCE_IGNORE_FILES "${QUALPF_CPACK_SOURCE_ROOT}/${archive}$")
     endif()
+endforeach()
+string(JSON QUALPF_EXCLUDED_MATERIAL_COUNT LENGTH "${QUALPF_DISTRIBUTION_JSON}" excluded_distribution_materials)
+math(EXPR QUALPF_EXCLUDED_MATERIAL_LAST "${QUALPF_EXCLUDED_MATERIAL_COUNT} - 1")
+foreach(index RANGE 0 ${QUALPF_EXCLUDED_MATERIAL_LAST})
+    string(JSON excluded GET "${QUALPF_DISTRIBUTION_JSON}" excluded_distribution_materials ${index})
+    qualpf_cpack_escape_regex(excluded "${excluded}")
+    list(APPEND CPACK_SOURCE_IGNORE_FILES "${QUALPF_CPACK_SOURCE_ROOT}/${excluded}$")
 endforeach()
 string(JSON QUALPF_EXCLUDED_LEGACY_COUNT LENGTH "${QUALPF_DISTRIBUTION_JSON}" excluded_legacy_assets)
 math(EXPR QUALPF_EXCLUDED_LEGACY_LAST "${QUALPF_EXCLUDED_LEGACY_COUNT} - 1")
