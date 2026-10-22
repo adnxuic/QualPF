@@ -3,6 +3,8 @@
 The application GPLv3 text is the root `LICENSE`. The additional texts here are
 retained verbatim, with line endings normalized only where necessary for portable
 text comparison. Component copyrights remain in their source files and notices.
+Upstream MPL and GCC exception whitespace is preserved; their scoped Git
+whitespace attributes prevent rewriting the legal texts to satisfy formatting.
 
 - LGPL-3.0-only.txt: SPDX license-list-data, Git blob
   `513d1c01fe5b5b9724e999d8eb041ff17d444eaa`; supplements the GPLv3 text.
