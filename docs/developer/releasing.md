@@ -73,6 +73,9 @@ component classifications and review blockers. Missing/stale notices fail even
 audit staging. It excludes itself from hashing. Artifact sidecars identify exact
 revision/version, toolchain, artifact SHA-256 and packaging-tool hashes. Generic
 component labels are review aids, not inferred grants.
+IFW post-build checks also inspect generated installer/component XML, the displayed
+canonical license and the actual copied product icons. Component options are set
+in one call so later script configuration cannot discard the license.
 
 An existing local PDF is preserved but installed only with matching documentation
 input/PDF hashes from `docs/make_pdf.sh`. The generated proof stays under

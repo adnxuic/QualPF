@@ -32,13 +32,14 @@
     ],
     "status": "in_progress",
     "base_commit": "744612d19dc1b3f78856e5c68bc990ea39871f3b",
-    "checkpoint_commit": "e47c33c641b05dcc7178e2e9fa287ea323c96dbf",
+    "checkpoint_commit": "6f3f84fe2089d9da25cd8ea340389940395364ba",
     "completed": [
       "Recorded upstream GPLv3 grant evidence, component obligations, historical installer agreement identity and unresolved scientific-data/artwork rights.",
       "Added application/third-party notices and full supplemental license texts; corrected current README license and maintainer.",
       "Implemented shared independent metadata, QualPF 1.0.0, native scalable About and offline legal resources; preserved internal settings identities.",
       "Added README methodological acknowledgment of Match public PFSM documentation, distinct from code provenance; fixed AppImage icon staging and product help/support routes.",
-      "Integrated staged/runtime inventories, tracked corresponding-source exports with preferred generator inputs, source/tool/artifact hashes and formal/audit package rejection controls; stale generated PDF inputs are excluded."
+      "Integrated staged/runtime inventories, tracked corresponding-source exports with preferred generator inputs, source/tool/artifact hashes and formal/audit package rejection controls; stale generated PDF inputs are excluded.",
+      "Generated and inspected IFW/TGZ audit artifacts; repaired CPack script policies and component-option replacement that omitted the installer GPL; added generated XML/license/icon rejection tests."
     ],
     "next_action": "Build and inspect actual IFW/TGZ audit artifacts at a clean commit, compile the extracted source without Git, validate installer isolation and complete supported Windows normal regressions.",
     "blockers": [
@@ -105,6 +106,30 @@
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": "build/distribution-readiness/stage-gnu-01-inventory.json"
+      },
+      {
+        "command": "cpack --config build/distribution-readiness/windows-gnu/CPackSourceConfig.cmake -G TGZ",
+        "result": "FAIL",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/distribution-readiness/cpack-source-01.log"
+      },
+      {
+        "command": "cpack --config build/distribution-readiness/windows-gnu/CPackSourceConfig.cmake -G TGZ",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/distribution-readiness/cpack-source-02.log"
+      },
+      {
+        "command": "cpack --config build/distribution-readiness/windows-gnu/CPackConfig.cmake -G IFW",
+        "result": "FAIL",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/distribution-readiness/cpack-ifw-01.log"
+      },
+      {
+        "command": "cpack --config build/distribution-readiness/windows-gnu/CPackConfig.cmake -G IFW",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/distribution-readiness/cpack-ifw-02.log"
       }
     ]
   }

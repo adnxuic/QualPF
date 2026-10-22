@@ -15,6 +15,7 @@ import subprocess
 import tarfile
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = "deploy/distribution.json"
@@ -369,6 +370,35 @@ def source_archive_errors(path, info, root, data):
     return errors
 
 
+def ifw_metadata_errors(root, stage, info, data):
+    errors = []
+    config = ET.parse(stage / "config/config.xml").getroot()
+    package_dir = stage / "packages/QualPF/meta"
+    package = ET.parse(package_dir / "package.xml").getroot()
+    for field, expected in (("Publisher", data["product"]["publisher"]), ("Version", info["version"])):
+        if config.findtext(field) != expected:
+            errors.append("IFW installer metadata mismatch: " + field)
+    for field, expected in (("Version", info["version"]), ("Description", data["product"]["description"]),
+                            ("ForcedInstallation", "true")):
+        if package.findtext(field) != expected:
+            errors.append("IFW component metadata mismatch: " + field)
+    licenses = package.findall("Licenses/License")
+    if len(licenses) != 1 or licenses[0].get("name") != data["product"]["license"]:
+        errors.append("IFW installer does not display the application license")
+    else:
+        license_file = relative(package_dir, licenses[0].get("file", ""))
+        if not license_file.is_file() or license_file.read_bytes() != (root / "LICENSE").read_bytes():
+            errors.append("IFW installer license text differs from the canonical GPL")
+    for field, filename, original in (("InstallerApplicationIcon", "cm_appicon.ico", "qualpf.ico"),
+                                       ("InstallerWindowIcon", "cm_winicon.png", "qualpf.png")):
+        value = config.findtext(field)
+        expected = Path(filename).stem if field == "InstallerApplicationIcon" else filename
+        icon = stage / "config" / filename
+        if value != expected or not icon.is_file() or digest(icon) != digest(root / "src/gui/resources/branding" / original):
+            errors.append("IFW installer uses an unexpected product icon: " + field)
+    return errors
+
+
 def self_test():
     class Controls(unittest.TestCase):
         def test_email_and_paths(self):
@@ -471,6 +501,30 @@ def self_test():
                 self.assertEqual(source_archive_errors(archive, info, root, data), [])
                 (root / "input.cpp").write_bytes(b"wrong source")
                 self.assertTrue(any("contents differ" in error for error in source_archive_errors(archive, info, root, data)))
+
+        def test_ifw_displayed_license_and_publisher(self):
+            with tempfile.TemporaryDirectory() as directory:
+                root, stage = Path(directory) / "source", Path(directory) / "installer"
+                branding, config, meta = root / "src/gui/resources/branding", stage / "config", stage / "packages/QualPF/meta"
+                for folder in (branding, config, meta):
+                    folder.mkdir(parents=True)
+                (root / "LICENSE").write_bytes(b"canonical GPL fixture")
+                (meta / "LICENSE").write_bytes((root / "LICENSE").read_bytes())
+                for original, staged in (("qualpf.ico", "cm_appicon.ico"), ("qualpf.png", "cm_winicon.png")):
+                    (branding / original).write_bytes(original.encode())
+                    (config / staged).write_bytes(original.encode())
+                config_text = '<Installer><Publisher>adnxuic</Publisher><Version>1.0.0</Version><InstallerApplicationIcon>cm_appicon</InstallerApplicationIcon><InstallerWindowIcon>cm_winicon.png</InstallerWindowIcon></Installer>'
+                (config / "config.xml").write_text(config_text, encoding="utf-8")
+                package = '<Package><Version>1.0.0</Version><Description>description</Description><ForcedInstallation>true</ForcedInstallation><Licenses><License name="GPL-3.0-only" file="LICENSE"/></Licenses></Package>'
+                (meta / "package.xml").write_text(package, encoding="utf-8")
+                data, info = dict(product=dict(publisher="adnxuic", description="description", license="GPL-3.0-only")), dict(version="1.0.0")
+                self.assertEqual(ifw_metadata_errors(root, stage, info, data), [])
+                (config / "config.xml").write_text(config_text.replace("adnxuic", "Institute of Crystallography - CNR"), encoding="utf-8")
+                self.assertTrue(any("Publisher" in error for error in ifw_metadata_errors(root, stage, info, data)))
+                (meta / "LICENSE").write_bytes(b"old restricted agreement")
+                self.assertTrue(any("canonical GPL" in error for error in ifw_metadata_errors(root, stage, info, data)))
+                (meta / "package.xml").write_text(package.replace('<Licenses><License name="GPL-3.0-only" file="LICENSE"/></Licenses>', ''), encoding="utf-8")
+                self.assertTrue(any("display" in error for error in ifw_metadata_errors(root, stage, info, data)))
     return unittest.TextTestRunner(verbosity=1).run(unittest.defaultTestLoader.loadTestsFromTestCase(Controls)).wasSuccessful()
 
 
@@ -487,6 +541,7 @@ def main():
     parser.add_argument("--review", type=Path)
     parser.add_argument("--source-artifact", type=Path)
     parser.add_argument("--source-tree", action="store_true")
+    parser.add_argument("--ifw-metadata", type=Path)
     parser.add_argument("--prepare-source", type=Path)
     parser.add_argument("--write-build-info", type=Path)
     parser.add_argument("--compiler", default="unknown")
@@ -523,6 +578,8 @@ def main():
         errors.extend(release_errors(data, info))
     if args.source_tree:
         errors.extend(check_source_tree(root, data))
+    if args.ifw_metadata:
+        errors.extend(ifw_metadata_errors(root, args.ifw_metadata, info, data))
     if args.check_manual:
         if not args.manual_file or not args.manual_proof:
             raise ValueError("manual check requires --manual-file and --manual-proof")
@@ -571,6 +628,6 @@ def main():
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError, tarfile.TarError) as error:
+    except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError, tarfile.TarError, ET.ParseError) as error:
         print("FAIL:", error)
         raise SystemExit(1)

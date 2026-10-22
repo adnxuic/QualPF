@@ -104,13 +104,6 @@ if(WIN32)
 
     CPACK_ADD_COMPONENT(${COMPONENT_NAME_MAIN})
 
-    # The component HAS to be installed
-    cpack_ifw_configure_component(${COMPONENT_NAME_MAIN} ESSENTIAL FORCED_INSTALLATION)
-
-    # Adds license info to package.xml file
-    # The same canonical GPL text is embedded in the app and installed as LICENSE.
-    cpack_ifw_configure_component(${COMPONENT_NAME_MAIN} LICENSES "${QUALPF_LICENSE}" ${CPACK_RESOURCE_FILE_LICENSE})
-
     # Generate only the C++ runtime choice; retain IFW's @TargetDir@ and other
     # path tokens verbatim rather than expanding them as CMake variables.
     if(MSVC)
@@ -133,6 +126,9 @@ if(WIN32)
     file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/configured_files/deploy/Windows/installscript.qs"
         "${QUALPF_IFW_INSTALL_SCRIPT}")
     cpack_ifw_configure_component(${COMPONENT_NAME_MAIN}
+        ESSENTIAL FORCED_INSTALLATION
+        DESCRIPTION "${QUALPF_DESCRIPTION}"
+        LICENSES "${QUALPF_LICENSE}" "${CPACK_RESOURCE_FILE_LICENSE}"
         SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/configured_files/deploy/Windows/installscript.qs")
 
     # The old QualX feed installs a foreign product. This C++ package has no
