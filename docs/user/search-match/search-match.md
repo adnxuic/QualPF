@@ -139,22 +139,37 @@ the explicit restraints define its candidate universe.
 | Weighting | Auto from explicitly supplied statistics; unknown noise uses labelled equal weights; equal weights can also be chosen |
 | Min. relative FOM | 0, in [0,1]; immediate display filter only |
 | General → Advanced → Workers | Auto (internal 0); applies to the next run |
-| General → Advanced → Template cache | Off; optional interpolation always has direct final verification |
+| General → Advanced → Template cache | On; interpolated fitting iterations always have direct final verification |
+
+Template caching can speed up searches by reducing repeated profile calculations
+during fitting iterations. Preparing and storing the cache costs time and memory,
+so small searches may not benefit. Disabling it evaluates profiles directly
+throughout fitting, avoiding interpolation and its cache overhead, but repeated
+calculations can be slower. Both modes verify final fits by direct evaluation.
+Saved off choices and existing project settings are retained. Restore Defaults
+enables caching; Setting → PFSM → Profile Expansion controls defaults for new
+projects.
 
 | Candidate Recall option | Default and effect |
 | --- | --- |
 | Enable candidate recall | On for first use or missing settings; an explicit off choice is remembered |
+| On resource limit | Bounded integral recall; choose Full-pool formal fitting to fit every candidate when the v2 grid or shift scan is too large |
 | Recall candidates | 500; total target from alternating original/residual channels |
 | Local shortlist | 20; Top-K for both initial selection and local review |
 | Protected candidates per channel | 5; protect each channel's top candidates within the recalled set |
 | Review set size | 80; fall back to the full pool if the review set exceeds this threshold |
 | Formal candidate set size | 80; fall back to the full pool if the proposed formal set exceeds this threshold |
 
+The five counts apply to normal v2 recall. Bounded integral recall has fixed
+channel budgets and keeps ties and numerical protection without a final cap.
+The resource-limit choice applies to the next new analysis, including saved
+defaults for new projects. Missing settings use bounded integral recall.
+
 Counts are integers from 1 to 2147483647. Channel protection must not exceed the
 local shortlist, which must not exceed the recall target. Both fallback thresholds
 must be at least the local shortlist. Ties and numerical protection can add
 candidates; a threshold is not a truncation cap. Equality does not trigger fallback.
-Disabling recall fits the full pool and disables the five fields while retaining
+Disabling recall fits the full pool and disables recall controls while retaining
 their values. Internal solver accuracy, starts, step counts and risk coefficients
 remain fixed. Shadow mode is available only in the benchmark CLI, whose default
 remains off.

@@ -15,7 +15,11 @@ PfsmFormalCandidateResult fitPfsmCandidate(PfsmFormalCandidateInput request,
     PfsmFormalCandidateResult result;
     auto input = std::move(request.fit);
     auto begin = Clock::now();
-    input.phases.push_back({request.identity, take(expander.prepare(request.expansion, context)),
+    const auto profile = request.prepared && request.prepared->profile() &&
+        dynamic_cast<const IntermediateLorentzianExpander *>(&expander) &&
+        request.prepared->matches(request.expansion, context)
+        ? request.prepared->profile() : take(expander.prepare(request.expansion, context));
+    input.phases.push_back({request.identity, profile,
         request.lower_shift, request.upper_shift, std::clamp(0., request.lower_shift, request.upper_shift)});
     result.expansion_seconds = elapsed(begin);
     begin = Clock::now();

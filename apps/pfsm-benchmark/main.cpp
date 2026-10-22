@@ -218,6 +218,15 @@ template <class T> QJsonArray array(const T &v) {
 QJsonObject params(const profile::ProfileFitParameters &p) {
     return {{"scales", array(p.scales)}, {"shifts_degrees", array(p.shifts)}};
 }
+QJsonObject workStatistics(const profile::ProfileWorkStatistics &s) {
+    return {{"input_builds",qint64(s.input_builds)}, {"input_buffer_growths",qint64(s.input_buffer_growths)},
+            {"sample_buffers",qint64(s.sample_buffers)}, {"paired_samples",qint64(s.paired_samples)},
+            {"physical_columns",qint64(s.physical_columns)}, {"nnls_solves",qint64(s.nnls_solves)},
+            {"template_preparations",qint64(s.template_preparations)}, {"chebyshev_tables",qint64(s.chebyshev_tables)},
+            {"input_worker_seconds",s.input_seconds}, {"reflection_worker_seconds",s.reflection_seconds},
+            {"correlation_worker_seconds",s.correlation_seconds}, {"sampling_worker_seconds",s.sampling_seconds},
+            {"nnls_worker_seconds",s.nnls_seconds}, {"template_worker_seconds",s.template_seconds}};
+}
 QJsonObject diagnostic(const profile::ProfileFitDiagnostics &d) {
     return {{"interpolated_iterations", d.interpolated_iterations},
             {"exact_final_verification", d.exact_final_verification},
@@ -416,6 +425,7 @@ QJsonObject candidateRecallOutput(const QString &directory, int number, const Pf
         {"fit_budget", a.problem->candidate_recall.limits.local_shortlist},
         {"normalization_scope", a.normalization_over_full_pool ? "full_pool" : "formal_subset"},
         {"normalization_maximum", a.normalization_maximum}};
+    result["resource_fallback"] = a.problem->candidate_recall.resource_fallback == PfsmResourceFallback::full_pool ? "full_pool" : "bounded_integral";
     if (a.problem->candidate_recall.limits != profile::PfsmCandidateRecallLimits{})
         result["limits"] = pfsmCandidateRecallLimitsJson(a.problem->candidate_recall.limits);
     if (a.problem->candidate_recall.mode == PfsmCandidateRecallMode::off) return result;
@@ -435,6 +445,9 @@ QJsonObject candidateRecallOutput(const QString &directory, int number, const Pf
         if (r.recall_top5_retained) report["recall_top5_retained"] = *r.recall_top5_retained;
         if (r.final_top5_retained) report["final_top5_retained"] = *r.final_top5_retained;
         if (r.selection) report["v2"] = pfsmCandidateRecallSelectionJson(*r.selection);
+        report["backend"] = r.backend == PfsmCandidateRecallBackend::v2 ? "v2" : "bounded_integral_relaxed";
+        report["switch_reason"] = QString::fromStdString(r.switch_reason);
+        if (r.integral) report["integral"] = pfsmIntegralRecallReportJson(*r.integral);
         attempts.append(report);
         for (const auto &e : r.candidates) {
             QJsonObject row{{"attempt", qint64(attempt)}, {"original_index", qint64(e.original_index)},
@@ -451,6 +464,12 @@ QJsonObject candidateRecallOutput(const QString &directory, int number, const Pf
             if (e.residual_score) row["residual_score"] = *e.residual_score;
             if (e.local_q) row["local_q"] = *e.local_q;
             if (e.gain) row["gain"] = *e.gain;
+            if (r.integral) {
+                const auto found = std::lower_bound(r.integral->candidates.begin(), r.integral->candidates.end(), e.original_index,
+                    [](const auto &v, auto index) { return v.original_index < index; });
+                if (found != r.integral->candidates.end() && found->original_index == e.original_index)
+                    row["integral"] = pfsmIntegralRecallCandidateJson(*found);
+            }
             {
                 const auto found = std::lower_bound(r.refinement_candidates.begin(), r.refinement_candidates.end(), e.original_index,
                     [](const auto &v, auto index) { return v.recall.original_index < index; });
@@ -560,12 +579,40 @@ QJsonObject roundOutput(const QString &directory, int number, ProductHandle stat
                                                    {"candidate_recall_review_seconds", p.candidate_recall_review_seconds},
                                                    {"fast_review_seconds", p.candidate_recall_review_seconds},
                                                    {"formal_reused", qint64(p.formal_reused)},
+                                                   {"template_prepare_calls", qint64(p.templates.prepare_calls)},
+                                                   {"template_cache_hits", qint64(p.templates.hits)},
+                                                   {"template_cache_misses", qint64(p.templates.misses)},
+                                                   {"template_expanded_hits", qint64(p.templates.expanded_hits)},
+                                                   {"template_cache_bytes", qint64(p.templates.bytes)},
+                                                   {"template_cache_peak_bytes", qint64(p.templates.peak_bytes)},
+                                                   {"template_evictions", qint64(p.templates.evictions)},
+                                                   {"template_prepare_seconds", p.templates.prepare_seconds},
+                                                   {"template_budget_fallbacks", qint64(p.templates.budget_fallbacks)},
+                                                   {"recall_cache_hits", qint64(p.recall_cache_hits)},
+                                                   {"recall_cache_misses", qint64(p.recall_cache_misses)},
+                                                   {"recall_cache_budget_fallbacks", qint64(p.recall_cache_budget_fallbacks)},
+                                                   {"recall_cache_bytes", qint64(p.recall_cache_bytes)},
                                                    {"threads", p.threads},
                                                    {"evaluated", qint64(p.evaluated)},
                                                    {"residual_evaluations", qint64(p.residual_evaluations)},
                                                    {"baseline_rebuilds", qint64(p.baseline_rebuilds)},
                                                    {"baseline_refinement_fits",
                                                     qint64(p.baseline_refinement_fits)}}}};
+    if (p.detailed_work) {
+        report["search_diagnostics"] = QJsonObject{{"correlation",workStatistics(p.correlation_work)},
+            {"initial",workStatistics(p.initial_work)}, {"review",workStatistics(p.review_work)},
+            {"selection_seconds",p.recall_selection_seconds}};
+    }
+    if (p.database_read) {
+        const auto &s=*p.database_read;
+        report["database_read_diagnostics"] = QJsonObject{{"count_seconds",s.count_seconds},
+            {"prepare_seconds",s.prepare_seconds}, {"execute_seconds",s.execute_seconds},
+            {"fetch_seconds",s.fetch_seconds}, {"fields_seconds",s.fields_seconds},
+            {"peaks_seconds",s.peaks_seconds}, {"materialize_seconds",s.materialize_seconds},
+            {"row_query_executions",qint64(s.row_query_executions)}, {"cards",qint64(s.cards)},
+            {"peaks",qint64(s.peaks)}, {"peak_text_bytes",qint64(s.peak_text_bytes)},
+            {"peak_buffer_growths",qint64(s.peak_buffer_growths)}, {"forward_only",s.forward_only}};
+    }
     if (a.baseline.rwp_observed)
         report["baseline_Rwp_obs"] = *a.baseline.rwp_observed;
     if (truth.phases.empty()) {
@@ -580,9 +627,10 @@ int main(int argc, char **argv) {
     QCoreApplication::setApplicationName("qualpf_pfsm_benchmark");
     QCommandLineParser cli;
     cli.addHelpOption();
+    cli.addOption(QCommandLineOption("search-diagnostics", "Measure read, recall and local work; not a speed measurement."));
     for (const auto &name : {"database", "manifest", "output", "threads", "case", "profile-candidates", "split",
                              "chemistry", "linear-algebra-cache-sizes", "fast-pfsm", "fast-pfsm-version",
-                             "pfsm-candidate-recall", "pfsm-candidate-recall-version"})
+                             "pfsm-candidate-recall", "pfsm-candidate-recall-version", "pfsm-resource-fallback"})
         cli.addOption(QCommandLineOption(name, QString("PFSM benchmark ") + name, name));
     cli.addOption(
         QCommandLineOption("prepare-only", "Validate observations/Geometric FWHM without searching."));
@@ -599,6 +647,9 @@ int main(int argc, char **argv) {
             if (!cli.isSet(name))
                 fail(QString("Required --") + name);
         PfsmCandidateRecallConfiguration candidate_recall;
+        const auto resourceFallback = cli.isSet("pfsm-resource-fallback") ? cli.value("pfsm-resource-fallback") : QString("bounded_integral");
+        if (resourceFallback == "full_pool") candidate_recall.resource_fallback = PfsmResourceFallback::full_pool;
+        else if (resourceFallback != "bounded_integral") fail("pfsm-resource-fallback must be bounded_integral or full_pool");
         const auto option = [&](const char *name, const char *legacy, const char *fallback) {
             if (cli.isSet(name) && cli.isSet(legacy) && cli.value(name) != cli.value(legacy))
                 fail(QString("Conflicting %1 and %2 options").arg(name, legacy));
@@ -707,6 +758,7 @@ int main(int argc, char **argv) {
                                                              : "full-candidate-top5"},
                         {"template_cache", cli.isSet("template-cache")},
                         {"candidate_recall_mode", mode}, {"candidate_recall_version", candidateRecallVersion},
+                        {"candidate_recall_resource_fallback", resourceFallback},
                         {"fast_pfsm_mode", mode}, {"fast_pfsm_version", candidateRecallVersion}, {"full_round", cli.isSet("full-round")},
                         {"linear_algebra_cache", algebraCache},
                         {"validation_split", split},
@@ -784,6 +836,7 @@ int main(int argc, char **argv) {
                     auto loaded = load(item, base);
                     summary["import_seconds"] = seconds(importStart);
                     loaded.request->threads = threads;
+                    loaded.request->measure_search_work = cli.isSet("search-diagnostics");
                     loaded.request->candidate_recall = candidate_recall;
                     loaded.request->full_round = cli.isSet("full-round");
                     loaded.request->template_cache = cli.isSet("template-cache");
@@ -855,6 +908,7 @@ int main(int argc, char **argv) {
                                 auto next = std::make_shared<PfsmRequest>();
                                 next->full_round = cli.isSet("full-round");
                                 next->threads = threads;
+                                next->measure_search_work = cli.isSet("search-diagnostics");
                                 input.pfsm = next;
                                 input.operation = SearchOperation::accept_phase;
                                 input.phase = chosen;

@@ -10,5 +10,6 @@ namespace qualpf::application::pfsm_detail {
 std::shared_ptr<const PfsmProblem> prepareProblem(const SearchInput &, const PfsmRequest &,
                                                   const ExecutionContext &);
 profile::ProfileTemplate expand(const ProductCard &, const PfsmProblem &, const ExecutionContext &);
+profile::ProfileExpansionInput expansionSettings(const PfsmProblem &);
 profile::ProfileExpansionInput expansionInput(const ProductCard &, const PfsmProblem &);
 }

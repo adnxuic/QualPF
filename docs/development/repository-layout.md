@@ -50,6 +50,18 @@ outside commits. Only `CoO.cif` is published from `tests/real_example_data/`.
 Ignoring an output preserves its bytes locally; it does not remove tracked files
 or historical Git objects.
 
+Visual Studio CMake outputs in root `out/`, machine-local `CMakeSettings.json`,
+root `.cache/` and Python `.mypy_cache/` / `.ruff_cache/` directories are also
+excluded from Git and source packages. Keep shared editor configuration and
+scientific `.lib`, `.out`, `.zip`, database and measured-input files eligible
+for explicit review; broad extension exclusions would hide required inputs.
+
+The optimization publication uses the final `codex/optimization` source tree,
+including its Core/Application/Infrastructure changes, GUI settings, QPF fields,
+benchmark/validation tools, regression tests and current documentation. Other
+experimental branches are independent and are not integration inputs. Preserve
+the annotated local tag `optimization-pre-squash-20261022` before integration.
+
 For a squash integration, preserve the source branch and an annotated local
 protection tag, then use a separate integration branch based on current main.
 The final commit must have main as its sole parent and the reviewed final tree;

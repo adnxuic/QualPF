@@ -7,12 +7,75 @@ and a temporary SQLite fixture. Real COD data are not a normal-test dependency.
 
 ## Current candidate-recall entry points
 
+`--search-diagnostics` enables runtime-only read and candidate-work diagnostics.
+It is off by default and must be omitted from controlled speed comparisons.
+`database_read_diagnostics` separates the row-count query, prepare/exec, cursor
+fetch, metadata conversion, paired-peak decoding and materialization. Cursor fetch
+includes SQLite and driver work; exec alone is not database execution time.
+The row-query count excludes restraint planning, which remains included in the
+outer `database_seconds`. Counts include decoded cards/peaks, peak-text bytes and
+observed peak-buffer growths. Failed/cancelled reads remain failed transactions.
+
+`search_diagnostics` separately reports correlation, initial and review worker
+work: input construction, reflection expansion/sorting, correlation, template
+preparation, physical sampling and NNLS. Worker sums overlap wall-clock stages;
+template and sampling timers can contain work also counted by lower-level timers.
+Buffer counts describe explicit monitored sites, not all heap allocations.
+Diagnostics and timers never affect the scientific payload or persist in QPF.
+
+The v2 scan retains recall-only expanded/stably sorted/merged lines in a separate
+128 MiB analysis-local store. Original-index reservations include flat line and
+slot storage, and all budget misses follow the uncached full-scan path. Identity,
+numerical policy, rounding and denormal controls bind the store to the frozen
+problem and universe. It is frozen after joined workers, committed only with the
+successful analysis, and never serialized or passed to formal fitting. Accepting
+or removing phases reuses static lines while rescoring the current residual.
+Runtime `recall_cache_*` fields report hits, misses, budget fallbacks and bytes.
+First-round allocation/build time is included in operation latency. Libraries
+whose estimated expanded line table is smaller than 4 MiB retain no recall bank: the
+long-spectrum controls exposed a small RSS regression for millisecond-scale scans.
+This deterministic admission rule changes only retention; every card still follows
+the original full scoring path. The 128 MiB cap applies to admitted banks.
+
+The existing 128 MiB template store now survives until analysis end through
+immutable entries and a private directory per operation. A matching frozen
+problem/universe permits borrowing; complete expansion-input and floating-mode
+checks still guard preparation. Reservations use line counts and frozen settings
+without constructing or retaining unprepared line buffers. Preparation builds
+one input per working candidate; review and formal stages borrow the prepared
+template's owned input. Retained inputs and templates share the budget.
+Unreserved candidates use the existing path, counted as
+`template_budget_fallbacks`. Failed/cancelled drafts cannot change the committed
+directory. Prepared input ownership also avoids rebuilding the same d/I input in
+initial evaluation, review and formal fitting. NNLS remains cold at every solve.
+The recall scorer computes a shared grid location for its three fields while
+retaining the original interpolation expressions and channel summation order.
+
+Strict PFSM paired reads use a forward-only SQL cursor and streaming QStringView
+tokens with the same Qt UTF-8/numeric conversion. Capacity is bounded by actual
+text, not declared peak counts. Classical decoding, row order, metadata/RIR and
+malformed-record errors retain their contracts. The optional
+`qualpf_candidate_reader_tests --full-library <database.sq>` audit compares every
+ordered d/I binary64 value with the retained preoptimization Qt decoder; it is
+not a normal-test dependency and writes no reference data.
+
 The maintained benchmark uses `--pfsm-candidate-recall off|shadow|enabled`
 and `--pfsm-candidate-recall-version v2`. The default is off with implementation
-version v2; recall remains benchmark-only. `--fast-pfsm` and
+version v2; new GUI analyses separately default to enabled. `--fast-pfsm` and
 `--fast-pfsm-version` are compatibility aliases. Matching old/new values are
 accepted together; conflicting values and explicit v1 requests fail before
 execution. `--full-round` still forces a complete-pool run for that round.
+`--pfsm-resource-fallback bounded_integral|full_pool` selects resource-limit
+behavior (default `bounded_integral`), while ordinary widths retain v2. The
+integral backend is exactly the `3fa1123a` baseline, excluding A and A+B.
+
+Each attempt names its actual `backend`, `switch_reason` and separate
+`full_fallback`. Integral reports contain fixed budgets, bins, bank/cache sizes,
+evaluation counts, timings, matching no-candidate controls and channel flags.
+The exact formal comparator retains Top-5, survivor evidence, normalization and
+baseline checks, and independently reconstructs the integral union. Frozen
+physical-state replay also routes resource limits to the baseline integral
+backend, with zero formal fits; v2 ablation stages apply only to v2 rounds.
 
 Round reports expose `candidate_recall`, and performance fields use
 `candidate_recall_*_seconds`. Run metadata uses `candidate_recall_mode` and
@@ -34,6 +97,238 @@ launcher recognizes the old replay filename in frozen runtimes. The preserved
 experiments below retain their original names, commands, versions and conclusions;
 v1 execution requires its original Git snapshot.
 
+## 2026-10-21 long-spectrum peak-RSS correction
+
+The lifetime-only follow-up at `49cc8c7d` passes the unchanged controlled
+performance gates, including both long-spectrum RSS bounds. The earlier failed
+checkpoint below and all its raw comparisons remain preserved.
+
+The initial/review peak came from overlapping temporary storage in anchored
+steps. The copied dictionary now ends before NNLS workspace allocation, and the
+linear matrix ends after prediction/shift recovery, before physical-trial
+sampling. All arithmetic expressions, column order, cold NNLS calls, candidate
+sets, protections, fallback rules and solver settings remain unchanged. No
+observation reduction, scheduling change or cache-budget increase is involved.
+
+Fresh evidence lives in `build/pfsm-rss-20261021/`: `acceptance-binding.json`,
+`baseline-reverification.json`, `long-cache/comparison.json`,
+`main-full/comparison.json`, `thread-modes/comparison.json`, `final-audit.json`
+and `final-verification.json`. The original `551bbb18660d74a1a86ec07bdd8c9a76964bf1e4`
+runtime, database/sidecars and input bindings were reverified. This uses the
+same Windows GCC Release configuration, v2 enabled, 12 workers, cached templates
+and algebra-cache settings as the preceding protocol: one warmup per variant,
+five alternating fresh-process pairs per long spectrum and three per primary
+full-library case. High-frequency diagnostics are off, and no task build/test
+overlaps timing. OS caches are not controlled. Long spectra retain their original
+chemistry constraints (461/468 cards); both primary cases scan all 88,312 cards
+without chemistry, with the same frozen acceptances.
+
+Values are operation medians [minimum, maximum] in seconds and maximum process
+peak through each round in MiB, using the same latency/RSS definitions below.
+
+| Case | Round | Before seconds | After seconds | Reduction | Peak RSS MiB, before / after |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Fe3Sb2O4Br4 | 0 | 2.970 [2.870, 2.974] | 2.903 [2.863, 2.943] | 2.26% | 231.316 / 220.457 |
+| Sr3Fe2Cl2O5 | 0 | 0.792 [0.784, 0.802] | 0.783 [0.781, 0.788] | 1.20% | 166.902 / 164.812 |
+| NIST_660c | 0 | 10.580 [10.553, 10.637] | 6.882 [6.840, 6.894] | 34.96% | 1612.152 / 836.055 |
+| NIST_660c | 1 | 4.935 [4.927, 5.041] | 3.200 [3.172, 3.241] | 35.15% | 1612.152 / 886.441 |
+| example1 | 0 | 7.841 [7.836, 7.926] | 4.752 [4.736, 4.799] | 39.40% | 1611.574 / 823.234 |
+| example1 | 1 | 2.611 [2.601, 2.737] | 1.378 [1.365, 1.379] | 47.22% | 1611.574 / 870.355 |
+| example1 | 2 | 3.125 [3.019, 3.152] | 1.516 [1.473, 1.542] | 51.48% | 1611.574 / 879.914 |
+| example1 | 3 | 3.527 [3.358, 3.886] | 1.836 [1.825, 1.915] | 47.94% | 1611.574 / 887.656 |
+
+Both long-spectrum peaks are also below the **previously recorded** baseline
+bounds of 240,431,104 and 174,899,200 bytes, independently of variation in the
+fresh control measurements. Every controlled round meets the unchanged 5%
+maximum median-regression and strict RSS gates. Both full-library first rounds
+exceed the 25% reduction target, and all subsequent rounds exceed 20%. The
+2–5 second exploratory target remains unmet for NIST_660c's first operation.
+
+All 24 A/B pairs preserve the complete scientific payload, including IDs/order,
+recall scores/seeds, initial/review decisions, protections/fallbacks, NNLS counts,
+formal candidate sets, full rankings, FOM, parameters and baseline curves.
+The direct/cache matrix at 1/4/12/20 threads additionally preserves exact
+within-mode scientific bytes; its single pairs are functional evidence only.
+Their raw timing/RSS observations, including RSS increases in some configurations,
+remain recorded and do not establish performance qualification for that matrix.
+Subsequent rounds keep the original universe and zero full-library read time.
+Output-only probes freshly compare 416 complete published calculated/residual
+curve pairs and FOMs across 16 rounds in both modes. `curve-rss-audit.json` binds
+the probe and unchanged ordinary executable to the preserved baseline outputs;
+these probes provide neither timings nor replacement scientific references.
+
+Fresh affected checks pass on Windows GCC (14 tests), Windows MSVC (13) and
+Linux GCC (13), including Core/Application, CLI, QPF, settings, GUI, threaded
+readers and configured architecture boundaries. The independent SciPy 1.16.2
+reference passes 54/54; all 169 normal references remain byte-preserved and
+source boundaries pass for 2,007 inputs. This small lifetime correction receives
+affected delta checks, not a new full normal or hosted-CI run. The earlier normal
+checkpoint retains its qualified scope below. The initial misspelled GNU build
+target and the corrected build log are both retained; no assertions or timeouts
+were changed.
+
+## 2026-10-21 full-library engineering optimization (prior failed RSS checkpoint)
+
+Implementation and equivalence checks are complete; **overall performance
+qualification is not passed** because the two long-spectrum controls exceed the
+strict peak-RSS bound. The full-library first-round and subsequent-round targets
+pass. No tolerance, card pool, recall selection or scientific reference was changed
+to make a gate pass.
+
+The controlled comparison binds original revision `551bbb18660d74a1a86ec07bdd8c9a76964bf1e4`
+to implementation `da2e40c7`, including the subsequent bounded storage corrections.
+Raw evidence is under `build/full-library-optimization-20261021/`:
+`baseline-binding.json`, `acceptance-extent-binding.json`,
+`baseline-reverification.json`, and the `*-extent/comparison.json` groups.
+The original frozen executable/runtime, database and its sidecars, manifest and
+build configuration were rehashed without changes. The database snapshot contains
+88,312 cards and 27,367,965 ordered d/I pairs; these are snapshot facts, not product
+constants. Read-only query plans retain the original row scan and count-index
+scan. No schema or index was modified.
+
+Measurements use Windows x64 GCC 13.1, Qt 6.8.3, Release, v2 enabled, cached
+templates, 12 candidate workers and fixed algebra-cache sizes
+`49152,1310720,25165824`. Both primary cases explicitly disable chemistry;
+example1 accepts `2104748`, `2104736`, then `1000032`. Each variant has one
+warmup, followed by three alternating A/B pairs per full-library case and five
+pairs per long spectrum. Every execution is a fresh process. No build or test
+from this task overlaps these controlled runs. The warmup does not imply an
+operating-system cold cache or reuse a previous process's card/cache objects.
+High-frequency diagnostics are disabled.
+
+Times below are operation-to-result medians and [minimum, maximum] in seconds;
+headless report serialization and native GUI painting are excluded from latency.
+RSS is the maximum process peak through that round, in MiB, before / after; it
+is not incremental stage memory. The long spectra keep their original chemistry
+constraints (461 and 468 candidates).
+
+| Case | Round | Before seconds | After seconds | Reduction | Peak RSS MiB, before / after |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| NIST_660c | 0 | 10.752 [10.692, 10.821] | 7.045 [6.955, 7.058] | 34.48% | 1612.105 / 836.562 |
+| NIST_660c | 1 | 5.077 [5.029, 5.091] | 3.243 [3.225, 3.252] | 36.12% | 1612.105 / 888.113 |
+| example1 | 0 | 7.867 [7.823, 8.012] | 4.730 [4.729, 4.889] | 39.88% | 1610.703 / 824.129 |
+| example1 | 1 | 2.589 [2.583, 2.621] | 1.376 [1.374, 1.390] | 46.85% | 1610.703 / 871.176 |
+| example1 | 2 | 2.745 [2.701, 2.990] | 1.539 [1.533, 1.546] | 43.92% | 1610.703 / 880.707 |
+| example1 | 3 | 3.311 [3.106, 3.352] | 1.847 [1.838, 1.849] | 44.21% | 1610.703 / 890.898 |
+| Fe3Sb2O4Br4 | 0 | 2.905 [2.893, 2.930] | 2.921 [2.905, 2.971] | -0.54% | 229.293 / 230.434 |
+| Sr3Fe2Cl2O5 | 0 | 0.805 [0.796, 0.810] | 0.779 [0.775, 0.780] | 3.27% | 166.797 / 166.820 |
+
+Both full-library first rounds exceed the 25% reduction target, and all four
+subsequent rounds exceed 20%. Their RSS bounds pass. No controlled round exceeds
+5% median slowdown: Fe3Sb2O4Br4 slows by 0.54%, while Sr3Fe2Cl2O5 improves by
+3.27%. However, their peak RSS increases by **1,196,032 bytes** and **24,576
+bytes**, respectively, so the strict RSS gate fails. NIST_660c still takes about
+7.04 seconds on its first operation; the 2–5 second exploratory goal is not met
+across the primary cases.
+
+Original failed controls are preserved under `long-cache/` and
+`long-cache-admission/`. Their failure led to zero recall retention below 4 MiB
+and extent-only template reservation. Final results above use `long-cache-extent/`;
+they do not replace those earlier comparisons. Output-only phase probes under
+`memory-before/` and `memory-after/` locate the Fe peak in initial/review work,
+before formal fitting and report serialization. They are descriptive single runs
+with separate instrumented executables and cannot clear or replace the controlled
+RSS failure. Further peak reduction remains unqualified; no scheduling or numerical
+change was introduced to chase this small difference.
+
+All 24 measured A/B pairs preserve complete scientific output: candidate count,
+ID/order, correlation/seed evidence, initial/review selections, protection and
+fallback reasons, formal sets, complete rankings, parameters, baseline diagnostics
+and curves. The additional chemistry-constrained example1 matrix (849 cards)
+uses direct/cache at 1/4/12/20 threads, one pair each without warmup. It verifies
+exact A/B and within-mode thread identity, **not statistical speed qualification**.
+All subsequent rounds retain the original universe and record zero full-library
+read time. `extent-final-audit.json` records each check separately.
+
+Output-only curve probes additionally compare **416 complete published candidate
+calculated/residual curve pairs and FOMs across 16 rounds**, covering both primary
+full-library cases and both long spectra in direct/cache modes. All are exact.
+`curve-extent-audit.json` binds the final probe and unchanged ordinary executable;
+unchanged baseline outputs retain their original executable, manifest and command
+bindings. These probes are never used for speed claims or scientific goldens.
+
+Instrumented causal counts (`work-count-extent-audit.json`) show peak-buffer
+growths dropping from 1,587,314 to 176,622. The second NIST round hits 7,784
+recall entries and still scans all 80,527 uncached remaining cards. Initial
+template preparations fall from 500 to 381; the 1,500 cold NNLS solves and all
+initial/review physical-sampling counts are unchanged. The 128 MiB recall cap and
+existing 128 MiB template cap remain independent. Instrumented worker sums are
+not used as controlled stage wall times.
+
+Correctness scope is explicit:
+
+- The strict full-database decoder audit preserves every ordered ID and binary64
+  d/I pair against the retained preoptimization Qt parser. Edge fixtures cover
+  zero/duplicate peaks, dual radiation, malformed values and counts, empty tokens,
+  cancellation and source changes.
+- Final storage corrections pass 14 affected Windows GCC tests and 13 each on
+  Windows MSVC (Qt 6.8.3) and Linux GCC (Qt 6.10.2), including Core/Application,
+  QPF, CLI, GUI, settings, threaded readers and architecture boundaries. Existing
+  lifecycle coverage includes accept/remove, baseline/resource fallback, stale
+  publication and close/drain. No hosted or full Linux/MSVC suite PASS is implied.
+- The primary normal regression at implementation checkpoint `15836c96` passes
+  120/122 tests in the sandbox. The UUID-owned registry migration fixture and
+  localhost update transport test both pass unchanged in their native rerun.
+  Both original failures remain in `gnu-normal.xml/.log`; the two passes are in
+  `gnu-normal-native.xml/.log`. The later storage-only corrections receive the
+  affected delta checks above, not another full normal run.
+- The final fresh independent SciPy 1.16.2 numerical reference passes 54/54;
+  all 169 preserved normal references remain byte-identical. Boundary checks
+  cover 2,007 bound inputs and the configured strict target gate. No product
+  output was promoted to a reference.
+
+## Baseline integral resource-fallback verification
+
+The 2026-10-21 port uses Core baseline `3fa1123a` and receiving product revision
+`e10dde62`; A (`1250a174`) and A+B (`8c149f61`) are excluded. Source correspondence
+is recorded in the [numerical contract](pfsm.md). Evidence is under
+`build/pfsm-integral-fallback-20261021/`; frozen input/reference files are unchanged.
+
+The focused NIST check covers both historical grid-limit rounds in each of
+`NIST_674b_CeO2` and `NIST_676a`. All four switch successfully to integral recall.
+CeO2's unions contain its entire 35/34-card pools; NIST_676a's unions contain
+64/64 of 589/588 cards. Successful full-pool unions are not preparation failures.
+Exact comparisons retain full-pool Top-5, every retained formal row, baseline
+curves and normalization. Separate frozen physical-state replay reproduces the
+unions with zero formal fits (`focused/comparison.json`). These checks were
+allowed to overlap builds and establish correctness, not controlled performance.
+
+The independent Dara replay compares all 837 candidate numerical rows against
+the frozen baseline: numbers, shifts, scales, KKT evidence, evaluation counts and
+selection match exactly. COD `7218520` is in the relaxed Top-32; its matched
+no-candidate and candidate searches use the same two old coordinates. The maximum
+is 165 NNLS evaluations per card. One metadata difference is retained explicitly:
+old-bank ownership accounting is 7,229,552 bytes rather than the older standalone
+diagnostic's 7,229,440 bytes (two bank objects and two old-shift doubles). The
+initial all-fields comparison failure remains beside the qualified assessment in
+`dara-baseline-replay/`; no numerical tolerance or frozen evidence was changed.
+
+Windows GCC, Windows MSVC and Linux GCC affected Core/Application, QPF/protocol,
+settings and native GUI checks pass. The integral baseline-rebuild replay and
+historical-QPF load-then-rescore controls are included. Original independent
+high-precision/SciPy integral checks pass 24/24 on both Windows compilers; original
+v2 checks pass 54/54. Strict architecture and its negative controls pass. Logs
+retain initial build/assertion failures and the sandbox temporary-directory access
+failure; the QPF test passes with a workspace-owned temporary directory and
+unchanged assertions.
+
+The single full replay completes all 80 ready cases and 263 rounds. Against
+hash-bound full-pool evidence, Top-5, retained formal rows, baseline curves and
+normalization pass. All 259 ordinary-width v2 rounds also retain byte-identical
+scientific files against the receiving branch. Four rounds use the integral
+backend; the five other full-pool fallbacks remain four formal-underestimation
+supplements and one v2 review-limit fallback. Identification remains 79/80 with
+the original Bi2Mo3O12 Top-5 failure; all nine nonready classifications remain.
+`cohort-audit.json` binds the outputs. The original cohort driver exits 1 because
+it incorrectly expected exit 1 for `failed_top5`; both the frozen historical and
+current native processes actually return 2. That original failure and the initial
+audit field-name error remain preserved. Read-only correction verifies the
+original exit and scientific evidence without rerunning any case.
+
+Windows GCC full normal regression passes 122/122 with original timeouts
+(`gnu-normal.xml`, actual terminal exit 0); this is separate from the three-platform
+affected checks and the independent numerical comparisons above.
+
 ## Acceptance scope
 
 Primary acceptance uses independently documented chemical-composition constraints.
@@ -43,6 +338,43 @@ preserved earlier runs retain their original inputs and interpretation. Rwp
 improvement measures spectral agreement and does not establish chemical plausibility.
 
 ## Performance-only measurements
+
+### Baseline integral fallback: adjacent NIST_676a pair (2026-10-21)
+
+The authorized single pair ran from 19:31:56 to 19:44:02 Asia/Shanghai after
+all builds, tests and the correctness cohort exited. Both native processes and
+the owning driver exit 0. Windows GCC Release, runtime, database, frozen inputs,
+twelve threads, cached IL configuration and explicit algebra cache sizes are
+shared; there are no warmups or repeated measurements. The predecessor binary
+SHA-256 starts `47306481`, and the integral product binary starts `7a0cdb9c`.
+`timing-adjacent/measurement.json` binds commands, complete hashes and raw reports;
+`timing-assessment.json` records the actual terminal wait and derived totals.
+
+| Scope | v2 resource-limit full pool | Baseline integral fallback |
+| --- | ---: | ---: |
+| Formal candidates, rounds 0 / 1 | 589 / 588 | 64 / 64 |
+| Operation-to-result total | 564.141 s | 149.205 s |
+| Case end-to-end | 565.021 s | 150.066 s |
+| Process lifetime | 570.244 s | 154.271 s |
+| Peak process RSS | 185.664 MiB | 182.316 MiB |
+
+| Round (zero-based) | Old operation | New operation | New shared preparation | New integral scan | New relaxation | Old formal wall | New formal wall |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 0 | 115.060 s | 43.061 s | 0.039 s | 19.781 s | 8.498 s | 114.748 s | 14.437 s |
+| 1 | 449.081 s | 106.144 s | 0.233 s | 22.422 s | 8.994 s | 448.966 s | 74.377 s |
+
+The new backend uses 2048 fine/1024 coarse bins, with 0/257 old-bank columns;
+reported integral buffer peaks are 22,191,672/33,593,716 bytes. Per-card limits
+remain independently checked. Shared preparation includes the rejected v2
+preparation attempt. Relaxation is reported in the existing review/local timing
+aliases and must be counted once. Formal wall excludes baseline refinement;
+worker sums overlap, and RSS is a cumulative process high-water mark.
+
+Both rounds preserve full-pool Top-5, every retained formal row, baseline curves
+and normalization. The observed case end-to-end reduction is 73.44%. This single
+adjacent observation establishes no repeated-run variance or general speedup;
+host CPU snapshots before the processes are 18.3% and 6.0%. No A/A+B comparison
+was performed, and earlier measurements and failures remain unchanged.
 
 ### Current enabled-only twelve-thread cohort timing
 
@@ -366,6 +698,13 @@ diagnostics, and stops on any failure or numerical difference. It never writes
 reference expected values. Pass fresh `--output`, frozen `--before`/`--after`
 runners, the same `--manifest` and `--database`; use `--full-library` for the
 separate unconstrained stress measurement.
+
+Recall reports are compared exactly except for `shared_seconds`,
+`integral_seconds` and `relaxed_seconds` inside each attempt's `integral` object.
+These elapsed times may differ or be absent without a scientific mismatch.
+Selection, objectives, parameters, evaluation/resource counts and unknown fields
+remain checked; the exclusion does not apply to similarly named fields elsewhere.
+Comparison uses copies and preserves the original reports and timing records.
 
 An optional `--linear-algebra-cache-sizes L1,L2,L3` freezes the private dense
 backend's process-start blocking hints in bytes, with positive nondecreasing

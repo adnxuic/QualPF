@@ -13,6 +13,9 @@ std::shared_ptr<const PfsmProblem> prepareProblem(const SearchInput &input, cons
         fail("pfsm.fast", "Unknown fast mode");
     if (request.candidate_recall.version != PfsmCandidateRecallVersion::v2)
         fail("pfsm.fast", "Unknown fast version");
+    if (request.candidate_recall.resource_fallback != PfsmResourceFallback::bounded_integral &&
+        request.candidate_recall.resource_fallback != PfsmResourceFallback::full_pool)
+        fail("pfsm.candidate_recall.resource_fallback", "Unknown resource-limit policy");
     const auto recallLimits = profile::validatePfsmCandidateRecallLimits(request.candidate_recall.limits);
     if (!recallLimits) throw Failure{recallLimits.error()};
     if (!request.observations)
@@ -205,17 +208,30 @@ std::shared_ptr<const PfsmProblem> prepareProblem(const SearchInput &input, cons
     problem->candidate_recall = request.candidate_recall;
     return problem;
 }
-profile::ProfileExpansionInput expansionInput(const ProductCard &card, const PfsmProblem &problem) {
-    if (card.d.size() != card.intensity.size())
-        fail("pfsm.reference", "Reference requires paired d/I records");
+profile::ProfileExpansionInput expansionSettings(const PfsmProblem &problem) {
     profile::ProfileExpansionInput input;
     input.fwhm_degrees = problem.physical_width->width.value;
     input.radiation = problem.radiation;
     if (problem.template_cache)
         input.interpolation_window = {problem.observations->coordinates.front() - problem.upper_shift,
                                       problem.observations->coordinates.back() - problem.lower_shift};
-    for (std::size_t i = 0; i < card.d.size(); ++i)
+    return input;
+}
+profile::ProfileExpansionInput expansionInput(const ProductCard &card, const PfsmProblem &problem) {
+    profile::ProfileWorkTimer timer(&profile::ProfileWorkStatistics::input_seconds);
+    profile::countProfileWork(&profile::ProfileWorkStatistics::input_builds);
+    if (card.d.size() != card.intensity.size())
+        fail("pfsm.reference", "Reference requires paired d/I records");
+    auto input = expansionSettings(problem);
+    if (!card.d.empty()) {
+        profile::countProfileWork(&profile::ProfileWorkStatistics::input_buffer_growths);
+        input.lines.reserve(card.d.size());
+    }
+    for (std::size_t i = 0; i < card.d.size(); ++i) {
+        if (input.lines.size()==input.lines.capacity())
+            profile::countProfileWork(&profile::ProfileWorkStatistics::input_buffer_growths);
         input.lines.push_back({i, card.d[i], card.intensity[i]});
+    }
     return input;
 }
 profile::ProfileTemplate expand(const ProductCard &card, const PfsmProblem &problem,

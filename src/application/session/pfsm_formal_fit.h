@@ -11,6 +11,7 @@ struct PfsmFormalCandidateInput {
     std::size_t original_index = 0;
     std::uint64_t generation = 0;
     double lower_shift = -.5, upper_shift = .5;
+    profile::PreparedProfileTemplateHandle prepared;
 };
 struct PfsmFormalCandidateResult {
     std::shared_ptr<const PfsmCandidateEvidence> evidence;

@@ -1,4 +1,5 @@
 #include "pfsm_sampling.h"
+#include "pfsm_work.h"
 #include "qualpf/profile/pfsm_candidate_recall.h"
 #include <numeric>
 #include <algorithm>
@@ -54,9 +55,18 @@ void candidateRecallContracts() {
     const auto merged=reference({{0,30,3},{2,31,.4}});
     auto a=take(scorePfsmCandidateRecallCandidate(round,p,0,context()));
     auto b=take(scorePfsmCandidateRecallCandidate(round,merged,1,context()));
+    const auto prepared=take(preparePfsmRecallReference(p,context()));
+    check(prepared.size()==2 && prepared[0].identity==0 && prepared[0].intensity==3);
+    const auto fresh=take(scorePfsmCandidateRecallCandidate(round,p,0,context(),true));
+    const auto cached=take(scorePreparedPfsmRecallReference(round,prepared,p.fwhm_degrees,0,context(),true));
+    check(fresh.original_score==cached.original_score && fresh.residual_score==cached.residual_score &&
+          fresh.original_shift==cached.original_shift && fresh.residual_shift==cached.residual_shift &&
+          fresh.original_seeds==cached.original_seeds && fresh.residual_seeds==cached.residual_seeds);
     near(*a.original_score,*b.original_score); near(*a.residual_score,*b.residual_score);
     const auto zero=scorePfsmCandidateRecallCandidate(round,reference({{0,30,0}}),2,context());
     check(!zero && zero.error().code==ErrorCode::numerical_failure);
+    const auto empty=scorePreparedPfsmRecallReference(round,{},p.fwhm_degrees,2,context());
+    check(!empty && empty.error().code==zero.error().code && empty.error().message==zero.error().message);
     auto overflow=std::make_shared<PfsmCandidateRecallData>(*d);
     std::fill(overflow->original_response.begin(),overflow->original_response.end(),-std::numeric_limits<double>::max()/2);
     auto overflowRound=round; overflowRound.data=overflow;
@@ -111,9 +121,13 @@ void candidateRecallContracts() {
     check(selectPfsmRecallCandidates(rows).size()==501);
     check(selectPfsmRecallAblationCandidates(rows).size()==22);
     check(rows.back().recall_reason=="numerical_protection" && rows.back().retention_reason=="numerical_protection");
-    check(!preparePfsmCandidateRecallData(o,1e-8,-.5,.5,context()));
+    check(preparePfsmCandidateRecallData(o,1e-8,-.5,.5,context()).error().reason=="candidate_recall_grid_limit");
+    check(take(preparePfsmCandidateRecallData(o,1440./131066.5,0,0,context()))->weights.size()==131072);
+    check(preparePfsmCandidateRecallData(o,1440./131067.5,0,0,context()).error().reason=="candidate_recall_grid_limit");
     check(take(preparePfsmCandidateRecallData(o,4,0,4095,context()))->scan.size()==4096);
-    check(!preparePfsmCandidateRecallData(o,4,0,4096,context()));
+    check(preparePfsmCandidateRecallData(o,4,0,4096,context()).error().reason=="candidate_recall_scan_limit");
+    check(preparePfsmCandidateRecallData(o,4,0,4097,context()).error().reason=="candidate_recall_scan_limit");
+    check(preparePfsmCandidateRecallData(o,0,-.5,.5,context()).error().code==ErrorCode::invalid_input);
     std::stop_source stop;stop.request_stop();auto cancelled=context();cancelled.cancellation=stop.get_token();
     auto failure=preparePfsmCandidateRecallData(o,4,-.5,.5,cancelled);
     check(!failure && failure.error().code==ErrorCode::cancelled);
@@ -190,10 +204,23 @@ void candidateRecallAnchoredContracts() {
     check(!b.original_seeds.empty() && b.original_seeds.size()<=3);
     for(std::size_t i=0;i<b.original_seeds.size();++i)for(std::size_t j=0;j<i;++j)
         check(std::abs(b.original_seeds[i]-b.original_seeds[j])>=1);
-    auto initial=take(evaluatePfsmCandidateRecallInitial(round,input,b,ctx));
+    detail::WorkCounters initialWork;
+    PfsmCandidateRecallCandidate initial;
+    {
+        detail::MeasureWork measurement(initialWork);
+        initial=take(evaluatePfsmCandidateRecallInitial(round,input,b,ctx));
+    }
     check(initial.initialized && initial.nnls_calls==3 && initial.numerical_protection.empty());
-    auto reviewed=take(reviewPfsmCandidateRecall(round,input,initial,ctx));
+    check(initialWork.paired_samples==2 && initialWork.physical_columns==2 && initialWork.nnls_solves==3);
+    detail::WorkCounters reviewWork;
+    PfsmCandidateRecallCandidate reviewed;
+    {
+        detail::MeasureWork measurement(reviewWork);
+        reviewed=take(reviewPfsmCandidateRecall(round,input,initial,ctx));
+    }
     check(reviewed.reviewed && reviewed.nnls_calls<=15 && reviewed.numerical_protection.empty());
+    check(reviewWork.nnls_solves==reviewed.nnls_calls-initial.nnls_calls);
+    check(reviewWork.paired_samples<=3*reviewed.seeds.size());
     check(reviewed.best.gain>=initial.best.gain && reviewed.best.q<=initial.best.q);
     for(const auto &start:reviewed.starts) {
         check(start.steps.size()==2 && !start.initial_fit.baseline_fallback);
@@ -211,6 +238,15 @@ void candidateRecallAnchoredContracts() {
     check(!reviewPfsmCandidateRecall(round,input,reviewed,ctx));
     auto zero=reference({{0,30,0}});auto protectedZero=take(evaluatePfsmCandidateRecallInitial(round,zero,b,ctx));
     check(!protectedZero.numerical_protection.empty() && protectedZero.best.baseline_fallback);
+    auto directInput=input;
+    directInput.interpolation_window.reset();
+    detail::WorkCounters directWork;
+    {
+        detail::MeasureWork measurement(directWork);
+        auto directInitial=take(evaluatePfsmCandidateRecallInitial(round,directInput,b,ctx));
+        check(directInitial.numerical_protection.empty() && !directInitial.best.baseline_fallback);
+        check(directWork.paired_samples==2 && directWork.nnls_solves==3);
+    }
 }
 
 void candidateRecallProtectionContracts() {

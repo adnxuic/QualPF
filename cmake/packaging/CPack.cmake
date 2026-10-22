@@ -20,7 +20,11 @@ list(APPEND CPACK_SOURCE_IGNORE_FILES
     "${QUALPF_CPACK_SOURCE_ROOT}/references[/]"
     "${QUALPF_CPACK_SOURCE_ROOT}/cmake-build-[^/]*[/]"
     "${QUALPF_CPACK_SOURCE_ROOT}/[.]venv[/]"
+    "${QUALPF_CPACK_SOURCE_ROOT}/out[/]"
+    "${QUALPF_CPACK_SOURCE_ROOT}/[.]cache[/]"
+    "${QUALPF_CPACK_SOURCE_ROOT}/CMakeSettings[.]json$"
     "[/][.]pytest_cache[/]"
+    "[/][.](mypy|ruff)_cache[/]"
     "[/]([.]DS_Store|Thumbs[.]db|desktop[.]ini)$")
 # Local example collections stay private; retain only the independent CoO fixture.
 file(GLOB_RECURSE QUALPF_LOCAL_EXAMPLES LIST_DIRECTORIES true CONFIGURE_DEPENDS

@@ -147,6 +147,11 @@ int main(int argc,char **argv) try {
     }
     categories->setCurrentRow(2);auto *pfsmModules=widget<QTabWidget>(dialog,"2_workflowModules");
     check(pfsmModules->tabText(0)=="Background" && pfsmModules->tabText(1)=="Initial Peaks" && pfsmModules->tabText(2)=="FWHM");
+    pfsmModules->setCurrentIndex(4);check(pfsmModules->tabText(4)=="Profile Expansion");
+    auto *pfsmCache=widget<QCheckBox>(dialog,"2_pfsmCache");check(pfsmCache->isChecked());
+    pfsmCache->setChecked(false);widget<QPushButton>(dialog,"restoreWorkflowPage")->click();check(pfsmCache->isChecked());
+    if(!capture.isEmpty()){events();check(dialog.grab().save(capture+"/setting-pfsm-template-cache.png"));}
+    pfsmCache->setChecked(false);
     pfsmModules->setCurrentIndex(1);auto *pfsmInitial=widget<QLineEdit>(dialog,"2_initialSlope");
     auto *pfsmAutomatic=widget<QCheckBox>(dialog,"2_initialAutomatic");auto *pfsmWindow=widget<QSpinBox>(dialog,"2_initialWindow");
     pfsmInitial->setText("0.33");pfsmAutomatic->setChecked(false);check(pfsmWindow->isEnabled());pfsmWindow->setValue(17);
@@ -171,12 +176,14 @@ int main(int argc,char **argv) try {
     defaults.fail=true;save->click();check(dialog.isVisible()&&workspace.session().snapshot()==original&&defaults.value.profile(WorkflowId::csm).background.coefficients==6);
     defaults.fail=false;save->click();check(!dialog.isVisible()&&defaults.value.profile(WorkflowId::csm).background.coefficients==12);
     check(defaults.value.profile(WorkflowId::preprocessing).background.coefficients==8&&workspace.session().snapshot()==original);
+    check(!defaults.value.profile(WorkflowId::pfsm).pfsm.template_cache && original->projectSettings->profile(WorkflowId::pfsm).pfsm.template_cache);
     const auto &pfsmInitialSaved=defaults.value.profile(WorkflowId::pfsm).initial_peaks.options;
     check(pfsmInitialSaved.slope==.33f && !pfsmInitialSaved.automatic_window && pfsmInitialSaved.half_window==17 && pfsmInitialSaved.polynomial_degree==5);
     for(auto flow:{WorkflowId::preprocessing,WorkflowId::csm,WorkflowId::peak_search})check(defaults.value.profile(flow).initial_peaks.options.slope==.1f);
     check(workspace.session().snapshot()->projectSettings->profile(WorkflowId::pfsm).initial_peaks.options.slope==.1f);
     Workspace fresh(SearchBackend::cpp,defaultAlgorithms(),&defaults);check(fresh.session().snapshot()->projectSettings->profile(WorkflowId::csm).background.coefficients==12);
     check(fresh.session().snapshot()->projectSettings->profile(WorkflowId::pfsm).initial_peaks.options.slope==.33f);
+    check(!fresh.session().snapshot()->projectSettings->profile(WorkflowId::pfsm).pfsm.template_cache);
     WorkflowSettingsDialog restored(fresh);check(restored.load(WorkflowId::pfsm,"Initial Peaks"));
     check(restored.selectedModule()=="Initial Peaks" && widget<QLineEdit>(restored,"2_initialSlope")->text()=="0.33");
     check(widget<QSpinBox>(restored,"2_initialWindow")->value()==17 && widget<QSpinBox>(restored,"2_initialDegree")->value()==5);

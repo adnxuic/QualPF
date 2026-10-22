@@ -6,6 +6,7 @@ from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from pfsm_candidate_recall_report import candidate_recall_report
+from pfsm_integral_recall_compare import validate_integral
 
 
 def exact(value):
@@ -118,13 +119,18 @@ def compare(left, right, left_dir, right_dir, subset=False):
                     evidence = rows(evidence_file)
                     for attempt in attempts:
                         records = [r for r in evidence if r.get('attempt') == attempt['attempt']]
+                        backend = attempt.get('backend', 'v2')
+                        if backend == 'bounded_integral_relaxed':
+                            local.extend(validate_integral(attempt, records, len(b.get('baseline_parameters', {}).get('shifts_degrees', b.get('baseline_parameters', {}).get('shifts', [])))))
+                        elif backend != 'v2':
+                            local.append('unknown recall backend')
                         if attempt.get('full_fallback'):
                             if (set(attempt['retained_indices']) != universe or not attempt.get('fallback_reason') or
                                     (records and fast.get('algorithm_version') != 'v2')):
                                 local.append('invalid full fallback')
                             if not records:
                                 continue
-                        if fast.get('algorithm_version') == 'v2':
+                        if backend == 'v2' and fast.get('algorithm_version') == 'v2':
                             stage = attempt.get('v2', {})
                             if not stage or fast.get('version') != 3:
                                 local.append('missing v2 selection/schema')
@@ -170,7 +176,7 @@ def compare(left, right, left_dir, right_dir, subset=False):
                                                   (score != 'gain' or r.get('recalled'))),
                                                  key=lambda r: (-r[score], r['original_index']))
                                 expected_ranks = {r['original_index']: i+1 for i, r in enumerate(ordered)}
-                                if any(r.get(rank) != expected_ranks.get(r['original_index']) for r in records):
+                                if backend == 'v2' and any(r.get(rank) != expected_ranks.get(r['original_index']) for r in records):
                                     local.append('incorrect '+rank)
                             for row in records:
                                 for selected, reason in (('recalled', 'recall_reason'), ('retained', 'retention_reason')):

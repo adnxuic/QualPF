@@ -42,6 +42,9 @@ bool compatibleManualPfsmWidth(const ProductState &s, const FwhmUsage &u) {
         bool(validateFwhmUsage(u));
 }
 Status validatePfsmSettings(const PfsmSettings &s) {
+    if (s.candidate_recall_resource_fallback != PfsmResourceFallback::bounded_integral &&
+        s.candidate_recall_resource_fallback != PfsmResourceFallback::full_pool)
+        return Status{invalid("pfsm.candidate_recall.resource_fallback", "Unknown resource-limit policy")};
     if (!std::isfinite(s.lower_shift) || !std::isfinite(s.upper_shift) || s.lower_shift > s.upper_shift ||
         !std::isfinite(s.minimum_relative_fom) || s.minimum_relative_fom < 0 || s.minimum_relative_fom > 1 ||
         s.threads < 0 || (s.weighting != PfsmSettings::Weighting::automatic && s.weighting != PfsmSettings::Weighting::equal))
@@ -66,6 +69,11 @@ PfsmSettings pfsmSettings(const MetadataObject &values, std::optional<Error> *re
         s.weighting = PfsmSettings::Weighting::equal;
     if (!validatePfsmSettings(s)) s = {};
     constexpr auto prefix = "PFSMOptions/candidateRecall/";
+    if (const auto i = values.find(std::string(prefix) + "resourceFallback"); i != values.end()) {
+        if (i->second.toString() == "full_pool") s.candidate_recall_resource_fallback = PfsmResourceFallback::full_pool;
+        else if (i->second.toString() != "bounded_integral" && recallWarning)
+            *recallWarning = invalid("pfsm.candidate_recall.resource_fallback", "Invalid saved resource-limit policy; using bounded integral recall.");
+    }
     if (const auto i = values.find(std::string(prefix) + "enabled"); i != values.end()) {
         s.candidate_recall_enabled = i->second.toBool(true);
         if (!std::holds_alternative<bool>(i->second.data) && recallWarning)
@@ -95,6 +103,8 @@ void storePfsmSettings(MetadataObject &values, const PfsmSettings &s) {
     values["PFSMOptions/templateCache"] = s.template_cache;
     values["PFSMOptions/weighting"] = s.weighting == PfsmSettings::Weighting::equal ? "equal" : "auto";
     values["PFSMOptions/candidateRecall/enabled"] = s.candidate_recall_enabled;
+    values["PFSMOptions/candidateRecall/resourceFallback"] =
+        s.candidate_recall_resource_fallback == PfsmResourceFallback::bounded_integral ? "bounded_integral" : "full_pool";
     const auto &limits = s.candidate_recall_limits;
     values["PFSMOptions/candidateRecall/recallCandidates"] = limits.recall_candidates;
     values["PFSMOptions/candidateRecall/localShortlist"] = limits.local_shortlist;
@@ -166,6 +176,7 @@ Result<PfsmRequest> makePfsmRequest(ProductHandle source, const PfsmSettings &s)
     request.template_cache = s.template_cache;
     request.candidate_recall.mode = s.candidate_recall_enabled ? PfsmCandidateRecallMode::enabled : PfsmCandidateRecallMode::off;
     request.candidate_recall.limits = s.candidate_recall_limits;
+    request.candidate_recall.resource_fallback = s.candidate_recall_resource_fallback;
     if (source->projectSettings && source->preprocessing.fwhm_usage &&
         compatibleManualPfsmWidth(*source, *source->preprocessing.fwhm_usage)) {
         request.supplied_width = source->preprocessing.fwhm_usage;

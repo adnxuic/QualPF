@@ -1,5 +1,7 @@
 #include "pfsm_workflow.h"
 #include "pfsm_candidate_recall.h"
+#include "pfsm_templates.h"
+#include "pfsm_recall_store.h"
 #include <cfenv>
 #include <omp.h>
 
@@ -30,48 +32,88 @@ PfsmCandidateRecallResult refinePfsmRecallCandidates(const PfsmCandidateRecallIn
     const auto round=std::move(prepared).value();report.local_baseline_q=round.baseline_q;
     report.candidates.resize(all.size());
     std::fenv_t environment;std::fegetenv(&environment);
-    const auto workers=[&](std::size_t count,auto work) {
+    const auto workers=[&](std::size_t count,ProfileWorkStatistics &total,auto work) {
+        std::vector<ProfileWorkStatistics> measured(a.measure_work ? count : 0);
         std::vector<std::optional<Error>> errors(count);
         const int workerThreads=threads;
 #pragma omp parallel for schedule(dynamic, 1) num_threads(workerThreads)
         for(std::ptrdiff_t slot=0;slot<static_cast<std::ptrdiff_t>(count);++slot) {
             const auto i=static_cast<std::size_t>(slot);
             std::fenv_t previous;std::fegetenv(&previous);std::fesetenv(&environment);
-            try {checkpoint(context);work(i);}
+            try {
+                checkpoint(context);
+                if (a.measure_work) { ProfileWorkMeasurement measurement(measured[i],true); work(i); }
+                else work(i);
+            }
             catch(const Failure &f){errors[i]=f.error;}
             catch(const std::exception &e){errors[i]=Error{ErrorCode::numerical_failure,"pfsm.fast.v2.worker",e.what()};}
             catch(...){errors[i]=Error{ErrorCode::numerical_failure,"pfsm.fast.v2.worker","Unknown worker failure"};}
             std::fesetenv(&previous);
         }
         checkpoint(context);for(const auto &e:errors)if(e)throw Failure{*e};
+        for(const auto &v:measured)total+=v;
     };
     begin=Clock::now();
-    workers(all.size(),[&](std::size_t i) {
+    std::shared_ptr<PfsmRecallStore> building;
+    if (!out.recall_store || !out.recall_store->matches(a.problem, a.universe, context)) {
+        building = std::make_shared<PfsmRecallStore>(a.problem, a.universe, context,
+            PfsmRecallStore::retentionBudget(*a.problem, *a.universe));
+        out.recall_store = building;
+    }
+    for (auto index : all) {
+        if (out.recall_store->get(index)) ++out.cache_hits;
+        else {
+            ++out.cache_misses;
+            if (!out.recall_store->reserved(index)) ++out.cache_budget_fallbacks;
+        }
+    }
+    workers(all.size(),out.timing.correlation_work,[&](std::size_t i) {
         auto &e=report.candidates[i];e.original_index=all[i];
-        auto scored=scorePfsmCandidateRecallCandidate(round.recall,expansionInput((*a.universe)[all[i]],p),all[i],context,true);
+        const auto score = [&]() -> Result<PfsmCandidateRecallEvidence> {
+            if (const auto cached = out.recall_store->get(all[i]))
+                return scorePreparedPfsmRecallReference(round.recall, *cached, p.physical_width->width.value, all[i], context, true);
+            const auto input = expansionInput((*a.universe)[all[i]], p);
+            if (!building || !building->reserved(all[i]))
+                return scorePfsmCandidateRecallCandidate(round.recall, input, all[i], context, true);
+            auto prepared = preparePfsmRecallReference(input, context);
+            if (!prepared) return Result<PfsmCandidateRecallEvidence>{prepared.error()};
+            building->store(all[i], prepared.value());
+            return scorePreparedPfsmRecallReference(round.recall, prepared.value(), input.fwhm_degrees, all[i], context, true);
+        };
+        auto scored=score();
         if(scored)e=std::move(scored).value();
         else if(scored.error().code==ErrorCode::numerical_failure)e.protection_reason=scored.error().message;
         else throw Failure{scored.error()};
     });
+    building.reset(); // No mutable cache handle survives the joined scan.
+    const auto selectionStart=Clock::now();
     report.recalled_indices=selectPfsmRecallCandidates(report.candidates, p.candidate_recall.limits);
+    out.timing.selection+=elapsed(selectionStart);
     out.timing.correlation+=elapsed(begin);
     std::vector<std::size_t> recalledSlots;
     for(std::size_t i=0;i<all.size();++i)if(report.candidates[i].recalled)recalledSlots.push_back(i);
     report.refinement_candidates.resize(recalledSlots.size());
+    if(a.templates)a.templates->reserve(report.recalled_indices);
     begin=Clock::now();
-    workers(recalledSlots.size(),[&](std::size_t i) {
+    workers(recalledSlots.size(),out.timing.initial_work,[&](std::size_t i) {
         const auto &e=report.candidates[recalledSlots[i]];
-        report.refinement_candidates[i]=take(evaluatePfsmCandidateRecallInitial(round,
-            expansionInput((*a.universe)[e.original_index],p),e,context));
+        const auto input=a.templates ? a.templates->input(e.original_index) :
+            std::make_shared<const ProfileExpansionInput>(expansionInput((*a.universe)[e.original_index],p));
+        const auto prepared=a.templates && e.protection_reason.empty()
+            ? a.templates->prepare(e.original_index,*input,context) : PreparedProfileTemplateHandle{};
+        report.refinement_candidates[i]=take(evaluatePfsmCandidateRecallInitial(round,*input,e,context,prepared));
     });
     auto selection=preparePfsmCandidateRecallReview(report.refinement_candidates, p.candidate_recall.limits);
     out.timing.initial+=elapsed(begin);
     begin=Clock::now();
-    if(!selection.review_skipped)workers(recalledSlots.size(),[&](std::size_t i) {
+    if(!selection.review_skipped)workers(recalledSlots.size(),out.timing.review_work,[&](std::size_t i) {
         auto &e=report.refinement_candidates[i];
         if(!std::binary_search(selection.review.begin(),selection.review.end(),e.recall.original_index))return;
-        const auto input=expansionInput((*a.universe)[e.recall.original_index],p);
-        e=take(reviewPfsmCandidateRecall(round,input,std::move(e),context));
+        const auto input=a.templates ? a.templates->input(e.recall.original_index) :
+            std::make_shared<const ProfileExpansionInput>(expansionInput((*a.universe)[e.recall.original_index],p));
+        const auto prepared=a.templates && e.numerical_protection.empty()
+            ? a.templates->prepare(e.recall.original_index,*input,context) : PreparedProfileTemplateHandle{};
+        e=take(reviewPfsmCandidateRecall(round,*input,std::move(e),context,prepared));
     });
     finalizePfsmCandidateRecall(report.refinement_candidates,selection,all);
     out.timing.review+=elapsed(begin);

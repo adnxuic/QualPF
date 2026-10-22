@@ -10,6 +10,8 @@ PfsmCandidateRecallResult recallPfsmCandidates(const PfsmCandidateRecallInput &a
     PfsmCandidateRecallResult out;
     out.formal_indices = all;
     out.data = a.data;
+    out.integral_data = a.integral_data;
+    out.recall_store = a.recall_store;
     using namespace profile;
     if (a.problem->candidate_recall.mode == PfsmCandidateRecallMode::off) return out;
     auto &report = out.report.emplace();
@@ -36,6 +38,12 @@ PfsmCandidateRecallResult recallPfsmCandidates(const PfsmCandidateRecallInput &a
         if (!prepared) {
             out.timing.shared += elapsed(begin);
             if (prepared.error().code != ErrorCode::numerical_failure) throw Failure{prepared.error()};
+            if (p.candidate_recall.resource_fallback == PfsmResourceFallback::bounded_integral &&
+                (prepared.error().reason == "candidate_recall_grid_limit" ||
+                 prepared.error().reason == "candidate_recall_scan_limit")) {
+                report.switch_reason = prepared.error().reason;
+                return integralPfsmRecallCandidates(a, std::move(out), context);
+            }
             return full(prepared.error().message);
         }
         out.data = std::move(prepared).value();

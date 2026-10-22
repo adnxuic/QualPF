@@ -72,6 +72,7 @@ struct Writer {
     template <class T> void operator()(const char *key, const T &v) {
         fields.insert_or_assign(key, encode(v, archive, path + "." + key));
     }
+    template <class T> void extension(const char *key, const T &v) { (*this)(key, v); }
 };
 struct Reader {
     Archive &archive;
@@ -82,6 +83,10 @@ struct Reader {
         if (found == fields.end())
             invalid(path + "." + key, "Missing required QPF field");
         v = decode<T>(found->second, archive, path + "." + key);
+    }
+    // Only explicitly declared additive fields may use constructor defaults.
+    template <class T> void extension(const char *key, T &v) {
+        if (fields.contains(key)) (*this)(key, v);
     }
 };
 inline Value putObject(const std::string &kind, Writer w) {

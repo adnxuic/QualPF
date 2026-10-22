@@ -1,15 +1,38 @@
 #include "pfsm_internal.h"
+#if defined(__SSE2__) || defined(_M_X64)
+#include <emmintrin.h>
+#endif
 
 namespace qualpf::profile::detail {
-ReducedProblem::ReducedProblem(const ProfileFitInput &in, const ExecutionContext &ctx)
-    : input(in), context(ctx) {
+namespace {
+unsigned observationDenormalMode() {
+#if defined(__SSE2__) || defined(_M_X64)
+    return _mm_getcsr() & 0x8040;
+#else
+    return 0;
+#endif
+}
+PreparedProfileObservationsHandle prepareObservations(std::shared_ptr<const ProfileObservations> observations,
+                                                      const ExecutionContext &context, bool frozen) {
     checkpoint(context);
-    if (context.numerical_policy != NumericalPolicy::explicit_float64 || !input.observations)
+    if (context.numerical_policy != NumericalPolicy::explicit_float64 || !observations)
         fail("pfsm.observations", "Owned observations and explicit binary64 policy are required");
-    const auto &data = *input.observations;
-    const auto n = data.coordinates.size(), m = input.phases.size();
+    if (frozen)
+        observations = std::make_shared<const ProfileObservations>(*observations);
+    auto prepared = std::make_shared<PreparedProfileObservations>();
+    prepared->observations = std::move(observations);
+    prepared->frozen = frozen;
+    prepared->denormals = observationDenormalMode();
+    const auto &data = *prepared->observations;
+    const auto n = data.coordinates.size();
     if (!n || data.observed.size() != n || data.background.size() != n || data.weights.size() != n)
         fail("pfsm.observations", "Observation arrays must be nonempty and aligned");
+    countWork(&WorkCounters::observation_preparations);
+    auto &z = prepared->normalized_net;
+    auto &sqrt_weights = prepared->sqrt_weights;
+    auto &net_denominator = prepared->net_denominator;
+    auto &observed_denominator = prepared->observed_denominator;
+    auto &normalization = prepared->normalization;
     z.resize(static_cast<Eigen::Index>(n));
     sqrt_weights.resize(static_cast<Eigen::Index>(n));
     Vector observed(static_cast<Eigen::Index>(n));
@@ -31,6 +54,28 @@ ReducedProblem::ReducedProblem(const ProfileFitInput &in, const ExecutionContext
     if (!(normalization > 0) || !std::isfinite(net_denominator) || !std::isfinite(observed_denominator))
         fail("pfsm.denominator", "No finite positive weighted net signal", ErrorCode::missing_data);
     z /= normalization;
+    return prepared;
+}
+PreparedProfileObservationsHandle observationsForFit(const ProfileFitInput &input, const ExecutionContext &context) {
+    checkpoint(context);
+    if (context.numerical_policy != NumericalPolicy::explicit_float64 || !input.observations)
+        fail("pfsm.observations", "Owned observations and explicit binary64 policy are required");
+    if (input.prepared_observations && input.prepared_observations->frozen &&
+        input.prepared_observations->observations == input.observations &&
+        input.prepared_observations->rounding == std::fegetround() &&
+        input.prepared_observations->denormals == observationDenormalMode()) {
+        countWork(&WorkCounters::observation_reuses);
+        return input.prepared_observations;
+    }
+    return prepareObservations(input.observations, context, false);
+}
+}
+ReducedProblem::ReducedProblem(const ProfileFitInput &in, const ExecutionContext &ctx)
+    : prepared_(observationsForFit(in, ctx)), input(in), context(ctx),
+      z(prepared_->normalized_net), sqrt_weights(prepared_->sqrt_weights),
+      net_denominator(prepared_->net_denominator), observed_denominator(prepared_->observed_denominator),
+      normalization(prepared_->normalization) {
+    const auto n = input.observations->coordinates.size(), m = input.phases.size();
     for (std::size_t j = 0; j < m; ++j) {
         const auto &p = input.phases[j];
         if (!p.profile || !std::isfinite(p.lower_shift) || !std::isfinite(p.upper_shift) ||
@@ -54,6 +99,18 @@ ReducedProblem::ReducedProblem(const ProfileFitInput &in, const ExecutionContext
     linear_workspace.resize(static_cast<Eigen::Index>(n), static_cast<Eigen::Index>(m));
     last_shifts = Vector::Constant(static_cast<Eigen::Index>(m), std::numeric_limits<double>::quiet_NaN());
 }
+void ReducedProblem::anchorColumns(const Vector &shifts) {
+    clearAnchor();
+    if (shifts.size() != last_shifts.size())
+        return;
+    for (Eigen::Index index = 0; index < shifts.size(); ++index)
+        if (std::bit_cast<std::uint64_t>(shifts[index]) != std::bit_cast<std::uint64_t>(last_shifts[index]))
+            return;
+    anchor_.shifts = shifts;
+    anchor_.weighted = columns;
+    anchor_.unweighted = unweighted_columns;
+    anchor_.valid = true;
+}
 void ReducedProblem::update(const Vector &shifts) {
     checkpoint(context);
     if (shifts.size() != columns.cols())
@@ -64,6 +121,16 @@ void ReducedProblem::update(const Vector &shifts) {
             fail("pfsm.shifts", "Shift is outside its finite bounds");
         if (shifts[j] == last_shifts[j])
             continue;
+        if (anchor_.valid &&
+            std::bit_cast<std::uint64_t>(shifts[j]) == std::bit_cast<std::uint64_t>(anchor_.shifts[j])) {
+            columns.col(j) = anchor_.weighted.col(j);
+            unweighted_columns.col(j) = anchor_.unweighted.col(j);
+            last_shifts[j] = shifts[j];
+            linear_workspace.valid[static_cast<std::size_t>(j)] = false;
+            countWork(&WorkCounters::anchor_restores);
+            continue;
+        }
+        countWork(&WorkCounters::formal_columns);
         auto values =
             exact_mode ? p.profile->evaluateExact(input.observations->coordinates, shifts[j], false, context)
                        : p.profile->evaluate(input.observations->coordinates, shifts[j], false, context);
@@ -208,6 +275,15 @@ ProfileFitResult ReducedProblem::result(const Evaluation &e, const Vector &shift
 } // namespace qualpf::profile::detail
 
 namespace qualpf::profile {
+Result<PreparedProfileObservationsHandle> prepareProfileObservations(
+    std::shared_ptr<const ProfileObservations> observations, const ExecutionContext &context) try {
+    return Result<PreparedProfileObservationsHandle>{detail::prepareObservations(std::move(observations), context, true)};
+} catch (const detail::Failure &failure) {
+    return Result<PreparedProfileObservationsHandle>{failure.error};
+}
+std::shared_ptr<const ProfileObservations> profileObservationSnapshot(const PreparedProfileObservationsHandle &prepared) {
+    return prepared ? prepared->observations : nullptr;
+}
 Status validateProfileFitResult(const ProfileFitResult &value, const ProfileFitInput &input,
                                 bool requireExact) {
     const auto invalid = [] {

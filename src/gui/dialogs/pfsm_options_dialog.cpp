@@ -115,11 +115,23 @@ PfsmOptionsDialog::PfsmOptionsDialog(MainWindow *window) : QDialog(window), wind
     workers_->setRange(0, INT_MAX); workers_->setSpecialValueText(tr("Auto"));
     cache_ = new QCheckBox(tr("Enable (direct final verification)")); cache_->setObjectName("pfsmTemplateCache");
     advancedForm->addRow(tr("Workers"), workers_); advancedForm->addRow(tr("Template cache"), cache_);
+    advancedForm->addRow(label(tr("Enabled (default): Uses interpolated templates during fitting iterations to reduce "
+                                 "repeated profile calculations and can speed up searches. Preparing and storing the "
+                                 "cache takes extra time and memory, so small searches may not benefit. Final fits "
+                                 "are always verified by direct profile evaluation.")));
+    advancedForm->addRow(label(tr("Disabled: Evaluates profiles directly throughout fitting, avoiding interpolation "
+                                 "and its cache preparation and memory costs. Repeated profile calculations can "
+                                 "make searches slower.")));
     general->addWidget(advanced); general->addWidget(panel); general->addStretch();
     auto *scopeNotice=label(tr("FOM: immediate display filter. Workers: next run.\nShift bounds, weighting and cache: next new analysis."));scopeNotice->setObjectName("pfsmScopeNotice");general->addWidget(scopeNotice);
     auto *recall = page(tr("Candidate Recall"), "pfsmRecallScroll", recallScroll_);
     recallEnabled_ = new QCheckBox(tr("Enable candidate recall")); recallEnabled_->setObjectName("pfsmRecallEnabled");
     recall->addWidget(recallEnabled_); recall->addWidget(label(tr("Preselect candidates before formal PFSM fitting.")));
+    recall->addWidget(label(tr("The counts below apply to standard v2 recall. Bounded integral recall uses fixed channel budgets and retains cutoff ties and protected candidates.")));
+    auto *resourceForm = new QFormLayout;
+    resourceFallback_ = new QComboBox; resourceFallback_->setObjectName("pfsmResourceFallback");
+    resourceFallback_->addItems({tr("Bounded integral recall"), tr("Full-pool formal fitting")});
+    resourceForm->addRow(tr("On resource limit"), resourceFallback_); recall->addLayout(resourceForm);
     auto *selection = new QGroupBox(tr("Candidate selection"));
     auto *fallback = new QGroupBox(tr("Full-pool fallback thresholds"));
     auto *selectionForm = formLayout(selection), *fallbackForm = formLayout(fallback);
@@ -182,8 +194,9 @@ bool PfsmOptionsDialog::setOptions() {
         const auto &v = c.limits;
         const auto mode = c.mode == PfsmCandidateRecallMode::off ? tr("Off") :
             (c.mode == PfsmCandidateRecallMode::enabled ? tr("On") : tr("Shadow"));
-        currentRecall_->setText(tr("Current analysis (frozen): %1\nRecall %2 · Local %3 · Per channel %4\nReview threshold %5 · Formal threshold %6")
-            .arg(mode).arg(v.recall_candidates).arg(v.local_shortlist).arg(v.protected_per_channel).arg(v.review_limit).arg(v.formal_limit));
+        currentRecall_->setText(tr("Current analysis (frozen): %1\nRecall %2 · Local %3 · Per channel %4\nReview threshold %5 · Formal threshold %6\nOn resource limit: %7")
+            .arg(mode).arg(v.recall_candidates).arg(v.local_shortlist).arg(v.protected_per_channel).arg(v.review_limit).arg(v.formal_limit)
+            .arg(c.resource_fallback == PfsmResourceFallback::full_pool ? tr("Full-pool formal fitting") : tr("Bounded integral recall")));
     }
     const auto configuration = source->projectSettings ? source->projectSettings->profile(WorkflowId::pfsm).fwhm : source->preprocessing.fwhm.value_or(FwhmConfiguration{});
     QString width = tr("Automatic · Geometric if needed (Q = %1)").arg(configuration.minimum_sampling_density);
@@ -215,12 +228,14 @@ void PfsmOptionsDialog::setWidgets(const PfsmSettings &s) {
     minimum_->setValue(s.minimum_relative_fom); slider_->setValue(qRound(s.minimum_relative_fom * 1000));
     workers_->setValue(s.threads); cache_->setChecked(s.template_cache);
     recallEnabled_->setChecked(s.candidate_recall_enabled);
+    resourceFallback_->setCurrentIndex(s.candidate_recall_resource_fallback == PfsmResourceFallback::full_pool ? 1 : 0);
     const auto &v = s.candidate_recall_limits;
     const std::array<int, 5> values{v.recall_candidates,v.local_shortlist,v.protected_per_channel,v.review_limit,v.formal_limit};
     for (std::size_t i=0;i<values.size();++i) recallCounts_[i]->setValue(values[i]);
     updateResolved(); updateRecallEnabled(); clearErrors();
 }
 void PfsmOptionsDialog::updateRecallEnabled() {
+    resourceFallback_->setEnabled(recallEnabled_->isChecked());
     for (auto *spin : recallCounts_) spin->setEnabled(recallEnabled_->isChecked());
 }
 void PfsmOptionsDialog::updateResolved() {
@@ -250,6 +265,7 @@ void PfsmOptionsDialog::accept() {
     s.minimum_relative_fom = minimum_->value(); s.threads = workers_->value(); s.template_cache = cache_->isChecked();
     s.weighting = weighting_->currentIndex() == 1 ? PfsmSettings::Weighting::equal : PfsmSettings::Weighting::automatic;
     s.candidate_recall_enabled = recallEnabled_->isChecked();
+    s.candidate_recall_resource_fallback = resourceFallback_->currentIndex() == 1 ? PfsmResourceFallback::full_pool : PfsmResourceFallback::bounded_integral;
     for (std::size_t i=0;i<recallCounts_.size();++i) {
         if (!recallCounts_[i]->hasAcceptableInput()) { showRecallError(i,tr("Enter an integer from 1 to 2147483647.")); return; }
         recallCounts_[i]->interpretText();

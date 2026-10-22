@@ -71,9 +71,11 @@ struct PfsmCandidateRecallCandidate {
 
 };
 Result<PfsmCandidateRecallCandidate> evaluatePfsmCandidateRecallInitial(const PfsmCandidateRecallPhysicalRound &,
-    const ProfileExpansionInput &, const PfsmCandidateRecallEvidence &, const ExecutionContext &);
+    const ProfileExpansionInput &, const PfsmCandidateRecallEvidence &, const ExecutionContext &,
+    PreparedProfileTemplateHandle prepared = {});
 Result<PfsmCandidateRecallCandidate> reviewPfsmCandidateRecall(const PfsmCandidateRecallPhysicalRound &,
-    const ProfileExpansionInput &, PfsmCandidateRecallCandidate, const ExecutionContext &);
+    const ProfileExpansionInput &, PfsmCandidateRecallCandidate, const ExecutionContext &,
+    PreparedProfileTemplateHandle prepared = {});
 struct PfsmCandidateRecallSelection {
     PfsmCandidateRecallLimits limits;
     double g_star = PfsmCandidateRecallPolicy::gain_floor;

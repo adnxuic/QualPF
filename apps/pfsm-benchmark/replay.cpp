@@ -101,6 +101,8 @@ int main(int argc,char **argv) {
         const double h=input["width"].toDouble(),lo=input["lower_shift"].toDouble(),hi=input["upper_shift"].toDouble();
         const bool cache=input["template_cache"].toBool();
         std::shared_ptr<const PfsmCandidateRecallData> data;
+        std::shared_ptr<const PfsmIntegralData> integralData;
+        std::shared_ptr<const ProfileObservations> frozenData;
         QJsonArray reports;
         save(output+"/run-start.json",{{"schema","qualpf.pfsm.fast-replay.v1"},{"code_revision",QUALPF_PFSM_REVISION},
             {"input_sha256",digest(cli.value("input"))},{"executable_sha256",digest(QCoreApplication::applicationFilePath())},
@@ -123,17 +125,76 @@ int main(int argc,char **argv) {
             const auto frozen=roundValue.toObject();const int number=frozen["round"].toInt(-1);if(number<0)fail("Invalid round");
             const auto roundStart=Clock::now();std::cout<<"Replay "<<input["case"].toString().toStdString()<<" round "<<number<<std::endl;
             const auto observed=observations(boundPath(frozen["observations"]));
-            if(!data)data=take(preparePfsmCandidateRecallData(observed.data,h,lo,hi,ctx));
-            else if(data->observations->coordinates!=observed.data->coordinates || data->observations->observed!=observed.data->observed ||
-                data->observations->background!=observed.data->background || data->observations->weights!=observed.data->weights)fail("Frozen observations changed across rounds");
+            if(frozenData && (frozenData->coordinates!=observed.data->coordinates || frozenData->observed!=observed.data->observed ||
+                frozenData->background!=observed.data->background || frozenData->weights!=observed.data->weights))fail("Frozen observations changed across rounds");
+            if(!frozenData)frozenData=observed.data;
+            std::string resourceReason;
+            if(!data) {
+                auto prepared=preparePfsmCandidateRecallData(frozenData,h,lo,hi,ctx);
+                if(prepared)data=std::move(prepared).value();
+                else if(prepared.error().code==ErrorCode::numerical_failure &&
+                    (prepared.error().reason=="candidate_recall_grid_limit" || prepared.error().reason=="candidate_recall_scan_limit"))
+                    resourceReason=prepared.error().reason;
+                else take(std::move(prepared));
+            }
             const auto expansion=[&](std::size_t i){ProfileExpansionInput p;p.fwhm_degrees=h;p.radiation=radiation;
-                if(cache)p.interpolation_window={data->observations->coordinates.front()-hi,data->observations->coordinates.back()-lo};
+                if(cache)p.interpolation_window={frozenData->coordinates.front()-hi,frozenData->coordinates.back()-lo};
                 for(std::size_t j=0;j<cards[i].d.size();++j)p.lines.push_back({j,cards[i].d[j],cards[i].intensity[j]});return p;};
             const auto scales=numbers(frozen["scales"]),shifts=numbers(frozen["shifts"]);const auto ids=frozen["selected_ids"].toArray();
             if(scales.size()!=shifts.size() || scales.size()!=std::size_t(ids.size()))fail("Unaligned frozen parameters");
             std::vector<PfsmCandidateRecallPhysicalPhase> selected;std::set<std::size_t> selectedIndices;
             for(std::size_t j=0;j<scales.size();++j){auto it=identities.find(ids[qsizetype(j)].toString().toStdString());if(it==identities.end() || !selectedIndices.insert(it->second).second)fail("Invalid selected identity");selected.push_back({expansion(it->second),scales[j],shifts[j]});}
             std::vector<std::size_t> pool;for(std::size_t i=0;i<cards.size();++i)if(!selectedIndices.contains(i))pool.push_back(i);
+            if(!resourceReason.empty()) {
+                PfsmIntegralRecallReport d;d.baseline_shifts=shifts;
+                std::vector<ProfileExpansionInput> oldInputs;
+                for(const auto &phase:selected){oldInputs.push_back(phase.input);oldInputs.back().interpolation_window.reset();}
+                t=Clock::now();
+                if(!integralData)integralData=take(preparePfsmIntegralData(frozenData,{},h,d.options,ctx));
+                const auto integralRound=take(preparePfsmIntegralRound(integralData,oldInputs,shifts,observed.residual,{},ctx));
+                const auto relaxedRound=take(preparePfsmRelaxedRound(integralData,oldInputs,shifts,lo,hi,{},d.relaxed_options,ctx));
+                d.shared_seconds=elapsed(t);d.fine_bins=integralData->fine.weights.size();d.coarse_bins=integralData->coarse.weights.size();
+                d.fine_denominator=integralData->fine.denominator;d.coarse_baseline_q=integralRound.coarse_baseline_q;
+                d.fine_baseline_q=integralRound.fine_baseline_q;d.tau=integralRound.tau;
+                d.relaxation_radius=relaxedRound.radius;d.bank_columns=relaxedRound.bank_columns;
+                d.peak_buffer_bytes=integralData->buffer_bytes+integralRound.buffer_bytes+relaxedRound.buffer_bytes;
+                d.candidates.resize(pool.size());
+                t=Clock::now();workers(pool.size(),[&](std::size_t i){
+                    auto p=expansion(pool[i]);p.interpolation_window.reset();
+                    d.candidates[i]=take(evaluatePfsmIntegralCandidate(integralRound,p,lo,hi,{},ctx));d.candidates[i].original_index=pool[i];
+                });d.integral_seconds=elapsed(t);
+                t=Clock::now();workers(pool.size(),[&](std::size_t i){
+                    auto p=expansion(pool[i]);p.interpolation_window.reset();
+                    d.candidates[i].relaxed=take(evaluatePfsmRelaxedCandidate(relaxedRound,p,d.candidates[i],ctx));
+                });d.relaxed_seconds=elapsed(t);
+                std::size_t workerBytes=0;
+                for(auto &e:d.candidates){
+                    if(!e.relaxed.uncertainty.empty())e.uncertainty.push_back(e.relaxed.uncertainty);
+                    e.nnls_iterations+=e.relaxed.iterations;
+                    d.coarse_evaluations+=e.coarse_evaluations;d.fine_evaluations+=e.fine_evaluations;d.relaxed_evaluations+=e.relaxed.evaluations;
+                    workerBytes=std::max(workerBytes,e.buffer_bytes+e.relaxed.buffer_bytes);
+                }
+                d.peak_buffer_bytes+=std::size_t(threads)*workerBytes;
+                take(selectPfsmIntegralCandidates(d.candidates,d.options,ctx));
+                const auto retained=take(selectPfsmRelaxedCandidates(d.candidates,d.relaxed_options,ctx)).indices;
+                QFile evidence(output+QString("/replay-%1.jsonl").arg(number));
+                if(!evidence.open(QIODevice::WriteOnly|QIODevice::NewOnly))fail("Cannot create integral replay evidence");
+                for(const auto &e:d.candidates){
+                    QJsonObject row{{"id",QString::fromStdString(cards[e.original_index].id)},{"original_index",qint64(e.original_index)},
+                        {"recalled",e.retained},{"retained",e.retained},{"integral",pfsmIntegralRecallCandidateJson(e)},
+                        {"original_shift",e.original.shift},{"residual_shift",e.residual.shift},
+                        {"protection_reason",e.uncertainty.empty()?QString():QString::fromStdString(e.uncertainty.front())}};
+                    if(e.original.score)row["original_score"]=*e.original.score;if(e.residual.score)row["residual_score"]=*e.residual.score;
+                    const auto b=QJsonDocument(row).toJson(QJsonDocument::Compact)+'\n';if(evidence.write(b)!=b.size())fail("Cannot write integral replay evidence");
+                }
+                evidence.close();
+                QJsonObject report{{"round",number},{"backend","bounded_integral_relaxed"},{"switch_reason",QString::fromStdString(resourceReason)},
+                    {"integral",pfsmIntegralRecallReportJson(d)},{"formal_fits",0},{"pool",indices(pool)},
+                    {"recalled",indices(retained)},{"recalled_indices",indices(retained)},{"retained_indices",indices(retained)},
+                    {"full_fallback",false},{"fallback_reason",""},{"fast_seconds",elapsed(roundStart)},
+                    {"evidence_sha256",digest(evidence.fileName())}};
+                save(output+QString("/round-%1.json").arg(number),report);reports.append(report);continue;
+            }
             t=Clock::now();const auto round=take(preparePfsmCandidateRecallPhysicalRound(data,observed.residual,selected,ctx,false));
             const double sharedSeconds=elapsed(t);
             const double expected=frozen["baseline_Q"].toDouble()/data->denominator;
@@ -143,7 +204,7 @@ int main(int argc,char **argv) {
                 if(result)recall[i]=std::move(result).value();else if(result.error().code==ErrorCode::numerical_failure)recall[i].protection_reason=result.error().message;else take(std::move(result));});
             const auto recalled=selectPfsmRecallCandidates(recall);const double recallSeconds=elapsed(t);
             std::vector<std::size_t> recalledSlots;for(std::size_t i=0;i<recall.size();++i)if(recall[i].recalled)recalledSlots.push_back(i);
-            QJsonObject report{{"round",number},{"baseline_q",round.baseline_q},{"denominator",data->denominator},
+            QJsonObject report{{"round",number},{"backend","v2"},{"baseline_q",round.baseline_q},{"denominator",data->denominator},
                 {"formal_fits",0},{"pool",indices(pool)},{"recalled",indices(recalled)},{"shared_seconds",sharedSeconds},{"recall_seconds",recallSeconds}};
             std::vector<PfsmCandidateRecallBackprojectionResult> a(recalledSlots.size());std::vector<PfsmCandidateRecallEvidence> aRows;
             if(stage!="bc"){

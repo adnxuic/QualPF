@@ -88,6 +88,7 @@ Vector selectStep(const Vector &x, const Vector &lower, const Vector &upper,
 }
 }
 OuterResult trf(ReducedProblem &problem, const Vector &start) {
+    problem.clearAnchor();
     auto current = problem.evaluate(start); // Validates all coordinates, including fixed bounds.
     const auto n = static_cast<Eigen::Index>(problem.free.size());
     if (!n) return {std::move(current), start, ProfileFitTermination::fixed_shifts, 0};
@@ -120,6 +121,7 @@ OuterResult trf(ReducedProblem &problem, const Vector &start) {
     const double difference = std::cbrt(std::numeric_limits<double>::epsilon());
     ProfileFitTermination termination = ProfileFitTermination::budget;
     const auto differentiate = [&](const Vector &x, const Vector &residual) -> Matrix {
+        problem.anchorColumns(shifts(x));
         Matrix jacobian(residual.size(), n);
         for (Eigen::Index j = 0; j < n; ++j) {
             const double desired = difference * std::max(1., std::abs(x[j]));
@@ -184,7 +186,10 @@ OuterResult trf(ReducedProblem &problem, const Vector &start) {
             else if (ratio > .75 && length > .95 * radius) radius *= 2;
             const bool cost_stop = actual >= 0 && actual < options.ftol * current.cost && ratio > .25;
             const bool step_stop = physical.norm() < options.xtol * (options.xtol + x.norm());
-            if (actual > 0) { x = std::move(trial); current = std::move(candidate); accepted = true; }
+            if (actual > 0) {
+                x = std::move(trial); current = std::move(candidate); accepted = true;
+                problem.clearAnchor();
+            }
             if (cost_stop || step_stop) {
                 termination = cost_stop && step_stop ? ProfileFitTermination::cost_and_step :
                     cost_stop ? ProfileFitTermination::cost : ProfileFitTermination::step;
@@ -224,6 +229,7 @@ OuterResult trf(ReducedProblem &problem, const Vector &start) {
             final_gradient[j] > 0 ? x[j] - lower[j] : 1.;
         optimality = std::max(optimality, std::abs(final_gradient[j] * distance));
     }
+    problem.clearAnchor();
     return {std::move(current), final_shifts, termination, optimality};
 }
 } // namespace qualpf::profile::detail

@@ -183,5 +183,97 @@ class ReplayInputTests(unittest.TestCase):
         with self.assertRaises(ValueError):self.adapter.derive_selected(self.order,[bad])
 
 
+class WorkComparisonTests(unittest.TestCase):
+    def setUp(self):
+        work_spec = importlib.util.spec_from_file_location('work_compare', module.with_name('pfsm_work_compare.py'))
+        self.work = importlib.util.module_from_spec(work_spec)
+        work_spec.loader.exec_module(self.work)
+        self.before = dict(cases=[dict(id='analytic', passed=True, actual=dict(value=1., risk=0.),
+                                     stderr=json.dumps(dict(nnls_solves=3, paired_samples=6)))])
+        self.after = copy.deepcopy(self.before)
+        self.after['cases'][0]['stderr'] = json.dumps(dict(nnls_solves=3, paired_samples=2))
+
+    def test_reduced_work_preserves_science(self):
+        report = self.work.compare(self.before, self.after)
+        self.assertEqual(report['differences'], [])
+        self.assertEqual(report['after']['paired_samples'], 2)
+
+    def test_every_scientific_field_is_checked(self):
+        self.after['cases'][0]['actual']['risk'] = -0.
+        self.assertTrue(self.work.compare(self.before, self.after)['differences'])
+
+    def test_solver_counts_and_failures_are_checked(self):
+        self.after['cases'][0]['stderr'] = json.dumps(dict(nnls_solves=2, paired_samples=2))
+        self.assertTrue(self.work.compare(self.before, self.after)['differences'])
+        self.after = copy.deepcopy(self.before)
+        self.after['cases'][0]['passed'] = False
+        self.assertTrue(self.work.compare(self.before, self.after)['differences'])
+
+    def test_missing_or_reordered_cases_are_checked(self):
+        self.after['cases'].clear()
+        self.assertTrue(self.work.compare(self.before, self.after)['differences'])
+        self.after = copy.deepcopy(self.before)
+        self.after['cases'][0]['id'] = 'other'
+        self.assertTrue(self.work.compare(self.before, self.after)['differences'])
+
+
+class IntegralComparatorTests(unittest.TestCase):
+    def setUp(self):
+        self.records = []
+        # Independent ordered channels: fine 0..63, coarse 0..15, support 84..99,
+        # relaxed 0..31. The union is 0..63 plus 84..99, without a final cap.
+        for i in range(100):
+            v = dict(normalized_fine_gain=100-i, normalized_coarse_gain=100-i,
+                     relaxed_gain=100-i, fine_selected=i<64, coarse_selected=i<16,
+                     original_selected=i>=84, residual_selected=i>=84, relaxed_selected=i<32,
+                     integral_complete=True, relaxed_complete=True, uncertainty=[], relaxed_uncertainty='',
+                     coarse_evaluations=65, fine_evaluations=32, relaxed_evaluations=205,
+                     candidate_cache_columns=32, released=[], relaxed_null_shifts=[], relaxed_null_scales=[],
+                     relaxed_best_shifts=[0.], relaxed_best_scales=[1.])
+            self.records.append(dict(original_index=i, original_score=i, residual_score=i,
+                                     protection_reason='', integral=v))
+        indices = list(range(64))+list(range(84,100))
+        self.attempt = dict(backend='bounded_integral_relaxed', switch_reason='candidate_recall_grid_limit',
+            full_fallback=False, recalled_indices=indices, retained_indices=indices,
+            integral=dict(source_revision=comparator.validate_integral.__globals__['SOURCE'], implementation='baseline',
+                fine_bins=2048, coarse_bins=1024, bank_columns=0, fine_budget=64, coarse_budget=16,
+                original_budget=16, residual_budget=16, relaxed_budget=32, nnls_limit=205, tail_mass_epsilon=1e-4,
+                coarse_evaluations=6500, fine_evaluations=3200, relaxed_evaluations=20500))
+
+    def check_result(self):
+        return comparator.validate_integral(self.attempt, self.records, 0)
+
+    def test_baseline_union(self):
+        self.assertEqual(self.check_result(), [])
+
+    def test_ties_bypass_v2_cap(self):
+        for r in self.records:
+            r['integral']['normalized_fine_gain'] = 1.
+            r['integral']['fine_selected'] = True
+        self.attempt['recalled_indices'] = self.attempt['retained_indices'] = list(range(100))
+        self.assertEqual(self.check_result(), [])
+        self.attempt['retained_indices'] = list(range(80))
+        self.assertTrue(self.check_result())
+
+    def test_fixed_resources_and_matching(self):
+        for key in ('coarse_evaluations', 'fine_evaluations', 'relaxed_evaluations', 'candidate_cache_columns'):
+            with self.subTest(key=key):
+                self.records[0]['integral'][key] += 1000
+                self.assertTrue(self.check_result())
+                self.records[0]['integral'][key] -= 1000
+        self.records[0]['integral']['relaxed_null_shifts'] = [.1]
+        self.assertTrue(self.check_result())
+
+    def test_protected_candidate_and_source(self):
+        self.records[70]['integral']['uncertainty'] = ['numerical_failure']
+        self.records[70]['protection_reason'] = 'numerical_failure'
+        self.assertTrue(self.check_result())
+        indices = sorted(self.attempt['retained_indices']+[70])
+        self.attempt['recalled_indices'] = self.attempt['retained_indices'] = indices
+        self.assertEqual(self.check_result(), [])
+        self.attempt['integral']['implementation'] = 'A+B'
+        self.assertTrue(self.check_result())
+
+
 if __name__ == '__main__':
     unittest.main()

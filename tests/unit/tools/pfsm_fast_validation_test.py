@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Scheduling and reuse controls; no product-generated numeric expectations."""
+import copy
 import json
+import math
 from pathlib import Path
 import sys
 import tempfile
@@ -11,6 +13,149 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]/'tools/validation'))
 from pfsm_fast_validation import CompletedRuns, check_group, sha
 import pfsm_candidate_recall_validation as v2
+import pfsm_performance as performance
+
+
+def integral_performance_fixture():
+    # Explicit comparison inputs, not product-generated numerical expectations.
+    attempt = dict(backend='bounded_integral_relaxed', retained_indices=[1, 4],
+                   integral=dict(shared_seconds=.1, integral_seconds=.2, relaxed_seconds=.3,
+                                 fine_baseline_q=2.0, fine_denominator=4.0,
+                                 relaxed_evaluations=12, peak_buffer_bytes=1024))
+    recall = dict(mode='enabled', attempts=[copy.deepcopy(attempt), copy.deepcopy(attempt)])
+    return dict(points=3, candidate_count=5, candidate_order_sha256='fixed',
+                rounds=[dict(baseline_Q=2.0, candidate_recall=copy.deepcopy(recall)) for _ in range(2)])
+
+
+class PerformanceComparisonTests(unittest.TestCase):
+    def test_integral_timings_are_ignored_without_mutating_reports(self):
+        before = integral_performance_fixture()
+        for round_index in range(2):
+            for attempt_index in range(2):
+                for field in ('shared_seconds', 'integral_seconds', 'relaxed_seconds'):
+                    for missing in (False, True):
+                        with self.subTest(round=round_index, attempt=attempt_index, field=field, missing=missing):
+                            after = copy.deepcopy(before)
+                            integral = after['rounds'][round_index]['candidate_recall']['attempts'][attempt_index]['integral']
+                            if missing:
+                                integral.pop(field)
+                            else:
+                                integral[field] += 1
+                            original = json.dumps([before, after], sort_keys=True)
+                            self.assertEqual(performance.scientific_equal(before, after), [])
+                            self.assertEqual(json.dumps([before, after], sort_keys=True), original)
+
+    def test_integral_evidence_differences_remain_exact_failures(self):
+        before = integral_performance_fixture()
+        for field, value in (('fine_baseline_q', math.nextafter(2.0, math.inf)),
+                             ('fine_denominator', math.nextafter(4.0, math.inf)),
+                             ('relaxed_evaluations', 13), ('peak_buffer_bytes', 2048),
+                             ('future_seconds', 1.0)):
+            with self.subTest(field=field):
+                after = copy.deepcopy(before)
+                integral = after['rounds'][1]['candidate_recall']['attempts'][1]['integral']
+                integral['shared_seconds'] += 1
+                integral[field] = value
+                self.assertEqual(performance.scientific_equal(before, after), ['round 1: candidate_recall'])
+
+    def test_recall_selection_and_other_paths_remain_checked(self):
+        before = integral_performance_fixture()
+        for field, value in (('retained_indices', [1, 3]), ('backend', 'v2'), ('shared_seconds', 1.0)):
+            with self.subTest(field=field):
+                after = copy.deepcopy(before)
+                after['rounds'][0]['candidate_recall']['attempts'][0][field] = value
+                self.assertEqual(performance.scientific_equal(before, after), ['round 0: candidate_recall'])
+        for recall in (None, dict(mode='off'), dict(mode='enabled', attempts=[dict(backend='v2')])):
+            with self.subTest(recall=recall):
+                before['rounds'][0]['candidate_recall'] = recall
+                self.assertEqual(performance.scientific_equal(before, copy.deepcopy(before)), [])
+        after = copy.deepcopy(before)
+        after['rounds'][0]['baseline_Q'] = math.nextafter(2.0, math.inf)
+        self.assertEqual(performance.scientific_equal(before, after), ['round 0: baseline_Q'])
+
+
+class PerformanceScheduleTests(unittest.TestCase):
+    def run_schedule(self, arguments, mismatch=False, integral_timing=False):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        root = Path(temporary.name)
+        executable = root / 'benchmark.exe'
+        executable.write_bytes(b'independent scheduling fixture')
+        manifest = root / 'manifest.json'
+        manifest.write_text(json.dumps(dict(cases=[dict(id='sample', status='ready')])))
+        output = root / 'comparison'
+        launches = []
+
+        def run(command, **options):
+            launches.append(command)
+            directory = Path(command[command.index('--output') + 1])
+            directory.mkdir()
+            case_directory = directory / 'sample'
+            case_directory.mkdir()
+            after = directory.name.endswith('-after')
+            case = dict(status='performance_not_acceptance', points=1, candidate_count=1,
+                        candidate_order_sha256='fixed', end_to_end_seconds=1.0,
+                        rounds=[dict(operation_to_result_seconds=1.0, peak_process_resident_bytes=1024)])
+            if integral_timing:
+                recall = integral_performance_fixture()['rounds'][0]['candidate_recall']
+                if after:
+                    for attempt in recall['attempts']:
+                        for field in ('shared_seconds', 'integral_seconds', 'relaxed_seconds'):
+                            attempt['integral'][field] += 1
+                case['rounds'][0]['candidate_recall'] = recall
+            (directory / 'run.json').write_text(json.dumps(dict(cases=[case])))
+            for name in ('candidate-order.txt', 'round-0.jsonl', 'baseline-0.tsv'):
+                content = 'independent comparison fixture'
+                if mismatch and after and name == 'round-0.jsonl':
+                    content = 'changed comparison fixture'
+                (case_directory / name).write_text(content)
+            return SimpleNamespace(returncode=0)
+
+        command = ['pfsm_performance.py', '--before', str(executable), '--after', str(executable),
+                   '--database', str(root / 'database'), '--manifest', str(manifest),
+                   '--output', str(output), '--case', 'sample', '--mode', 'cache',
+                   '--threads', '12', '--repetitions', '1', *arguments]
+        with patch.object(sys, 'argv', command), patch.object(performance.subprocess, 'run', side_effect=run):
+            if mismatch:
+                with self.assertRaisesRegex(RuntimeError, 'Numerical mismatch'):
+                    performance.main()
+            else:
+                performance.main()
+        return launches, json.loads((output / 'comparison.json').read_text())
+
+    def test_single_pair_without_warmup_launches_only_twice(self):
+        launches, report = self.run_schedule(['--no-warmup'])
+        self.assertEqual(len(launches), 2)
+        self.assertEqual([(row['iteration'], row['variant']) for row in report['measurements']],
+                         [(0, 'before'), (0, 'after')])
+        self.assertEqual(report['warmup_pairs'], 0)
+        self.assertEqual(report['repetitions'], 1)
+        self.assertTrue(report['comparisons'][0]['scientific_identical'])
+
+    def test_default_still_runs_one_warmup_pair(self):
+        launches, report = self.run_schedule([])
+        self.assertEqual(len(launches), 4)
+        self.assertEqual([row['iteration'] for row in report['measurements']], ['warmup', 'warmup', 0, 0])
+        self.assertEqual(report['warmup_pairs'], 1)
+
+    def test_full_library_preserves_explicit_single_pair(self):
+        launches, report = self.run_schedule(['--no-warmup', '--full-library'])
+        self.assertEqual(len(launches), 2)
+        self.assertTrue(all(command[-2:] == ['--chemistry', 'none'] for command in launches))
+        self.assertEqual(report['repetitions'], 1)
+
+    def test_no_warmup_keeps_scientific_mismatch_failure(self):
+        launches, report = self.run_schedule(['--no-warmup'], mismatch=True)
+        self.assertEqual(len(launches), 2)
+        self.assertFalse(report['comparisons'][0]['scientific_identical'])
+        self.assertEqual(report['comparisons'][0]['differences'], ['round-0.jsonl'])
+
+    def test_integral_timing_changes_allow_performance_report_completion(self):
+        launches, report = self.run_schedule(['--no-warmup', '--candidate-recall', 'enabled'], integral_timing=True)
+        self.assertEqual(len(launches), 2)
+        self.assertTrue(report['comparisons'][0]['scientific_identical'])
+        self.assertEqual(report['comparisons'][0]['differences'], [])
+        self.assertEqual(len(report['groups'][0]['rounds']), 1)
 
 
 class WorkflowTests(unittest.TestCase):

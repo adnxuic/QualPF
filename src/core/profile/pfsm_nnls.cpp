@@ -3,6 +3,8 @@
 namespace qualpf::profile::detail {
 LinearSolution nnls(const Matrix &a, const Vector &z, std::size_t budget, NnlsWorkspace &workspace,
                     const ExecutionContext &context) {
+    ProfileWorkTimer timer(&ProfileWorkStatistics::nnls_seconds);
+    countWork(&WorkCounters::nnls_solves);
     const auto m = a.cols(), n = a.rows();
     LinearSolution out;
     out.scales = Vector::Zero(m);

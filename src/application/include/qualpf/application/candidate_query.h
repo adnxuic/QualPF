@@ -7,6 +7,14 @@
 #include <optional>
 
 namespace qualpf::application {
+struct CandidateReadStatistics {
+    // Timings cover readRows; restraint planning remains in database_seconds.
+    double count_seconds = 0, prepare_seconds = 0, execute_seconds = 0, fetch_seconds = 0;
+    double fields_seconds = 0, peaks_seconds = 0, materialize_seconds = 0;
+    std::size_t row_query_executions = 0, cards = 0, peaks = 0, peak_text_bytes = 0;
+    std::size_t peak_buffer_growths = 0;
+    bool forward_only = false;
+};
 // Owned criteria, never a SQL statement or a connection. Infrastructure compiles
 // these values using the existing SQL/filter/order contract.
 struct CandidateQuery {
@@ -24,6 +32,7 @@ struct CandidateQuery {
     double wavelength = 0;
     bool excludeDeleted = false, decodeReflections = true, print = false;
     bool strictPairedReflections = false;
+    bool measure_read = false; // Runtime diagnostics only; never persisted.
     // Owned IDs after Application's in-memory filter, before SQL restraints.
     // A present empty list means no candidates; absence requests normal routing.
     std::optional<std::vector<std::string>> preselectedIds;

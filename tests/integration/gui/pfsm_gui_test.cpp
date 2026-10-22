@@ -17,6 +17,7 @@
 #include <QElapsedTimer>
 #include <QEventLoop>
 #include <QFile>
+#include <QFontDatabase>
 #include <QHeaderView>
 #include <QLabel>
 #include <QKeyEvent>
@@ -139,6 +140,10 @@ static ProductState state(AlgorithmHandle algorithms) {
 }
 int main(int argc, char **argv) try {
     QApplication app(argc, argv); QTemporaryDir temporary; check(temporary.isValid());
+    if (qEnvironmentVariable("QT_QPA_PLATFORM") == "offscreen") {
+        const int font = QFontDatabase::addApplicationFont("C:/Windows/Fonts/segoeui.ttf");
+        if (font >= 0) app.setFont(QFont(QFontDatabase::applicationFontFamilies(font).front(), 9));
+    }
     QSettings::setDefaultFormat(QSettings::IniFormat); QSettings::setPath(QSettings::IniFormat,QSettings::UserScope,temporary.path());
     app.setOrganizationName("QualPF-tests"); app.setApplicationName("pfsm-gui");
     if (argc == 3 && std::string(argv[1]) == "--verify-isolated-preference") {
@@ -202,10 +207,12 @@ int main(int argc, char **argv) try {
     widget<QAction>(window,"actionPFSMOptions")->trigger();
     check(options->isVisible() && widget<QLabel>(*options,"pfsmFwhmSource")->text().contains("Geometric"));
     check(widget<QLabel>(*options,"pfsmResolvedWeights")->text().contains("noise unknown"));
-    check(widget<QSpinBox>(*options,"pfsmWorkers")->value() == 0 && !widget<QCheckBox>(*options,"pfsmTemplateCache")->isChecked());
+    check(widget<QSpinBox>(*options,"pfsmWorkers")->value() == 0 && widget<QCheckBox>(*options,"pfsmTemplateCache")->isChecked());
     snap(options,"pfsm-options.png");
     auto *optionTabs=widget<QTabWidget>(*options,"pfsmOptionsTabs");
     auto *recallOn=widget<QCheckBox>(*options,"pfsmRecallEnabled");
+    auto *resourceFallback=widget<QComboBox>(*options,"pfsmResourceFallback");
+    check(resourceFallback->count()==2 && resourceFallback->currentIndex()==0);
     auto *recallCount=widget<QSpinBox>(*options,"recallCandidates");
     auto *shortlist=widget<QSpinBox>(*options,"localShortlist");
     auto *channel=widget<QSpinBox>(*options,"protectedPerChannel");
@@ -221,7 +228,8 @@ int main(int argc, char **argv) try {
     QApplication::sendEvent(optionTabs,&switchTab);check(optionTabs->currentIndex()==1);
     recallOn->setFocus();
     QKeyEvent nextField(QEvent::KeyPress,Qt::Key_Tab,Qt::NoModifier);
-    QApplication::sendEvent(recallOn,&nextField);check(options->focusWidget()==recallCount);
+    QApplication::sendEvent(recallOn,&nextField);check(options->focusWidget()==resourceFallback);
+    QApplication::sendEvent(resourceFallback,&nextField);check(options->focusWidget()==recallCount);
     snap(options,"pfsm-options-recall.png");
     if (!capture.isEmpty()) {
         const auto size=options->size();
@@ -238,15 +246,18 @@ int main(int argc, char **argv) try {
         snap(options,"pfsm-options-advanced.png");
         widget<QToolButton>(*options,"pfsmAdvanced")->click();optionTabs->setCurrentIndex(1);
     }
-    recallOn->setChecked(false);check(!recallCount->isEnabled() && recallCount->value()==500);
+    recallOn->setChecked(false);check(!recallCount->isEnabled() && !resourceFallback->isEnabled() && recallCount->value()==500);
     recallOn->setChecked(true);recallCount->setValue(10);optionTabs->setCurrentIndex(0);options->accept();
     check(options->isVisible() && optionTabs->currentIndex()==1 && !widget<QLabel>(*options,"localShortlistError")->text().isEmpty());
     check(options->focusWidget()==shortlist);snap(options,"pfsm-options-validation.png");
     check(session.snapshot()==untouched && !preferences.contains("PFSMOptions/candidateRecall/enabled"));
-    restore->click();check(recallCount->value()==500 && recallOn->isChecked());options->reject();check(session.snapshot()==untouched);
+    widget<QCheckBox>(*options,"pfsmTemplateCache")->setChecked(false);
+    restore->click();check(recallCount->value()==500 && recallOn->isChecked() && widget<QCheckBox>(*options,"pfsmTemplateCache")->isChecked());options->reject();check(session.snapshot()==untouched);
 
     // Options belong to this project; another process retains the factory defaults.
     widget<QAction>(window,"actionPFSMOptions")->trigger();
+    resourceFallback->setCurrentIndex(1);
+    widget<QCheckBox>(*options,"pfsmTemplateCache")->setChecked(false);
     recallCount->setValue(600);shortlist->setValue(30);channel->setValue(6);review->setValue(90);formal->setValue(100);
     recallOn->setChecked(false);options->accept();check(!options->isVisible());
     check(!preferences.contains("PFSMOptions/candidateRecall/enabled"));
@@ -256,6 +267,8 @@ int main(int argc, char **argv) try {
     {
         PfsmOptionsDialog reopened(&window);check(reopened.setOptions());
         check(!widget<QCheckBox>(reopened,"pfsmRecallEnabled")->isChecked() && widget<QSpinBox>(reopened,"recallCandidates")->value()==600);
+        check(widget<QComboBox>(reopened,"pfsmResourceFallback")->currentIndex()==1);
+        check(!widget<QCheckBox>(reopened,"pfsmTemplateCache")->isChecked());
     }
     auto clean=*session.snapshot();clean.searchOptions=untouched->searchOptions;
     check(bool(session.commit(session.snapshot(),clean)));

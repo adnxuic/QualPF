@@ -179,7 +179,9 @@ static void csmRoundtrip() {
     check(restored.phases.size() == 1 && restored.peaks.intensity == selected.peaks.intensity &&
           restored.provenance.residualHistory.size() == selected.provenance.residualHistory.size());
 }
-static void pfsm(bool recall, bool cache) {
+static void changeObject(const std::string &, const std::string &,
+                         const std::function<void(qpf::Value::Map &, const std::string &)> &, bool);
+static void pfsm(bool recall, bool cache, bool integral = false, bool fullPolicy = false) {
     auto s = state();
     s.algorithms = take(resolveAlgorithms(AlgorithmSpec{{}, SearchMethod::pfsm}));
     s.workflow.active = WorkflowId::pfsm;
@@ -188,9 +190,20 @@ static void pfsm(bool recall, bool cache) {
     auto request = std::make_shared<PfsmRequest>();
     request->threads = 1;
     request->template_cache = cache;
+    if (fullPolicy) request->candidate_recall.resource_fallback = PfsmResourceFallback::full_pool;
     request->lower_shift = -.12;
     request->upper_shift = .12;
     request->candidate_recall.mode = recall ? PfsmCandidateRecallMode::enabled : PfsmCandidateRecallMode::off;
+    // Three cards exceed a deliberately configured one-card small-pool boundary.
+    if (recall) request->candidate_recall.limits = {500,1,1,80,80};
+    if (integral) {
+        request->lower_shift = request->upper_shift = 0;
+        FwhmUsage width;
+        width.width = AngularWidthDegrees{.005}; width.origin = FwhmOrigin::fixed;
+        width.algorithm = {"qualpf.fwhm.fixed",1}; width.dataset = s.pattern.id;
+        width.source_id = s.pattern.source_id; width.current = width.manual = true;
+        width.minimum_sampling_density = 6; request->supplied_width = width;
+    }
     request->observations.emplace();
     auto &o = *request->observations;
     o.signal_source = "analytic";
@@ -226,6 +239,39 @@ static void pfsm(bool recall, bool cache) {
     check(fresh.pfsm && fresh.algorithms->spec.method() == SearchMethod::pfsm);
     check(fresh.pfsm->baseline.parameters.shifts == selected.pfsm->baseline.parameters.shifts);
     auto restored = roundtrip(selected);
+    check(restored.pfsm->problem->candidate_recall.resource_fallback == request->candidate_recall.resource_fallback);
+    if (integral && !fullPolicy) {
+        check(restored.pfsm->candidate_recall_reports.back().backend == PfsmCandidateRecallBackend::bounded_integral_relaxed &&
+            restored.pfsm->candidate_recall_reports.back().integral && !restored.pfsm->integral_recall_data);
+        const auto &a = restored.pfsm->candidate_recall_reports.back().integral->candidates;
+        const auto &b = selected.pfsm->candidate_recall_reports.back().integral->candidates;
+        check(a.size() == b.size());
+        for (std::size_t i=0;i<a.size();++i) check(a[i].relaxed.best.q == b[i].relaxed.best.q &&
+            a[i].relaxed.best.shifts == b[i].relaxed.best.shifts && a[i].relaxed.evaluations == b[i].relaxed.evaluations);
+    } else if (recall) {
+        changeObject(savedPath, "pfsm_candidate_recall_report", [](auto &fields, const auto &) {
+            fields.erase("backend"); fields.erase("switch_reason"); fields.erase("integral");
+        }, true);
+        changeObject(savedPath, "pfsm_candidate_recall_configuration", [](auto &fields, const auto &) { fields.erase("resource_fallback"); }, true);
+        auto historical = take(QpfProjectReader{}.read(savedPath, SearchBackend::cpp)).state;
+        check(historical.pfsm->problem->candidate_recall.resource_fallback == PfsmResourceFallback::bounded_integral);
+        check(historical.pfsm->candidate_recall_reports.back().backend == PfsmCandidateRecallBackend::v2);
+        if (fullPolicy) {
+            // Historical v2 diagnostics stay unchanged on load. A subsequent
+            // rescore uses the missing-field default on the frozen narrow problem.
+            auto resumedInput = input;
+            resumedInput.source = std::make_shared<const ProductState>(historical);
+            resumedInput.operation = SearchOperation::rescore;
+            auto workers = std::make_shared<PfsmRequest>(); workers->threads = 1;
+            resumedInput.pfsm = workers;
+            auto resumed = take(SearchEngine{}.run(resumedInput, reader, context)).next;
+            check(resumed.pfsm->problem == historical.pfsm->problem && reader.calls == 1 &&
+                resumed.pfsm->candidate_recall_reports.back().backend == PfsmCandidateRecallBackend::bounded_integral_relaxed &&
+                resumed.pfsm->integral_recall_data);
+        }
+        changeObject(savedPath, "pfsm_candidate_recall_report", [](auto &fields, const auto &) { fields.erase("pool_size"); }, true);
+        check(!QpfProjectReader{}.read(savedPath, SearchBackend::cpp));
+    }
     check(restored.algorithms == restored.pfsm->problem->algorithms);
     check(restored.pfsm->baseline.calculated == selected.pfsm->baseline.calculated &&
           restored.pfsm->baseline.parameters.shifts == selected.pfsm->baseline.parameters.shifts);
@@ -630,6 +676,8 @@ int main(int argc, char **argv) try {
     csmRoundtrip();
     pfsm(false, false);
     pfsm(true, true);
+    pfsm(true, false, true);
+    pfsm(true, false, true, true);
     std::cout << "PASS: QPF 1.0 workflow evidence, unknown fields, atomic save, "
                  "PFSM continuation and database admission\n";
 } catch (const std::exception &e) {

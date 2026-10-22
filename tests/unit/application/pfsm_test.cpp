@@ -4,6 +4,9 @@
 #include "qualpf/application/search_coordinator.h"
 #include "qualpf/application/search_preparation.h"
 #include "qualpf/application/configured_fwhm.h"
+#include "pfsm_templates.h"
+#include "pfsm_recall_store.h"
+#include "pfsm_candidate_recall.h"
 #include <algorithm>
 #include <atomic>
 #include <cmath>
@@ -209,14 +212,23 @@ static void presentationAndWidths() {
     s.original_signal_provenance = OriginalSignalProvenance{s.pattern.source_id, "analytic units", true, false};
     ProductSearchSession session(s);
     PfsmSettings settings;
+    check(settings.template_cache && pfsmSettings({}).template_cache);
+    check(!pfsmSettings({{"PFSMOptions/templateCache", false}}).template_cache);
     check(settings.candidate_recall_enabled && PfsmRequest{}.candidate_recall.mode == PfsmCandidateRecallMode::off);
     check(pfsmSettings({}).candidate_recall_enabled);
+    check(pfsmSettings({}).candidate_recall_resource_fallback == PfsmResourceFallback::bounded_integral);
+    settings.candidate_recall_resource_fallback = PfsmResourceFallback::full_pool;
     settings.threads = 1;
     settings.lower_shift = settings.upper_shift = 0;
     MetadataObject values{{"SearchOptions/minFom", .3}, {"vendor/unknown", "retained"}};
     storePfsmSettings(values, settings);
     check(values["SearchOptions/minFom"].toDouble() == .3 && values["vendor/unknown"].toString() == "retained");
     check(pfsmSettings(values).lower_shift == 0 && bool(validatePfsmSettings(settings)));
+    check(pfsmSettings(values).template_cache);
+    check(pfsmSettings(values).candidate_recall_resource_fallback == PfsmResourceFallback::full_pool);
+    auto invalidPolicy = values; invalidPolicy["PFSMOptions/candidateRecall/resourceFallback"] = "unknown";
+    std::optional<Error> policyWarning;
+    check(pfsmSettings(invalidPolicy, &policyWarning).candidate_recall_resource_fallback == PfsmResourceFallback::bounded_integral && policyWarning);
     {
         auto saved = values;
         saved["PFSMOptions/candidateRecall/enabled"] = false;
@@ -243,8 +255,12 @@ static void presentationAndWidths() {
     check(!validatePfsmSettings(settings));
     settings.minimum_relative_fom = 0;
     auto request = take(makePfsmRequest(session.snapshot(), settings));
+    check(request.template_cache);
+    auto directSettings = settings; directSettings.template_cache = false;
+    check(!take(makePfsmRequest(session.snapshot(), directSettings)).template_cache);
     check(request.candidate_recall.mode == PfsmCandidateRecallMode::enabled &&
-          request.candidate_recall.limits == settings.candidate_recall_limits);
+          request.candidate_recall.limits == settings.candidate_recall_limits &&
+          request.candidate_recall.resource_fallback == PfsmResourceFallback::full_pool);
     check(!request.supplied_width && request.observations->equal_weights &&
           request.observations->signal == PfsmObservationRequest::Signal::observed);
     auto statistical = s;
@@ -684,7 +700,7 @@ static void baselineFailures() {
 }
 
 // Reuse the independently analytic local-alignment counterexample, not prescreen code.
-static void candidateRecallBaselineReplay(bool cache, bool smallPool = false, PfsmCandidateRecallVersion version = PfsmCandidateRecallVersion::v2) {
+static void candidateRecallBaselineReplay(bool cache, bool smallPool = false, PfsmCandidateRecallVersion version = PfsmCandidateRecallVersion::v2, bool integral = false) {
     using namespace profile;
     const ExecutionContext context{{}, NumericalPolicy::explicit_float64, {}};
     // A shifted four-line pattern has an inferior local alignment near zero.
@@ -711,10 +727,22 @@ static void candidateRecallBaselineReplay(bool cache, bool smallPool = false, Pf
         p.intensity = {.3 + .003 * c, .8 - .002 * c, .2 + .001 * c, .4};
         read.cards.push_back(std::move(p));
     }
+    // The same independently generated alignment problem, rescaled in angle,
+    // crosses the v2 grid limit while keeping widths, shifts and spacing proportional.
+    const double angularScale = integral ? .025 : 1.;
+    if (integral) {
+        const auto mapped = [&](double x) { return 30 + angularScale * (x - 30); };
+        for (auto &x : source.pattern.two_theta) x.value = mapped(x.value);
+        source.pattern.calculation_range = AngularRange{TwoThetaDegrees{mapped(28)}, TwoThetaDegrees{mapped(35)}};
+        for (auto &p : read.cards) for (auto &d : p.d) {
+            const auto angle = 360 / std::numbers::pi * std::asin(1 / (2*d));
+            d = 1 / (2 * std::sin(mapped(angle) * std::numbers::pi / 360));
+        }
+    }
     auto options = std::make_shared<PfsmRequest>(*request(4, cache));
-    options->lower_shift = -1; options->upper_shift = 1;
+    options->lower_shift = -angularScale; options->upper_shift = angularScale;
     FwhmUsage width;
-    width.width = AngularWidthDegrees{.2}; width.origin = FwhmOrigin::fixed;
+    width.width = AngularWidthDegrees{.2 * angularScale}; width.origin = FwhmOrigin::fixed;
     width.algorithm = {"qualpf.fwhm.fixed", 1}; width.dataset = source.pattern.id;
     width.source_id = source.pattern.source_id; width.current = width.manual = true;
     width.minimum_sampling_density = 6; options->supplied_width = width;
@@ -730,7 +758,7 @@ static void candidateRecallBaselineReplay(bool cache, bool smallPool = false, Pf
     fit.observations = local->problem->observations; fit.options = local->problem->fit;
     fit.phases = local->selected; fit.phases[0].initial_shift = 0;
     local->baseline = take(NnlsTrfProfileFitter{}.fit(fit, context));
-    check(local->baseline.q > 100000 && std::abs(local->baseline.parameters.shifts[0]) < .03);
+    check(local->baseline.q > 100000 && std::abs(local->baseline.parameters.shifts[0]) < .03 * angularScale);
     // Inject a valid local solution as the prior baseline, with no stale scores.
     selected.phases[0].scale = local->baseline.parameters.scales[0]; selected.candidates.clear();
     local->normalization_maximum = 0; selected.pfsm = local;
@@ -759,7 +787,7 @@ static void candidateRecallBaselineReplay(bool cache, bool smallPool = false, Pf
         outputs.push_back(take(SearchEngine{}.run(rescore, read, context)).next);
         const auto &result = outputs.back();
         check(bool(validatePfsmState(result)) && result.pfsm->performance.baseline_rebuilds == 1 &&
-            result.pfsm->baseline.q < 1e-10 && std::abs(result.pfsm->baseline.parameters.shifts[0] - .4) < 1e-8);
+            result.pfsm->baseline.q < 1e-10 && std::abs(result.pfsm->baseline.parameters.shifts[0] - .4 * angularScale) < 1e-8 * angularScale);
         deterministic(outputs.front(), result);
         const auto &a = outputs.front().pfsm->baseline, &b = result.pfsm->baseline;
         check(a.q == b.q && a.parameters.scales == b.parameters.scales && a.parameters.shifts == b.parameters.shifts &&
@@ -775,6 +803,8 @@ static void candidateRecallBaselineReplay(bool cache, bool smallPool = false, Pf
     check(enabled.front().discarded && !enabled.back().discarded && enabled.back().full_fallback);
     check(enabled.back().fallback_reason == "baseline_rebuild_full_replay");
     check(outputs[2].pfsm->performance.formal_reused == 0);
+    if (integral) check(enabled.front().backend == PfsmCandidateRecallBackend::bounded_integral_relaxed &&
+        enabled.front().switch_reason == "candidate_recall_grid_limit" && enabled.back().backend == PfsmCandidateRecallBackend::v2);
     if (smallPool) {
         check(enabled.size() == 2 && enabled.front().fallback_reason == "small_pool");
         check(outputs[2].pfsm->performance.evaluated == outputs[0].pfsm->performance.evaluated);
@@ -808,9 +838,16 @@ static void candidateRecallWorkflow(bool cache, PfsmCandidateRecallVersion versi
     };
     for (auto mode : {PfsmCandidateRecallMode::shadow, PfsmCandidateRecallMode::enabled}) {
         auto r = std::make_shared<PfsmRequest>(*request(2, cache)); r->candidate_recall.mode = mode; r->candidate_recall.version = version; in.pfsm = r;
+        r->measure_search_work = true;
         auto candidate_recall = take(SearchEngine{}.run(in, library, context));
+        const auto &measured = candidate_recall.next.pfsm->performance;
+        check(measured.detailed_work && measured.correlation_work.input_builds == library.cards.size() &&
+              measured.initial_work.nnls_solves > 0 && measured.initial_work.physical_columns > 0);
         check(candidate_recall.next.pfsm->candidate_recall_data && candidate_recall.next.pfsm->candidate_recall_reports.size() == 1);
         const auto &report = candidate_recall.next.pfsm->candidate_recall_reports.back();
+        const auto &reuse = candidate_recall.next.pfsm->performance.templates;
+        check(reuse.hits > 0 && reuse.prepare_calls == reuse.misses);
+        check(reuse.bytes <= reuse.peak_bytes && reuse.peak_bytes <= 128 * 1024 * 1024);
         {
             check(report.algorithm_version == PfsmCandidateRecallVersion::v2 && report.selection);
             check(report.selection->review.size() <= 80);
@@ -829,7 +866,35 @@ static void candidateRecallWorkflow(bool cache, PfsmCandidateRecallVersion versi
             check(candidate_recall.next.candidates.size() <= full.next.candidates.size());
             subset(full.next, candidate_recall.next);
         }
-        auto frozen = std::make_shared<const ProductState>(candidate_recall.next);
+        check(measured.recall_cache_bytes == 0 && measured.recall_cache_budget_fallbacks == library.cards.size());
+        // Default admission leaves tiny libraries uncached. Explicitly seed the
+        // bounded store for this small fixture to exercise cross-round ownership
+        // and compare its full results against the ordinary uncached operation.
+        auto retained = std::make_shared<pfsm_detail::PfsmRecallStore>(candidate_recall.next.pfsm->problem,
+            candidate_recall.next.pfsm->universe, context);
+        for (std::size_t i=0;i<library.cards.size();++i)
+            retained->store(i, take(profile::preparePfsmRecallReference(
+                pfsm_detail::expansionInput(library.cards[i], *candidate_recall.next.pfsm->problem), context)));
+        auto cachedAnalysis = std::make_shared<PfsmAnalysis>(*candidate_recall.next.pfsm);
+        cachedAnalysis->recall_store = retained; retained.reset();
+        auto cachedState = candidate_recall.next; cachedState.pfsm = cachedAnalysis;
+        auto frozen = std::make_shared<const ProductState>(std::move(cachedState));
+        check(frozen->pfsm->recall_store && measured.recall_cache_hits == 0 &&
+              measured.recall_cache_misses == library.cards.size() &&
+              measured.recall_cache_bytes <= 128 * 1024 * 1024);
+        auto repeatedInput = input(frozen, 2); repeatedInput.operation = SearchOperation::rescore;
+        auto repeatedRequest = std::make_shared<PfsmRequest>(); repeatedRequest->threads = 2;
+        repeatedRequest->measure_search_work = true; repeatedInput.pfsm = repeatedRequest;
+        const auto repeated = take(SearchEngine{}.run(repeatedInput, library, context));
+        deterministic(candidate_recall.next, repeated.next);
+        check(repeated.next.pfsm->recall_store == frozen->pfsm->recall_store &&
+              repeated.next.pfsm->performance.recall_cache_hits == library.cards.size() &&
+              repeated.next.pfsm->performance.correlation_work.input_builds == 0);
+        check(repeated.next.pfsm->template_store != frozen->pfsm->template_store &&
+              repeated.next.pfsm->performance.templates.prepare_calls == 0 &&
+              repeated.next.pfsm->performance.initial_work.input_builds == 0 &&
+              frozen->pfsm->performance.templates.prepare_calls == reuse.prepare_calls);
+        const auto readsBeforeContinuation = library.calls;
         auto rescore = input(frozen, 2); rescore.operation = SearchOperation::rescore;
         auto override = std::make_shared<PfsmRequest>(); override->threads = 2; override->full_round = true;
         rescore.pfsm = override;
@@ -852,6 +917,8 @@ static void candidateRecallWorkflow(bool cache, PfsmCandidateRecallVersion versi
         auto accepted = take(SearchEngine{}.run(*accept, library, context));
 
         check(accepted.next.pfsm->universe == frozen->pfsm->universe);
+        check(accepted.next.pfsm->recall_store == frozen->pfsm->recall_store &&
+              accepted.next.pfsm->performance.recall_cache_hits == library.cards.size()-1);
         check(accepted.next.pfsm->candidate_recall_reports.back().pool_size == library.cards.size()-1);
         check(accepted.next.pfsm->candidate_recall_reports.back().generation == frozen->pfsm->generation+1);
         check(accepted.next.pfsm->candidate_recall_data == frozen->pfsm->candidate_recall_data);
@@ -859,6 +926,8 @@ static void candidateRecallWorkflow(bool cache, PfsmCandidateRecallVersion versi
         auto remove = take(phaseRemovalInput(std::make_shared<const ProductState>(accepted.next), "strong"));
         remove.databaseVersion=19;
         auto removed=take(SearchEngine{}.run(remove,library,context));
+        check(removed.next.pfsm->recall_store == frozen->pfsm->recall_store);
+        check(library.calls == readsBeforeContinuation);
         check(removed.next.pfsm->candidate_recall_reports.back().pool_size==library.cards.size());
         check(bool(validatePfsmState(removed.next)));
     }
@@ -959,6 +1028,120 @@ static void v2JointConflict() {
         }
     }
 }
+static void templateBudget(const PfsmAnalysis &analysis, const ExecutionContext &context) {
+    using pfsm_detail::PfsmTemplateStore;
+    auto universe = std::make_shared<const std::vector<ProductCard>>(
+        std::vector<ProductCard>{analysis.universe->front()});
+    const auto input = pfsm_detail::expansionInput(universe->front(), *analysis.problem);
+    const std::vector<std::size_t> indices{0};
+    {
+        using pfsm_detail::PfsmRecallStore;
+        check(PfsmRecallStore::retentionBudget(*analysis.problem, *universe) == 0);
+        PfsmRecallStore zero(analysis.problem, universe, context, 0);
+        check(zero.bytes() == 0 && !zero.reserved(0) && !zero.get(0));
+        PfsmRecallStore full(analysis.problem, universe, context);
+        check(full.reserved(0) && !full.get(0));
+        const auto lines = take(profile::preparePfsmRecallReference(input, context));
+        full.store(0, lines);
+        check(full.get(0) && full.get(0)->size() == lines.size());
+        for (std::size_t i=0;i<lines.size();++i)
+            check((*full.get(0))[i].identity == lines[i].identity &&
+                  (*full.get(0))[i].position == lines[i].position &&
+                  (*full.get(0))[i].intensity == lines[i].intensity);
+        PfsmRecallStore exhausted(analysis.problem, universe, context, full.bytes()-1);
+        check(!exhausted.reserved(0) && !exhausted.get(0));
+        check(full.matches(analysis.problem, universe, context));
+        check(!full.matches(std::make_shared<const PfsmProblem>(*analysis.problem), universe, context));
+        check(!full.matches(analysis.problem, std::make_shared<const std::vector<ProductCard>>(*universe), context));
+        const int rounding = std::fegetround(); std::fesetround(FE_DOWNWARD);
+        check(!full.matches(analysis.problem, universe, context)); std::fesetround(rounding);
+    }
+    PfsmTemplateStore complete(analysis.problem, universe);
+    const auto overhead = complete.statistics().bytes;
+    for (bool cache : {false, true}) {
+        auto expansion = input;
+        if (!cache)
+            expansion.interpolation_window.reset();
+        PfsmTemplateStore unreserved(analysis.problem, universe);
+        check(unreserved.statistics().bytes == overhead && overhead > 0);
+        check(!unreserved.prepare(0, expansion, context));
+        check(!unreserved.prepare(0, expansion, context));
+        const auto statistics = unreserved.statistics();
+        check(statistics.prepare_calls == 0 && statistics.misses == 2 && statistics.hits == 0 &&
+              statistics.expanded_hits == 0 && statistics.evictions == 0 && statistics.prepare_seconds == 0 &&
+              statistics.bytes == overhead && statistics.peak_bytes == overhead);
+        profile::IntermediateLorentzianExpander expander;
+        const auto fallback = take(expander.prepare(expansion, context));
+        const auto expected = take(profile::PreparedProfileTemplate::prepare(expansion, context))->profile();
+        const auto &coordinates = analysis.problem->observations->coordinates;
+        const auto actualSamples = take(fallback->evaluate(coordinates, 0, true, context));
+        const auto expectedSamples = take(expected->evaluate(coordinates, 0, true, context));
+        check(actualSamples.intensity == expectedSamples.intensity &&
+              actualSamples.shift_derivative == expectedSamples.shift_derivative);
+        expansion.fwhm_degrees = 0;
+        check(!unreserved.prepare(0, expansion, context));
+        const auto invalid = expander.prepare(expansion, context);
+        check(!invalid && invalid.error().code == ErrorCode::invalid_input);
+        std::stop_source stop;
+        stop.request_stop();
+        auto canceled = context;
+        canceled.cancellation = stop.get_token();
+        bool rejected = false;
+        try {
+            unreserved.prepare(0, expansion, canceled);
+        } catch (const pfsm_detail::Failure &failure) {
+            rejected = failure.error.code == ErrorCode::cancelled;
+        }
+        check(rejected && unreserved.statistics().misses == 3 &&
+              unreserved.statistics().prepare_calls == 0);
+    }
+    PfsmTemplateStore metadataOnly(analysis.problem, universe, overhead);
+    metadataOnly.reserve(indices);
+    check(!metadataOnly.prepare(0, input, context));
+    check(metadataOnly.statistics().prepare_calls == 0 && metadataOnly.statistics().misses == 1 &&
+          metadataOnly.statistics().bytes == overhead && metadataOnly.statistics().peak_bytes == overhead);
+    complete.reserve(indices);
+    // Reservations use extents only; no retained unprepared line vectors.
+    check(complete.statistics().bytes == overhead && complete.statistics().peak_bytes == overhead);
+    const auto first = complete.prepare(0, input, context);
+    check(first && first->profile());
+    check(complete.prepare(0, input, context) == first);
+    check(complete.statistics().prepare_calls == 1 && complete.statistics().hits == 1);
+    {
+        auto previous = std::make_shared<PfsmTemplateStore>(analysis.problem, universe);
+        previous->reserve(indices);
+        const auto original = previous->prepare(0, input, context);
+        const auto previousStatistics = previous->statistics();
+        PfsmTemplateStore next(analysis.problem, universe, 128 * 1024 * 1024, previous);
+        check(next.prepare(0, *next.input(0), context) == original && next.statistics().prepare_calls == 0);
+        check(previous->statistics().hits == previousStatistics.hits &&
+              previous->statistics().bytes == previousStatistics.bytes);
+        auto different = input; different.fwhm_degrees *= 2;
+        const auto replaced = next.prepare(0, different, context);
+        check(replaced != original && replaced->matches(different, context) && original->matches(input, context));
+        check(previous->statistics().prepare_calls == 1 && next.statistics().peak_bytes <= 128 * 1024 * 1024);
+        PfsmTemplateStore mismatch(std::make_shared<const PfsmProblem>(*analysis.problem), universe,
+                                  128 * 1024 * 1024, previous);
+        mismatch.reserve(indices);
+        check(mismatch.prepare(0, input, context) != original && mismatch.statistics().prepare_calls == 1);
+        PfsmTemplateStore zero(analysis.problem, universe, 0, previous);
+        check(!zero.prepare(0, input, context) && zero.statistics().bytes == 0 &&
+              zero.statistics().budget_fallbacks == 1);
+    }
+    const auto budget = overhead + profile::PreparedProfileTemplate::storageBound(input, false);
+    PfsmTemplateStore lightweight(analysis.problem, universe, budget);
+    lightweight.reserve(indices);
+    const auto initial = lightweight.prepare(0, input, context);
+    const auto reviewed = lightweight.prepare(0, input, context);
+    check(initial && reviewed && reviewed->matches(input, context));
+    check(lightweight.statistics().peak_bytes <= budget && lightweight.statistics().expanded_hits == 1);
+    const auto &coordinates = analysis.problem->observations->coordinates;
+    check(take(initial->profile()->evaluate(coordinates, 0, false, context)).intensity ==
+          take(reviewed->profile()->evaluate(coordinates, 0, false, context)).intensity);
+    PfsmTemplateStore disabled(analysis.problem, universe, 0);
+    disabled.reserve(indices);
+    check(!disabled.prepare(0, input, context) && disabled.statistics().peak_bytes == 0);
+}
 static void v2ThreadSelection() {
     const ExecutionContext context{{}, NumericalPolicy::explicit_float64, {}};
     auto source=std::make_shared<const ProductState>(state());auto library=reader();
@@ -970,8 +1153,12 @@ static void v2ThreadSelection() {
         auto in=input(source);in.pfsm=r;
         auto output=take(SearchEngine{}.run(in,library,context));
         check(bool(validatePfsmState(output.next)));
-        if(!first){first=std::move(output.next);continue;}
+        if(!first){templateBudget(*output.next.pfsm,context);first=std::move(output.next);continue;}
         deterministic(*first,output.next);
+        const auto &firstReuse=first->pfsm->performance.templates;
+        const auto &nextReuse=output.next.pfsm->performance.templates;
+        check(firstReuse.prepare_calls==nextReuse.prepare_calls && firstReuse.hits==nextReuse.hits &&
+              firstReuse.bytes==nextReuse.bytes && nextReuse.peak_bytes<=128*1024*1024);
         const auto &a=first->pfsm->candidate_recall_reports.back(),&b=output.next.pfsm->candidate_recall_reports.back();
         check(a.retained_indices==b.retained_indices && a.recalled_indices==b.recalled_indices &&
             a.selection->initial_top==b.selection->initial_top &&
@@ -981,7 +1168,99 @@ static void v2ThreadSelection() {
                 a.refinement_candidates[i].nnls_calls==b.refinement_candidates[i].nnls_calls);
     }
 }
+static void integralResourceWorkflow() {
+    const ExecutionContext context{{}, NumericalPolicy::explicit_float64, {}};
+    auto source = std::make_shared<const ProductState>(state());
+    auto library = reader();
+    // Identical cards deliberately exceed the v2 formal limit through cutoff ties.
+    for (int i = 0; i < 90; ++i) library.cards.push_back(card("tied-" + std::to_string(i), {30}));
+    auto options = std::make_shared<PfsmRequest>(*request(1));
+    options->lower_shift = options->upper_shift = 0;
+    FwhmUsage width;
+    width.width = AngularWidthDegrees{.005}; width.origin = FwhmOrigin::fixed;
+    width.algorithm = {"qualpf.fwhm.fixed", 1}; width.dataset = source->pattern.id;
+    width.source_id = source->pattern.source_id; width.current = width.manual = true;
+    width.minimum_sampling_density = 6; options->supplied_width = width;
+    auto in = input(source); in.pfsm = options;
+    const auto off = take(SearchEngine{}.run(in, library, context)).next;
+    check(!off.pfsm->integral_recall_data);
+    std::optional<ProductState> enabled;
+    for (auto mode : {PfsmCandidateRecallMode::shadow, PfsmCandidateRecallMode::enabled}) {
+        options->candidate_recall.mode = mode;
+        auto output = take(SearchEngine{}.run(in, library, context)).next;
+        const auto &r = output.pfsm->candidate_recall_reports.back();
+        check(r.backend == PfsmCandidateRecallBackend::bounded_integral_relaxed && r.integral && !r.selection &&
+            r.switch_reason == "candidate_recall_grid_limit" && !r.full_fallback && r.fallback_reason.empty());
+        check(r.recalled_indices == r.retained_indices && r.retained_indices.size() > 80);
+        check(output.pfsm->integral_recall_data && !output.pfsm->candidate_recall_data && bool(validatePfsmState(output)));
+        if (mode == PfsmCandidateRecallMode::shadow) deterministic(off, output);
+        else {
+            auto survivors = off;
+            std::erase_if(survivors.candidates, [&](const auto &card) {
+                return !std::binary_search(r.retained_indices.begin(), r.retained_indices.end(), card.pfsm->original_index);
+            });
+            deterministic(survivors, output); // Every retained formal result remains exact.
+            for (std::size_t i=0;i<5;++i) check(off.candidates[i].id == output.candidates[i].id);
+            check(off.pfsm->normalization_maximum == output.pfsm->normalization_maximum);
+        }
+        if (mode == PfsmCandidateRecallMode::enabled) enabled = std::move(output);
+    }
+    options->candidate_recall.resource_fallback = PfsmResourceFallback::full_pool;
+    const auto fullPolicy = take(SearchEngine{}.run(in, library, context)).next;
+    const auto &fullReport = fullPolicy.pfsm->candidate_recall_reports.back();
+    check(fullReport.full_fallback && fullReport.backend == PfsmCandidateRecallBackend::v2 &&
+        fullReport.switch_reason.empty() && !fullReport.integral && !fullPolicy.pfsm->integral_recall_data);
+    deterministic(off, fullPolicy);
+    options->candidate_recall.resource_fallback = PfsmResourceFallback::bounded_integral;
+    options->threads = 4;
+    const auto parallel = take(SearchEngine{}.run(in, library, context)).next;
+    deterministic(*enabled, parallel);
+    const auto &a = enabled->pfsm->candidate_recall_reports.back().integral->candidates;
+    const auto &b = parallel.pfsm->candidate_recall_reports.back().integral->candidates;
+    for (std::size_t i = 0; i < a.size(); ++i)
+        check(a[i].fine_gain == b[i].fine_gain && a[i].relaxed.best.q == b[i].relaxed.best.q &&
+            a[i].relaxed.evaluations == b[i].relaxed.evaluations);
+    options->full_round = true;
+    auto forced = take(SearchEngine{}.run(in, library, context)).next;
+    check(forced.pfsm->candidate_recall_reports.back().fallback_reason == "requested_full_round" && !forced.pfsm->integral_recall_data);
+    deterministic(off, forced); options->full_round = false;
+    auto accepted = *take(phaseAcceptanceInput(std::make_shared<const ProductState>(*enabled), "strong", SearchParameters{AngularWidthDegrees{0}}, true));
+    accepted.databaseVersion = 19;
+    auto withOld = take(SearchEngine{}.run(accepted, library, context)).next;
+    check(withOld.pfsm->integral_recall_data == enabled->pfsm->integral_recall_data && bool(validatePfsmState(withOld)));
+    check(withOld.pfsm->candidate_recall_reports.back().integral->bank_columns == 1); // Fixed bounds deduplicate all 257 ticks.
+    auto remove = take(phaseRemovalInput(std::make_shared<const ProductState>(withOld), "strong")); remove.databaseVersion = 19;
+    auto removed = take(SearchEngine{}.run(remove, library, context)).next;
+    deterministic(*enabled, removed);
+    auto corrupted = *enabled;
+    auto bad = std::make_shared<PfsmAnalysis>(*corrupted.pfsm);
+    bad->candidate_recall_reports.back().integral->candidates.front().relaxed.evaluations = 206;
+    corrupted.pfsm = bad; check(!validatePfsmState(corrupted));
+    *bad = *enabled->pfsm; bad->candidate_recall_reports.back().switch_reason = "other_failure";
+    check(!validatePfsmState(corrupted));
+    *bad = *enabled->pfsm; bad->candidate_recall_reports.back().integral->candidates.front().main_selected =
+        !bad->candidate_recall_reports.back().integral->candidates.front().main_selected;
+    check(!validatePfsmState(corrupted));
+    // Exercise the scan-limit route without running the intentionally huge formal scan.
+    auto problem = std::make_shared<PfsmProblem>(*enabled->pfsm->problem);
+    problem->physical_width->width.value = 4; problem->lower_shift = 0; problem->upper_shift = 4096;
+    pfsm_detail::PfsmCandidateRecallInput recall;
+    recall.problem = problem; recall.universe = enabled->pfsm->universe;
+    recall.baseline = enabled->pfsm->baseline; recall.generation = enabled->pfsm->generation;
+    recall.all_indices = enabled->pfsm->candidate_recall_reports.back().retained_indices;
+    auto scan = pfsm_detail::recallPfsmCandidates(recall, context);
+    check(scan.report->switch_reason == "candidate_recall_scan_limit" && !scan.report->full_fallback && scan.integral_data);
+    problem->source.break_before.assign(problem->observations->coordinates.size(), 1);
+    auto failed = pfsm_detail::recallPfsmCandidates(recall, context);
+    check(failed.report->full_fallback && failed.report->fallback_reason == "integral_shared_numerical_failure" &&
+        failed.formal_indices == recall.all_indices);
+    std::stop_source stop; stop.request_stop(); auto canceled = context; canceled.cancellation = stop.get_token();
+    auto cancelled = SearchEngine{}.run(in, library, canceled);
+    check(!cancelled && cancelled.error().code == ErrorCode::cancelled);
+}
 int main() try {
+    integralResourceWorkflow();
+    candidateRecallBaselineReplay(false, false, PfsmCandidateRecallVersion::v2, true);
     candidateRecallWorkflow(false, PfsmCandidateRecallVersion::v2);
     candidateRecallWorkflow(true, PfsmCandidateRecallVersion::v2);
     candidateRecallBaselineReplay(false, false, PfsmCandidateRecallVersion::v2);

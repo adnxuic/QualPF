@@ -1,7 +1,10 @@
 #include "pfsm_sampling.h"
 #include "pfsm_simd.h"
+#include "pfsm_work.h"
 #include <algorithm>
 #include <array>
+#include <bit>
+#include <cfenv>
 #include <cmath>
 #include <limits>
 #include <numbers>
@@ -33,6 +36,7 @@ class IlTemplate final : public IProfileTemplate {
         return Result<ProfileTemplate>{std::make_shared<const IlTemplate>(std::move(lines), width_, bounded)};
     }
     double fwhmDegrees() const noexcept override { return width_; }
+    std::size_t storageBytes() const noexcept { return sizeof(*this) + lines_.capacity() * sizeof(ProfileLine); }
     Result<ProfileSamples> evaluate(std::span<const double> x, double shift, bool derivative,
                                     const ExecutionContext &context) const override {
         if (context.numerical_policy != NumericalPolicy::explicit_float64)
@@ -150,6 +154,7 @@ class CachedIlTemplate final : public IProfileTemplate {
           step_((upper - lower) / double(coefficients.size())), coefficients_(std::move(coefficients)) {}
     double fwhmDegrees() const noexcept override { return direct_->fwhmDegrees(); }
     bool usesApproximation() const noexcept override { return true; }
+    std::size_t storageBytes() const noexcept { return sizeof(*this) + coefficients_.capacity() * sizeof(Coefficients); }
     Result<ProfileSamples> evaluateExact(std::span<const double> x, double shift, bool derivative,
                                          const ExecutionContext &context) const override {
         return direct_->evaluate(x, shift, derivative, context);
@@ -275,6 +280,24 @@ class CachedIlTemplate final : public IProfileTemplate {
     const std::vector<Coefficients> coefficients_;
 };
 
+struct ChebyshevTransform {
+    static constexpr auto nodes = CachedIlTemplate::nodes;
+    std::array<double, nodes> locations{};
+    std::array<std::array<double, nodes>, nodes> cosine{};
+    ChebyshevTransform() {
+        detail::countWork(&detail::WorkCounters::chebyshev_tables);
+        for (std::size_t index = 0; index < nodes; ++index) {
+            const double angle = std::numbers::pi * (double(nodes - index) - .5) / double(nodes);
+            locations[index] = std::cos(angle);
+            for (std::size_t order = 0; order < nodes; ++order)
+                cosine[order][index] = std::cos(double(order) * angle);
+        }
+    }
+};
+const ChebyshevTransform &nearestChebyshevTransform() {
+    static const ChebyshevTransform transform;
+    return transform;
+}
 Result<ProfileTemplate> cached(std::shared_ptr<const IlTemplate> direct, std::pair<double, double> window,
                                const ExecutionContext &context) {
     const auto [lower, upper] = window;
@@ -292,19 +315,14 @@ Result<ProfileTemplate> cached(std::shared_ptr<const IlTemplate> direct, std::pa
     const auto relative = direct->relativeTo(lower, context);
     if (!relative)
         return Result<ProfileTemplate>{relative.error()};
-    std::array<double, n> locations{};
-    std::array<std::array<double, n>, n> cosine{};
-    for (std::size_t j = 0; j < n; ++j) {
-        // Reversed Chebyshev roots produce ascending coordinates relative to lower.
-        const double angle = std::numbers::pi * (double(n - j) - .5) / double(n);
-        locations[j] = std::cos(angle);
-        for (std::size_t k = 0; k < n; ++k)
-            cosine[k][j] = std::cos(double(k) * angle);
-    }
+    std::optional<ChebyshevTransform> localTransform;
+    if (std::fegetround() != FE_TONEAREST)
+        localTransform.emplace();
+    const auto &transform = localTransform ? *localTransform : nearestChebyshevTransform();
     std::vector<double> x;
     x.reserve(segments * n);
     for (std::size_t cell = 0; cell < segments; ++cell)
-        for (double t : locations)
+        for (double t : transform.locations)
             x.push_back((double(cell) + .5 + .5 * t) * step);
     if (std::adjacent_find(x.begin(), x.end(), [](double a, double b) { return a >= b; }) != x.end())
         return Result<ProfileTemplate>{std::move(direct)};
@@ -325,7 +343,7 @@ Result<ProfileTemplate> cached(std::shared_ptr<const IlTemplate> direct, std::pa
         for (std::size_t k = 0; k < n; ++k) {
             double sum = 0, correction = 0;
             for (std::size_t j = 0; j < n; ++j) {
-                const double term = (samples.value().intensity[cell * n + j] / double(n)) * cosine[k][j];
+                const double term = (samples.value().intensity[cell * n + j] / double(n)) * transform.cosine[k][j];
                 const double corrected = term - correction;
                 const double next = sum + corrected;
                 correction = (next - sum) - corrected;
@@ -387,6 +405,7 @@ Result<std::vector<ProfileLine>> expandProfileLines(const ProfileExpansionInput 
 }
 Result<ProfileTemplate> IntermediateLorentzianExpander::prepare(const ProfileExpansionInput &in,
                                                                 const ExecutionContext &context) const {
+    detail::countWork(&detail::WorkCounters::template_preparations);
     auto expanded = expandProfileLines(in, context);
     if (!expanded) return Result<ProfileTemplate>{expanded.error()};
     auto lines = std::move(expanded).value();
@@ -398,9 +417,132 @@ Result<ProfileTemplate> IntermediateLorentzianExpander::prepare(const ProfileExp
 }
 Result<ProfileSamples> evaluateProfilePairedSamples(const ProfileTemplate &profile,std::span<const double> x,
     double shift,const ExecutionContext &context) {
+    detail::countWork(&detail::WorkCounters::paired_samples);
     if(!profile) return Result<ProfileSamples>{invalid("Missing fast profile")};
     if(const auto *cached=dynamic_cast<const CachedIlTemplate *>(profile.get()))
         return cached->evaluatePaired(x,shift,context);
     return profile->evaluateExact(x,shift,true,context);
+}
+namespace {
+bool sameBits(double left, double right) {
+    return std::bit_cast<std::uint64_t>(left) == std::bit_cast<std::uint64_t>(right);
+}
+unsigned denormalMode() {
+#if defined(__SSE2__) || defined(_M_X64)
+    return _mm_getcsr() & 0x8040;
+#else
+    return 0;
+#endif
+}
+bool sameExpansion(const ProfileExpansionInput &left, const ProfileExpansionInput &right) {
+    if (left.coordinates != right.coordinates || !sameBits(left.fwhm_degrees, right.fwhm_degrees) ||
+        left.lines.size() != right.lines.size() || left.radiation.kind != right.radiation.kind ||
+        left.radiation.lines.size() != right.radiation.lines.size() ||
+        left.interpolation_window.has_value() != right.interpolation_window.has_value())
+        return false;
+    if (left.interpolation_window &&
+        (!sameBits(left.interpolation_window->first, right.interpolation_window->first) ||
+         !sameBits(left.interpolation_window->second, right.interpolation_window->second)))
+        return false;
+    for (std::size_t index = 0; index < left.lines.size(); ++index)
+        if (left.lines[index].identity != right.lines[index].identity ||
+            !sameBits(left.lines[index].position, right.lines[index].position) ||
+            !sameBits(left.lines[index].intensity, right.lines[index].intensity))
+            return false;
+    for (std::size_t index = 0; index < left.radiation.lines.size(); ++index)
+        if (!sameBits(left.radiation.lines[index].wavelength.value, right.radiation.lines[index].wavelength.value) ||
+            !sameBits(left.radiation.lines[index].relative_weight, right.radiation.lines[index].relative_weight))
+            return false;
+    return true;
+}
+}
+struct PreparedProfileTemplate::Data {
+    ProfileExpansionInput input;
+    std::shared_ptr<const IlTemplate> direct;
+    int rounding = std::fegetround();
+    unsigned denormals = denormalMode();
+};
+bool PreparedProfileTemplate::matches(const ProfileExpansionInput &input, const ExecutionContext &context) const noexcept {
+    return context.numerical_policy == NumericalPolicy::explicit_float64 &&
+        data_->rounding == std::fegetround() && data_->denormals == denormalMode() &&
+        sameExpansion(data_->input, input);
+}
+const ProfileExpansionInput &PreparedProfileTemplate::input() const noexcept { return data_->input; }
+Result<PreparedProfileTemplateHandle> PreparedProfileTemplate::prepare(
+    const ProfileExpansionInput &input, const ExecutionContext &context, PreparedProfileTemplateHandle previous) {
+    if (context.cancellation.stop_requested())
+        return Result<PreparedProfileTemplateHandle>{
+            Error{ErrorCode::cancelled, "pfsm.expansion", "IL preparation canceled"}};
+    if (previous && !previous->matches(input, context))
+        previous.reset();
+    if (previous && previous->profile())
+        return Result<PreparedProfileTemplateHandle>{std::move(previous)};
+    detail::countWork(&detail::WorkCounters::template_preparations);
+    std::shared_ptr<const Data> data;
+    if (previous) {
+        data = previous->data_;
+    } else {
+        auto lines = expandProfileLines(input, context);
+        if (!lines)
+            return Result<PreparedProfileTemplateHandle>{lines.error()};
+        auto prepared = std::make_shared<Data>();
+        prepared->input = input;
+        prepared->direct = std::make_shared<const IlTemplate>(std::move(lines).value(), input.fwhm_degrees);
+        data = std::move(prepared);
+    }
+    ProfileTemplate profile = data->direct;
+    if (input.interpolation_window) {
+        auto complete = cached(data->direct, *input.interpolation_window, context);
+        if (!complete)
+            return Result<PreparedProfileTemplateHandle>{complete.error()};
+        profile = std::move(complete).value();
+    }
+    return Result<PreparedProfileTemplateHandle>{
+        PreparedProfileTemplateHandle(new PreparedProfileTemplate(std::move(data), std::move(profile)))};
+}
+std::size_t PreparedProfileTemplate::storageBytes() const noexcept {
+    std::size_t bytes = sizeof(*this) + sizeof(Data) + 384 +
+        data_->input.lines.capacity() * sizeof(ProfileLine) +
+        data_->input.radiation.lines.capacity() * sizeof(RadiationLine) + data_->direct->storageBytes();
+    if (const auto *interpolated = dynamic_cast<const CachedIlTemplate *>(profile_.get()))
+        bytes += interpolated->storageBytes() + 128;
+    return bytes;
+}
+PreparedProfileTemplateHandle PreparedProfileTemplate::expandedOnly() const {
+    return PreparedProfileTemplateHandle(new PreparedProfileTemplate(data_, {}));
+}
+std::size_t PreparedProfileTemplate::storageBound(const ProfileExpansionInput &input, bool coefficients) noexcept {
+    return storageBoundForLineCount(input, input.lines.size(), coefficients);
+}
+std::size_t PreparedProfileTemplate::storageBoundForLineCount(const ProfileExpansionInput &input,
+                                                             std::size_t lineCount, bool coefficients) noexcept {
+    const auto maximum = std::numeric_limits<std::size_t>::max();
+    const auto components = input.coordinates == ProfileExpansionInput::Coordinates::d_spacing_angstrom
+        ? input.radiation.lines.size() : std::size_t{1};
+    if (components >= maximum / (2 * sizeof(ProfileLine)) ||
+        lineCount > maximum / (sizeof(ProfileLine) * (1 + 2 * components)))
+        return maximum;
+    const auto lineBytes = lineCount * sizeof(ProfileLine) * (1 + 2 * components);
+    if (input.radiation.lines.size() > (maximum - lineBytes) / sizeof(RadiationLine))
+        return maximum;
+    std::size_t bytes = lineBytes + input.radiation.lines.size() * sizeof(RadiationLine);
+    const std::size_t overhead = sizeof(PreparedProfileTemplate) + sizeof(Data) + sizeof(IlTemplate) + 384;
+    if (bytes > maximum - overhead)
+        return maximum;
+    bytes += overhead;
+    if (coefficients && input.interpolation_window) {
+        if (!std::isfinite(input.fwhm_degrees) || input.fwhm_degrees <= 0)
+            return maximum;
+        const double count = std::ceil((input.interpolation_window->second - input.interpolation_window->first) /
+                                       (.5 * input.fwhm_degrees));
+        if (std::isfinite(count) && count >= 1 && count <= 16384) {
+            const auto extra = sizeof(CachedIlTemplate) + 128 +
+                static_cast<std::size_t>(count) * sizeof(CachedIlTemplate::Coefficients);
+            if (bytes > maximum - extra)
+                return maximum;
+            bytes += extra;
+        }
+    }
+    return bytes;
 }
 } // namespace qualpf::profile

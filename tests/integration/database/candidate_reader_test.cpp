@@ -5,6 +5,8 @@
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QTemporaryDir>
+#include <bit>
+#include <cmath>
 #include <iostream>
 #include <source_location>
 #include <stdexcept>
@@ -82,7 +84,9 @@ static void pfsmPairs(const QString &directory) {
         "INSERT INTO id VALUES('40','','','','','C','',1,'2,3,','100,20,',4,3)",
         "INSERT INTO id VALUES('50','','','','','C','',1,NULL,NULL,5,0)",
         "INSERT INTO id VALUES('60','','','','','C',' 2.5 ',1,'2,','100,',6,1)",
-        "INSERT INTO id VALUES('70','','','','','C','bad',1,'2,','100,',7,1)"});
+        "INSERT INTO id VALUES('70','','','','','C','bad',1,'2,','100,',7,1)",
+        "INSERT INTO id VALUES('80','','','','','C','',1,'2,','-0,',8,1)",
+        "INSERT INTO id VALUES('90','','','','','C','',1,'2,','100,',9,2147483647)"});
     for(const auto &suffix:{".sq.info",".sq.infostat",".sq.search"})file(base+suffix,{"CREATE TABLE unused(id TEXT)"});
     infrastructure::SqlReferenceRepository reader;check(reader.openDatabases(base));
     CandidateQuery query;query.route=CandidateQuery::Route::constrained_browse;query.strictPairedReflections=true;
@@ -91,7 +95,17 @@ static void pfsmPairs(const QString &directory) {
     auto result=reader.read(query,context,{});
     check(result&&result.value().size()==1&&result.value()[0].d==std::vector<double>({.1,2})&&
         result.value()[0].intensity==std::vector<double>({900,100})&&result.value()[0].tth.empty());
-    for(const auto *id:{"20","30","40"}) {
+    check(!reader.readStatistics());
+    query.measure_read=true;
+    const auto measured=reader.read(query,context,{});
+    check(measured && measured.value()[0].d==result.value()[0].d &&
+          measured.value()[0].intensity==result.value()[0].intensity);
+    const auto statistics=reader.readStatistics();
+    check(statistics && statistics->forward_only && statistics->cards==1 && statistics->peaks==2 &&
+          statistics->row_query_executions==1 && statistics->peak_text_bytes==14 &&
+          statistics->peak_buffer_growths>0 && statistics->peaks_seconds>=0);
+    query.measure_read=false;
+    for(const auto *id:{"20","30","40","90"}) {
         query.preselectedIds=std::vector<std::string>{id};result=reader.read(query,context,{});
         check(!result&&result.error().message.find(id)!=std::string::npos);
     }
@@ -105,6 +119,11 @@ static void pfsmPairs(const QString &directory) {
           QString::fromStdString(result.value()[0].rir)==QStringLiteral(" 2.5 "));
     query.preselectedIds=std::vector<std::string>{"70"}; result=reader.read(query,context,{});
     check(result && !result.value()[0].referenceRir && result.value()[0].rir=="bad");
+    query.preselectedIds=std::vector<std::string>{"80"};result=reader.read(query,context,{});
+    check(result&&result.value()[0].intensity[0]==0&&std::signbit(result.value()[0].intensity[0]));
+    std::stop_source stop;auto canceled=context;canceled.cancellation=stop.get_token();
+    const auto stopped=reader.read(query,canceled,[&](auto,auto){stop.request_stop();});
+    check(!stopped&&stopped.error().code==ErrorCode::cancelled);
 }
 static void numericRir(const QString &directory) {
     const auto base=directory+"/numeric-rir";
@@ -123,11 +142,86 @@ static void numericRir(const QString &directory) {
     const auto classic=reader.read(query,context,{});
     check(classic && !classic.value()[0].referenceRir && classic.value()[0].rir==pfsm.value()[0].rir);
 }
+static std::optional<std::vector<double>> priorPairedDecoder(const QByteArray &bytes,bool spacing) {
+    if(bytes.trimmed().isEmpty())return std::vector<double>{};
+    auto parts=QString::fromUtf8(bytes).split(',',Qt::KeepEmptyParts);
+    if(!parts.empty()&&parts.back().trimmed().isEmpty())parts.removeLast();
+    std::vector<double> values;
+    for(const auto &part:parts) {
+        bool ok=false;const auto v=part.toDouble(&ok);
+        if(!ok||!std::isfinite(v)||(spacing?v<=0:v<0))return {};
+        values.push_back(v);
+    }
+    return values;
+}
+static bool sameBits(const std::vector<double> &a,const std::vector<double> &b) {
+    if(a.size()!=b.size())return false;
+    for(std::size_t i=0;i<a.size();++i)
+        if(std::bit_cast<std::uint64_t>(a[i])!=std::bit_cast<std::uint64_t>(b[i]))return false;
+    return true;
+}
+static void streamingDecoder(const QString &directory) {
+    const auto base=directory+"/stream";
+    file(base+".sq",{"CREATE TABLE id(id TEXT,name TEXT,mineralname TEXT,chemical_formula TEXT,spacegroup TEXT,quality TEXT,rir REAL,nrec INTEGER,dvalue TEXT,intensita TEXT,n INTEGER,nd INTEGER)"});
+    const std::vector<QByteArray> tokens={"", " ", "2", "2,", "2, \t", "2,,", ",", ",2", "2, ,3",
+        "2,3", " 2.0000000000000004 ,3e-1,", "2,nan", "2,inf", "2,1e309", "2,1e-400", "2,-1", "-0", "0",
+        "2\xC2\xA0", "\xC2\xA0", "2,\xC2\xA0", "2,\xff", "1.2345678901234567,+2E+0,", "1,234"};
+    {
+        auto db=QSqlDatabase::addDatabase("QSQLITE","stream-writer");db.setDatabaseName(base+".sq");check(db.open());
+        for(std::size_t i=0;i<tokens.size();++i) {
+            auto d=priorPairedDecoder(tokens[i],true);
+            QSqlQuery q(db);q.prepare("INSERT INTO id VALUES(?,'','','','','C',1.2345678901234567,1,?,?,1,?)");
+            q.addBindValue(QString::number(i));q.addBindValue(tokens[i]);q.addBindValue(tokens[i]);
+            q.addBindValue(qint64(d?d->size():1));check(q.exec());
+        }
+        db.close();
+    }
+    QSqlDatabase::removeDatabase("stream-writer");
+    for(const auto suffix:{".sq.info",".sq.infostat",".sq.search"})file(base+suffix,{"CREATE TABLE unused(id TEXT)"});
+    infrastructure::SqlReferenceRepository reader;check(reader.openDatabases(base));
+    CandidateQuery query;query.route=CandidateQuery::Route::constrained_browse;query.strictPairedReflections=true;
+    const ExecutionContext context{{},NumericalPolicy::explicit_float64,{}};
+    for(std::size_t i=0;i<tokens.size();++i) {
+        query.preselectedIds=std::vector<std::string>{std::to_string(i)};
+        const auto result=reader.read(query,context,{});
+        const auto d=priorPairedDecoder(tokens[i],true),intensity=priorPairedDecoder(tokens[i],false);
+        check(bool(result)==(bool(d)&&bool(intensity)));
+        if(result)check(result.value().size()==1&&sameBits(result.value()[0].d,*d)&&sameBits(result.value()[0].intensity,*intensity));
+    }
+}
+// Optional real-library differential audit; never a normal-test dependency or
+// a product-generated golden. The preoptimization Qt decoder is kept above.
+static void fullLibraryAudit(const QString &path) {
+    const auto base=path.endsWith(".sq")?path.left(path.size()-3):path;
+    infrastructure::SqlReferenceRepository reader;check(reader.openDatabases(base));
+    CandidateQuery request;request.route=CandidateQuery::Route::constrained_browse;request.strictPairedReflections=true;
+    const auto cards=reader.read(request,{{},NumericalPolicy::explicit_float64,{}},{});check(bool(cards));
+    std::size_t rows=0,peaks=0;
+    {
+        auto db=QSqlDatabase::addDatabase("QSQLITE","audit-reader");db.setDatabaseName(base+".sq");
+        db.setConnectOptions("QSQLITE_OPEN_READONLY");check(db.open());
+        QSqlQuery query(db);query.setForwardOnly(true);
+        check(query.exec("SELECT id,dvalue,intensita,nd FROM id"));
+        while(query.next()) {
+            check(rows<cards.value().size());const auto &card=cards.value()[rows++];
+            auto d=priorPairedDecoder(query.value(1).toByteArray(),true);
+            auto intensity=priorPairedDecoder(query.value(2).toByteArray(),false);
+            check(d&&intensity&&card.id==query.value(0).toString().toStdString()&&
+                  sameBits(card.d,*d)&&sameBits(card.intensity,*intensity)&&card.d.size()==query.value(3).toULongLong());
+            peaks+=card.d.size();
+        }
+        check(!query.lastError().isValid()&&rows==cards.value().size());query.finish();db.close();
+    }
+    QSqlDatabase::removeDatabase("audit-reader");
+    std::cout<<"PASS: full-library ordered bitwise paired decoder audit: "<<rows<<" cards, "<<peaks<<" peaks\n";
+}
 int main(int argc, char **argv) try {
     QCoreApplication app(argc, argv);
     QTemporaryDir dir;
     check(dir.isValid());
     numericRir(dir.path());
+    streamingDecoder(dir.path());
+    if(argc==3&&std::string(argv[1])=="--full-library")fullLibraryAudit(QString::fromLocal8Bit(argv[2]));
     const auto base = dir.path() + "/cards";
     file(base + ".sq", {"CREATE TABLE id(id TEXT,name TEXT,mineralname TEXT,chemical_formula TEXT,spacegroup "
                         "TEXT,quality TEXT,rir TEXT,nrec INTEGER,dvalue TEXT,intensita TEXT,n INTEGER)",

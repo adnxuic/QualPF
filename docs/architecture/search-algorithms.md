@@ -329,12 +329,21 @@ preparation, scoring or residual subtraction.
 PFSM candidate recall is enabled by default for new GUI analyses, with an explicit
 disabled preference retained. The benchmark CLI and low-level requests still
 default to off; shadow remains CLI-only. `PfsmProblem::candidate_recall` freezes
-the mode and validated `PfsmCandidateRecallLimits` at analysis creation;
+the mode, resource-limit policy and validated `PfsmCandidateRecallLimits` at analysis creation;
 `PfsmRequest::full_round` overrides one run without changing that configuration.
 Off uses the original full workflow and allocates no recall workspace. Shadow
 records selections while formally fitting the entire pool. Enabled fits
 only selected/tied/protected entries. Only built-in fixed IL and NNLS/TRF support
 the approximation; replacements and small pools use the full path.
+
+Only v2 grid/scan resource-limit errors dispatch to the `3fa1123a` bounded
+integral/old-shift baseline by default. A project setting can instead request
+full-pool formal fitting on those limits. The resource route follows the existing
+off/full-round/small-pool/replacement priorities. Immutable integral cells follow
+the frozen problem; old-phase banks and matched controls follow each baseline.
+Integral success records its backend and switch reason separately from a full
+fallback, and keeps the five-channel union without v2's review/formal caps.
+The v2 formal-underestimation check never consumes integral diagnostics.
 
 Every generation recalls from the complete immutable universe. The original
 weighted correlation field persists with the frozen observations; the residual

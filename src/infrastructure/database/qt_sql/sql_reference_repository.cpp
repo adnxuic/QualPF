@@ -6,10 +6,25 @@
 #include "qualpf/search/algorithms.h"
 #include <bit>
 #include <cmath>
+#include <chrono>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QScopeGuard>
 #include <QUuid>
+
+namespace {
+class ReadTimer {
+    using Clock = std::chrono::steady_clock;
+    double *value_;
+    Clock::time_point start_;
+  public:
+    ReadTimer(std::optional<qualpf::application::CandidateReadStatistics> &s,
+              double qualpf::application::CandidateReadStatistics::*field) : value_(s ? &((*s).*field) : nullptr) {
+        if (value_) start_ = Clock::now();
+    }
+    ~ReadTimer() { if (value_) *value_ += std::chrono::duration<double>(Clock::now()-start_).count(); }
+};
+} // namespace
 
 namespace qualpf::infrastructure {
 
@@ -26,6 +41,8 @@ qualpf::Result<std::vector<qualpf::application::ProductCard>> SqlReferenceReposi
     const auto cleanup=qScopeGuard([this]{m_reading=false; m_token={};});
     m_token=context.cancellation; m_decodeReflections=request.decodeReflections; m_readError.clear();
     m_strictPairedReflections=request.strictPairedReflections;
+    readStatistics_.reset();
+    if (request.measure_read) readStatistics_.emplace();
     if (m_token.stop_requested()) return Result<std::vector<application::ProductCard>>{Error{ErrorCode::cancelled,"search","Search canceled"}};
     if (!dbMain.isOpen()) return Result<std::vector<application::ProductCard>>{Error{ErrorCode::missing_data,"database","Database is not open"}};
     auto lease = referenceLease_ ? nullptr : infrastructure::DatabaseLease::read(basePath_);
@@ -317,16 +334,47 @@ void SqlReferenceRepository::readRows(const QString &idsString, const SqlCandida
         if (builder.deletedEnabled()) sql += " where trim(quality)!='D' and id in (" + idsString + ")";
         else sql += " where id in (" + idsString + ")";
     } else if (builder.deletedEnabled()) sql += " where trim(quality)!='D'";
-    const int actualCount = count > 0 ? count : dbMain.queryForCount(sql);
-    query.prepare(sql);
+    using Statistics = application::CandidateReadStatistics;
+    // PFSM consumes every row once; never retain the driver's scrollback copy.
+    if (m_strictPairedReflections) query.setForwardOnly(true);
+    int actualCount = count;
+    if (count <= 0) {
+        ReadTimer timer(readStatistics_, &Statistics::count_seconds);
+        if (readStatistics_) ++readStatistics_->row_query_executions;
+        actualCount = dbMain.queryForCount(sql);
+    }
+    if (m_strictPairedReflections && actualCount > 0 &&
+        std::size_t(actualCount) <= cards.max_size() - cards.size()) {
+        ReadTimer timer(readStatistics_, &Statistics::materialize_seconds);
+        cards.reserve(cards.size() + std::size_t(actualCount));
+    }
+    {
+        ReadTimer timer(readStatistics_, &Statistics::prepare_seconds);
+        query.prepare(sql);
+    }
     int row=0, last=-1;
-    if (query.exec()) while (query.next()) {
+    bool executed;
+    {
+        ReadTimer timer(readStatistics_, &Statistics::execute_seconds);
+        if (readStatistics_) ++readStatistics_->row_query_executions;
+        executed = query.exec();
+    }
+    if (readStatistics_) readStatistics_->forward_only = query.isForwardOnly();
+    while (executed) {
+        bool next;
+        {
+            ReadTimer timer(readStatistics_, &Statistics::fetch_seconds);
+            next = query.next();
+        }
+        if (!next) break;
         if (m_token.stop_requested()) break;
         ++row;
         const int percentage = actualCount > 0 ? static_cast<int>(100.0f*row/actualCount) : 0;
         if (progress && percentage != last) { last=percentage; progress(row,actualCount); }
         if (m_token.stop_requested()) break;
         qualpf::application::ProductCard card;
+        {
+        ReadTimer timer(readStatistics_, &Statistics::fields_seconds);
         card.id=query.value(0).toString().toStdString();
         card.chemicalName=query.value(1).toString().toStdString();
         card.mineralName=query.value(2).toString().toStdString();
@@ -346,16 +394,28 @@ void SqlReferenceRepository::readRows(const QString &idsString, const SqlCandida
             const auto value = numeric ? raw.toDouble(&validRir) : raw.toString().trimmed().toDouble(&validRir);
             if (validRir) card.referenceRir = value;
         }
+        }
         if (m_decodeReflections) {
+            ReadTimer timer(readStatistics_, &Statistics::peaks_seconds);
             if (m_strictPairedReflections) {
-                const auto decode=[](const QByteArray &bytes,std::vector<double> &values,bool spacing) {
+                const auto decode=[&](const QByteArray &bytes,std::vector<double> &values,bool spacing) {
+                    if (readStatistics_) readStatistics_->peak_text_bytes += std::size_t(bytes.size());
                     if(bytes.trimmed().isEmpty())return true; // Legal nd=0 gives an explicit zero template.
-                    auto parts=QString::fromUtf8(bytes).split(',',Qt::KeepEmptyParts);
-                    // Database writers conventionally append one terminal comma.
-                    if(!parts.empty()&&parts.back().trimmed().isEmpty())parts.removeLast();
-                    for(const auto &part:parts) {
+                    const auto text=QString::fromUtf8(bytes);
+                    const QStringView view(text);
+                    // Capacity follows actual text, never the untrusted nd column.
+                    const auto tokens=std::size_t(text.count(QLatin1Char(',')))+1;
+                    if(values.capacity()<tokens) {
+                        if(readStatistics_)++readStatistics_->peak_buffer_growths;
+                        values.reserve(tokens);
+                    }
+                    for(const auto part:QStringTokenizer(view,QLatin1Char(','),Qt::KeepEmptyParts)) {
+                        // Match split/removeLast exactly, including an all-Unicode-
+                        // whitespace final token; interior empty tokens still fail.
+                        if(part.end()==view.end()&&part.trimmed().isEmpty())break;
                         bool ok=false;const double value=part.toDouble(&ok);
                         if(!ok||!std::isfinite(value)||(spacing?value<=0:value<0))return false;
+                        if (readStatistics_ && values.size()==values.capacity()) ++readStatistics_->peak_buffer_growths;
                         values.push_back(value);
                     }
                     return true;
@@ -378,7 +438,11 @@ void SqlReferenceRepository::readRows(const QString &idsString, const SqlCandida
                 if (!std::isnan(tth)) card.tth.push_back(tth);
             }
         }
-        cards.push_back(std::move(card));
+        if (readStatistics_) { ++readStatistics_->cards; readStatistics_->peaks += card.d.size(); }
+        {
+            ReadTimer timer(readStatistics_, &Statistics::materialize_seconds);
+            cards.push_back(std::move(card));
+        }
     }
     if (query.lastError().isValid()) m_readError=query.lastError().text();
 }

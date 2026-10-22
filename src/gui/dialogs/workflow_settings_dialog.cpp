@@ -208,6 +208,11 @@ void WorkflowSettingsDialog::buildFlow(WorkflowId id) {
     if(id==WorkflowId::pfsm) {
         p=page("Candidate Recall");
         auto *enabled=boolean(id,p,tr("Enable candidate recall"),"recallEnabled",[](const Profile &v){return v.pfsm.candidate_recall_enabled;},[](Profile &v,bool x){v.pfsm.candidate_recall_enabled=x;});
+        auto *resource = choice(id,p,tr("On resource limit"),"recallResourceFallback",{"Bounded integral recall","Full-pool formal fitting"},
+            [](const Profile &v){return int(v.pfsm.candidate_recall_resource_fallback);},
+            [](Profile &v,int x){v.pfsm.candidate_recall_resource_fallback=PfsmResourceFallback(x);});
+        connect(enabled,&QCheckBox::toggled,resource,&QWidget::setEnabled);
+        note(id,p,tr("Candidate counts below apply to standard v2 recall. Bounded integral recall uses fixed budgets with cutoff ties and numerical protection."));
         const std::array<std::pair<const char *,int profile::PfsmCandidateRecallLimits::*>,5> limits{{
             {"Recall candidates",&profile::PfsmCandidateRecallLimits::recall_candidates},{"Local shortlist",&profile::PfsmCandidateRecallLimits::local_shortlist},
             {"Protected per channel",&profile::PfsmCandidateRecallLimits::protected_per_channel},{"Review limit",&profile::PfsmCandidateRecallLimits::review_limit},
@@ -219,6 +224,12 @@ void WorkflowSettingsDialog::buildFlow(WorkflowId id) {
         }
         p=page("Profile Expansion");
         boolean(id,p,tr("Cache profile templates"),"pfsmCache",[](const Profile &v){return v.pfsm.template_cache;},[](Profile &v,bool x){v.pfsm.template_cache=x;});
+        note(id,p,tr("Enabled (default): Uses interpolated templates during fitting iterations to reduce repeated "
+                     "profile calculations and can speed up searches. Preparing and storing the cache takes extra "
+                     "time and memory, so small searches may not benefit. Final fits are always verified by direct "
+                     "profile evaluation."));
+        note(id,p,tr("Disabled: Evaluates profiles directly throughout fitting, avoiding interpolation and its cache "
+                     "preparation and memory costs. Repeated profile calculations can make searches slower."));
         note(id,p,tr("Uses the existing radiation components, measured FWHM and fixed profile expansion model."));
         p=page("Profile Fitting");
         number(id,p,tr("Lower shift (° 2θ)"),"pfsmLower",-180,180,[](const Profile &v){return v.pfsm.lower_shift;},[](Profile &v,double x){v.pfsm.lower_shift=x;});
@@ -264,7 +275,7 @@ void WorkflowSettingsDialog::copyPage(Profile &to,const Profile &from,const QStr
     else if(page=="Matching") {to.csm.automatic_delta=from.csm.automatic_delta;to.csm.delta=from.csm.delta;}
     else if(page=="FOM") {to.csm.minimum_fom=from.csm.minimum_fom;to.csm.weight_position=from.csm.weight_position;to.csm.weight_intensity=from.csm.weight_intensity;to.csm.weight_phases=from.csm.weight_phases;}
     else if(page=="Residual") to.csm.residual=from.csm.residual;
-    else if(page=="Candidate Recall") {to.pfsm.candidate_recall_enabled=from.pfsm.candidate_recall_enabled;to.pfsm.candidate_recall_limits=from.pfsm.candidate_recall_limits;}
+    else if(page=="Candidate Recall") {to.pfsm.candidate_recall_enabled=from.pfsm.candidate_recall_enabled;to.pfsm.candidate_recall_limits=from.pfsm.candidate_recall_limits;to.pfsm.candidate_recall_resource_fallback=from.pfsm.candidate_recall_resource_fallback;}
     else if(page=="Profile Expansion") to.pfsm.template_cache=from.pfsm.template_cache;
     else if(page=="Profile Fitting") {to.pfsm.lower_shift=from.pfsm.lower_shift;to.pfsm.upper_shift=from.pfsm.upper_shift;to.pfsm.weighting=from.pfsm.weighting;to.pfsm.threads=from.pfsm.threads;}
     else if(page=="Results") to.pfsm.minimum_relative_fom=from.pfsm.minimum_relative_fom;

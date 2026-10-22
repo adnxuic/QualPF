@@ -21,8 +21,8 @@ struct PfsmCandidateRecallLocalProblem {
 };
 namespace {
 using detail::checkpoint;
-[[noreturn]] void unavailable(const char *message) {
-    throw detail::Failure{Error{ErrorCode::numerical_failure, "pfsm.fast", message}};
+[[noreturn]] void unavailable(const char *message, const char *reason = "") {
+    throw detail::Failure{Error{ErrorCode::numerical_failure, "pfsm.fast", message, reason}};
 }
 template <class T> T take(Result<T> r) {
     if (!r) throw detail::Failure{r.error()};
@@ -39,6 +39,24 @@ double query(const PfsmCandidateRecallData &d, std::span<const double> v, double
     const double result = (1 - a) * v[j] + a * v[j + 1];
     if (!std::isfinite(result)) unavailable("Nonfinite fast interpolation");
     return result;
+}
+// Three fields share the same grid. Calculate its location once, retaining each
+// field's original interpolation expression and each channel's reduction order.
+std::array<double, 3> queryFields(const PfsmCandidateRecallRound &round, double x) {
+    const auto &d = *round.data;
+    const auto n = d.original_response.size();
+    if (n < 2 || d.energy_response.size() != n || round.residual_response.size() != n)
+        return {query(d, d.original_response, x), query(d, round.residual_response, x), query(d, d.energy_response, x)};
+    const double t = (x - d.origin) / d.step;
+    if (!std::isfinite(t) || t < 0 || t > double(n - 1)) unavailable("Query outside fast grid");
+    const auto j = std::min(static_cast<std::size_t>(t), n - 2);
+    const double a = t - double(j);
+    const auto value = [&](std::span<const double> v) {
+        const double result = (1 - a) * v[j] + a * v[j + 1];
+        if (!std::isfinite(result)) unavailable("Nonfinite fast interpolation");
+        return result;
+    };
+    return {value(d.original_response), value(round.residual_response), value(d.energy_response)};
 }
 void deposit(const PfsmCandidateRecallData &d, std::vector<double> &v, double x, double value) {
     const double t = (x - d.origin) / d.step;
@@ -70,6 +88,7 @@ std::vector<double> convolve(const PfsmCandidateRecallKernel &k, std::span<const
     return out;
 }
 std::vector<ProfileLine> lines(const ProfileExpansionInput &input, const ExecutionContext &ctx) {
+    ProfileWorkTimer timer(&ProfileWorkStatistics::reflection_seconds);
     auto out = take(expandProfileLines(input, ctx));
     std::stable_sort(out.begin(), out.end(), [](const auto &a, const auto &b) { return a.position < b.position; });
     std::vector<ProfileLine> merged;
@@ -133,7 +152,8 @@ Result<std::shared_ptr<const PfsmCandidateRecallData>> preparePfsmCandidateRecal
     d->origin = std::min(0., *xmin) - margin - 2 * d->step;
     const double end = std::max(180., *xmax) + margin + 2 * d->step;
     const double count = std::ceil((end - d->origin) / d->step) + 1;
-    if (!std::isfinite(count) || count < 2 || count > 131072) unavailable("Fast grid node limit");
+    if (!std::isfinite(count) || count < 2 || count > 131072)
+        unavailable("Fast grid node limit", "candidate_recall_grid_limit");
     const auto m = static_cast<std::size_t>(count);
     d->weights.assign(m, 0); d->weighted_signal.assign(m, 0);
     for (std::size_t i = 0; i < n; ++i) {
@@ -149,7 +169,8 @@ Result<std::shared_ptr<const PfsmCandidateRecallData>> preparePfsmCandidateRecal
     }
     if (!(d->denominator > 0) || !std::isfinite(d->denominator)) unavailable("Invalid fast normalization");
     const double intervals = (upper - lower) / (width / 4);
-    if (!std::isfinite(intervals) || intervals > 4096) unavailable("Fast shift scan limit");
+    if (!std::isfinite(intervals) || intervals > 4096)
+        unavailable("Fast shift scan limit", "candidate_recall_scan_limit");
     d->scan = {lower, upper, std::clamp(0., lower, upper)};
     for (std::size_t j = 1; j <= static_cast<std::size_t>(intervals); ++j) {
         const double shift = lower + double(j) * (width / 4);
@@ -157,7 +178,7 @@ Result<std::shared_ptr<const PfsmCandidateRecallData>> preparePfsmCandidateRecal
     }
     std::sort(d->scan.begin(), d->scan.end());
     d->scan.erase(std::unique(d->scan.begin(), d->scan.end()), d->scan.end());
-    if (d->scan.size() > 4096) unavailable("Fast shift scan limit");
+    if (d->scan.size() > 4096) unavailable("Fast shift scan limit", "candidate_recall_scan_limit");
     auto k = std::make_shared<PfsmCandidateRecallKernel>();
     k->nodes = m; k->fft_size = 1;
     while (k->fft_size < 3 * m - 2) k->fft_size *= 2;
@@ -221,6 +242,11 @@ Result<PfsmCandidateRecallRound> preparePfsmCandidateRecallRound(std::shared_ptr
     return Result<PfsmCandidateRecallRound>{std::move(out)};
 } catch (const detail::Failure &f) { return Result<PfsmCandidateRecallRound>{f.error}; }
 
+Result<std::vector<ProfileLine>> preparePfsmRecallReference(const ProfileExpansionInput &input,
+    const ExecutionContext &ctx) try {
+    return Result<std::vector<ProfileLine>>{lines(input, ctx)};
+} catch (const detail::Failure &f) { return Result<std::vector<ProfileLine>>{f.error}; }
+
 Result<PfsmCandidateRecallEvidence> scorePfsmCandidateRecallCandidate(const PfsmCandidateRecallRound &round, const ProfileExpansionInput &input,
     std::size_t index, const ExecutionContext &ctx, bool collectSeeds) try {
     checkpoint(ctx);
@@ -230,6 +256,19 @@ Result<PfsmCandidateRecallEvidence> scorePfsmCandidateRecallCandidate(const Pfsm
     const auto &d = *round.data;
     if (input.fwhm_degrees != d.width) unavailable("Fast candidate width mismatch");
     const auto reference = lines(input, ctx);
+    return scorePreparedPfsmRecallReference(round, reference, input.fwhm_degrees, index, ctx, collectSeeds);
+} catch (const detail::Failure &f) { return Result<PfsmCandidateRecallEvidence>{f.error}; }
+
+Result<PfsmCandidateRecallEvidence> scorePreparedPfsmRecallReference(const PfsmCandidateRecallRound &round,
+    std::span<const ProfileLine> reference, double width, std::size_t index, const ExecutionContext &ctx,
+    bool collectSeeds) try {
+    checkpoint(ctx);
+    if (!round.data || !round.data->kernel || round.data->weights.size() < 2 ||
+        round.residual_response.size() != round.data->weights.size())
+        detail::fail("pfsm.fast", "Missing fast correlation round");
+    const auto &d = *round.data;
+    if (width != d.width) unavailable("Fast candidate width mismatch");
+    ProfileWorkTimer timer(&ProfileWorkStatistics::correlation_seconds);
     PfsmCandidateRecallEvidence e; e.original_index = index;
     if (reference.empty()) unavailable("Zero fast candidate");
     std::vector<double> originalScores, residualScores;
@@ -238,9 +277,10 @@ Result<PfsmCandidateRecallEvidence> scorePfsmCandidateRecallCandidate(const Pfsm
         double original = 0, residual = 0, energy = 0;
         for (const auto &line : reference) {
             const double t = line.position + shift;
-            original += line.intensity * query(d, d.original_response, t);
-            residual += line.intensity * query(d, round.residual_response, t);
-            energy += line.intensity * line.intensity * query(d, d.energy_response, t);
+            const auto field = queryFields(round, t);
+            original += line.intensity * field[0];
+            residual += line.intensity * field[1];
+            energy += line.intensity * line.intensity * field[2];
         }
         if (!(energy > 0) || !std::isfinite(energy)) unavailable("Unreliable fast energy");
         const auto score = [&](double c) {

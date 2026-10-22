@@ -1,7 +1,10 @@
 #include "qualpf/profile/pfsm.h"
+#include "pfsm_work.h"
+#include "pfsm_internal.h"
 #include <algorithm>
 #include <atomic>
 #include <cmath>
+#include <cfenv>
 #include <iostream>
 #include <limits>
 #include <numbers>
@@ -164,6 +167,110 @@ static ProfileFitInput linear(std::vector<double> y, std::vector<std::vector<dou
     return in;
 }
 static ProfileFitResult fit(const ProfileFitInput &in) { return take(NnlsTrfProfileFitter{}.fit(in, ctx())); }
+static void preparedObservations() {
+    auto input = linear({2, 3, 5}, {{1, 0, 1}, {0, 1, 1}});
+    const auto expected = fit(input);
+    auto source = std::make_shared<ProfileObservations>(*input.observations);
+    detail::WorkCounters work;
+    detail::MeasureWork measurement(work);
+    input.prepared_observations = take(prepareProfileObservations(source, ctx()));
+    input.observations = profileObservationSnapshot(input.prepared_observations);
+    check(input.observations != source);
+    source->observed[0] = std::numeric_limits<double>::quiet_NaN();
+    for (int repeat = 0; repeat < 2; ++repeat) {
+        const auto actual = fit(input);
+        check(actual.parameters.scales == expected.parameters.scales &&
+              actual.parameters.shifts == expected.parameters.shifts &&
+              actual.calculated == expected.calculated && actual.residual == expected.residual &&
+              actual.q == expected.q && actual.denominator_net == expected.denominator_net &&
+              actual.denominator_observed == expected.denominator_observed &&
+              actual.rwp_net == expected.rwp_net && actual.rwp_observed == expected.rwp_observed &&
+              actual.termination == expected.termination);
+        const auto &left = actual.diagnostics;
+        const auto &right = expected.diagnostics;
+        check(left.residual_evaluations == right.residual_evaluations &&
+              left.difference_evaluations == right.difference_evaluations &&
+              left.nnls_iterations == right.nnls_iterations && left.starts == right.starts &&
+              left.rank == right.rank && left.kkt_violation == right.kkt_violation &&
+              left.optimality == right.optimality && left.rank_deficient == right.rank_deficient &&
+              left.kkt_checked == right.kkt_checked &&
+              left.interpolated_iterations == right.interpolated_iterations &&
+              left.exact_final_verification == right.exact_final_verification &&
+              left.zero_templates == right.zero_templates &&
+              left.unidentifiable_shifts == right.unidentifiable_shifts && left.at_bound == right.at_bound);
+    }
+    check(work.observation_preparations == 1 && work.observation_reuses == 2);
+    const auto saved = input.observations;
+    input.observations = source;
+    check(!NnlsTrfProfileFitter{}.fit(input, ctx()));
+    check(!prepareProfileObservations(source, ctx()));
+    input.observations = saved;
+    const auto preparations = work.observation_preparations;
+    const auto rounding = std::fegetround();
+    check(std::fesetround(FE_UPWARD) == 0);
+    const auto directed = NnlsTrfProfileFitter{}.fit(input, ctx());
+    check(std::fesetround(rounding) == 0);
+    check(bool(directed) && work.observation_preparations == preparations + 1);
+#if defined(__SSE2__) || defined(_M_X64)
+    const auto denormals = _mm_getcsr();
+    _mm_setcsr(denormals ^ 0x8040);
+    const auto alternate = NnlsTrfProfileFitter{}.fit(input, ctx());
+    _mm_setcsr(denormals);
+    check(bool(alternate) && work.observation_preparations == preparations + 2);
+#endif
+    std::stop_source stop;
+    stop.request_stop();
+    auto canceled = ctx();
+    canceled.cancellation = stop.get_token();
+    const auto rejected = NnlsTrfProfileFitter{}.fit(input, canceled);
+    check(!rejected && rejected.error().code == ErrorCode::cancelled);
+    check(!prepareProfileObservations(saved, canceled));
+    auto invalidPolicy = ctx();
+    invalidPolicy.numerical_policy = static_cast<NumericalPolicy>(255);
+    check(!NnlsTrfProfileFitter{}.fit(input, invalidPolicy));
+    check(!prepareProfileObservations(saved, invalidPolicy));
+    check(!prepareProfileObservations({}, ctx()) && !profileObservationSnapshot({}));
+}
+static void anchorColumns() {
+    auto input = linear({2, 3, 5}, {});
+    input.phases = {{"first", makeProfile({{1, 0, 2}}), -.5, .5, 0},
+                    {"second", makeProfile({{2, 1, 3}}), -.5, .5, 0}};
+    const auto context = ctx();
+    detail::ReducedProblem problem(input, context);
+    detail::Vector anchor = detail::Vector::Zero(2);
+    detail::WorkCounters work;
+    detail::MeasureWork measurement(work);
+    const auto original = problem.evaluate(anchor);
+    const detail::Matrix weighted = problem.columns, unweighted = problem.unweighted_columns;
+    problem.anchorColumns(anchor);
+    auto trial = anchor;
+    trial[0] = .03;
+    problem.evaluate(trial, true);
+    trial[0] = 0;
+    trial[1] = -.02;
+    problem.evaluate(trial, true);
+    const auto restored = problem.evaluate(anchor);
+    check(work.formal_columns == 4 && work.anchor_restores == 2 && work.nnls_solves == 4);
+    check(problem.columns == weighted && problem.unweighted_columns == unweighted);
+    check(restored.scales == original.scales && restored.residual == original.residual &&
+          restored.cost == original.cost && restored.linear.iterations == original.linear.iterations &&
+          restored.linear.kkt == original.linear.kkt);
+    problem.enableExact();
+    problem.evaluate(anchor);
+    check(work.formal_columns == 6 && work.anchor_restores == 2 && work.nnls_solves == 5);
+    problem.anchorColumns(anchor);
+    trial[1] = -.01;
+    problem.anchorColumns(trial);
+    problem.evaluate(trial);
+    problem.evaluate(anchor);
+    check(work.formal_columns == 8 && work.anchor_restores == 2);
+    problem.anchorColumns(anchor);
+    trial[0] = .51;
+    bool rejected = false;
+    try { problem.evaluate(trial); }
+    catch (const detail::Failure &failure) { rejected = failure.error.field == "pfsm.shifts"; }
+    check(rejected);
+}
 static void nnls() {
     auto one = fit(linear({2, 5, -1}, {{1, 2, 1}}));
     near(one.parameters.scales[0], 11. / 6);
@@ -336,6 +443,103 @@ static void scaleReentry() {
     check(reentered.diagnostics.starts == 2 && reentered.parameters.scales[0] > 0);
     check(reentered.q <= active.q && reentered.q < inactive.q);
     check(reentered.diagnostics.kkt_checked && !reentered.diagnostics.unidentifiable_shifts[0]);
+}
+static void preparedTemplates() {
+    ProfileExpansionInput input;
+    input.coordinates = ProfileExpansionInput::Coordinates::two_theta_degrees;
+    input.fwhm_degrees = .2;
+    input.lines = {{0, 30, 1}, {1, 30.4, .3}};
+    input.radiation.lines = {{WavelengthAngstrom{1.54}, 1}};
+    input.interpolation_window = {{28, 32}};
+    const auto prepared = take(PreparedProfileTemplate::prepare(input, ctx()));
+    check(prepared->matches(input, ctx()) && prepared->profile()->usesApproximation());
+    check(prepared->storageBytes() <= PreparedProfileTemplate::storageBound(input, true));
+    auto settings = input; settings.lines.clear();
+    check(prepared->storageBytes() <= PreparedProfileTemplate::storageBoundForLineCount(settings, 2, true));
+    check(PreparedProfileTemplate::storageBoundForLineCount(settings, std::numeric_limits<std::size_t>::max(), true) ==
+          std::numeric_limits<std::size_t>::max());
+    const std::vector<double> coordinates{29.7, 30., 30.4};
+    const auto original = take(IntermediateLorentzianExpander{}.prepare(input, ctx()));
+    check(take(original->evaluate(coordinates, .1, false, ctx())).intensity ==
+          take(prepared->profile()->evaluate(coordinates, .1, false, ctx())).intensity);
+    detail::WorkCounters work;
+    {
+        detail::MeasureWork measurement(work);
+        check(take(PreparedProfileTemplate::prepare(input, ctx(), prepared)) == prepared);
+        check(work.template_preparations == 0);
+        const auto lightweight = prepared->expandedOnly();
+        check(!lightweight->profile() && lightweight->storageBytes() < prepared->storageBytes());
+        check(lightweight->storageBytes() <= PreparedProfileTemplate::storageBound(input, false));
+        const auto restored = take(PreparedProfileTemplate::prepare(input, ctx(), lightweight));
+        check(work.template_preparations == 1);
+        check(take(restored->profile()->evaluate(coordinates, .1, false, ctx())).intensity ==
+              take(prepared->profile()->evaluate(coordinates, .1, false, ctx())).intensity);
+    }
+    for (int field = 0; field < 9; ++field) {
+        auto changed = input;
+        switch (field) {
+        case 0: changed.lines[0].identity = 4; break;
+        case 1: changed.lines[0].position = 30.1; break;
+        case 2: changed.lines[0].intensity = 2; break;
+        case 3: std::reverse(changed.lines.begin(), changed.lines.end()); break;
+        case 4: changed.radiation.lines[0].wavelength.value = 1.55; break;
+        case 5: changed.radiation.lines[0].relative_weight = .5; break;
+        case 6: changed.fwhm_degrees = .3; break;
+        case 7: changed.interpolation_window.reset(); break;
+        case 8: changed.interpolation_window->second = 33; break;
+        }
+        check(!prepared->matches(changed, ctx()));
+        const auto fresh = take(IntermediateLorentzianExpander{}.prepare(changed, ctx()));
+        const auto replaced = take(PreparedProfileTemplate::prepare(changed, ctx(), prepared));
+        check(replaced != prepared && replaced->matches(changed, ctx()));
+        check(take(replaced->profile()->evaluate(coordinates, .1, false, ctx())).intensity ==
+              take(fresh->evaluate(coordinates, .1, false, ctx())).intensity);
+    }
+    auto invalid = input;
+    invalid.lines[0].intensity = -1;
+    check(!PreparedProfileTemplate::prepare(invalid, ctx(), prepared));
+    auto unspecified = ctx();
+    unspecified.numerical_policy = NumericalPolicy::unspecified;
+    check(!prepared->matches(input, unspecified));
+    check(!PreparedProfileTemplate::prepare(input, unspecified, prepared));
+    std::stop_source stop;
+    stop.request_stop();
+    auto cancelled = ctx();
+    cancelled.cancellation = stop.get_token();
+    const auto failure = PreparedProfileTemplate::prepare(input, cancelled, prepared);
+    check(!failure && failure.error().code == ErrorCode::cancelled);
+}
+static void interpolationConstants() {
+    ProfileExpansionInput input;
+    input.coordinates = ProfileExpansionInput::Coordinates::two_theta_degrees;
+    input.fwhm_degrees = .2;
+    input.lines = {{0, 30, 1}};
+    input.interpolation_window = {{29, 31}};
+    const std::vector<double> coordinates{29.7, 30., 30.4};
+    std::fenv_t previous;
+    check(std::fegetenv(&previous) == 0);
+    check(std::fesetround(FE_TONEAREST) == 0);
+    detail::WorkCounters work;
+    {
+        detail::MeasureWork measurement(work);
+        const auto first = take(IntermediateLorentzianExpander{}.prepare(input, ctx()));
+        const auto second = take(IntermediateLorentzianExpander{}.prepare(input, ctx()));
+        check(take(first->evaluate(coordinates, 0, false, ctx())).intensity ==
+              take(second->evaluate(coordinates, 0, false, ctx())).intensity);
+        check(work.chebyshev_tables <= 1 && work.template_preparations == 2);
+        const auto nearestTables = work.chebyshev_tables;
+        check(std::fesetround(FE_UPWARD) == 0);
+        const auto upward = take(IntermediateLorentzianExpander{}.prepare(input, ctx()));
+        const auto repeated = take(IntermediateLorentzianExpander{}.prepare(input, ctx()));
+        check(work.chebyshev_tables == nearestTables + 2);
+        check(take(upward->evaluate(coordinates, 0, false, ctx())).intensity ==
+              take(repeated->evaluate(coordinates, 0, false, ctx())).intensity);
+        check(std::fegetround() == FE_UPWARD);
+        check(std::fesetround(FE_TONEAREST) == 0);
+        take(IntermediateLorentzianExpander{}.prepare(input, ctx()));
+        check(work.chebyshev_tables == nearestTables + 2);
+    }
+    check(std::fesetenv(&previous) == 0);
 }
 static void interpolation() {
     for (double h : {.013, .2}) {
@@ -591,10 +795,12 @@ static void batchedScan() {
 }
 
 void candidateRecallContracts();
+void integralContracts();
 void candidateRecallBackprojectionContracts();
 void candidateRecallAnchoredContracts();
 void candidateRecallProtectionContracts();
 int main() try {
+    integralContracts();
     candidateRecallContracts();
     candidateRecallBackprojectionContracts();
     candidateRecallAnchoredContracts();
@@ -602,8 +808,12 @@ int main() try {
     expansion();
     expansionRemainder();
     nnls();
+    preparedObservations();
+    anchorColumns();
     trf();
     scaleReentry();
+    preparedTemplates();
+    interpolationConstants();
     interpolation();
     interpolationRelativeCoordinates();
     batchedScan();

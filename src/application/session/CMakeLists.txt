@@ -8,6 +8,7 @@ add_library(qualpf_session STATIC
     pfsm_observations.cpp
     pfsm_candidate_recall_refinement.cpp
     pfsm_candidate_recall_correlation.cpp
+    pfsm_candidate_recall_integral.cpp
     pfsm_workflow.cpp
     pfsm_formal_fit.cpp
     pfsm_state.cpp
@@ -55,11 +56,11 @@ target_link_libraries(qualpf_session PRIVATE OpenMP::OpenMP_CXX)
 set_target_properties(qualpf_session PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
 
 if(MSVC)
-    set_source_files_properties(pfsm_candidate_recall_refinement.cpp pfsm_candidate_recall_correlation.cpp pfsm_observations.cpp pfsm_formal_fit.cpp pfsm_workflow.cpp pfsm_state.cpp pfsm_presentation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
+    set_source_files_properties(pfsm_candidate_recall_integral.cpp pfsm_candidate_recall_refinement.cpp pfsm_candidate_recall_correlation.cpp pfsm_observations.cpp pfsm_formal_fit.cpp pfsm_workflow.cpp pfsm_state.cpp pfsm_presentation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
     set_source_files_properties(../preprocessing/configured_fwhm.cpp ../preprocessing/initial_peak_search.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
     set_source_files_properties(../preprocessing/peak_coordinates.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 else()
-    set_source_files_properties(pfsm_candidate_recall_refinement.cpp pfsm_candidate_recall_correlation.cpp pfsm_observations.cpp pfsm_formal_fit.cpp pfsm_workflow.cpp pfsm_state.cpp pfsm_presentation.cpp PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")
+    set_source_files_properties(pfsm_candidate_recall_integral.cpp pfsm_candidate_recall_refinement.cpp pfsm_candidate_recall_correlation.cpp pfsm_observations.cpp pfsm_formal_fit.cpp pfsm_workflow.cpp pfsm_state.cpp pfsm_presentation.cpp PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")
     set_source_files_properties(../preprocessing/configured_fwhm.cpp ../preprocessing/initial_peak_search.cpp PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")
     set_source_files_properties(../preprocessing/peak_coordinates.cpp PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")
 endif()

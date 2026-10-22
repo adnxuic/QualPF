@@ -12,6 +12,73 @@ reports are no longer used for routine development.
 
 ### Changed
 
+- Extended local-output exclusions to Visual Studio CMake outputs/settings and
+  Python/tool caches in both Git and source packages. Retained the optimization
+  development branch and a local protection tag for final-tree squash publication.
+
+- Reclaimed local storage from retired compilation intermediates and losslessly
+  compressed retained build logs and result tables, preserving current builds,
+  releases, frozen references, original failures and nested Git worktrees.
+
+- Enabled PFSM profile template caching by default for new settings and factory
+  restoration, preserving saved off choices and existing projects. Added the
+  speed, preparation-time and memory tradeoffs to both PFSM settings dialogs;
+  final fits retain direct profile verification.
+
+- Reused immutable PFSM template entries across analysis rounds within the existing
+  128 MiB store, with private per-round directories and owned input borrowing.
+  Shared recall interpolation locations across its three fields without changing
+  formulas, cold NNLS starts, candidate sets or formal fitting.
+  Controlled full-library first and subsequent rounds meet the 25%/20% speed
+  targets with exact scientific output. The anchored temporary-lifetime fix also
+  clears both long-spectrum peak-RSS controls under the unchanged gates; the
+  fresh comparison and original failures remain in the PFSM benchmark guide.
+
+- Retained recall-only expanded, stably merged reflection lines within each PFSM
+  analysis under a separate 128 MiB budget. Reservations follow original card
+  order; misses still scan the complete universe, and formal line order is unchanged.
+  Small derived pools retain no bank to avoid unnecessary resident storage.
+  Template reservations use line extents without retaining unprepared input buffers.
+
+- Streamed strict PFSM reference rows and paired peak tokens without retaining
+  the SQL driver's scrollback rows or allocating a string list per card. Preserved
+  ordered binary64 d/I, metadata/RIR and malformed-input behavior; added a full-
+  library differential decoder audit independent of normal test fixtures.
+
+- Added opt-in PFSM benchmark diagnostics for reference-row reading/decoding and
+  recall/local candidate work, separating worker sums from operation wall time.
+  Default execution and persisted scientific evidence remain unchanged.
+
+- Kept normal PFSM v2 recall and added a resource-limit policy: bounded integral
+  and old-shift recall by default, or full-pool formal fitting when selected.
+  The fallback ports baseline `3fa1123a`, excluding A/A+B optimizations, and
+  leaves formal fitting unchanged. Project/default settings and QPF freeze the
+  policy; backend-specific reports, replay and exact comparators retain the
+  integral union and resource evidence. Verified the 80-case/263-round replay,
+  three-platform affected tests and Windows GCC full normal suite; retained
+  historical identification/nonready results. An adjacent single NIST_676a pair
+  reduces formal fits from 1177 to 128, with exact retained formal evidence.
+
+- Reused candidate-local PFSM template values, paired derivatives, physical trial
+  matrices/models and winning columns without removing NNLS solves.
+- Shared the fixed Chebyshev transform under nearest rounding; other rounding
+  modes retain per-call construction and the original coefficient order.
+- Reused immutable PFSM expansions and templates across recall, review and formal
+  fitting within a deterministic 128 MiB operation budget, with full binary input
+  checks, uncached fallback and separate work/memory diagnostics.
+- Reused validated immutable PFSM observations and finite-difference anchor
+  columns without removing NNLS calls or changing solver diagnostics.
+- Added an explicit no-warmup option to the paired PFSM timing driver, including
+  recorded execution counts and single-pair scheduling checks.
+- Sent PFSM template-store misses with no retention reservation directly to the
+  original expansion path, avoiding non-retainable wrappers and identity copies
+  while preserving cancellation, validation and miss diagnostics.
+- Compared the repaired PFSM workflow on 79 additional frozen cases against
+  retained baseline observations, preserving scientific files, original failed
+  statuses and unfavorable single-run timing observations without remeasuring
+  the baseline. Separately remeasured the nine higher-elapsed cases as adjacent
+  single before/after pairs, retaining original observations and failed screens.
+
 - Prepared a clean squash publication boundary with explicit local build/draft
   exclusions and corrected PFSM/QPF status in current entry documentation.
 - Separated 15 sealed regression ZIPs from the main tree and source packages,
@@ -77,6 +144,13 @@ reports are no longer used for routine development.
   FOM ranking while retaining conditional preprocessing and Classical ordering.
 
 ### Added
+
+- Added bounded integral and old-shift recall kernels from baseline `3fa1123a`,
+  with analytic/resource tests and independent integral/NNLS probes. Stage A
+  trial reuse and A+B row compression are excluded; formal fitting is unchanged.
+
+- Added opt-in, thread-local PFSM work measurements for independent numerical
+  probes and explicit candidate-recall/Eigen cache settings for paired timings.
 
 - Added editable Initial Peak Search options and an independent candidate command
   with a read-only table. Settings and owned
@@ -147,6 +221,14 @@ reports are no longer used for routine development.
 - Exposed source-bound Application common-preprocessing and independent formal-peak-extraction evaluations; product peak preparation consumes these stages through its existing checked transaction.
 
 ### Fixed
+
+- Excluded the three integral-recall elapsed-time fields from PFSM performance
+  scientific comparisons, preventing timing-only differences from aborting A/B
+  validation while preserving exact evidence checks and original reports.
+
+- Released dead PFSM anchored-step dictionary and linear-matrix storage before
+  NNLS and physical-trial allocations overlap on long spectra, preserving all
+  expressions, solve counts, candidate sets and acceptance thresholds.
 
 - Remove the report's hardcoded generic font family so first-import HTML layout
   inherits the interface font and avoids Windows font-alias discovery latency.

@@ -3,14 +3,19 @@
 #include "qualpf/application/pfsm_evidence.h"
 #include "qualpf/application/pfsm_settings.h"
 #include "qualpf/profile/pfsm_candidate_recall.h"
+#include "qualpf/profile/pfsm_relaxed_screen.h"
+#include "qualpf/profile/work_statistics.h"
 
 namespace qualpf::application {
+namespace pfsm_detail { class PfsmRecallStore; class PfsmTemplateStore; }
 enum class PfsmCandidateRecallMode { off, shadow, enabled };
 enum class PfsmCandidateRecallVersion { v2 };
+enum class PfsmCandidateRecallBackend { v2, bounded_integral_relaxed };
 struct PfsmCandidateRecallConfiguration {
     PfsmCandidateRecallMode mode = PfsmCandidateRecallMode::off;
     PfsmCandidateRecallVersion version = PfsmCandidateRecallVersion::v2;
     profile::PfsmCandidateRecallLimits limits;
+    PfsmResourceFallback resource_fallback = PfsmResourceFallback::bounded_integral;
     friend bool operator==(const PfsmCandidateRecallConfiguration &, const PfsmCandidateRecallConfiguration &) = default;
 };
 struct PfsmObservationRequest {
@@ -44,6 +49,7 @@ struct PfsmRequest {
     bool template_cache = false; // Explicit opt-in; final fitting always verifies direct IL.
     PfsmCandidateRecallConfiguration candidate_recall;
     bool full_round = false; // Per-run override, without changing the frozen mode.
+    bool measure_search_work = false; // Runtime-only diagnostic request.
 };
 struct PfsmProblem {
     std::vector<preprocessing::BackgroundPoint> background_points;
@@ -59,6 +65,12 @@ struct PfsmProblem {
     bool template_cache = false;
     PfsmCandidateRecallConfiguration candidate_recall;
 };
+struct PfsmTemplateStatistics {
+    std::size_t prepare_calls = 0, hits = 0, misses = 0, expanded_hits = 0;
+    std::size_t bytes = 0, peak_bytes = 0, evictions = 0;
+    std::size_t budget_fallbacks = 0;
+    double prepare_seconds = 0;
+};
 struct PfsmPerformance {
     // Expansion/solve are aggregate worker times; wall time measures joined
     // candidate work.
@@ -70,8 +82,28 @@ struct PfsmPerformance {
     std::size_t evaluated = 0, residual_evaluations = 0, baseline_rebuilds = 0;
     std::size_t baseline_refinement_fits = 0;
     int threads = 1;
+    PfsmTemplateStatistics templates;
+    std::optional<CandidateReadStatistics> database_read;
+    bool detailed_work = false;
+    profile::ProfileWorkStatistics correlation_work, initial_work, review_work;
+    double recall_selection_seconds = 0;
+    std::size_t recall_cache_hits = 0, recall_cache_misses = 0, recall_cache_budget_fallbacks = 0;
+    std::size_t recall_cache_bytes = 0;
+};
+struct PfsmIntegralRecallReport {
+    profile::PfsmIntegralOptions options;
+    profile::PfsmRelaxedOptions relaxed_options;
+    std::size_t fine_bins = 0, coarse_bins = 0, bank_columns = 0, peak_buffer_bytes = 0;
+    std::size_t coarse_evaluations = 0, fine_evaluations = 0, relaxed_evaluations = 0;
+    double coarse_baseline_q = 0, fine_baseline_q = 0, fine_denominator = 0, tau = 0, relaxation_radius = 0;
+    double shared_seconds = 0, integral_seconds = 0, relaxed_seconds = 0;
+    std::vector<double> baseline_shifts;
+    std::vector<profile::PfsmScreenEvidence> candidates;
 };
 struct PfsmCandidateRecallReport {
+    PfsmCandidateRecallBackend backend = PfsmCandidateRecallBackend::v2;
+    std::string switch_reason;
+    std::optional<PfsmIntegralRecallReport> integral;
     PfsmCandidateRecallVersion algorithm_version = PfsmCandidateRecallVersion::v2;
     profile::PfsmCandidateRecallLimits limits;
     std::optional<profile::PfsmCandidateRecallSelection> selection;
@@ -113,6 +145,10 @@ struct PfsmAnalysis {
     AlgorithmRunSource origin;
     PfsmPerformance performance;
     std::shared_ptr<const profile::PfsmCandidateRecallData> candidate_recall_data;
+    std::shared_ptr<const profile::PfsmIntegralData> integral_recall_data;
+    // Runtime-only derived inputs; omitted from QPF and frozen at publication.
+    std::shared_ptr<const pfsm_detail::PfsmRecallStore> recall_store;
+    std::shared_ptr<const pfsm_detail::PfsmTemplateStore> template_store;
     std::vector<PfsmCandidateRecallReport> candidate_recall_reports;
     bool normalization_over_full_pool = true;
     // Frozen after final baseline stabilization over the complete unselected

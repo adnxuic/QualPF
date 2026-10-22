@@ -1,9 +1,23 @@
 #pragma once
 #include "qualpf/profile/pfsm.h"
+#include "pfsm_work.h"
 #include <Eigen/Dense>
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <bit>
+#include <cfenv>
+
+namespace qualpf::profile {
+struct PreparedProfileObservations {
+    std::shared_ptr<const ProfileObservations> observations;
+    Eigen::VectorXd normalized_net, sqrt_weights;
+    double net_denominator = 0, observed_denominator = 0, normalization = 0;
+    bool frozen = false;
+    int rounding = std::fegetround();
+    unsigned denormals = 0;
+};
+}
 
 namespace qualpf::profile::detail {
 using Vector = Eigen::VectorXd;
@@ -48,26 +62,36 @@ struct Evaluation {
     LinearSolution linear;
 };
 class ReducedProblem {
+    PreparedProfileObservationsHandle prepared_;
+
   public:
     ReducedProblem(const ProfileFitInput &, const ExecutionContext &);
     Evaluation evaluate(const Vector &shifts, bool difference = false);
     Evaluation explicitParameters(const ProfileFitParameters &);
     ProfileFitResult result(const Evaluation &, const Vector &, ProfileFitTermination, double optimality);
     double scanObjective(const Evaluation &, const Vector &, std::vector<double> &calculated);
+    void anchorColumns(const Vector &);
+    void clearAnchor() { anchor_.valid = false; }
     void enableExact() {
         exact_mode = true;
         last_shifts.setConstant(std::numeric_limits<double>::quiet_NaN());
+        clearAnchor();
     }
     bool approximated = false, exact_mode = false;
     const ProfileFitInput &input;
     const ExecutionContext &context;
-    Vector z, sqrt_weights;
+    const Vector &z, &sqrt_weights;
     Matrix columns, unweighted_columns;
     double net_denominator = 0, observed_denominator = 0, normalization = 0, width = 1;
     std::vector<std::size_t> free;
     ProfileFitDiagnostics counts;
 
   private:
+    struct AnchorColumns {
+        Vector shifts;
+        Matrix weighted, unweighted;
+        bool valid = false;
+    } anchor_;
     Vector last_shifts;
     NnlsWorkspace linear_workspace;
     void update(const Vector &);

@@ -8,6 +8,7 @@ from pfsm_candidate_recall_replay_inputs import sha, read, ranking
 
 
 from pfsm_candidate_recall_report import candidate_recall_report
+from pfsm_integral_recall_compare import validate_integral
 
 def verified(binding):
     path=Path(binding['path'])
@@ -41,6 +42,17 @@ def compare(binding,output):
         if set(by_index)!=pool or set(actual['pool'])!=pool:raise ValueError('Replay universe mismatch')
         top={r['original_index'] for r in formal[:5]}
         old_selected=set(candidate_recall_report(old)['attempts'][-1]['retained_indices'])
+        if actual.get('backend', 'v2') == 'bounded_integral_relaxed':
+            errors = validate_integral(actual, records, len(next(r for r in read(input_path)['rounds'] if r['round'] == n)['shifts']))
+            retained = set(actual['retained_indices'])
+            if errors or set(actual['recalled']) != retained:
+                raise ValueError('Invalid integral replay: '+str(errors))
+            reports.append(dict(round=n, backend='bounded_integral_relaxed', switch_reason=actual['switch_reason'],
+                recall_top5=top<=retained, final_screening_top5=top<=retained, formal_count=len(retained),
+                formal_fits=0, formal_preservation='requires_new_enabled_validation', fallback='',
+                integral=actual['integral'], old_top5_losses=[dict(id=formal_by_index[i]['id'],
+                    formal_rank=formal_by_index[i]['rank'], recovered=i in retained) for i in sorted(top-old_selected)]))
+            continue
         recalled=set(actual['recalled']);a_top=pure_a(records)
         selection=actual.get('bc');underestimated=[];final=set();local=set();initial=set();channel=set();protected=set()
         if selection:
@@ -69,7 +81,7 @@ def compare(binding,output):
                 reviewed_rank=row.get('bc',{}).get('local_rank'),a_local_recovered=i in a_top,
                 recovery_reasons=reasons,primary_recovery=reasons[0] if reasons else 'not_run',
                 candidate_reasons=row.get('bc',{}).get('retention_reasons',[])))
-        reports.append(dict(round=n,recall_top5=top<=recalled,a_local_top5=top<=a_top if 'a_top20' in actual else None,
+        reports.append(dict(round=n,backend='v2',recall_top5=top<=recalled,a_local_top5=top<=a_top if 'a_top20' in actual else None,
             initial_top5=top<=initial if selection else None,
             reviewed_top5=(top<=local if not selection['review_skipped'] else None) if selection else None,
             review_skipped=selection['review_skipped'] if selection else None,

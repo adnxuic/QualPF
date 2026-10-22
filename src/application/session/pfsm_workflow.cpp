@@ -1,6 +1,8 @@
 #include "pfsm_workflow.h"
 #include "pfsm_candidate_recall.h"
 #include "pfsm_formal_fit.h"
+#include "pfsm_templates.h"
+#include "pfsm_recall_store.h"
 #include "qualpf/search/rir.h"
 #include "qualpf/application/result_management.h"
 #include "qualpf/application/configured_fwhm.h"
@@ -14,9 +16,10 @@ namespace qualpf::application {
 namespace {
 using namespace pfsm_detail;
 using namespace profile;
-ProfileFitInput fitInput(const PfsmAnalysis &analysis) {
+ProfileFitInput fitInput(const PfsmAnalysis &analysis, PreparedProfileObservationsHandle prepared) {
     ProfileFitInput input;
-    input.observations = analysis.problem->observations;
+    input.observations = prepared ? profileObservationSnapshot(prepared) : analysis.problem->observations;
+    input.prepared_observations = std::move(prepared);
     input.options = analysis.problem->fit;
     input.phases = analysis.selected;
     return input;
@@ -174,11 +177,13 @@ Result<PreparedSearchResult> runPfsm(const SearchInput &input, CandidateReader &
         query.deltaD.clear();
         query.wavelength = 0;
         query.strictPairedReflections = true;
+        query.measure_read = request.measure_search_work;
         analysis->query = query;
         const auto start = Clock::now();
         stage("Candidate Recall — reference library");
         auto cards = take(reader.read(query, context, progress));
         analysis->performance.database_seconds = elapsed(start);
+        analysis->performance.database_read = reader.readStatistics();
         std::set<std::string> identities;
         for (const auto &card : cards) {
             checkpoint(context);
@@ -220,7 +225,10 @@ Result<PreparedSearchResult> runPfsm(const SearchInput &input, CandidateReader &
     }
     analysis->origin = {input.source->algorithms, input.parameters, input.source,
                         input.source->revision,   input.taskId,     input.databaseVersion};
-    auto baselineInput = fitInput(*analysis);
+    const auto observations = dynamic_cast<const NnlsTrfProfileFitter *>(
+        analysis->problem->algorithms->modules.profile_fitter.get())
+        ? take(prepareProfileObservations(analysis->problem->observations, context)) : PreparedProfileObservationsHandle{};
+    auto baselineInput = fitInput(*analysis, observations);
     if (!initial)
         baselineInput.fallback = analysis->baseline.parameters;
     if (input.operation == SearchOperation::remove_phase) {
@@ -282,6 +290,11 @@ Result<PreparedSearchResult> runPfsm(const SearchInput &input, CandidateReader &
     std::map<std::size_t, ReusableFormal> formalCache;
     std::optional<FormalReuseBinding> cacheBinding;
     bool supplementPending = false;
+    const auto templates = analysis->problem->candidate_recall.mode != PfsmCandidateRecallMode::off &&
+        dynamic_cast<const IntermediateLorentzianExpander *>(
+        analysis->problem->algorithms->modules.profile_expander.get())
+        ? std::make_shared<PfsmTemplateStore>(analysis->problem, analysis->universe,
+            128 * 1024 * 1024, analysis->template_store) : nullptr;
     for (std::size_t rebuild = 0;;) {
         checkpoint(context);
         if (supplementPending) { indices = allIndices; supplementPending = false; }
@@ -289,11 +302,23 @@ Result<PreparedSearchResult> runPfsm(const SearchInput &input, CandidateReader &
             stage("Candidate Recall");
             auto recalled = recallPfsmCandidates({analysis->problem, analysis->universe, analysis->selected,
                 analysis->baseline, analysis->generation, analysis->candidate_recall_data,
-                allIndices, threads, rebuild, fullReason}, context);
+                allIndices, threads, rebuild, fullReason, templates, analysis->integral_recall_data,
+                request.measure_search_work, analysis->recall_store}, context);
             indices = std::move(recalled.formal_indices);
             analysis->candidate_recall_data = std::move(recalled.data);
+            analysis->integral_recall_data = std::move(recalled.integral_data);
+            analysis->recall_store = std::move(recalled.recall_store);
             if (recalled.report) analysis->candidate_recall_reports.push_back(std::move(*recalled.report));
             auto &timing = analysis->performance;
+            timing.recall_cache_hits += recalled.cache_hits;
+            timing.recall_cache_misses += recalled.cache_misses;
+            timing.recall_cache_budget_fallbacks += recalled.cache_budget_fallbacks;
+            timing.recall_cache_bytes = analysis->recall_store ? analysis->recall_store->bytes() : 0;
+            timing.detailed_work = request.measure_search_work;
+            timing.correlation_work += recalled.timing.correlation_work;
+            timing.initial_work += recalled.timing.initial_work;
+            timing.review_work += recalled.timing.review_work;
+            timing.recall_selection_seconds += recalled.timing.selection;
             timing.candidate_recall_shared_seconds += recalled.timing.shared;
             timing.candidate_recall_correlation_seconds += recalled.timing.correlation;
             timing.candidate_recall_initial_seconds += recalled.timing.initial;
@@ -315,7 +340,8 @@ Result<PreparedSearchResult> runPfsm(const SearchInput &input, CandidateReader &
             auto &phase = baselinePhases[j];
             phase.initial_shift = analysis->baseline.parameters.shifts[j];
             phase.profile = std::make_shared<const BaselineTemplate>(
-                phase.profile, analysis->problem->observations, phase.initial_shift, context);
+                phase.profile, observations ? profileObservationSnapshot(observations) : analysis->problem->observations,
+                phase.initial_shift, context);
         }
         analysis->performance.expansion_seconds += elapsed(baselineStart);
         std::vector<PfsmFormalCandidateResult> results(indices.size());
@@ -346,15 +372,17 @@ Result<PreparedSearchResult> runPfsm(const SearchInput &input, CandidateReader &
             std::fesetenv(&environment);
             try {
                 checkpoint(context);
-                auto formalInput = fitInput(*analysis);
+                auto formalInput = fitInput(*analysis, observations);
                 formalInput.phases = baselinePhases;
                 const auto &problem = *analysis->problem;
                 const auto &card = (*analysis->universe)[indices[slot]];
                 const auto preparationStart = Clock::now();
-                auto expansion = expansionInput(card, problem);
+                auto expansion = templates ? *templates->input(indices[slot]) : expansionInput(card, problem);
+                const auto prepared = templates ? templates->prepare(indices[slot], expansion, context)
+                                                : PreparedProfileTemplateHandle{};
                 const auto preparationSeconds = elapsed(preparationStart);
                 auto fitted = fitPfsmCandidate({std::move(formalInput), std::move(expansion), card.id,
-                    indices[slot], analysis->generation, problem.lower_shift, problem.upper_shift},
+                    indices[slot], analysis->generation, problem.lower_shift, problem.upper_shift, prepared},
                     *problem.algorithms->modules.profile_expander, *problem.algorithms->modules.profile_fitter,
                     analysis->baseline, context);
                 fitted.expansion_seconds += preparationSeconds;
@@ -380,6 +408,8 @@ Result<PreparedSearchResult> runPfsm(const SearchInput &input, CandidateReader &
         analysis->performance.candidate_wall_seconds += elapsed(workersStart);
         analysis->performance.threads = actualThreads.load();
         checkpoint(context);
+        if (templates)
+            analysis->performance.templates = templates->statistics();
         for (const auto &result : results)
             if (result.error)
                 throw Failure{*result.error};
@@ -428,7 +458,7 @@ Result<PreparedSearchResult> runPfsm(const SearchInput &input, CandidateReader &
             auto parameters = better->parameters;
             parameters.scales.pop_back();
             parameters.shifts.pop_back();
-            auto input = fitInput(*analysis);
+            auto input = fitInput(*analysis, observations);
             input.starts = {parameters.shifts};
             input.fallback = parameters;
             for (std::size_t j = 0; j < input.phases.size(); ++j)
@@ -440,7 +470,7 @@ Result<PreparedSearchResult> runPfsm(const SearchInput &input, CandidateReader &
         }
         if (analysis->problem->candidate_recall.version == PfsmCandidateRecallVersion::v2 && !analysis->candidate_recall_reports.empty()) {
             auto &report = analysis->candidate_recall_reports.back();
-            if (report.selection && !report.full_fallback) {
+            if (report.backend == PfsmCandidateRecallBackend::v2 && report.selection && !report.full_fallback) {
                 bool underestimated = false;
                 // The gate sees only the simulated formal set, even in shadow mode.
                 for (auto &local : report.refinement_candidates) {
@@ -494,6 +524,7 @@ Result<PreparedSearchResult> runPfsm(const SearchInput &input, CandidateReader &
             CardAlgorithmSource{analysis->origin, analysis->origin});
     }
     out.evaluated = analysis->performance.evaluated;
+    analysis->template_store = templates;
     out.next.pfsm = std::move(analysis);
     if (out.next.projectSettings) out.next.workflow.completed_target =
         input.operation == SearchOperation::accept_phase || input.operation == SearchOperation::remove_phase ?

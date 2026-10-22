@@ -36,7 +36,7 @@ class PfsmOptionsDialog final : public QDialog {
     qualpf::application::ProductHandle source_;
     QLineEdit *lower_, *upper_;
     QLabel *width_, *resolved_, *error_;
-    QComboBox *weighting_;
+    QComboBox *weighting_, *resourceFallback_;
     QDoubleSpinBox *minimum_;
     QSlider *slider_;
     QSpinBox *workers_;

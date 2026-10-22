@@ -55,10 +55,38 @@ class IntermediateLorentzianExpander final : public IProfileExpander {
     AlgorithmIdentity identity() const override { return {"qualpf.profile.il.fixed", 1}; }
     Result<ProfileTemplate> prepare(const ProfileExpansionInput &, const ExecutionContext &) const override;
 };
+class PreparedProfileTemplate;
+using PreparedProfileTemplateHandle = std::shared_ptr<const PreparedProfileTemplate>;
+class PreparedProfileTemplate final {
+  public:
+    static Result<PreparedProfileTemplateHandle> prepare(const ProfileExpansionInput &, const ExecutionContext &,
+                                                         PreparedProfileTemplateHandle previous = {});
+    static std::size_t storageBound(const ProfileExpansionInput &, bool coefficients) noexcept;
+    // The same conservative bound without materializing reference-line values.
+    static std::size_t storageBoundForLineCount(const ProfileExpansionInput &settings,
+                                               std::size_t line_count, bool coefficients) noexcept;
+    bool matches(const ProfileExpansionInput &, const ExecutionContext &) const noexcept;
+    const ProfileExpansionInput &input() const noexcept;
+    const ProfileTemplate &profile() const noexcept { return profile_; }
+    std::size_t storageBytes() const noexcept;
+    PreparedProfileTemplateHandle expandedOnly() const;
+
+  private:
+    struct Data;
+    PreparedProfileTemplate(std::shared_ptr<const Data> data, ProfileTemplate profile)
+        : data_(std::move(data)), profile_(std::move(profile)) {}
+    std::shared_ptr<const Data> data_;
+    ProfileTemplate profile_;
+};
 
 struct ProfileObservations {
     std::vector<double> coordinates, observed, background, weights;
 };
+struct PreparedProfileObservations;
+using PreparedProfileObservationsHandle = std::shared_ptr<const PreparedProfileObservations>;
+Result<PreparedProfileObservationsHandle> prepareProfileObservations(
+    std::shared_ptr<const ProfileObservations>, const ExecutionContext &);
+std::shared_ptr<const ProfileObservations> profileObservationSnapshot(const PreparedProfileObservationsHandle &);
 struct ProfileFitPhase {
     std::string identity;
     ProfileTemplate profile;
@@ -107,6 +135,7 @@ struct ProfileFitInput {
     std::vector<std::vector<double>> starts; // Degrees, including fixed coordinates.
     std::optional<ProfileFitParameters> fallback;
     ProfileFitOptions options;
+    PreparedProfileObservationsHandle prepared_observations;
 };
 // Shared full-payload validation also used by the default scan adapter.
 Status validateProfileFitResult(const ProfileFitResult &, const ProfileFitInput &, bool requireExact = true);

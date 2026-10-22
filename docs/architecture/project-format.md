@@ -138,3 +138,15 @@ session undo. Failure leaves the existing workspace, identity and undo intact.
 
 Historical QXP codecs live only in tests/support/legacy_qxp. Production file ports
 accept QPF exclusively; test-only historical controls do not imply compatibility.
+
+### PFSM resource-limit extensions
+
+PFSM settings and frozen recall configuration optionally encode the resource-limit
+policy, defaulting to bounded integral when absent. Recall reports optionally
+encode the actual backend, switch reason and bounded integral/old-shift evidence;
+absence means historical v2 diagnostics. Other existing fields remain mandatory.
+Unknown extension fields survive the normal archive round trip. Integral caches,
+old-phase column banks and worker workspaces are not serialized. Loading does not
+rerun recall; a later search/re-score uses the restored frozen problem and current
+resource routing. Backend-specific validation admits integral union sizes above
+the v2 limits while checking candidate identity, baseline and evidence consistency.

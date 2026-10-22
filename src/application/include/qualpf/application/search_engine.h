@@ -12,6 +12,7 @@ namespace qualpf::application {
 class CandidateReader {
   public:
     virtual ~CandidateReader() = default;
+    virtual std::optional<CandidateReadStatistics> readStatistics() const { return {}; }
     virtual Result<std::vector<StoredCandidateIndex>> storedTop(const ExecutionContext &, SearchProgress) {
         return Result<std::vector<StoredCandidateIndex>>{Error{ErrorCode::unsupported, "search.stored_top",
             "Stored strongest index access is unavailable"}};

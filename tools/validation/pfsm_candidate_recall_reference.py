@@ -144,7 +144,7 @@ def main():
                     errors += [abs(result['intensity'][k]-float(value)),h*abs(result['derivative'][k]-float(gradient))]
             maximum=max(errors) if errors else None
             report['cases'].append(dict(id=f'derivative-h{h}-s{shift}',passed=maximum is not None and maximum<=2e-10,
-                maximum_error=maximum,stderr=run.stderr))
+                maximum_error=maximum,actual=result,stderr=run.stderr))
     report['passed']=all(c['passed'] for c in report['cases'])
     args.output.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     print(f"PFSM candidate recall (v2) independent reference: {sum(c['passed'] for c in report['cases'])}/{len(report['cases'])}")

@@ -172,6 +172,14 @@ template <> struct Tokens<PfsmCandidateRecallMode> {
 template <> struct Tokens<PfsmCandidateRecallVersion> {
     static constexpr std::array values{std::pair{PfsmCandidateRecallVersion::v2, "v2"}};
 };
+template <> struct Tokens<PfsmResourceFallback> {
+    static constexpr std::array values{std::pair{PfsmResourceFallback::bounded_integral, "bounded_integral"},
+        std::pair{PfsmResourceFallback::full_pool, "full_pool"}};
+};
+template <> struct Tokens<PfsmCandidateRecallBackend> {
+    static constexpr std::array values{std::pair{PfsmCandidateRecallBackend::v2, "v2"},
+        std::pair{PfsmCandidateRecallBackend::bounded_integral_relaxed, "bounded_integral_relaxed"}};
+};
 template <> struct Tokens<PfsmRirRevision::Radiation> {
     static constexpr std::array values{std::pair{PfsmRirRevision::Radiation::cu_kalpha, "cu_kalpha"}};
 };

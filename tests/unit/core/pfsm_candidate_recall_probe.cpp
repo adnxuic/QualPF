@@ -1,4 +1,5 @@
 #include "pfsm_sampling.h"
+#include "pfsm_work_report.h"
 #include "qualpf/profile/pfsm_candidate_recall.h"
 #include <iomanip>
 #include <iostream>
@@ -17,6 +18,7 @@ void fitJson(const PfsmCandidateRecallPhysicalFit &f) {
     vectorJson(f.parameters.scales);std::cout<<",\"shifts\":";vectorJson(f.parameters.shifts);std::cout<<'}';
 }
 int main(int argc,char **argv) try {
+    PfsmWorkReport workReport;
     const std::string mode=argc==2?argv[1]:"";
     const bool anchored=mode=="anchored" || mode=="anchored-cache";
     const bool physical=mode=="backprojection" || anchored;

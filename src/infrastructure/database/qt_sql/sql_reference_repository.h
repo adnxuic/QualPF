@@ -44,6 +44,7 @@ public:
     SqlReferenceRepository(QString scope, qualpf::infrastructure::ConnectionTrace trace,
                    std::unique_ptr<qualpf::infrastructure::DatabaseLease> lease = {});
     ~SqlReferenceRepository();
+    std::optional<application::CandidateReadStatistics> readStatistics() const override { return readStatistics_; }
     bool openDatabases(const QString &path, std::stop_token cancellation = {});
     void closeDatabeses();
     bool open(const std::string &path) override;
@@ -80,6 +81,7 @@ private:
     bool m_strictPairedReflections=false;
     QString m_readError;
     bool m_reading = false;
+    std::optional<application::CandidateReadStatistics> readStatistics_;
     QString basePath_;
     std::unique_ptr<qualpf::infrastructure::DatabaseLease> referenceLease_;
 

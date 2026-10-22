@@ -1,6 +1,7 @@
 #include "pfsm_sampling.h"
 #include "qualpf/profile/pfsm_candidate_recall.h"
 #include "pfsm_internal.h"
+#include <bit>
 
 namespace qualpf::profile {
 using detail::Matrix;
@@ -41,6 +42,9 @@ double stableGain(const Vector &r,const Vector &change) {
 }
 Vector physicalColumn(const PfsmCandidateRecallPhysicalProblem &p,const ProfileTemplate &profile,
                       double shift,const ExecutionContext &ctx) {
+    ProfileWorkTimer timer(&ProfileWorkStatistics::sampling_seconds);
+    detail::countWork(&detail::WorkCounters::physical_columns);
+    countProfileWork(&ProfileWorkStatistics::sample_buffers);
     auto samples=take(p.anchored ? evaluateProfilePairedSamples(profile,p.coordinates,shift,ctx)
                                  : profile->evaluate(p.coordinates,shift,false,ctx));
     if(samples.intensity.size()!=p.coordinates.size()) numerical("Unaligned physical template");
@@ -56,27 +60,62 @@ PfsmCandidateRecallPhysicalFit fallback(const PfsmCandidateRecallPhysicalRound &
     out.parameters.scales.push_back(0);out.parameters.shifts.push_back(candidateShift);
     return out;
 }
-PfsmCandidateRecallPhysicalFit fitPhysical(const PfsmCandidateRecallPhysicalRound &round,
+struct PhysicalSampleState {
+    std::vector<double> shifts;
+    Matrix columns, derivatives;
+    Vector model;
+};
+struct PhysicalFitState {
+    PfsmCandidateRecallPhysicalFit fit;
+    PhysicalSampleState samples;
+};
+PhysicalSampleState samplePhysicalState(const PfsmCandidateRecallPhysicalRound &round,
+    const std::vector<ProfileTemplate> &profiles,const std::vector<double> &shifts,const ExecutionContext &ctx) {
+    detail::checkpoint(ctx);
+    ProfileWorkTimer timer(&ProfileWorkStatistics::sampling_seconds);
+    countProfileWork(&ProfileWorkStatistics::sample_buffers);
+    const auto &physical=*round.physical;
+    PhysicalSampleState state;
+    state.shifts=shifts;
+    state.columns.resize(physical.z.size(),static_cast<Eigen::Index>(profiles.size()));
+    if(physical.anchored)state.derivatives.resize(state.columns.rows(),state.columns.cols());
+    for(std::size_t index=0;index<profiles.size();++index) {
+        const auto column=static_cast<Eigen::Index>(index);
+        if(index<physical.selected.size() && shifts[index]==physical.selected[index].shift) {
+            state.columns.col(column)=physical.baseline_columns.col(column);
+            if(physical.anchored)state.derivatives.col(column)=physical.baseline_derivatives.col(column);
+        } else if(physical.anchored) {
+            detail::countWork(&detail::WorkCounters::physical_columns);
+            auto samples=take(evaluateProfilePairedSamples(profiles[index],physical.coordinates,shifts[index],ctx));
+            if(samples.intensity.size()!=physical.coordinates.size())numerical("Unaligned physical template");
+            state.columns.col(column)=detail::vectorOf(samples.intensity).cwiseProduct(physical.sqrt_weights);
+            if(!state.columns.col(column).allFinite())numerical("Nonfinite physical template");
+            state.derivatives.col(column)=detail::vectorOf(samples.shift_derivative).cwiseProduct(physical.sqrt_weights)*round.recall.data->width;
+        } else {
+            state.columns.col(column)=physicalColumn(physical,profiles[index],shifts[index],ctx);
+        }
+    }
+    return state;
+}
+PhysicalFitState fitPhysicalState(const PfsmCandidateRecallPhysicalRound &round,
     const std::vector<ProfileTemplate> &profiles,const std::vector<double> &shifts,
     std::size_t &calls,std::size_t &iterations,detail::NnlsWorkspace &workspace,const ExecutionContext &ctx) {
     detail::checkpoint(ctx);const auto &p=*round.physical;
-    Matrix columns(p.z.size(),static_cast<Eigen::Index>(profiles.size()));
-    for(std::size_t j=0;j<profiles.size();++j) {
-        if(j<p.selected.size() && shifts[j]==p.selected[j].shift)
-            columns.col(static_cast<Eigen::Index>(j))=p.baseline_columns.col(static_cast<Eigen::Index>(j));
-        else columns.col(static_cast<Eigen::Index>(j))=physicalColumn(p,profiles[j],shifts[j],ctx);
-    }
+    PhysicalFitState state;
+    state.samples=samplePhysicalState(round,profiles,shifts,ctx);
+    const auto &columns=state.samples.columns;
     workspace.resize(columns.rows(),columns.cols());
     ++calls;auto solved=detail::nnls(columns,p.z,0,workspace,ctx);iterations+=solved.iterations;
-    PfsmCandidateRecallPhysicalFit out;out.parameters.scales=detail::valuesOf(solved.scales);out.parameters.shifts=shifts;
+    auto &out=state.fit;out.parameters.scales=detail::valuesOf(solved.scales);out.parameters.shifts=shifts;
     out.q=solved.residual.squaredNorm();out.kkt=solved.kkt;out.baseline_fallback=false;
     out.approximated=std::any_of(profiles.begin(),profiles.end(),[](const auto &v){return v->usesApproximation();});
-    const Vector model=columns*solved.scales;
+    state.samples.model=columns*solved.scales;
+    const auto &model=state.samples.model;
     out.gain=stableGain(p.residual,model-p.baseline_model);
     out.difference_gain=round.baseline_q-out.q;
     if(!std::isfinite(out.q) || std::abs(out.gain-out.difference_gain)>threshold(round.baseline_q,out.q,0))
         numerical("Physical gain identity failed");
-    return out;
+    return state;
 }
 } // namespace
 Result<PfsmCandidateRecallPhysicalRound> preparePfsmCandidateRecallPhysicalRound(
@@ -170,7 +209,7 @@ Result<PfsmCandidateRecallBackprojectionResult> fitPfsmCandidateRecallBackprojec
             shifts.push_back(largest>0?std::clamp(position/total,group.front(),group.back()):unchanged);
             offset+=group.size();
         }
-        trial.physical=fitPhysical(round,profiles,shifts,out.nnls_calls,out.nnls_iterations,workspace,ctx);
+        trial.physical=fitPhysicalState(round,profiles,shifts,out.nnls_calls,out.nnls_iterations,workspace,ctx).fit;
         if(trial.physical.gain>out.best.gain+threshold(round.baseline_q,trial.physical.q,out.best.q))
             out.best=trial.physical;
     }
@@ -178,30 +217,32 @@ Result<PfsmCandidateRecallBackprojectionResult> fitPfsmCandidateRecallBackprojec
 } catch(const detail::Failure &f) {return Result<PfsmCandidateRecallBackprojectionResult>{f.error};}
 
 namespace {
-struct LocalWorkspace { detail::NnlsWorkspace physical, linear; };
+struct LocalWorkspace {
+    detail::NnlsWorkspace physical, linear;
+    std::optional<PhysicalSampleState> current;
+    std::optional<Vector> best_column;
+};
 std::vector<ProfileTemplate> candidateProfiles(const PfsmCandidateRecallPhysicalRound &round,
-    const ProfileExpansionInput &input,const ExecutionContext &ctx) {
+    const ProfileExpansionInput &input,const ExecutionContext &ctx,const PreparedProfileTemplateHandle &prepared) {
     if(!round.physical || !round.recall.data)detail::fail("pfsm.fast.v2","Missing anchored round");
     if(!round.physical->anchored)detail::fail("pfsm.fast.v2","Anchored correction requires a v2 round");
     if(input.fwhm_degrees!=round.recall.data->width)detail::fail("pfsm.fast.v2","Anchored width mismatch");
     auto profiles=round.physical->profiles;
-    IntermediateLorentzianExpander expander;profiles.push_back(take(expander.prepare(input,ctx)));
+    detail::checkpoint(ctx);
+    IntermediateLorentzianExpander expander;
+    profiles.push_back(prepared && prepared->profile() && prepared->matches(input,ctx)
+        ? prepared->profile() : take(expander.prepare(input,ctx)));
     return profiles;
 }
-Matrix physicalColumns(const PfsmCandidateRecallPhysicalRound &round,const std::vector<ProfileTemplate> &profiles,
-                       const std::vector<double> &shifts,const ExecutionContext &ctx) {
-    const auto &p=*round.physical;Matrix a(p.z.size(),static_cast<Eigen::Index>(profiles.size()));
-    for(std::size_t j=0;j<profiles.size();++j) {
-        if(j<p.selected.size() && shifts[j]==p.selected[j].shift)
-            a.col(static_cast<Eigen::Index>(j))=p.baseline_columns.col(static_cast<Eigen::Index>(j));
-        else a.col(static_cast<Eigen::Index>(j))=physicalColumn(p,profiles[j],shifts[j],ctx);
-    }
-    return a;
+bool sameShifts(const std::vector<double> &left,const std::vector<double> &right) {
+    return left.size()==right.size() && std::equal(left.begin(),left.end(),right.begin(),
+        [](double first,double second){return std::bit_cast<std::uint64_t>(first)==std::bit_cast<std::uint64_t>(second);});
 }
 double correlationRisk(const PfsmCandidateRecallPhysicalRound &round,const ProfileTemplate &candidate,
-                       double shift,const ExecutionContext &ctx) {
+                       double shift,const std::optional<Vector> &saved,const ExecutionContext &ctx) {
+    detail::checkpoint(ctx);
     const auto &p=*round.physical;
-    const Vector a=physicalColumn(p,candidate,shift,ctx);
+    const Vector a=saved?*saved:physicalColumn(p,candidate,shift,ctx);
     const double norm=a.stableNorm();
     if(!(norm>0) || !std::isfinite(norm))numerical("Zero or nonfinite physical candidate");
     const Vector unit=a/norm;
@@ -211,17 +252,22 @@ double correlationRisk(const PfsmCandidateRecallPhysicalRound &round,const Profi
     return eta;
 }
 void consider(const PfsmCandidateRecallPhysicalRound &round,PfsmCandidateRecallCandidate &candidate,
-              const PfsmCandidateRecallPhysicalFit &fit) {
-    if(fit.gain>candidate.best.gain+threshold(round.baseline_q,fit.q,candidate.best.q))candidate.best=fit;
+              const PfsmCandidateRecallPhysicalFit &fit,const PhysicalSampleState &samples,LocalWorkspace &workspace) {
+    if(fit.gain>candidate.best.gain+threshold(round.baseline_q,fit.q,candidate.best.q)) {
+        candidate.best=fit;
+        workspace.best_column=samples.columns.col(samples.columns.cols()-1);
+    }
 }
 void initializeSeed(const PfsmCandidateRecallPhysicalRound &round,const std::vector<ProfileTemplate> &profiles,
                     PfsmCandidateRecallCandidate &candidate,PfsmCandidateRecallSeed &seed,LocalWorkspace &workspace,const ExecutionContext &ctx) {
     auto shifts=fallback(round,seed.initial_shift).parameters.shifts;
     if(candidate.nnls_calls>=PfsmCandidateRecallPolicy::total_calls)numerical("Fast NNLS call budget exhausted");
-    seed.current=fitPhysical(round,profiles,shifts,candidate.nnls_calls,candidate.nnls_iterations,workspace.physical,ctx);
+    auto fitted=fitPhysicalState(round,profiles,shifts,candidate.nnls_calls,candidate.nnls_iterations,workspace.physical,ctx);
+    seed.current=std::move(fitted.fit);
+    workspace.current=std::move(fitted.samples);
     if(seed.current.q>round.baseline_q+threshold(round.baseline_q,seed.current.q,0))
         numerical("Fixed-shift NNLS lost the feasible baseline");
-    seed.initial_fit=seed.current;seed.initialized=true;consider(round,candidate,seed.current);
+    seed.initial_fit=seed.current;seed.initialized=true;consider(round,candidate,seed.current,*workspace.current,workspace);
 }
 void anchoredStep(const PfsmCandidateRecallPhysicalRound &round,const std::vector<ProfileTemplate> &profiles,
                   PfsmCandidateRecallCandidate &candidate,PfsmCandidateRecallSeed &seed,LocalWorkspace &workspace,const ExecutionContext &ctx) {
@@ -231,33 +277,33 @@ void anchoredStep(const PfsmCandidateRecallPhysicalRound &round,const std::vecto
     if(!seed.initialized || seed.steps.size()>=PfsmCandidateRecallPolicy::steps ||
        candidate.nnls_calls+2>PfsmCandidateRecallPolicy::total_calls)numerical("Fast local step budget exhausted");
     const auto &shifts=seed.current.parameters.shifts;
-    Matrix a=physicalColumns(round,profiles,shifts,ctx);
-    Matrix derivative(a.rows(),a.cols());
-    for(std::size_t j=0;j<m;++j) {
-        if(j<p.selected.size() && shifts[j]==p.selected[j].shift && p.baseline_derivatives.cols()==a.cols()-1)
-            derivative.col(static_cast<Eigen::Index>(j))=p.baseline_derivatives.col(static_cast<Eigen::Index>(j));
-        else {
-            auto samples=take(evaluateProfilePairedSamples(profiles[j],p.coordinates,shifts[j],ctx));
-            a.col(static_cast<Eigen::Index>(j))=detail::vectorOf(samples.intensity).cwiseProduct(p.sqrt_weights);
-            derivative.col(static_cast<Eigen::Index>(j))=detail::vectorOf(samples.shift_derivative).cwiseProduct(p.sqrt_weights)*data.width;
-        }
+    if(!workspace.current || !sameShifts(workspace.current->shifts,shifts)) {
+        workspace.current=samplePhysicalState(round,profiles,shifts,ctx);
+        workspace.current->model=workspace.current->columns*detail::vectorOf(seed.current.parameters.scales);
     }
+    const auto &a=workspace.current->columns;
+    const auto &derivative=workspace.current->derivatives;
     if(!derivative.allFinite())numerical("Nonfinite anchored derivative");
-    std::vector<std::pair<double,double>> bounds;std::vector<Vector> dictionary;
-    for(std::size_t j=0;j<m;++j) {
-        const double lower=std::max(-seed.radius,(data.lower_shift-shifts[j])/data.width);
-        const double upper=std::min(seed.radius,(data.upper_shift-shifts[j])/data.width);
-        if(lower>upper || lower>0 || upper<0)numerical("Current shift outside local feasible interval");
-        bounds.emplace_back(lower,upper);
-        dictionary.push_back(a.col(static_cast<Eigen::Index>(j))+lower*derivative.col(static_cast<Eigen::Index>(j)));
-        if(lower!=upper)dictionary.push_back(a.col(static_cast<Eigen::Index>(j))+upper*derivative.col(static_cast<Eigen::Index>(j)));
+    std::vector<std::pair<double,double>> bounds;
+    Matrix linear;
+    {
+        std::vector<Vector> dictionary;
+        for(std::size_t j=0;j<m;++j) {
+            const double lower=std::max(-seed.radius,(data.lower_shift-shifts[j])/data.width);
+            const double upper=std::min(seed.radius,(data.upper_shift-shifts[j])/data.width);
+            if(lower>upper || lower>0 || upper<0)numerical("Current shift outside local feasible interval");
+            bounds.emplace_back(lower,upper);
+            dictionary.push_back(a.col(static_cast<Eigen::Index>(j))+lower*derivative.col(static_cast<Eigen::Index>(j)));
+            if(lower!=upper)dictionary.push_back(a.col(static_cast<Eigen::Index>(j))+upper*derivative.col(static_cast<Eigen::Index>(j)));
+        }
+        linear.resize(a.rows(),static_cast<Eigen::Index>(dictionary.size()));
+        for(std::size_t j=0;j<dictionary.size();++j)linear.col(static_cast<Eigen::Index>(j))=dictionary[j];
     }
-    Matrix linear(a.rows(),static_cast<Eigen::Index>(dictionary.size()));
-    for(std::size_t j=0;j<dictionary.size();++j)linear.col(static_cast<Eigen::Index>(j))=dictionary[j];
+    // The copied dictionary is dead before NNLS allocates its private workspace.
     workspace.linear.resize(linear.rows(),linear.cols());
     ++candidate.nnls_calls;
     const auto solved=detail::nnls(linear,p.z,0,workspace.linear,ctx);candidate.nnls_iterations+=solved.iterations;
-    const Vector model=a*detail::vectorOf(seed.current.parameters.scales);
+    const auto &model=workspace.current->model;
     const Vector residual=p.z-model;
     PfsmCandidateRecallStep step;step.radius=seed.radius;step.anchor=seed.current.parameters;
     step.linear_coefficients=detail::valuesOf(solved.scales);
@@ -275,9 +321,13 @@ void anchoredStep(const PfsmCandidateRecallPhysicalRound &round,const std::vecto
         }
         trialShifts[j]=std::clamp(shifts[j]+data.width*localSteps[j],data.lower_shift,data.upper_shift);
     }
-    step.physical=fitPhysical(round,profiles,trialShifts,candidate.nnls_calls,candidate.nnls_iterations,workspace.physical,ctx);
-    const Matrix trialColumns=physicalColumns(round,profiles,trialShifts,ctx);
-    const Vector trialModel=trialColumns*detail::vectorOf(step.physical.parameters.scales);
+    // Coefficients, prediction and trial shifts own everything needed below.
+    // Release the dead linear matrix before allocating the physical trial state.
+    linear.resize(0,0);
+    auto trial=fitPhysicalState(round,profiles,trialShifts,candidate.nnls_calls,candidate.nnls_iterations,workspace.physical,ctx);
+    step.physical=std::move(trial.fit);
+    const auto &trialColumns=trial.samples.columns;
+    const auto &trialModel=trial.samples.model;
     step.actual=stableGain(residual,trialModel-model);
     step.distortion=std::abs(step.predicted-step.actual);
     if(step.predicted>0)step.ratio=step.actual/step.predicted;
@@ -298,14 +348,18 @@ void anchoredStep(const PfsmCandidateRecallPhysicalRound &round,const std::vecto
             step.local_boundary=true;
     }
     candidate.maximum_distortion=std::max(candidate.maximum_distortion,step.distortion);
-    consider(round,candidate,step.physical);
-    if(step.accepted)seed.current=step.physical;else seed.radius*=.5;
+    consider(round,candidate,step.physical,trial.samples,workspace);
+    if(step.accepted) {
+        seed.current=step.physical;
+        workspace.current=std::move(trial.samples);
+    } else seed.radius*=.5;
     seed.steps.push_back(std::move(step));
 }
 } // namespace
 
 Result<PfsmCandidateRecallCandidate> evaluatePfsmCandidateRecallInitial(const PfsmCandidateRecallPhysicalRound &round,
-    const ProfileExpansionInput &input,const PfsmCandidateRecallEvidence &recall,const ExecutionContext &ctx) {
+    const ProfileExpansionInput &input,const PfsmCandidateRecallEvidence &recall,const ExecutionContext &ctx,
+    PreparedProfileTemplateHandle prepared) {
     PfsmCandidateRecallCandidate out;out.recall=recall;out.numerical_protection=recall.protection_reason;
     try {
         detail::checkpoint(ctx);
@@ -323,14 +377,14 @@ Result<PfsmCandidateRecallCandidate> evaluatePfsmCandidateRecallInitial(const Pf
             for(std::size_t j=0;j<i;++j)if(std::abs(out.seeds[i]-out.seeds[j])<d.width/4)
                 detail::fail("pfsm.fast.v2","Unseparated frozen seeds");
         }
-        auto profiles=candidateProfiles(round,input,ctx);
+        auto profiles=candidateProfiles(round,input,ctx,prepared);
         LocalWorkspace workspace;
         out.starts.push_back({});out.starts.back().initial_shift=out.seeds.front();
         out.initialized=true;
         initializeSeed(round,profiles,out,out.starts.back(),workspace,ctx);
         anchoredStep(round,profiles,out,out.starts.back(),workspace,ctx);
         out.initial_gain=out.best.gain;
-        out.initial_eta=out.eta=correlationRisk(round,profiles.back(),out.best.parameters.shifts.back(),ctx);
+        out.initial_eta=out.eta=correlationRisk(round,profiles.back(),out.best.parameters.shifts.back(),workspace.best_column,ctx);
     } catch(const detail::Failure &f) {
         if(f.error.code!=ErrorCode::numerical_failure)return Result<PfsmCandidateRecallCandidate>{f.error};
         out.numerical_protection=f.error.message;
@@ -338,7 +392,8 @@ Result<PfsmCandidateRecallCandidate> evaluatePfsmCandidateRecallInitial(const Pf
     return Result<PfsmCandidateRecallCandidate>{std::move(out)};
 }
 Result<PfsmCandidateRecallCandidate> reviewPfsmCandidateRecall(const PfsmCandidateRecallPhysicalRound &round,
-    const ProfileExpansionInput &input,PfsmCandidateRecallCandidate out,const ExecutionContext &ctx) {
+    const ProfileExpansionInput &input,PfsmCandidateRecallCandidate out,const ExecutionContext &ctx,
+    PreparedProfileTemplateHandle prepared) {
     try {
         detail::checkpoint(ctx);
         if(out.reviewed)detail::fail("pfsm.fast.v2","Repeated candidate review");
@@ -346,7 +401,7 @@ Result<PfsmCandidateRecallCandidate> reviewPfsmCandidateRecall(const PfsmCandida
         if(!out.numerical_protection.empty())return Result<PfsmCandidateRecallCandidate>{std::move(out)};
         if(!out.initialized || out.starts.size()!=1 || out.starts.front().steps.size()!=1)
             detail::fail("pfsm.fast.v2","Review requires one completed initial step");
-        auto profiles=candidateProfiles(round,input,ctx);
+        auto profiles=candidateProfiles(round,input,ctx,prepared);
         LocalWorkspace workspace;
         anchoredStep(round,profiles,out,out.starts.front(),workspace,ctx);
         for(std::size_t i=1;i<out.seeds.size();++i) {
@@ -354,7 +409,7 @@ Result<PfsmCandidateRecallCandidate> reviewPfsmCandidateRecall(const PfsmCandida
             initializeSeed(round,profiles,out,seed,workspace,ctx);
             anchoredStep(round,profiles,out,seed,workspace,ctx);anchoredStep(round,profiles,out,seed,workspace,ctx);
         }
-        out.eta=correlationRisk(round,profiles.back(),out.best.parameters.shifts.back(),ctx);
+        out.eta=correlationRisk(round,profiles.back(),out.best.parameters.shifts.back(),workspace.best_column,ctx);
     } catch(const detail::Failure &f) {
         if(f.error.code!=ErrorCode::numerical_failure)return Result<PfsmCandidateRecallCandidate>{f.error};
         out.numerical_protection=f.error.message;

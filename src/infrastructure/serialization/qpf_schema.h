@@ -165,6 +165,7 @@ MODEL(CsmSettings, "csm_settings",
                   FIELD("strongest", strongest) FIELD("exclude_deleted", exclude_deleted)
                       FIELD("maximum_entries", maximum_entries))
 MODEL(PfsmSettings, "pfsm_settings",
+      a.extension("candidate_recall_resource_fallback", v.candidate_recall_resource_fallback);
       FIELD("lower_shift", lower_shift) FIELD("upper_shift", upper_shift)
           FIELD("minimum_relative_fom", minimum_relative_fom) FIELD("weighting", weighting)
               FIELD("threads", threads) FIELD("template_cache", template_cache)
@@ -264,6 +265,7 @@ MODEL(PfsmCandidateRecallLimits, "pfsm_candidate_recall_limits",
           FIELD("protected_per_channel", protected_per_channel) FIELD("review_limit", review_limit)
               FIELD("formal_limit", formal_limit))
 MODEL(PfsmCandidateRecallConfiguration, "pfsm_candidate_recall_configuration",
+      a.extension("resource_fallback", v.resource_fallback);
       FIELD("mode", mode) FIELD("version", version) FIELD("limits", limits))
 MODEL(PfsmProblem, "pfsm_problem",
       FIELD("background_points", background_points) FIELD("observations", observations)
@@ -319,6 +321,8 @@ MODEL(PfsmCandidateRecallSelection, "pfsm_candidate_recall_selection",
                   FIELD("retained", retained) FIELD("review_skipped", review_skipped)
                       FIELD("full_fallback", full_fallback) FIELD("fallback_reason", fallback_reason))
 MODEL(PfsmCandidateRecallReport, "pfsm_candidate_recall_report",
+      a.extension("backend", v.backend); a.extension("switch_reason", v.switch_reason);
+      a.extension("integral", v.integral);
       FIELD("algorithm_version", algorithm_version) FIELD("limits", limits) FIELD("selection", selection)
           FIELD("refinement_candidates", refinement_candidates) FIELD("generation", generation)
               FIELD("baseline_version", baseline_version) FIELD("pool_size", pool_size)
@@ -331,6 +335,45 @@ MODEL(PfsmCandidateRecallReport, "pfsm_candidate_recall_report",
                                           FIELD("top5_indices", top5_indices)
                                               FIELD("recall_top5_retained", recall_top5_retained)
                                                   FIELD("final_top5_retained", final_top5_retained))
+MODEL(PfsmIntegralOptions, "pfsm_integral_options",
+      FIELD("version", version) FIELD("fine_bins", fine_bins) FIELD("coarse_positions", coarse_positions)
+      FIELD("neighborhoods", neighborhoods) FIELD("fine_positions", fine_positions) FIELD("fine_budget", fine_budget)
+      FIELD("coarse_budget", coarse_budget) FIELD("original_budget", original_budget) FIELD("residual_budget", residual_budget)
+      FIELD("tail_mass_epsilon", tail_mass_epsilon))
+MODEL(PfsmRelaxedOptions, "pfsm_relaxed_options",
+      FIELD("version", version) FIELD("radius_widths", radius_widths) FIELD("maximum_span_fraction", maximum_span_fraction)
+      FIELD("old_coordinates", old_coordinates) FIELD("bank_positions", bank_positions) FIELD("starts", starts)
+      FIELD("stages", stages) FIELD("maximum_evaluations", maximum_evaluations) FIELD("candidate_cache", candidate_cache)
+      FIELD("budget", budget))
+MODEL(PfsmSupportEvidence, "pfsm_integral_support",
+      FIELD("score", score) FIELD("shift", shift) FIELD("visible_fraction", visible_fraction)
+      FIELD("edge_fraction", edge_fraction) FIELD("visible_groups", visible_groups) FIELD("uncertain", uncertain))
+MODEL(PfsmRelaxedPoint, "pfsm_relaxed_point", FIELD("q", q) FIELD("shifts", shifts) FIELD("scales", scales))
+MODEL(PfsmRelaxedEvidence, "pfsm_relaxed_evidence",
+      FIELD("best", best) FIELD("null", null) FIELD("fixed_q", fixed_q) FIELD("gain", gain) FIELD("kkt", kkt)
+      FIELD("released", released) FIELD("evaluations", evaluations) FIELD("iterations", iterations)
+      FIELD("cache_columns", cache_columns) FIELD("cache_bytes", cache_bytes) FIELD("buffer_bytes", buffer_bytes)
+      FIELD("uncertainty", uncertainty) FIELD("complete", complete) FIELD("selected", selected))
+MODEL(PfsmScreenEvidence, "pfsm_integral_evidence",
+      FIELD("original_index", original_index) FIELD("gain", gain) FIELD("normalized_gain", normalized_gain)
+      FIELD("coarse_shift", coarse_shift) FIELD("original", original) FIELD("residual", residual)
+      FIELD("uncertainty", uncertainty) FIELD("nnls_iterations", nnls_iterations) FIELD("scan_evaluations", scan_evaluations)
+      FIELD("main_selected", main_selected) FIELD("original_selected", original_selected)
+      FIELD("residual_selected", residual_selected) FIELD("retained", retained)
+      FIELD("fine_gain", fine_gain) FIELD("normalized_fine_gain", normalized_fine_gain) FIELD("fine_shift", fine_shift)
+      FIELD("coarse_evaluations", coarse_evaluations) FIELD("fine_evaluations", fine_evaluations)
+      FIELD("buffer_bytes", buffer_bytes) FIELD("coarse_selected", coarse_selected)
+      FIELD("integral_complete", integral_complete) FIELD("relaxed", relaxed))
+MODEL(PfsmIntegralRecallReport, "pfsm_integral_recall_report",
+      FIELD("baseline_shifts", baseline_shifts)
+      FIELD("options", options) FIELD("relaxed_options", relaxed_options)
+      FIELD("fine_bins", fine_bins) FIELD("coarse_bins", coarse_bins) FIELD("bank_columns", bank_columns)
+      FIELD("peak_buffer_bytes", peak_buffer_bytes) FIELD("coarse_evaluations", coarse_evaluations)
+      FIELD("fine_evaluations", fine_evaluations) FIELD("relaxed_evaluations", relaxed_evaluations)
+      FIELD("coarse_baseline_q", coarse_baseline_q) FIELD("fine_baseline_q", fine_baseline_q)
+      FIELD("fine_denominator", fine_denominator) FIELD("tau", tau) FIELD("relaxation_radius", relaxation_radius)
+      FIELD("shared_seconds", shared_seconds) FIELD("integral_seconds", integral_seconds)
+      FIELD("relaxed_seconds", relaxed_seconds) FIELD("candidates", candidates))
 MODEL(PfsmQuantificationLibrary, "pfsm_quantification_library", FIELD("references", references))
 MODEL(PfsmAnalysis, "pfsm_analysis",
       FIELD("query", query) FIELD("problem", problem) FIELD("universe", universe)

@@ -78,6 +78,9 @@ add_library(qualpf_core STATIC
     profile/pfsm_candidate_recall_selection.cpp
     profile/pfsm_candidate_recall_refinement.cpp
     profile/pfsm_candidate_recall_correlation.cpp
+    profile/pfsm_integral_data.cpp
+    profile/pfsm_integral_screen.cpp
+    profile/pfsm_relaxed_screen.cpp
     profile/pfsm_expansion.cpp
     profile/pfsm_simd.cpp
     profile/pfsm_nnls.cpp
@@ -98,6 +101,11 @@ if(QUALPF_PFSM_AVX2 AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(AMD64|amd64|x86_64)$")
     endif()
 endif()
 target_compile_features(qualpf_core PUBLIC cxx_std_20)
+if(MSVC)
+    set_source_files_properties(profile/pfsm_integral_data.cpp profile/pfsm_integral_screen.cpp profile/pfsm_relaxed_screen.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
+else()
+    set_source_files_properties(profile/pfsm_integral_data.cpp profile/pfsm_integral_screen.cpp profile/pfsm_relaxed_screen.cpp PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")
+endif()
 if(MSVC)
     set_source_files_properties(profile/pfsm_candidate_recall_selection.cpp profile/pfsm_candidate_recall_refinement.cpp profile/pfsm_candidate_recall_correlation.cpp profile/pfsm_expansion.cpp profile/pfsm_nnls.cpp profile/pfsm_fitting.cpp profile/pfsm_trf.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 else()

@@ -17,6 +17,74 @@ bool sameRadiation(const Radiation &a, const Radiation &b) {
             return false;
     return true;
 }
+bool validIntegralRecall(const PfsmCandidateRecallReport &r, const PfsmProblem &p, std::size_t oldCount) {
+    if (p.candidate_recall.resource_fallback != PfsmResourceFallback::bounded_integral ||
+        !r.integral || r.selection || !r.refinement_candidates.empty() ||
+        (r.switch_reason != "candidate_recall_grid_limit" && r.switch_reason != "candidate_recall_scan_limit")) return false;
+    const auto &d = *r.integral;
+    if (!profile::validatePfsmIntegralOptions(d.options) || !profile::validatePfsmRelaxedOptions(d.relaxed_options)) return false;
+    for (double v : {d.coarse_baseline_q, d.fine_baseline_q, d.fine_denominator, d.tau, d.relaxation_radius,
+                     d.shared_seconds, d.integral_seconds, d.relaxed_seconds})
+        if (!std::isfinite(v) || v < 0) return false;
+    if (d.baseline_shifts.size() != oldCount) return false;
+    for (double shift : d.baseline_shifts) if (!std::isfinite(shift) || shift < p.lower_shift || shift > p.upper_shift) return false;
+    if (r.full_fallback) return d.candidates.empty() && r.candidates.empty();
+    if (!d.fine_bins || d.fine_bins > 2048 || d.coarse_bins != (d.fine_bins + 1) / 2 ||
+        !(d.fine_denominator > 0) || d.bank_columns > 257 * oldCount ||
+        d.relaxation_radius != std::min(1.5 * p.physical_width->width.value, .5 * (p.upper_shift - p.lower_shift)) ||
+        d.fine_baseline_q != r.local_baseline_q || d.candidates.size() != r.pool_size ||
+        d.candidates.size() != r.candidates.size() || r.recalled_indices != r.retained_indices) return false;
+    std::size_t coarse = 0, fine = 0, evaluations = 0;
+    const auto point = [&](const profile::PfsmRelaxedPoint &v, std::size_t count) {
+        if (!std::isfinite(v.q) || v.q < 0 || v.scales.size() != count || v.shifts.size() != count) return false;
+        for (auto s : v.scales) if (!std::isfinite(s) || s < 0) return false;
+        for (auto s : v.shifts) if (!std::isfinite(s) || s < p.lower_shift || s > p.upper_shift) return false;
+        for (std::size_t j=0;j<oldCount;++j)
+            if (v.shifts[j] < std::max(p.lower_shift,d.baseline_shifts[j]-d.relaxation_radius) ||
+                v.shifts[j] > std::min(p.upper_shift,d.baseline_shifts[j]+d.relaxation_radius)) return false;
+        return true;
+    };
+    for (std::size_t i = 0; i < d.candidates.size(); ++i) {
+        const auto &e = d.candidates[i]; const auto &common = r.candidates[i]; const auto &v = e.relaxed;
+        if (e.original_index != common.original_index || e.retained != common.retained ||
+            common.original_score != e.original.score || common.residual_score != e.residual.score ||
+            common.original_shift != e.original.shift || common.residual_shift != e.residual.shift ||
+            common.nnls_iterations != e.nnls_iterations ||
+            common.protection_reason != (e.uncertainty.empty() ? "" : e.uncertainty.front()) ||
+            e.coarse_evaluations > 66 || e.fine_evaluations > 32 ||
+            e.scan_evaluations != e.coarse_evaluations + e.fine_evaluations ||
+            v.evaluations > 205 || v.cache_columns > 32 || v.released.size() > 2 ||
+            !std::is_sorted(v.released.begin(), v.released.end()) ||
+            std::adjacent_find(v.released.begin(), v.released.end()) != v.released.end()) return false;
+        for (auto j : v.released) if (j >= oldCount) return false;
+        for (auto value : {e.gain, e.normalized_gain, e.fine_gain, e.normalized_fine_gain})
+            if (value && (!std::isfinite(*value) || *value < 0)) return false;
+        for (double value : {e.coarse_shift, e.fine_shift})
+            if (!std::isfinite(value) || (e.integral_complete && (value < p.lower_shift || value > p.upper_shift))) return false;
+        for (const auto *support : {&e.original, &e.residual}) {
+            if (!std::isfinite(support->visible_fraction) || support->visible_fraction < 0 || support->visible_fraction > 1 ||
+                !std::isfinite(support->edge_fraction) || support->edge_fraction < 0 || support->edge_fraction > 1) return false;
+        }
+        for (double value : {v.fixed_q, v.gain, v.kkt}) if (!std::isfinite(value) || value < 0) return false;
+        if (v.complete && (!point(v.best, oldCount + 1) || !point(v.null, oldCount) ||
+            v.gain != std::max(0.,v.null.q-v.best.q)/d.fine_denominator)) return false;
+        if ((!e.integral_complete || !v.complete || !v.uncertainty.empty()) && e.uncertainty.empty()) return false;
+        coarse += e.coarse_evaluations; fine += e.fine_evaluations; evaluations += v.evaluations;
+    }
+    if (coarse != d.coarse_evaluations || fine != d.fine_evaluations || evaluations != d.relaxed_evaluations) return false;
+    auto rows = d.candidates;
+    const ExecutionContext context{{}, NumericalPolicy::explicit_float64, {}};
+    if (!profile::selectPfsmIntegralCandidates(rows, d.options, context)) return false;
+    auto selection = profile::selectPfsmRelaxedCandidates(rows, d.relaxed_options, context);
+    if (!selection || selection.value().indices != r.retained_indices) return false;
+    for (std::size_t i = 0; i < rows.size(); ++i) {
+        const auto &a = rows[i], &b = d.candidates[i];
+        if (a.main_selected != b.main_selected || a.coarse_selected != b.coarse_selected ||
+            a.original_selected != b.original_selected || a.residual_selected != b.residual_selected ||
+            a.relaxed.selected != b.relaxed.selected) return false;
+    }
+    return true;
+}
 bool sameBackground(const std::optional<SampledSignal> &a, const std::optional<SampledSignal> &b) {
     return bool(a) == bool(b) && (!a || (a->values == b->values && bool(a->window) == bool(b->window) &&
                                          (!a->window || a->window->first == b->window->first)));
@@ -76,22 +144,32 @@ Status validatePfsmState(const ProductState &state) {
     const auto mode = analysis.problem->candidate_recall.mode;
     const auto version = analysis.problem->candidate_recall.version;
     const auto &limits = analysis.problem->candidate_recall.limits;
+    if (analysis.problem->candidate_recall.resource_fallback != PfsmResourceFallback::bounded_integral &&
+        analysis.problem->candidate_recall.resource_fallback != PfsmResourceFallback::full_pool) return error();
     if (!profile::validatePfsmCandidateRecallLimits(limits)) return error();
     if (version != PfsmCandidateRecallVersion::v2) return error();
     if (mode != PfsmCandidateRecallMode::off && mode != PfsmCandidateRecallMode::shadow && mode != PfsmCandidateRecallMode::enabled)
         return error();
-    if (mode == PfsmCandidateRecallMode::off && (analysis.candidate_recall_data || !analysis.candidate_recall_reports.empty() ||
+    if (mode == PfsmCandidateRecallMode::off && (analysis.candidate_recall_data || analysis.integral_recall_data || !analysis.candidate_recall_reports.empty() ||
         !analysis.normalization_over_full_pool)) return error();
     if (mode != PfsmCandidateRecallMode::enabled && !analysis.normalization_over_full_pool) return error();
     if (analysis.candidate_recall_data && (analysis.candidate_recall_data->observations != analysis.problem->observations ||
         analysis.candidate_recall_data->width != analysis.problem->physical_width->width.value ||
         analysis.candidate_recall_data->lower_shift != analysis.problem->lower_shift ||
         analysis.candidate_recall_data->upper_shift != analysis.problem->upper_shift)) return error();
+    if (analysis.integral_recall_data && (analysis.candidate_recall_data ||
+        analysis.integral_recall_data->original != analysis.problem->observations ||
+        analysis.integral_recall_data->width != analysis.problem->physical_width->width.value ||
+        !profile::validatePfsmIntegralOptions(analysis.integral_recall_data->options))) return error();
     std::set<std::size_t> universe;
     for (std::size_t i = 0; mode != PfsmCandidateRecallMode::off && i < analysis.universe->size(); ++i)
         if (std::none_of(analysis.selected.begin(), analysis.selected.end(),
             [&](const auto &p) { return p.identity == (*analysis.universe)[i].id; })) universe.insert(i);
     for (const auto &r : analysis.candidate_recall_reports) {
+        if (r.backend == PfsmCandidateRecallBackend::bounded_integral_relaxed) {
+            if (!validIntegralRecall(r, *analysis.problem, analysis.selected.size()) || r.baseline_version > 2 ||
+                (!r.discarded && r.integral->baseline_shifts != analysis.baseline.parameters.shifts)) return error();
+        } else if (r.backend != PfsmCandidateRecallBackend::v2 || r.integral || !r.switch_reason.empty()) return error();
         if (r.algorithm_version != version || r.limits != limits) return error();
         if (r.generation != analysis.generation || r.pool_size != universe.size() ||
             !std::isfinite(r.formal_baseline_q) || r.formal_baseline_q < 0 ||
@@ -158,7 +236,7 @@ Status validatePfsmState(const ProductState &state) {
                             !std::isfinite(step.physical.q) || (step.ratio && !std::isfinite(*step.ratio))) return error();
                 }
             }
-        } else if (!r.full_fallback || !r.refinement_candidates.empty()) return error();
+        } else if (r.backend == PfsmCandidateRecallBackend::v2 && (!r.full_fallback || !r.refinement_candidates.empty())) return error();
     }
     if (mode != PfsmCandidateRecallMode::off && (analysis.candidate_recall_reports.empty() || analysis.candidate_recall_reports.back().discarded ||
         analysis.candidate_recall_reports.back().formal_baseline_q != analysis.baseline.q)) return error();

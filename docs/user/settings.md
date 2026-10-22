@@ -18,6 +18,15 @@ half-height crossings. It does not call the separate SG initial-peak module, so
 these SG parameters do not affect automatic geometric FWHM; the page states this
 explicitly.
 
+**Setting → PFSM → Profile Expansion** enables template caching by default.
+During fitting iterations, cached interpolation reduces repeated profile
+calculations and can speed up searches. Cache preparation takes time and uses
+extra memory, so small searches may not benefit. Final fits always use direct
+profile evaluation for verification. Turning caching off evaluates profiles
+directly throughout fitting and avoids interpolation and its cache overhead,
+but repeated calculations can make searches slower. Existing saved choices and
+project settings are preserved; **Restore Page Defaults** enables the cache.
+
 Each **Options** entry opens its established independent dialog, with its original
 controls, tabs, preview and buttons. CSM retains its weight sliders; PFSM retains
 General and Candidate Recall; Initial Peak Search retains Settings and Initial

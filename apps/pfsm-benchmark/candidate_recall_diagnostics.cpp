@@ -16,6 +16,39 @@ QJsonObject pfsmCandidateRecallLimitsJson(const PfsmCandidateRecallLimits &limit
         {"protected_per_channel",limits.protected_per_channel},{"review_limit",limits.review_limit},
         {"formal_limit",limits.formal_limit}};
 }
+QJsonObject pfsmIntegralRecallReportJson(const qualpf::application::PfsmIntegralRecallReport &d) {
+    return {{"source_revision", "3fa1123a16ab746f80f946dea55f4b9f5b633e48"}, {"implementation", "baseline"},
+        {"baseline_shifts",numbers(d.baseline_shifts)}, {"fine_bins",qint64(d.fine_bins)}, {"coarse_bins",qint64(d.coarse_bins)}, {"bank_columns",qint64(d.bank_columns)},
+        {"peak_buffer_bytes",qint64(d.peak_buffer_bytes)}, {"coarse_evaluations",qint64(d.coarse_evaluations)},
+        {"fine_evaluations",qint64(d.fine_evaluations)}, {"relaxed_evaluations",qint64(d.relaxed_evaluations)},
+        {"coarse_baseline_q",d.coarse_baseline_q}, {"fine_baseline_q",d.fine_baseline_q},
+        {"fine_denominator",d.fine_denominator}, {"tau",d.tau}, {"relaxation_radius",d.relaxation_radius},
+        {"shared_seconds",d.shared_seconds}, {"integral_seconds",d.integral_seconds}, {"relaxed_seconds",d.relaxed_seconds},
+        {"fine_budget",qint64(d.options.fine_budget)}, {"coarse_budget",qint64(d.options.coarse_budget)},
+        {"original_budget",qint64(d.options.original_budget)}, {"residual_budget",qint64(d.options.residual_budget)},
+        {"relaxed_budget",qint64(d.relaxed_options.budget)}, {"nnls_limit",qint64(d.relaxed_options.maximum_evaluations)},
+        {"tail_mass_epsilon",d.options.tail_mass_epsilon}};
+}
+QJsonObject pfsmIntegralRecallCandidateJson(const PfsmScreenEvidence &e) {
+    const auto &v=e.relaxed;
+    QJsonObject out{{"coarse_shift",e.coarse_shift},{"fine_shift",e.fine_shift},
+        {"coarse_evaluations",qint64(e.coarse_evaluations)},{"fine_evaluations",qint64(e.fine_evaluations)},
+        {"integral_complete",e.integral_complete},{"uncertainty",strings(e.uncertainty)},
+        {"fine_selected",e.main_selected},{"coarse_selected",e.coarse_selected},
+        {"original_selected",e.original_selected},{"residual_selected",e.residual_selected},
+        {"relaxed_selected",v.selected},{"relaxed_complete",v.complete},{"relaxed_uncertainty",QString::fromStdString(v.uncertainty)},
+        {"relaxed_gain",v.gain},{"relaxed_fixed_q",v.fixed_q},{"relaxed_best_q",v.best.q},{"relaxed_null_q",v.null.q},
+        {"relaxed_best_shifts",numbers(v.best.shifts)},{"relaxed_best_scales",numbers(v.best.scales)},
+        {"relaxed_null_shifts",numbers(v.null.shifts)},{"relaxed_null_scales",numbers(v.null.scales)},
+        {"released",indices(v.released)},{"relaxed_evaluations",qint64(v.evaluations)},
+        {"relaxed_kkt",v.kkt},{"candidate_cache_columns",qint64(v.cache_columns)},
+        {"candidate_cache_bytes",qint64(v.cache_bytes)},{"buffer_bytes",qint64(e.buffer_bytes+v.buffer_bytes)}};
+    if(e.gain)out["coarse_gain"]=*e.gain;
+    if(e.normalized_gain)out["normalized_coarse_gain"]=*e.normalized_gain;
+    if(e.fine_gain)out["fine_gain"]=*e.fine_gain;
+    if(e.normalized_fine_gain)out["normalized_fine_gain"]=*e.normalized_fine_gain;
+    return out;
+}
 QJsonObject pfsmCandidateRecallCandidateJson(const PfsmCandidateRecallCandidate &c) {
     QJsonObject out{{"original_index",qint64(c.recall.original_index)},
         {"initialized",c.initialized},{"reviewed",c.reviewed},{"seeds",numbers(c.seeds)},

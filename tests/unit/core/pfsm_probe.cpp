@@ -1,10 +1,12 @@
 // Text-only numerical probe for independent Python/SciPy comparison.
 #include "qualpf/profile/pfsm.h"
+#include "pfsm_work_report.h"
 #include <iomanip>
 #include <iostream>
 using namespace qualpf;
 using namespace qualpf::profile;
 int main(int argc, char **argv) {
+    PfsmWorkReport workReport;
     const bool cache = argc == 2 && std::string_view(argv[1]) == "--template-cache";
     if (argc > 1 && !cache)
         return 2;

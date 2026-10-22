@@ -50,6 +50,11 @@ Result<PfsmCandidateRecallRound> preparePfsmCandidateRecallRound(std::shared_ptr
     bool prepareLocalDictionary = true);
 Result<PfsmCandidateRecallEvidence> scorePfsmCandidateRecallCandidate(const PfsmCandidateRecallRound &, const ProfileExpansionInput &,
     std::size_t originalIndex, const ExecutionContext &, bool collectSeeds = false);
+// Recall-only stable ordering/merging. Never use these lines for formal fitting.
+Result<std::vector<ProfileLine>> preparePfsmRecallReference(const ProfileExpansionInput &, const ExecutionContext &);
+Result<PfsmCandidateRecallEvidence> scorePreparedPfsmRecallReference(const PfsmCandidateRecallRound &,
+    std::span<const ProfileLine>, double width, std::size_t originalIndex, const ExecutionContext &,
+    bool collectSeeds = false);
 // Deterministic original-library indices, with all cutoff ties and protected rows.
 // The caller validates limits before entering selection.
 std::vector<std::size_t> selectPfsmRecallCandidates(std::vector<PfsmCandidateRecallEvidence> &,

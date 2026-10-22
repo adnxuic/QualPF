@@ -188,6 +188,16 @@ python -B tools/validation/check_project_baseline.py --self-test
 python -B tools/validation/check_product_identity.py --self-test
 ```
 
+## Local build storage
+
+Retired task-build object files and static libraries are disposable; complete
+build-tree backups are unnecessary. Keep current configurations, active or paused
+campaign inputs, release copies, frozen references and original failed
+comparisons. Inspect `git worktree list` before cleaning nested directories and
+preserve their checkouts. On Windows, retained historical logs, result tables and
+source snapshots can use lossless NTFS compression after checking file hashes
+before and after. Leave current build configurations and running campaigns alone.
+
 ## Installation, packaging and documentation
 
 Run Linux build and packaging commands inside the configured Linux environment.
