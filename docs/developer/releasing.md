@@ -142,3 +142,26 @@ The checker verifies identities and missing-material rejection; it cannot invent
 the underlying legal grant. Reconfigure/build after the final implementation
 commit and pair binary/source artifacts at that revision. Release preparation
 does not authorize scientific model, precision, compiler-flag or PFSM changes.
+
+## Local 1.0.0 audit scope
+
+The local audit artifacts checked on 22 October 2026 identify clean payload
+revision `a8bc3dbec1f80dfb916474e7f856a46c0c127d1d`. Both Windows IFW packages
+and the corresponding-source TGZ have matching version/revision records and
+verified SHA-256 sidecars. Later documentation-only commits do not change that
+recorded payload identity. These are audit artifacts; the rights and runtime
+source reviews above remain prerequisites for formal distribution.
+
+| Configuration or action | Executed scope and qualification |
+| --- | --- |
+| Windows MinGW 13.1 / Qt 6.8.3 | All 126 normal tests executed: 124 passed in the restricted run; the original native-settings/loopback failures are retained, and both unchanged controls passed with native permissions. After the final Help changes, all 31 affected GUI/CLI/distribution/native controls passed. Zero-Fortran checks passed. |
+| Windows MSVC 19.40 / Qt 6.8.3 | All 126 normal tests and 11 standalone Qt-free tests passed. Build-input capture and zero-Fortran checks passed. |
+| About scaling and offline text | Checks at 100%, 150% and 200% passed on both Windows kits. Native MinGW screenshots and installed offline legal tabs were inspected. |
+| Source TGZ without Git metadata | The product built through all 279 steps in a fresh directory; all four maintained table generators reproduced their committed outputs, and the executable reported version 1.0.0. |
+| IFW packages | Final generated MinGW/MSVC metadata, canonical displayed GPL, copied icons, notices and payload identities passed inspection. The MSVC payload includes the required runtime bootstrap. |
+| Native installation lifecycle | MinGW revision `322351d9` was installed and checked for startup with system-only PATH, database access, unchanged legacy settings import, shortcuts, offline notices and uninstall. The task installation and shortcuts were removed and settings preserved. Final revision checks above cover subsequent Help and packaging controls. An actual MSVC installation/uninstall remains **NOT_VERIFIED**. |
+| Supported Linux GCC / DEB / AppImage | **NOT_VERIFIED**: the available WSL Ubuntu 22.04 lacks the supported SDK and the Docker engine is unavailable. Shell syntax was checked, but supported native builds, regressions, extracted package contents and installed behavior still require execution. No real DEB maintainer email has been supplied. |
+
+Original diagnostics and local package/test evidence remain under the ignored
+`build/distribution-readiness` directory. None of these artifacts was uploaded
+or published; passing local checks does not close the recorded authorization gaps.
