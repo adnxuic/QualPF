@@ -6,7 +6,7 @@ QualPF is a modified project derived from [QualX3](https://github.com/ccorrado71
 
 QualPF helps identify the crystalline phases present in a powder diffraction pattern by comparing it against large reference databases (PDF-2, COD) and crystallographic data imported from CIF files.
 
-[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](LICENSE)
+[![License: GPL v3 only](https://img.shields.io/badge/License-GPL--3.0--only-blue.svg)](LICENSE)
 ![C++20](https://img.shields.io/badge/C%2B%2B-20-00599C)
 ![Qt6](https://img.shields.io/badge/Qt-6-41CD52)
 
@@ -265,11 +265,19 @@ If you use QualX in your research, please cite one of the following works:
 
 ## License
 
-QualPF is distributed under the **GNU Lesser General Public License v3.0 (LGPL-3.0)**. See [LICENSE](LICENSE) for the full text.
+QualPF's additions and combined application are offered under the **GNU General
+Public License, version 3 only (GPL-3.0-only)**. See [LICENSE](LICENSE), the
+[origin and modification notice](NOTICE.md) and
+[third-party notices](THIRD_PARTY_NOTICES.md). Third-party components retain their
+own licenses. Outstanding rights and package-specific source obligations must be
+resolved before distributing a release; a local audit package is not a cleared release.
 
 ## Authors and acknowledgments
 
-Originally developed and maintained at the **Institute of Crystallography, CNR (IC-CNR), Bari**, Italy.
+QualPF is independently maintained and published by **adnxuic**. It derives from
+QualX3, originally developed at the **Institute of Crystallography, CNR (IC-CNR),
+Bari**, Italy. Original authorship and scientific references are retained; no
+institutional endorsement or official QualX distribution status is claimed.
 
 ## Contributing
 
@@ -281,4 +289,4 @@ retains its original language and bytes.
 
 ## Support
 
-For questions or issues, please use the project's issue tracker, or contact the maintainer (corrado.cuocci@cnr.it).
+For QualPF questions and issues, use [QualPF Issues](https://github.com/adnxuic/QualPF/issues).

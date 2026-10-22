@@ -12,6 +12,10 @@ reports are no longer used for routine development.
 
 ### Added
 
+- Added GPL-3.0-only origin/modification notices, third-party license texts and a
+  distribution rights inventory that keeps unresolved data, artwork and runtime
+  obligations explicit instead of treating them as cleared for release.
+
 - Added colorful icons to 32 previously text-only menu actions, Legacy CIF import,
   workflow settings and common file, peak, restraint, RIR and history controls.
   Preserved existing icons, labels, shortcuts and action behavior. Editable SVG

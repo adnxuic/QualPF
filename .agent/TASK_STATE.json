@@ -1,5 +1,21 @@
 {
   "schema": "qualpf.agent_task_state.v1",
   "baseline_ref": "docs/developer/project-baseline.json",
-  "active_task": null
+  "active_task": {
+    "id": "independent-distribution-readiness",
+    "goal": "Implement GPL-3.0-only independent QualPF distribution metadata, notices, branding and checked Windows/Linux packaging without publishing.",
+    "in_scope": ["NOTICE.md", "THIRD_PARTY_NOTICES.md", "LICENSES/**", "README.md", "CHANGELOG.md", "deploy/**", "cmake/**", "CMakeLists.txt", "apps/qualpf/**", "src/gui/**", "scripts/package/**", "tools/validation/**", "tests/**", "docs/**", "third_party/qcustomplot/README.md", ".gitattributes", ".github/workflows/quality.yml", ".agent/TASK_STATE.json"],
+    "out_of_scope": ["Numerical or PFSM behavior changes", "Core/Application API or settings/persistence contract changes", "Rewriting frozen evidence", "Remote changes or publication"],
+    "status": "in_progress",
+    "base_commit": "744612d19dc1b3f78856e5c68bc990ea39871f3b",
+    "checkpoint_commit": null,
+    "completed": ["Recorded upstream GPLv3 grant evidence, component obligations, historical installer agreement identity and unresolved scientific-data/artwork rights.", "Added application/third-party notices and full supplemental license texts; corrected current README license and maintainer."],
+    "next_action": "Implement shared independent product metadata, offline About legal texts and brand resource cleanup, then checked staged/source packaging.",
+    "blockers": ["Formal distribution requires rights clearance for retained scientific data and inherited artwork/documentation, plus actual package runtime/source reviews.", "DEB requires a real release contact email; QtIFW and a usable Linux runtime are not currently available in the inspected environment."],
+    "checks": [
+      {"command": "python -B tools/agent/check_current_context.py --self-test", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": null},
+      {"command": "python -B tools/validation/check_documentation.py --self-test", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": null},
+      {"command": "python -B tools/validation/check_product_identity.py --self-test", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": null}
+    ]
+  }
 }
