@@ -8,6 +8,8 @@ and `QualXDB` remain compatibility keys, not publisher declarations.
 
 Read the [origin notice](../../NOTICE.md),
 [third-party notices](../../THIRD_PARTY_NOTICES.md) and component inventory.
+For material-specific public evidence, byte identities and the remaining grant
+questions, see the [rights and source review](distribution-rights.md).
 The README acknowledgment of Match!'s public PFSM method describes methodological
 inspiration, separately from source provenance, licensing and the
 [PFSM numerical contract](numerical/pfsm.md).
@@ -45,6 +47,12 @@ Both modes reject stale build revision/version metadata; reconfigure and rebuild
 after committing before pairing binary and source artifacts.
 
 ## Local package inspection
+
+The owner's current Windows formal-distribution choice is MinGW/GNU; MSVC is
+retained for development validation. MSVC formal IFW binaries and VC++ runtime
+payloads are rejected. The supplied DEB maintainer address is
+`uncercalculate@163.com`; pass it explicitly as
+`QUALPF_RELEASE_CONTACT_EMAIL` (the cache default remains empty).
 
 Use the [supported compiler and Qt kits](building.md). For Windows, select the
 actual QtIFW installation and build before packaging:

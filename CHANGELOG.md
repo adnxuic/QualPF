@@ -12,6 +12,11 @@ reports are no longer used for routine development.
 
 ### Added
 
+- Recorded per-input scientific-data and inherited-image rights findings, actual
+  Windows Qt/installer runtime origins, and verified versioned dependency source
+  archives. Preserved separate winpthreads, MinGW CRT, IFW, libarchive and OpenSSL
+  notices; unresolved compilation grants and modified runtime source stay blocked.
+
 - Added checked distribution staging, actual payload/artifact SHA-256 inventories,
   tracked-only corresponding-source export with preferred generator inputs,
   explicit audit package labels and formal-release rejection of unresolved rights.
@@ -30,6 +35,12 @@ reports are no longer used for routine development.
   normal builds require no additional Qt module.
 
 ### Changed
+
+- Restricted formal Windows distribution to the owner's selected MinGW kit;
+  retained MSVC development validation and reject formal VC++ runtime delivery.
+  Recorded the supplied DEB maintainer email without filling the empty build
+  configuration default. Excluded inactive inherited documentation brand assets
+  from source delivery while retaining their originals.
 
 - Set the independent QualPF product version to 1.0.0; retained earlier upstream
   version entries as historical release records.

@@ -1,0 +1,325 @@
+{
+  "schema": "qualpf.distribution_rights_review.v1",
+  "reviewed_on": "2026-10-22",
+  "scope": "Current scientific preferred inputs and every active inherited image. Findings do not themselves grant rights; frozen originals and scientific values remain unchanged.",
+  "scientific_inputs": [
+    {
+      "id": "atom-properties",
+      "path": "share/qualx/files/AtomProperties.xen",
+      "sha256": "f2c18e79c74e06860311135e4334f32a75cb487e291918a5df71e0e748d7ad3b",
+      "status": "blocked",
+      "finding": "Int. Tables C 6.1.1.4, 4.2.6.8 and 4.2.4.3; Bondi/Rowland-Taylor radii and published atomic weights. No asset-specific redistribution grant located.",
+      "primary_sources": [
+        "https://it.iucr.org/C/"
+      ],
+      "hash_mode": "lf"
+    },
+    {
+      "id": "ffast-srd66",
+      "path": "tests/regression/references/provenance/resource-inputs/fortran/crystallography/nist_table.f90.txt",
+      "sha256": "d951d1d0a77c29bb3581e3f2946d809054ee38bcfd61515910def0fd630815e6",
+      "status": "blocked",
+      "finding": "Original generator points to NIST FFAST for Z=1..92. NIST explicitly identifies FFAST as SRD 66 with reserved compilation copyright; the general non-SRD/public-domain statement cannot clear this data. FFAST.jl software Unlicense does not explicitly relicense this older SRD compilation.",
+      "primary_sources": [
+        "https://www.nist.gov/pml/x-ray-form-factor-attenuation-and-scattering-tables",
+        "https://www.nist.gov/open/copyright-fair-use-and-licensing-statements-srd-data-software-and-technical-series-publications",
+        "https://github.com/usnistgov/FFAST.jl/blob/master/LICENSE"
+      ],
+      "hash_mode": "lf"
+    },
+    {
+      "id": "electron-scattering",
+      "path": "tests/regression/references/provenance/resource-inputs/fortran/crystallography/scatt_params.F90.txt",
+      "sha256": "34d046022a463a15cd75d040eb4f4e515c71ef9152dc28396c0af1e27ab95979",
+      "status": "blocked",
+      "finding": "Compiled Lobato parameters cite Lobato and Van Dyck (2014), DOI 10.1107/S205327331401643X. The file also retains unused Kirkland/Doyle-Turner tables. Author MULTEM source has GPLv3-or-later, but its current Lobato table is different; no substitution or numerical change is authorized.",
+      "primary_sources": [
+        "https://doi.org/10.1107/S205327331401643X",
+        "https://github.com/Ivanlh20/MULTEM/blob/master/src/atomic_data.hpp"
+      ],
+      "hash_mode": "lf"
+    },
+    {
+      "id": "syminfo",
+      "path": "share/qualx/files/syminfo.lib",
+      "sha256": "9b20fc422e6e1f6ded0f9c4d16d57204e05916896de79a4330762651f89be286",
+      "status": "blocked",
+      "finding": "CCP4 6.3/6.4 libccp4 has GPLv3/LGPLv3 texts; its syminfo.lib differs from this retained version beyond whitespace, including aliases/settings. Base attribution identified; exact derivative source/grant still needs confirmation.",
+      "primary_sources": [
+        "https://ftp.ccp4.ac.uk/ccp4/6.3.0/unpacked/lib/libccp4/",
+        "https://www.ccp4.ac.uk/html/symlib.html"
+      ],
+      "hash_mode": "lf"
+    },
+    {
+      "id": "symmetry-preferred-input",
+      "path": "tests/data/symmetry-reference.zip",
+      "sha256": "66672d9f3f0dd533bbac4bf99eaa1b4faecd5ebd2d92692064fb4ddae90382be",
+      "status": "blocked",
+      "finding": "Frozen archive has 14 members and four original source files, with exact-table.json and symm_table.f90 used by the generator. QualX source provenance is retained, but the underlying exact table compilation origin/grant is still unproved. Do not replace it with modern library output.",
+      "primary_sources": [
+        "https://github.com/ccorrado71/qualx3/commit/f98a51da8435fef0f730b513e76c820fb879865d"
+      ]
+    },
+    {
+      "id": "spglib-naming-supplement",
+      "path": "tests/regression/references/cif/site-symmetry/constraint-catalogue.json",
+      "sha256": "47e003e1275ba44b249e89614a9dbfe185c40963f372b68b24f46bc3c33d970a",
+      "status": "reviewed",
+      "finding": "Existing separately frozen spglib v2.5.0 supplement with its original BSD-3-Clause notice; does not clear the older exact symmetry catalogue.",
+      "license": "BSD-3-Clause",
+      "copyright": "Copyright (c) 2024, Spglib team",
+      "primary_sources": [
+        "https://github.com/spglib/spglib/tree/v2.5.0/database"
+      ],
+      "license_files": [
+        "LICENSES/spglib-BSD-3-Clause.txt"
+      ]
+    }
+  ],
+  "inherited_images": [
+    {
+      "path": "src/gui/resources/images/quit.png",
+      "sha256": "3d342460594d40070a49a8c87af92459adbb555ece77cabb73988f6cdd31562e",
+      "upstream_path": "src/images/quit.png",
+      "upstream_git_blob": "393598b9f30951de2b8d48f569104eb6c69ebd65",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/addpoint.png",
+      "sha256": "418495698c31be199a25fa72dc589b3d834c37c8bb3658e4826f2d62fc8eff57",
+      "upstream_path": "src/images/addpoint.png",
+      "upstream_git_blob": "71afc57cfea6cdbd15b044c6a43e357383ddc0ae",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/deletepoint.xpm",
+      "sha256": "2def00dc39ec5da818eb6e7837a1aa8ac22beabef4a7613098a2a722517558df",
+      "upstream_path": "src/images/deletepoint.xpm",
+      "upstream_git_blob": "fb3bb1888eca140d01ce5a74b29b8cedf12741d4",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/addpeak.xpm",
+      "sha256": "3f471f5d7b680666ed1c943807a9fee86808dea9648affbbf7543297e96b84f3",
+      "upstream_path": "src/images/addpeak.xpm",
+      "upstream_git_blob": "f13d17153f187cb96a695935a714fff8fdf35404",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/delpeak.xpm",
+      "sha256": "b1d1e56593d540b4c052d01499e0df1439289ebd889c13635bb436759bdc47e1",
+      "upstream_path": "src/images/delpeak.xpm",
+      "upstream_git_blob": "05cea86e45270edfc13844eb0a19b7c1ed29197b",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/filter.png",
+      "sha256": "99a7b1a12140d1fa7f95b161ba3bd5c0b6f96534a9a321cd566504e300f2b3e7",
+      "upstream_path": "src/images/filter.png",
+      "upstream_git_blob": "57768091c590d671126b1b77d218b082bb8d9ef4",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/Database_add.png",
+      "sha256": "78ca9fd0552968e02534776cd9ee8bd21346bfc58281198071a00861a06deada",
+      "upstream_path": "src/images/Database_add.png",
+      "upstream_git_blob": "c4dae967701f126756c0616b7707ba199bc75611",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/Database_delete.png",
+      "sha256": "97fd6fd9a536a9dab000550d0e383ca392b376ddc34256ad71029b706ce59657",
+      "upstream_path": "src/images/Database_delete.png",
+      "upstream_git_blob": "cdc8fa021ba7c370dc7848b4f208b2b8c216d3ac",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/rename.png",
+      "sha256": "65b1da50dc88405867e9664ffe2b93535a6d32337edec0372c47f6bca245d957",
+      "upstream_path": "src/images/rename.png",
+      "upstream_git_blob": "9116efd48b8a12e296dd503b6eefcf4041cb10bb",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/search_match_options.png",
+      "sha256": "44bb2d35f07006a0fa1b5a71dfe847a12db483b9c09c5f551eedf0b0fd1dc06a",
+      "upstream_path": "src/images/search_match_options.png",
+      "upstream_git_blob": "461b0beafa85f44eb26e7ca05987c3d25fa542d8",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/search_match.png",
+      "sha256": "4dc40db7b19c0d447e81962c45662c297a4131e087026f4a834fe9f19ccbd992",
+      "upstream_path": "src/images/search_match.png",
+      "upstream_git_blob": "ac213aa58baa8b8b6c05b6029cf60c5aa62efdf5",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/first_view.png",
+      "sha256": "f7054ab65563c786a08c0ac6f90621f4ab8ec565c14ddbfa35dc1a2b7ac5b2fa",
+      "upstream_path": "src/images/first_view.png",
+      "upstream_git_blob": "c8c13f088a8032fef06ab9af8fb5761ad38913a7",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/last_view.png",
+      "sha256": "2aae46a067e6ba572655d0ffefa48be35f03b063012559a1dda265007f9924d8",
+      "upstream_path": "src/images/last_view.png",
+      "upstream_git_blob": "a9b78704eb663d4d3eb0bbcd50c5f23335ae8ea2",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/go_next.png",
+      "sha256": "629a2afc799f06015334cc7871ee516bc83d51e3e02bb9cd45ca4cbcbd5746ff",
+      "upstream_path": "src/images/go_next.png",
+      "upstream_git_blob": "23bc5434b96740f12c1585dbea468ad8c0b540ec",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/go_previous.png",
+      "sha256": "bd3255ab916cf3d0c017bc23b32d74767675d7921d4e079aded9053cdbc33769",
+      "upstream_path": "src/images/go_previous.png",
+      "upstream_git_blob": "1519f23ea503d4b50e849d28634d5615876d1d9c",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/load_entry.png",
+      "sha256": "fa15e9e7695a65eb00953f27e4fc9098b615f391ff176d4888d2e21a20bacc52",
+      "upstream_path": "src/images/load_entry.png",
+      "upstream_git_blob": "76b398dd217c1f852d414ae2fcd379de8589b125",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/accept_entry.png",
+      "sha256": "0a9fc4d08382644494bdb117cadcf559d669f0bab29e065aea0b90147db7d180",
+      "upstream_path": "src/images/accept_entry.png",
+      "upstream_git_blob": "012316d6f3ebc23bb596575998793a8f36bb93bb",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/change_color.png",
+      "sha256": "60d7dc87d1f4450a7127fd70eb84b83906032950105c9b8df4779bd5e92a2006",
+      "upstream_path": "src/images/change_color.png",
+      "upstream_git_blob": "28128dcab1f94e54269122c549593cf59a7303fb",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/delete_entry.png",
+      "sha256": "65df36ea7aa1fcfa5b3cbf09b6202756bff64d75ebe244c91d8efc19a45a7f1a",
+      "upstream_path": "src/images/delete_entry.png",
+      "upstream_git_blob": "674e74643bb05e375c5c39c26aeed9afbeed4a10",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/autoscale.xpm",
+      "sha256": "6dbc03a2ce0c6611ce53ae2b3d4e72ea312837f1b8ab439afb78bc7ad0cbd244",
+      "upstream_path": "src/images/autoscale.xpm",
+      "upstream_git_blob": "851a414a94b8a1ce0bd09937a56ccc9eca3ab332",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/computermousecursor.png",
+      "sha256": "f42033bc84b46d07262ee3fd4d093a37eaee03d72fec4a5cd5f16c458cd7d6a2",
+      "upstream_path": "src/images/computermousecursor.png",
+      "upstream_git_blob": "93015374c5e0b4cff13e18bd2963b4e4c8a3a1c9",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/horizontal_zoom.png",
+      "sha256": "e0ed89f3e3ae90aad25c9616f10638be680ea9fb487803e27cf90a54dcddb5b1",
+      "upstream_path": "src/images/horizontal_zoom.png",
+      "upstream_git_blob": "15d28fe933bc7b8747c3603a5d015b176f49f6b1",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/legendaoff.xpm",
+      "sha256": "e01bef17d82a035f6f8699c9e0ce271190c1bce6cf7f41761db11d3ccf234a3d",
+      "upstream_path": "src/images/legendaoff.xpm",
+      "upstream_git_blob": "bd0faace25dbc7bc511e4c1701bb55ebfc61a167",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/legendaon.xpm",
+      "sha256": "b3d3d8c81f11227ea56d9bce5315afb0660666446cd7ceb3f80194288f357303",
+      "upstream_path": "src/images/legendaon.xpm",
+      "upstream_git_blob": "21244cf2cf514d6de027167f54641e3e6101299d",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/pan_121784.png",
+      "sha256": "accb326949fea40e2e0feca71cbb265b25b2f00fc86cd716150c8182a0d292d0",
+      "upstream_path": "src/images/pan_121784.png",
+      "upstream_git_blob": "7c01adb8bd6eac5cb95b3a7f8435927a52edf212",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/rectangle_zoom.png",
+      "sha256": "d1850308299c02a5636a56cadc0efd407fc27d1c8a92c31213f9bfc0b535200e",
+      "upstream_path": "src/images/rectangle_zoom.png",
+      "upstream_git_blob": "999ea6fa9591cbc2f90ad403b6fe19df30083415",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/reset_zoom.xpm",
+      "sha256": "ad305536d93082ef558fc9a90ea67529902727a8e19f2453168843d7ae8ccb49",
+      "upstream_path": "src/images/reset_zoom.xpm",
+      "upstream_git_blob": "fb6aeb974d7518c12ac828876a408e2bf2761306",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/preferences.png",
+      "sha256": "9adbcbcb094b318665ab3738b6d604a52209579b22f9d60ec37c72b6510a04e3",
+      "upstream_path": "src/images/preferences.png",
+      "upstream_git_blob": "34df9852bbcd3fbd162ac94d741227148850caa7",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    },
+    {
+      "path": "src/gui/resources/images/stop.png",
+      "sha256": "56388b24cb9b73da24af803edca487c41f603558a1f366742ff59d35b41b5037",
+      "upstream_path": "src/images/stop.png",
+      "upstream_git_blob": "438c068c267938762cdcf7fbc4e0a8161cf02ba6",
+      "status": "blocked",
+      "finding": "Inherited active image; repository provenance established, but original graphic authorship/asset-specific grant is not stated in the file metadata."
+    }
+  ],
+  "excluded_document_brand_assets": [
+    "docs/user/images/favicon.png",
+    "docs/user/images/qualx_icon.svg"
+  ],
+  "owner_information": [
+    "Permission or an applicable public grant covering retained NIST SRD 66 extraction, AtomProperties compilation and referenced tables, Lobato coefficient version, exact symmetry tables and inherited graphics/documentation. No private authorization is supplied; continue public-source review and report unresolved grants."
+  ],
+  "decisions": {
+    "windows_formal_distribution": "MinGW only; MSVC development validation retained",
+    "deb_maintainer_email": "uncercalculate@163.com"
+  }
+}

@@ -16,6 +16,13 @@ whitespace attributes prevent rewriting the legal texts to satisfy formatting.
   `COPYING.MPL2` and `COPYING.BSD`.
 - spglib-BSD-3-Clause.txt: unmodified project source notice
   `src/core/io/cif/site_symmetry_spglib_COPYING` (spglib v2.5.0 supplement).
+- mingw-winpthreads-COPYING.txt and mingw-w64-COPYING.txt: original notice files
+  from the selected MinGW 13.1.0 / MinGW-w64 v11 SDK. Winpthreads retains both
+  the mingw-w64 MIT and Lockless BSD notices.
+- QtIFW-GPL3-Exception.txt: original QtIFW 4.8.1 `LICENSE.GPL3-EXCEPT`.
+- IFW-libarchive-COPYING.txt: QtIFW 4.8.1's bundled libarchive `COPYING`.
+- OpenSSL-3.0-LICENSE.txt: OpenSSL 3.0.14's original `LICENSE.txt`, including
+  Apache License 2.0. These installer dependencies are not relicensed as QualPF.
 
 These files are not a blanket license for the installed SDK or runtime. Collect
 the actual package's component-specific notices and corresponding sources before

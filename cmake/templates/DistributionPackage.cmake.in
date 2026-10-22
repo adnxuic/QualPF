@@ -8,6 +8,8 @@ else()
 endif()
 if(CPACK_GENERATOR STREQUAL "DEB")
     list(APPEND _qualpf_args --kind DEB "--contact-email=@QUALPF_RELEASE_CONTACT_EMAIL@")
+elseif(CPACK_GENERATOR STREQUAL "IFW")
+    list(APPEND _qualpf_args --kind IFW)
 endif()
 execute_process(COMMAND "@Python3_EXECUTABLE@" -B "@QUALPF_DISTRIBUTION_CHECKER@" ${_qualpf_args}
     RESULT_VARIABLE _qualpf_status OUTPUT_VARIABLE _qualpf_output ERROR_VARIABLE _qualpf_error)

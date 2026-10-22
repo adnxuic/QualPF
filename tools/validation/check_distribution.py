@@ -145,7 +145,50 @@ def check_inputs(root):
     for name in data["source_inputs"]["tracked_generator_inputs"]:
         if not relative(root, name).is_file():
             errors.append("missing preferred table modification input: " + name)
+    errors.extend(rights_review_errors(root, data))
     return errors, data
+
+
+def rights_review_errors(root, data):
+    if not data.get("rights_review"):
+        return []  # Isolated fixtures and older portable metadata have no review.
+    review = read_json(relative(root, data["rights_review"]))
+    errors = []
+    if review.get("schema") != "qualpf.distribution_rights_review.v1":
+        return ["unsupported material rights review"]
+    images = review.get("inherited_images", [])
+    science = review.get("scientific_inputs", [])
+    qrc = ET.parse(root / "src/gui/resources/resource.qrc").getroot()
+    active_images = {"src/gui/resources/" + file.text for resource in qrc.findall("qresource")
+                     if resource.get("prefix") == "/images" for file in resource.findall("file")}
+    if active_images != {entry["path"] for entry in images}:
+        errors.append("active inherited images differ from the rights inventory")
+    required = set(data["source_inputs"]["tracked_generator_inputs"] + data["source_inputs"]["generator_archives"])
+    required.update(path.relative_to(root).as_posix() for path in (root / "share/qualx/files").rglob("*") if path.is_file())
+    if not required.issubset({entry["path"] for entry in science}):
+        errors.append("scientific preferred/runtime inputs omitted from the rights inventory")
+    seen = set()
+    for entry in images + science:
+        path = relative(root, entry["path"])
+        if entry["path"] in seen or entry.get("status") not in {"reviewed", "blocked", "partial"}:
+            errors.append("duplicate/invalid material rights entry: " + entry["path"])
+        seen.add(entry["path"])
+        raw = path.read_bytes()
+        if entry.get("hash_mode") == "lf":
+            raw = raw.replace(b"\r\n", b"\n")
+        if hashlib.sha256(raw).hexdigest() != entry["sha256"]:
+            errors.append("material changed since its rights review: " + entry["path"])
+        if entry.get("status") == "reviewed" and not all(entry.get(key) for key in
+                ("license", "copyright", "primary_sources", "license_files")):
+            errors.append("material grant is not documented: " + entry["path"])
+        for name in entry.get("license_files", []):
+            if not relative(root, name).is_file():
+                errors.append("material license missing: " + name)
+    statuses = {entry["id"]: entry["status"] for entry in data["components"]}
+    for component, entries in (("scientific-data", science), ("inherited-artwork-docs", images)):
+        if statuses.get(component) == "reviewed" and any(entry["status"] != "reviewed" for entry in entries):
+            errors.append("unresolved material grants cannot clear component: " + component)
+    return errors
 
 
 def email_error(email):
@@ -172,13 +215,17 @@ def manual_errors(root, pdf, proof):
     return []
 
 
-def release_errors(data, info):
+def release_errors(data, info, kind=None):
     errors = ["unresolved distribution rights: " + entry["id"] + ": " + entry["obligations"]
               for entry in data["components"] if entry["status"] == "blocked"]
     if info["audit_only"]:
         errors.append("audit package is not cleared for distribution")
     if info["source_dirty"] or not re.fullmatch(r"[0-9a-f]{40}", info["source_revision"]):
         errors.append("release requires one clean committed source revision")
+    if kind == "IFW" and data.get("release_policy", {}).get("windows_binary_compilers"):
+        compiler = info.get("compiler", "unknown").split()[0]
+        if compiler not in data["release_policy"]["windows_binary_compilers"]:
+            errors.append("Windows formal distribution requires the approved MinGW/GNU kit; MSVC is development-only")
     return errors
 
 
@@ -265,7 +312,9 @@ def runtime_component(name):
         return "qualpf-additions"
     if any(token in base for token in ("vcruntime", "msvcp", "vc_redist", "concrt", "vcomp")):
         return "msvc-runtime"
-    if any(token in base for token in ("libgcc", "libstdc++", "libgomp", "libwinpthread")):
+    if "libwinpthread" in base:
+        return "mingw-winpthreads"
+    if any(token in base for token in ("libgcc", "libstdc++", "libgomp")):
         return "gnu-mingw-runtime"
     if base.startswith(("qt6", "libqt6")) or "/plugins/" in "/" + lower:
         return "qt"
@@ -308,6 +357,8 @@ def stage_inventory(root, stage, data, review=None, kind=None):
         executable = file.suffix.lower() in {".exe", ".dll"} or re.search(r"\.so(?:\.[0-9]+)*$", file.name) or magic == b"\x7fELF"
         component = runtime_component(name) if executable else "material"
         value = dict(path=name, bytes=file.stat().st_size, sha256=digest(file), component=component)
+        if component in data.get("release_policy", {}).get("excluded_runtime_components", []):
+            errors.append("runtime excluded from formal distribution by owner policy: " + name)
         if executable and component != "qualpf-additions":
             value["review_status"] = "pending"
             accepted = review.get("files", {}).get(name, {})
@@ -448,6 +499,43 @@ def self_test():
             self.assertEqual(build_identity_errors(info, "a" * 40, "1.0.0"), [])
             self.assertTrue(build_identity_errors(info, "b" * 40, "1.0.0"))
             self.assertTrue(build_identity_errors(info, "a" * 40, "1.0.1"))
+
+        def test_owner_release_policy(self):
+            data = dict(components=[], release_policy=dict(windows_binary_compilers=["GNU"]))
+            info = dict(audit_only=False, source_dirty=False, source_revision="a" * 40,
+                        compiler="MSVC 19.40 (Windows/AMD64)")
+            self.assertTrue(any("development-only" in error for error in release_errors(data, info, "IFW")))
+            # A portable source export is not an MSVC binary distribution.
+            self.assertEqual(release_errors(data, info), [])
+            info["compiler"] = "GNU 13.1 (Windows/AMD64)"
+            self.assertEqual(release_errors(data, info, "IFW"), [])
+            self.assertEqual(runtime_component("bin/libwinpthread-1.dll"), "mingw-winpthreads")
+
+        def test_material_rights_binding(self):
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                qrc = root / "src/gui/resources/resource.qrc"
+                qrc.parent.mkdir(parents=True)
+                qrc.write_text('<RCC><qresource prefix="/images"><file>image.png</file></qresource></RCC>')
+                image = qrc.parent / "image.png"
+                image.write_bytes(b"inherited image")
+                row = dict(path="src/gui/resources/image.png", sha256=digest(image), status="blocked")
+                review = dict(schema="qualpf.distribution_rights_review.v1", scientific_inputs=[], inherited_images=[row])
+                data = dict(rights_review="review.json", source_inputs=dict(tracked_generator_inputs=[], generator_archives=[]),
+                            components=[dict(id="inherited-artwork-docs", status="blocked")])
+                write_json(root / "review.json", review)
+                self.assertEqual(rights_review_errors(root, data), [])
+                data["components"][0]["status"] = "reviewed"
+                self.assertTrue(any("cannot clear" in error for error in rights_review_errors(root, data)))
+                data["components"][0]["status"] = "blocked"
+                row["status"] = "reviewed"
+                write_json(root / "review.json", review)
+                self.assertTrue(any("grant" in error for error in rights_review_errors(root, data)))
+                image.write_bytes(b"changed inherited image")
+                self.assertTrue(any("changed" in error for error in rights_review_errors(root, data)))
+                review["inherited_images"] = []
+                write_json(root / "review.json", review)
+                self.assertTrue(any("active inherited" in error for error in rights_review_errors(root, data)))
 
         def test_stage_notices_and_runtime_hash_binding(self):
             with tempfile.TemporaryDirectory() as directory:
@@ -621,7 +709,7 @@ def main():
     if args.release:
         if args.audit_only:
             errors.append("--release and --audit-only are mutually exclusive")
-        errors.extend(release_errors(data, info))
+        errors.extend(release_errors(data, info, args.kind))
     if args.source_tree:
         errors.extend(check_source_tree(root, data))
     if args.ifw_metadata:
@@ -637,7 +725,7 @@ def main():
             errors.append("staged build metadata differs from the selected build")
         info = report["build"]
         if args.release:
-            errors.extend(release_errors(data, info))
+            errors.extend(release_errors(data, info, args.kind))
             errors.extend(report["review_blockers"])
             if not args.source_artifact:
                 errors.append("release binary requires --source-artifact, not a moving branch URL")

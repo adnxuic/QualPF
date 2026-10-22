@@ -129,8 +129,8 @@
         "libgomp-1.dll",
         "libgcc_s_seh-1.dll",
         "libstdc++-6.dll",
-        "libwinpthread-1.dll",
-        "Linux bundled compiler runtimes"
+        "Linux bundled compiler runtimes",
+        "MinGW-w64 CRT/startup code linked into product and GCC runtimes"
       ],
       "source": "https://gcc.gnu.org/ and https://www.mingw-w64.org/",
       "version": "compiler-resolved runtime files and package-specific hashes",
@@ -139,10 +139,27 @@
       "modifications": "Unmodified compiler-resolved runtime files; deployment only",
       "license_files": [
         "LICENSE",
-        "LICENSES/GCC-exception-3.1.txt"
+        "LICENSES/GCC-exception-3.1.txt",
+        "LICENSES/mingw-w64-COPYING.txt"
       ],
       "status": "package-review",
-      "obligations": "Collect each runtime's actual license/copyright and source obligations. Do not apply GCC's exception to winpthreads by assumption."
+      "obligations": "GCC 13.1.0 source acquired and verified; obtain the exact MinGW-builds patch/build scripts as well. Preserve MinGW CRT notices. Winpthreads has its own reviewed MIT/BSD notice, not the GCC exception."
+    },
+    {
+      "id": "mingw-winpthreads",
+      "paths": [
+        "libwinpthread-1.dll"
+      ],
+      "source": "https://github.com/mingw-w64/mingw-w64/tree/v11.0.0/mingw-w64-libraries/winpthreads",
+      "version": "MinGW-w64 v11; exact local SDK DLL identity recorded per payload",
+      "copyright": "Copyright (c) 2011 mingw-w64 project; derived parts (C) 2010 Lockless Inc.",
+      "license": "MIT and BSD-3-Clause notices in the supplied upstream COPYING",
+      "modifications": "Unmodified SDK DLL; deployment only",
+      "license_files": [
+        "LICENSES/mingw-winpthreads-COPYING.txt"
+      ],
+      "status": "reviewed",
+      "obligations": "Retain both notices and disclaimers, with no endorsement. No copyleft source requirement is imposed by these MIT/BSD terms; record the exact SDK DLL rather than applying GCC runtime exceptions."
     },
     {
       "id": "msvc-runtime",
@@ -156,7 +173,7 @@
       "modifications": "None; installer delivery/execution only",
       "license_files": [],
       "status": "package-review",
-      "obligations": "Confirm permitted redistribution and retain applicable Microsoft notices; do not describe it as GPL code."
+      "obligations": "Excluded from formal distribution by owner decision; MSVC remains a development/test kit. Historical audit packages remain evidence and are not release candidates."
     },
     {
       "id": "package-runtimes",
@@ -170,9 +187,13 @@
       "copyright": "Respective runtime/dependency authors",
       "license": "component-specific; not inferred from the application license",
       "modifications": "Generated installer metadata and deployment layout; record any binary modifications such as RPATH edits",
-      "license_files": [],
+      "license_files": [
+        "LICENSES/QtIFW-GPL3-Exception.txt",
+        "LICENSES/OpenSSL-3.0-LICENSE.txt",
+        "LICENSES/IFW-libarchive-COPYING.txt"
+      ],
       "status": "package-review",
-      "obligations": "Inventory the final artifact including installer/runtime code; distinguish build-only tools and shipped executable code."
+      "obligations": "IFW 4.8.1 installerbase embeds Qt 6.6.0 and OpenSSL 3.0.14, separately from application Qt 6.8.3. Public versioned sources are acquired; exact static build inputs/configuration and all embedded notices remain to be bound. Review DirectX/software-renderer payloads independently."
     },
     {
       "id": "scientific-data",
@@ -190,7 +211,7 @@
       "modifications": "Accepted generated C++ tables and preserved binary32/exact-rational semantics",
       "license_files": [],
       "status": "blocked",
-      "obligations": "Establish grants for AtomProperties.xen, syminfo.lib, scattering/NIST source tables, symmetry source catalogue and example data. Preserve all accepted bytes while reviewing."
+      "obligations": "Establish grants for AtomProperties.xen, syminfo.lib, scattering/NIST source tables, symmetry source catalogue and example data. Preserve all accepted bytes while reviewing. Per-input findings and required owner information: deploy/rights-review.json and docs/developer/distribution-rights.md."
     },
     {
       "id": "inherited-artwork-docs",
@@ -206,7 +227,7 @@
       "modifications": "Independent application mark and new action icons coexist with some inherited action/document images",
       "license_files": [],
       "status": "blocked",
-      "obligations": "Identify remaining inherited asset origins/grants. Removing institutional branding alone does not clear unrelated graphics or documentation assets."
+      "obligations": "Identify remaining inherited asset origins/grants. Removing institutional branding alone does not clear unrelated graphics or documentation assets. Per-input findings and required owner information: deploy/rights-review.json and docs/developer/distribution-rights.md."
     },
     {
       "id": "qualpf-additions",
@@ -252,7 +273,9 @@
     "deploy/linux/icons/16x16/qualx.png",
     "deploy/linux/icons/32x32/qualx.png",
     "deploy/linux/icons/48x48/qualx.png",
-    "deploy/linux/icons/256x256/qualx.png"
+    "deploy/linux/icons/256x256/qualx.png",
+    "docs/user/images/favicon.png",
+    "docs/user/images/qualx_icon.svg"
   ],
   "release_requirements": [
     "No blocked component rights remain unresolved.",
@@ -267,6 +290,22 @@
     "LICENSES/GCC-exception-3.1.txt": "9d6b43ce4d8de0c878bf16b54d8e7a10d9bd42b75178153e3af6a815bdc90f74",
     "LICENSES/LGPL-3.0-only.txt": "996af0513df21f7496288951c41428a03c174e9e4a9d63665c57d670f845ccb1",
     "LICENSES/MPL-2.0.txt": "fab3dd6bdab226f1c08630b1dd917e11fcb4ec5e1e020e2c16f83a0a13863e85",
-    "LICENSES/spglib-BSD-3-Clause.txt": "b7676bc8754b9b3aafbb2d13c9131e1f73a29f57a86a0504d550c9894dc26833"
-  }
+    "LICENSES/spglib-BSD-3-Clause.txt": "b7676bc8754b9b3aafbb2d13c9131e1f73a29f57a86a0504d550c9894dc26833",
+    "LICENSES/mingw-winpthreads-COPYING.txt": "63263614cdd29f2f93cba85e992f041b31f9fc7b4033692f31269489a8a1b177",
+    "LICENSES/mingw-w64-COPYING.txt": "76e1f805bb88f580ccb85c63fb41920602183227b91eb147c73af17c5748e2f5",
+    "LICENSES/QtIFW-GPL3-Exception.txt": "0dbe024961f6ab5c52689cbd036c977975d0d0f6a67ff97762d96cb819dd5652",
+    "LICENSES/IFW-libarchive-COPYING.txt": "b2cdf763345de2de34cebf54394df3c61a105c3b71288603c251f2fa638200ba",
+    "LICENSES/OpenSSL-3.0-LICENSE.txt": "7d5450cb2d142651b8afa315b5f238efc805dad827d91ba367d8516bc9d49e7a"
+  },
+  "release_policy": {
+    "windows_binary_compilers": [
+      "GNU"
+    ],
+    "excluded_runtime_components": [
+      "msvc-runtime"
+    ],
+    "deb_maintainer_email": "uncercalculate@163.com",
+    "basis": "Owner decision on 2026-10-22: MinGW formal Windows distribution; retain MSVC for development validation. Pass the real DEB email explicitly; the CMake cache default stays empty."
+  },
+  "rights_review": "deploy/rights-review.json"
 }

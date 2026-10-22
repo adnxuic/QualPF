@@ -1,5 +1,73 @@
 {
   "schema": "qualpf.agent_task_state.v1",
   "baseline_ref": "docs/developer/project-baseline.json",
-  "active_task": null
+  "active_task": {
+    "id": "distribution-rights-and-source-audit",
+    "goal": "Trace scientific tables and inherited asset rights, audit actual Windows runtime payloads and acquire verifiable corresponding sources without publishing.",
+    "in_scope": [
+      "deploy/**",
+      "LICENSES/**",
+      "NOTICE.md",
+      "THIRD_PARTY_NOTICES.md",
+      "docs/developer/**",
+      "CHANGELOG.md",
+      "tools/validation/**",
+      "cmake/packaging/**",
+      ".agent/TASK_STATE.json",
+      "cmake/templates/**",
+      ".gitattributes"
+    ],
+    "out_of_scope": [
+      "Scientific/PFSM or Core/Application API changes",
+      "Changing frozen data, goldens or failed comparisons",
+      "Remote writes, contacting authors or publication"
+    ],
+    "status": "in_progress",
+    "base_commit": "8f2921d531293a233a996042324a37be3c940d3c",
+    "checkpoint_commit": null,
+    "completed": [
+      "Read current distribution contracts and inspected the existing unresolved component inventory and local audit artifacts.",
+      "Recorded six scientific input scopes and 29 active inherited image origins; NIST SRD66 remains reserved and the CCP4/MULTEM candidates differ from retained tables.",
+      "Retained original winpthreads, CRT, IFW, libarchive and OpenSSL notices; split MIT/BSD winpthreads from GCC exceptions.",
+      "Recorded the real supplied DEB email and owner decision for MinGW formal distribution with MSVC development validation; added formal package policy controls.",
+      "Acquired eight versioned official source archives with official checksums; matched actual deployed Qt DLLs/plugins to selected SDKs and QtBase source commit to the SDK SBOM."
+    ],
+    "next_action": "Finish the verified notices/policy batch, prepare an offline dependency source/notice bundle and bind actual runtime review results without publishing.",
+    "blockers": [
+      "Exact scientific compilation and inherited asset grants remain unresolved; the owner has no private grants and requested public-source findings.",
+      "GCC vendor patch/build provenance, IFW static build provenance and graphics runtime terms remain package review obligations."
+    ],
+    "checks": [
+      {
+        "command": "python -B tools/validation/check_distribution.py --self-test",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": null
+      },
+      {
+        "command": "python -B tools/validation/check_references.py",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": null
+      },
+      {
+        "command": "cmake --build build/distribution-readiness/windows-gnu --target qualpf qualpf_about_dialog_tests --parallel 4",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/distribution-rights/gnu-legal-build-01.log"
+      },
+      {
+        "command": "ctest --test-dir build/distribution-readiness/windows-gnu -R qualpf.gui.about|qualpf.distribution.consistency|qualpf.product.startup",
+        "result": "FAIL",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/distribution-rights/gnu-legal-controls-01.xml"
+      },
+      {
+        "command": "ctest --test-dir build/distribution-readiness/windows-gnu -R qualpf.product.startup with native permissions",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/distribution-rights/gnu-legal-startup-native-01.xml"
+      }
+    ]
+  }
 }

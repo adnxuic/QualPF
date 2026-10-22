@@ -5,7 +5,10 @@
 # Preserve whitespace present in these verbatim upstream legal texts.
 /LICENSES/MPL-2.0.txt -whitespace
 /LICENSES/GCC-exception-3.1.txt -whitespace
+/LICENSES/mingw-w64-COPYING.txt -whitespace
 /deploy/distribution.json text eol=lf
+/deploy/rights-review.json text eol=lf
+/deploy/dependency-sources.json text eol=lf
 /third_party/qcustomplot/README.md text eol=lf
 /src/gui/dialogs/aboutdialog.* text eol=lf
 /tests/integration/gui/aboutdialog_test.cpp text eol=lf
