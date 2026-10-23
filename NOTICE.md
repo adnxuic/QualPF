@@ -43,6 +43,24 @@ Original copyrights are not transferred to the QualPF publisher. Existing
 third-party file notices must remain intact. The GPL text's Free Software
 Foundation copyright concerns that license document, not authorship of QualPF.
 
+## Inherited scientific tables
+
+On 23 October 2026, the QualPF publisher chose to follow QualX3's distribution
+approach for AtomProperties, the NIST FFAST extraction, electron-scattering
+parameters, `syminfo.lib` and the exact symmetry catalogue. These tables and their
+preferred modification inputs remain supplied on the upstream project-level GPL
+basis, with their original scientific references and corresponding source.
+QualPF's generated C++ representation preserves the accepted numerical values.
+
+The scoped decision is recorded in `deploy/distribution.json`; earlier public
+findings remain in `deploy/rights-review.json`. Separate third-party data grants
+have not been independently verified. In particular, NIST identifies FFAST as
+Standard Reference Database 66 with reserved compilation copyright; the general
+non-SRD NIST grant is not substituted for its terms. This upstream-based
+disposition makes no claim that NIST or another data author supplied a new grant.
+Excluded examples/CIF fixtures, replaced artwork/manual originals and databases
+retain their separate dispositions and terms.
+
 ## Your rights and warranty
 
 You may copy, modify and redistribute the covered application under GPLv3,

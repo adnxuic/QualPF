@@ -68,8 +68,8 @@ by `reference_paths.py`, without restoring full phase packages.
 
 The 15 sealed ZIPs are excluded from the main tracked tree. Source delivery
 additionally carries `symmetry-reference.zip` as the space-group generator's
-preferred input, subject to its unresolved rights review; the other 14 are
-independent test oracles, excluded from source delivery.
+preferred input under the recorded scientific-table upstream policy; the other
+14 are independent test oracles, excluded from source delivery.
 [Archive locations](reference/archives.json) records their byte lengths and
 SHA-256 hashes, the immutable source commit already present in main history,
 and the local protection tag. Original branch/tag data and all reference

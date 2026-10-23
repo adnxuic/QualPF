@@ -15,7 +15,8 @@ reports are no longer used for routine development.
 - Recorded per-input scientific-data and inherited-image rights findings, actual
   Windows Qt/installer runtime origins, and verified versioned dependency source
   archives. Preserved separate winpthreads, MinGW CRT, IFW, libarchive and OpenSSL
-  notices; unresolved compilation grants and modified runtime source stay blocked.
+  notices; historical data-grant findings remain recorded and modified runtime
+  source stays subject to package review.
   Added optional offline dependency bundles with original notices, full source
   archives and actual Eigen/Boost header sources, checked again during staging.
 
@@ -37,6 +38,14 @@ reports are no longer used for routine development.
   normal builds require no additional Qt module.
 
 ### Changed
+
+- Adopted the owner's QualX3 distribution approach for the five inherited
+  scientific table scopes: retain the upstream project GPL basis, original
+  references, copyright qualifications and corresponding sources. Recorded this
+  as an upstream-policy disposition, distinct from verified third-party grants;
+  the missing separate data-grant evidence alone no longer blocks those scopes.
+  Preserved all scientific values, reference assertions and excluded-material
+  dispositions; runtime/source and final package checks still apply.
 
 - Replaced inherited user-manual prose with independently authored QualPF
   instructions and an original workflow illustration. The tutorial uses the

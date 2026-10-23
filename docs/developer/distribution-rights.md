@@ -9,20 +9,35 @@ contracts. No scientific input, generated table or reference was changed.
 
 ## Scientific inputs
 
-| Material | Public evidence and remaining gap |
+On 23 October 2026, the owner instructed QualPF to follow QualX3's handling of
+these five inherited table scopes. The tables, original references and preferred
+source inputs are retained on the upstream project-level GPL distribution basis.
+`scientific_data_policy` in `deploy/distribution.json` is the decision's single
+source. The component and five material entries use `upstream-policy`, distinct
+from `reviewed`; their previous blocked status and public findings remain recorded.
+Missing separate data-grant evidence alone no longer blocks these five scopes.
+
+This disposition is not evidence of a new NIST or other third-party grant. The
+NIST compilation-copyright qualification and original file-specific terms remain
+visible. Runtime reviews, databases, excluded examples/CIF and replaced artwork
+or manual originals are outside this decision. New unreviewed material cannot
+silently inherit it.
+
+| Material | Retained public evidence and qualification |
 | --- | --- |
-| `AtomProperties.xen` | Its own header cites International Tables C 6.1.1.4, 4.2.6.8 and 4.2.4.3, Bondi/Rowland-Taylor radii and published atomic weights. The QualX GPL update establishes repository provenance, but no specific grant for this combined compilation or its external tables was located. The compilation and generated mass/scattering tables remain blocked. |
-| NIST FFAST extraction | The retained `nist_table.f90.txt` records the original NIST download/generation procedure for Z=1–92. The [official FFAST page](https://www.nist.gov/pml/x-ray-form-factor-attenuation-and-scattering-tables) identifies **Standard Reference Database 66** and reserves compilation copyright. NIST's [licensing statement](https://www.nist.gov/open/copyright-fair-use-and-licensing-statements-srd-data-software-and-technical-series-publications) distinguishes SRD from ordinary government data. The general non-SRD grant cannot clear this extraction. [FFAST.jl's Unlicense](https://github.com/usnistgov/FFAST.jl/blob/master/LICENSE) grants software rights without explicitly resolving this older SRD compilation. Applicable redistribution/derivative permission remains required. |
+| `AtomProperties.xen` | Its own header cites International Tables C 6.1.1.4, 4.2.6.8 and 4.2.4.3, Bondi/Rowland-Taylor radii and published atomic weights. The QualX GPL update establishes repository provenance; no separate grant for this combined compilation or its external tables was located in the public review. The owner has adopted the upstream distribution basis for the retained input and generated tables. |
+| NIST FFAST extraction | The retained `nist_table.f90.txt` records the original NIST download/generation procedure for Z=1–92. The [official FFAST page](https://www.nist.gov/pml/x-ray-form-factor-attenuation-and-scattering-tables) identifies **Standard Reference Database 66** and reserves compilation copyright. NIST's [licensing statement](https://www.nist.gov/open/copyright-fair-use-and-licensing-statements-srd-data-software-and-technical-series-publications) distinguishes SRD from ordinary government data. The general non-SRD grant is not substituted for its terms. [FFAST.jl's Unlicense](https://github.com/usnistgov/FFAST.jl/blob/master/LICENSE) grants software rights without explicitly resolving this older SRD compilation. No separate NIST grant was located in the examined QualX materials; that qualification remains recorded under the chosen upstream policy. |
 | Electron-scattering parameters | The active Lobato block cites [Lobato and Van Dyck (2014)](https://doi.org/10.1107/S205327331401643X). The author's [MULTEM source](https://github.com/Ivanlh20/MULTEM/blob/master/src/atomic_data.hpp) carries GPLv3-or-later, but its current parameter table differs from this retained version. Its license does not prove identity of these coefficients. The preferred Fortran input also retains unused Kirkland/Doyle-Turner tables. No replacement, rounding change or new product-derived reference was made. |
 | `syminfo.lib` | [CCP4's symmetry documentation](https://www.ccp4.ac.uk/html/symlib.html) identifies the format. The [official libccp4 6.3 source directory](https://ftp.ccp4.ac.uk/ccp4/6.3.0/unpacked/lib/libccp4/) supplies GPLv3/LGPLv3 texts. CCP4 6.3 and 6.4 publish the same file (SHA-256 `d8ea437d3e60ab4ef2007d2f5cfcd1cc4f16c2761be2dce041589d396dbfc42a`), which differs from QualPF's retained file in aliases and settings as well as whitespace. This establishes a base-source lead, not clearance of every modified entry or the separate exact catalogue. |
 | Exact symmetry catalogue | The frozen archive has 14 members, including four original source files. The generator uses `exact-table.json` and `symm_table.f90`; their independently recorded hashes remain unchanged. The underlying table compilation's origin/grant still needs confirmation. The separately licensed spglib naming supplement does not license this other catalogue. |
 | Historical powder examples | No file-specific redistribution grant was located for `CPD2.dat`, `example1.dat` or `MIXT_5.dat`. They are excluded from installation and source export. Development inputs and tests retain their original bytes. Permission is needed only if these examples are reintroduced into delivery. |
 | `CoO.cif` reference structure | The retained header identifies PAULING FILE Multinaries Edition 2012 / SpringerMaterials Release 2014, copyright Springer/MPDS/NIMS, **All Rights Reserved**. It is not a freely licensed COD fixture. This original remains in the development checkout with its existing assertions, but is excluded from source delivery. No replacement reference was generated. |
 
-Unresolved grants apply to compiled/generated data as well as preferred source
-inputs. An unused input table does not become cleared merely because its values
-are absent from the executable. Keep the independent generator inputs and
-original failures available during review.
+The scoped policy covers both the inherited source inputs and their generated
+C++ representations. Preserve all scientific values, references, generator
+inputs and original failures. Unused tables in a preferred input retain their
+original source/rights qualifications; their absence from executable calculations
+does not create a new grant.
 
 ## Inherited artwork and documents
 
@@ -66,7 +81,7 @@ Bibliographic facts and required upstream/third-party attributions remain.
 The `inherited-artwork-docs` component's reviewed status describes the completed
 replacement/exclusion disposition; it grants no rights in excluded originals.
 New contributions follow GPL-3.0-only to the extent applicable rights exist.
-Scientific-data grants and package-specific runtime reviews remain separate.
+The scoped scientific-data policy and package-specific runtime reviews remain separate.
 
 ## Actual Windows runtime findings
 
@@ -181,8 +196,9 @@ The empty default keeps ordinary builds independent of a local source cache.
 The reviewed local MinGW stage binds 17 Qt DLLs/plugins and winpthreads to their
 actual SDK bytes, notices and supplied source artifacts. Eigen/Boost reviews bind
 the actual header archives. This leaves three GCC DLL source/build bindings and
-the IFW container review incomplete, in addition to the application material
-grants. These are audit findings, not a declaration of formal release readiness.
+the IFW container review incomplete. Scientific table qualifications remain
+recorded under the owner's upstream policy. These are audit findings, not a
+declaration of formal release readiness.
 
 Source export excludes all `tests/real_example_data` and the three historical
 installed examples above. Full normal regression tests still require the original
@@ -202,14 +218,17 @@ VC++ runtime payloads. Historical MSVC audit artifacts remain evidence, not
 release candidates. This decision does not waive the separately embedded
 installer/graphics runtime review.
 
-No private grants were supplied, and no authors were contacted. The remaining
-external information is an applicable public license or rights-holder grant for
-the exact scientific compilations still delivered. Inherited action artwork and
-user manual originals have been replaced or removed; no new grant is asserted
-for those originals.
+No private grants were supplied, and no authors were contacted. The owner chose
+the upstream scientific-table distribution approach rather than making separate
+data-grant evidence a prerequisite for those five scopes. Earlier findings,
+original references and NIST's compilation-copyright statement remain recorded;
+the policy is not a representation that separate grants were obtained. The
+remaining package-specific runtime/source and platform acceptance work still
+applies. Inherited action artwork and user manual originals have been replaced
+or removed; no new grant is asserted for those originals.
 The excluded examples and reserved CIF require permission if they are to be
 redistributed later; they are no longer current payload prerequisites.
-Any grant must cover modification and redistribution with the intended GPL
-application, including corresponding-source delivery. If such permission cannot
-be found, a separately authorized replacement/removal design is needed; this
-audit does not authorize changing scientific data or weakening comparisons.
+The decision authorizes no numerical changes, replacement scientific data or
+weaker assertions. Existing audit artifacts predate this policy and the completed
+artwork/manual replacements; regenerate them before final distribution instead
+of relabeling their recorded provenance or review results.

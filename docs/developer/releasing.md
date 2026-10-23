@@ -23,10 +23,15 @@ It remains in Git at its original path/blob but is excluded from runtime/source
 delivery and never displayed as the QualPF installer license. Removing it from
 packaging does not establish grants for all inherited material.
 
-The inventory distinguishes reviewed source grants, blocked material and
-package-specific review. Outstanding rights include retained scientific
-data: AtomProperties.xen, syminfo.lib, scattering/NIST source tables and the exact
-symmetry catalogue. All 29 inherited runtime action images have
+The inventory distinguishes reviewed grants/dispositions, blocked material,
+package-specific review and the owner's scoped `upstream-policy`. On 23 October
+2026 the owner chose to handle AtomProperties, FFAST, electron-scattering
+parameters, `syminfo.lib` and the exact symmetry catalogue as QualX3 does: retain
+the tables, scientific references and corresponding sources on the upstream
+project-level GPL basis. These five scopes no longer fail release preflight
+solely because separate data grants were not found. Original findings and the
+NIST compilation-copyright qualification remain recorded; no new third-party
+permission is asserted. All 29 inherited runtime action images have
 been independently redrawn and their original files excluded from current source
 and delivery. The rights inventory retains original identities and replacement
 paths; their exclusion does not grant rights to the old artwork. The user manual
@@ -43,8 +48,10 @@ each kit. Available original Qt SBOMs and Eigen notices are installed under
 `share/qualpf/SDK-NOTICES`. Their presence is not a compatibility/source audit.
 
 Ordinary consistency checks can succeed with explicitly recorded unresolved
-rights. `--release` rejects unresolved rights, dirty/unknown revisions, stale
-build metadata, missing corresponding source and incomplete package reviews.
+rights. `--release` rejects blocked material, an invalid/widened upstream policy,
+dirty/unknown revisions, stale build metadata, missing corresponding source and
+incomplete package reviews. Inventories carry the scoped scientific-data policy
+and its explicit unverified-grant qualification alongside the runtime findings.
 `QUALPF_DISTRIBUTION_AUDIT_ONLY=ON` permits local inspection artifacts with
 `-audit` filenames, audit provenance and a separate audit installer title/path.
 This flag does not waive licenses or clear redistribution. No tool here uploads
@@ -116,8 +123,8 @@ are removed by packaging.
 
 Of the 15 sealed reference ZIPs, `tests/data/symmetry-reference.zip` is also the
 preferred input of the maintained space-group generator. Corresponding source
-includes it after rights clearance. The other 14 are independent test oracles,
-provisioned through the existing
+includes it under the recorded scientific-data policy. The other 14 are
+independent test oracles, provisioned through the existing
 [restoration procedure](../../tests/README.md#independent-references). Tracked
 scattering/chemistry/CIF catalogue inputs and generators are included as well.
 A successful compile of generated `.inc` files alone is insufficient.
@@ -138,7 +145,8 @@ New product sources also mark the delivered revision dirty. Source-boundary chec
 use archive contents directly, including when extraction occurs under another Git
 checkout; they cannot borrow the parent's index and report zero bound inputs.
 
-After rights clearance, configure audit mode OFF and supply:
+After completing the recorded material dispositions and package-specific review,
+configure audit mode OFF and supply:
 
 - `QUALPF_CORRESPONDING_SOURCE_ARCHIVE`: the exact clean, non-audit source TGZ
   matching the binary revision/version. Provide equivalent access alongside the

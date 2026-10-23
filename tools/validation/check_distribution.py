@@ -2,7 +2,8 @@
 """Check distribution inputs, inventory actual payloads and export corresponding source.
 
 Ordinary checks validate consistency, not legal clearance. --release additionally
-requires resolved rights, a clean revision, exact source and package runtime review.
+requires accepted material dispositions, a clean revision, exact source and package
+runtime review. An explicit upstream scientific-data policy is not a verified grant.
 No command publishes, fetches references, changes scientific inputs or edits Git.
 """
 import argparse
@@ -24,6 +25,8 @@ INVENTORY = "distribution-inventory.json"
 LICENSE_FILES = ("LICENSE", "NOTICE.md", "THIRD_PARTY_NOTICES.md")
 FIELDS = {"id", "paths", "source", "version", "copyright", "license",
           "modifications", "license_files", "status", "obligations"}
+UPSTREAM_SCIENTIFIC_MATERIALS = {"atom-properties", "ffast-srd66", "electron-scattering",
+                                 "syminfo", "symmetry-preferred-input"}
 
 
 def read_json(path):
@@ -116,7 +119,7 @@ def check_inputs(root):
     for entry in data["components"]:
         if not FIELDS.issubset(entry) or not all(entry.get(key) for key in FIELDS - {"license_files"}):
             errors.append("incomplete component provenance: " + str(entry.get("id")))
-        if entry["id"] in ids or entry["status"] not in {"reviewed", "blocked", "package-review"}:
+        if entry["id"] in ids or entry["status"] not in {"reviewed", "blocked", "package-review", "upstream-policy"}:
             errors.append("duplicate component or invalid review status: " + entry["id"])
         ids.add(entry["id"])
         if entry["status"] == "reviewed" and not entry["license_files"]:
@@ -152,11 +155,48 @@ def check_inputs(root):
     return errors, data
 
 
+def scientific_policy_errors(data, review=None):
+    """Keep the owner's scoped release disposition distinct from verified grants."""
+    policy = data.get("scientific_data_policy", {})
+    adopted = {entry["id"] for entry in data["components"] if entry["status"] == "upstream-policy"}
+    row_policy = review is not None and any(entry.get("status") == "upstream-policy"
+        for key in ("scientific_inputs", "inherited_images") for entry in review.get(key, []))
+    if not policy and not adopted and not row_policy:
+        return []
+    errors = []
+    if adopted != {"scientific-data"}:
+        errors.append("upstream policy is limited to the scientific-data component")
+    if not data.get("rights_review"):
+        errors.append("scientific upstream policy requires the retained material findings")
+    if (policy.get("mode") != "follow-upstream" or policy.get("adopted_by") != "adnxuic" or
+            not re.fullmatch(r"\d{4}-\d{2}-\d{2}", policy.get("adopted_on", "")) or
+            not policy.get("basis") or not policy.get("qualifications")):
+        errors.append("scientific upstream policy lacks the recorded owner decision")
+    upstream_ref = data.get("upstream", {}).get("license_commit")
+    if not upstream_ref or policy.get("upstream_ref") != upstream_ref:
+        errors.append("scientific upstream policy differs from the documented upstream license revision")
+    materials = policy.get("materials", [])
+    if set(materials) != UPSTREAM_SCIENTIFIC_MATERIALS or len(materials) != len(set(materials)):
+        errors.append("scientific upstream policy must cover only the five inherited table scopes")
+    if policy.get("separate_data_grants_verified") is not False:
+        errors.append("upstream policy cannot claim separately verified third-party data grants")
+    if review is not None:
+        rows = [entry for entry in review.get("scientific_inputs", []) if entry.get("status") == "upstream-policy"]
+        if ({entry.get("id") for entry in rows} != UPSTREAM_SCIENTIFIC_MATERIALS or
+                any(entry.get("delivery") == "excluded" for entry in rows) or
+                any(entry.get("status") == "upstream-policy" for entry in review.get("inherited_images", []))):
+            errors.append("scientific upstream policy differs from the delivered material inventory")
+        if any(entry.get("delivery") != "excluded" and entry.get("status") not in {"reviewed", "upstream-policy"}
+               for entry in review.get("scientific_inputs", [])):
+            errors.append("unreviewed scientific material falls outside the adopted upstream policy")
+    return errors
+
+
 def rights_review_errors(root, data):
     if not data.get("rights_review"):
-        return []  # Isolated fixtures and older portable metadata have no review.
+        return scientific_policy_errors(data)  # Older isolated fixtures have no review.
     review = read_json(relative(root, data["rights_review"]))
-    errors = []
+    errors = scientific_policy_errors(data, review)
     if review.get("schema") != "qualpf.distribution_rights_review.v1":
         return ["unsupported material rights review"]
     images = review.get("inherited_images", [])
@@ -177,7 +217,7 @@ def rights_review_errors(root, data):
     seen = set()
     for entry in images + science:
         path = relative(root, entry["path"])
-        if entry["path"] in seen or entry.get("status") not in {"reviewed", "blocked", "partial"}:
+        if entry["path"] in seen or entry.get("status") not in {"reviewed", "blocked", "partial", "upstream-policy"}:
             errors.append("duplicate/invalid material rights entry: " + entry["path"])
         seen.add(entry["path"])
         excluded = entry.get("delivery") == "excluded"
@@ -288,6 +328,7 @@ def manual_errors(root, pdf, proof):
 def release_errors(data, info, kind=None):
     errors = ["unresolved distribution rights: " + entry["id"] + ": " + entry["obligations"]
               for entry in data["components"] if entry["status"] == "blocked"]
+    errors.extend(scientific_policy_errors(data))
     if info["audit_only"]:
         errors.append("audit package is not cleared for distribution")
     if info["source_dirty"] or not re.fullmatch(r"[0-9a-f]{40}", info["source_revision"]):
@@ -501,6 +542,8 @@ def stage_inventory(root, stage, data, review=None, kind=None):
                   component_reviews=review.get("components", {}),
                   review_blockers=errors,
                   rights_blockers=[entry["id"] for entry in data["components"] if entry["status"] == "blocked"])
+    if data.get("scientific_data_policy"):
+        report["scientific_data_policy"] = data["scientific_data_policy"]
     return report, materials
 
 
@@ -623,6 +666,34 @@ def self_test():
             info["compiler"] = "GNU 13.1 (Windows/AMD64)"
             self.assertEqual(release_errors(data, info, "IFW"), [])
             self.assertEqual(runtime_component("bin/libwinpthread-1.dll"), "mingw-winpthreads")
+
+        def test_scientific_upstream_policy_is_scoped_and_not_a_grant(self):
+            policy = dict(mode="follow-upstream", adopted_by="adnxuic", adopted_on="2026-10-23",
+                          upstream_ref="a" * 40, materials=sorted(UPSTREAM_SCIENTIFIC_MATERIALS),
+                          basis="Owner follows the upstream GPL distribution approach",
+                          qualifications="Original third-party copyright statements retained",
+                          separate_data_grants_verified=False)
+            data = dict(components=[dict(id="scientific-data", status="upstream-policy"),
+                                    dict(id="compiler-runtime", status="blocked", obligations="source missing")],
+                        upstream=dict(license_commit="a" * 40), scientific_data_policy=policy,
+                        rights_review="review.json")
+            review = dict(scientific_inputs=[dict(id=name, status="upstream-policy")
+                                             for name in UPSTREAM_SCIENTIFIC_MATERIALS])
+            info = dict(audit_only=False, source_dirty=False, source_revision="b" * 40)
+            self.assertEqual(scientific_policy_errors(data, review), [])
+            self.assertEqual(len(release_errors(data, info)), 1)
+            self.assertIn("compiler-runtime", release_errors(data, info)[0])
+            for key, value in (("separate_data_grants_verified", True), ("basis", ""),
+                               ("materials", policy["materials"] + ["excluded-example"]),
+                               ("upstream_ref", "c" * 40)):
+                changed = json.loads(json.dumps(data))
+                changed["scientific_data_policy"][key] = value
+                self.assertTrue(scientific_policy_errors(changed, review), key)
+            data["components"][1]["status"] = "upstream-policy"
+            self.assertTrue(scientific_policy_errors(data, review))
+            data["components"][1]["status"] = "blocked"
+            review["scientific_inputs"][0]["delivery"] = "excluded"
+            self.assertTrue(scientific_policy_errors(data, review))
 
         def test_removed_image_replacement(self):
             with tempfile.TemporaryDirectory() as directory:
@@ -1014,6 +1085,8 @@ def main():
             build_tools=[dict(file=path.name, bytes=path.stat().st_size, sha256=digest(path)) for path in args.tool]))
     pending = [entry["id"] for entry in data["components"] if entry["status"] == "blocked"]
     print("PASS: distribution input consistency" + ("; rights still unresolved: " + ", ".join(pending) if pending else ""))
+    if data.get("scientific_data_policy"):
+        print("Scientific tables: follow upstream policy; separate third-party data grants not independently verified")
     return 0
 
 

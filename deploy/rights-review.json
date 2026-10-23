@@ -7,7 +7,8 @@
       "id": "atom-properties",
       "path": "share/qualx/files/AtomProperties.xen",
       "sha256": "f2c18e79c74e06860311135e4334f32a75cb487e291918a5df71e0e748d7ad3b",
-      "status": "blocked",
+      "status": "upstream-policy",
+      "prior_review_status": "blocked",
       "finding": "Int. Tables C 6.1.1.4, 4.2.6.8 and 4.2.4.3; Bondi/Rowland-Taylor radii and published atomic weights. No asset-specific redistribution grant located.",
       "primary_sources": [
         "https://it.iucr.org/C/"
@@ -18,7 +19,8 @@
       "id": "ffast-srd66",
       "path": "tests/regression/references/provenance/resource-inputs/fortran/crystallography/nist_table.f90.txt",
       "sha256": "d951d1d0a77c29bb3581e3f2946d809054ee38bcfd61515910def0fd630815e6",
-      "status": "blocked",
+      "status": "upstream-policy",
+      "prior_review_status": "blocked",
       "finding": "Original generator points to NIST FFAST for Z=1..92. NIST explicitly identifies FFAST as SRD 66 with reserved compilation copyright; the general non-SRD/public-domain statement cannot clear this data. FFAST.jl software Unlicense does not explicitly relicense this older SRD compilation.",
       "primary_sources": [
         "https://www.nist.gov/pml/x-ray-form-factor-attenuation-and-scattering-tables",
@@ -31,7 +33,8 @@
       "id": "electron-scattering",
       "path": "tests/regression/references/provenance/resource-inputs/fortran/crystallography/scatt_params.F90.txt",
       "sha256": "34d046022a463a15cd75d040eb4f4e515c71ef9152dc28396c0af1e27ab95979",
-      "status": "blocked",
+      "status": "upstream-policy",
+      "prior_review_status": "blocked",
       "finding": "Compiled Lobato parameters cite Lobato and Van Dyck (2014), DOI 10.1107/S205327331401643X. The file also retains unused Kirkland/Doyle-Turner tables. Author MULTEM source has GPLv3-or-later, but its current Lobato table is different; no substitution or numerical change is authorized.",
       "primary_sources": [
         "https://doi.org/10.1107/S205327331401643X",
@@ -43,7 +46,8 @@
       "id": "syminfo",
       "path": "share/qualx/files/syminfo.lib",
       "sha256": "9b20fc422e6e1f6ded0f9c4d16d57204e05916896de79a4330762651f89be286",
-      "status": "blocked",
+      "status": "upstream-policy",
+      "prior_review_status": "blocked",
       "finding": "CCP4 6.3/6.4 libccp4 has GPLv3/LGPLv3 texts; its syminfo.lib differs from this retained version beyond whitespace, including aliases/settings. Base attribution identified; exact derivative source/grant still needs confirmation.",
       "primary_sources": [
         "https://ftp.ccp4.ac.uk/ccp4/6.3.0/unpacked/lib/libccp4/",
@@ -55,7 +59,8 @@
       "id": "symmetry-preferred-input",
       "path": "tests/data/symmetry-reference.zip",
       "sha256": "66672d9f3f0dd533bbac4bf99eaa1b4faecd5ebd2d92692064fb4ddae90382be",
-      "status": "blocked",
+      "status": "upstream-policy",
+      "prior_review_status": "blocked",
       "finding": "Frozen archive has 14 members and four original source files, with exact-table.json and symm_table.f90 used by the generator. QualX source provenance is retained, but the underlying exact table compilation origin/grant is still unproved. Do not replace it with modern library output.",
       "primary_sources": [
         "https://github.com/ccorrado71/qualx3/commit/f98a51da8435fef0f730b513e76c820fb879865d"
@@ -545,11 +550,12 @@
     "docs/user/images/qualx_icon.svg"
   ],
   "owner_information": [
-    "Permission or an applicable public grant covering retained NIST SRD 66 extraction, AtomProperties compilation and referenced tables, Lobato coefficient version and exact symmetry tables remains required. Removed/replaced artwork and manual originals remain excluded, not relicensed. Excluded measured examples and the reserved CIF need permission if reintroduced."
+    "On 2026-10-23 the owner chose the QualX3 distribution approach for the five inherited table scopes. See scientific_data_policy in deploy/distribution.json. Earlier findings and hashes remain unchanged; separate third-party data grants have not been verified. Removed/replaced artwork/manual originals and excluded examples/CIF remain outside this decision."
   ],
   "decisions": {
     "windows_formal_distribution": "MinGW only; MSVC development validation retained",
-    "deb_maintainer_email": "uncercalculate@163.com"
+    "deb_maintainer_email": "uncercalculate@163.com",
+    "scientific_tables": "Follow the scoped upstream policy recorded in deploy/distribution.json; preserve original references, compilation-copyright qualifications and preferred sources without claiming new third-party grants."
   },
   "upstream_official_references": [
     "https://www.ic.cnr.it/en/software/qualx-2/",

@@ -19,14 +19,22 @@ not permission to distribute an unresolved work.**
 | winpthreads | Copyright (c) 2011 mingw-w64 project; derived parts (C) 2010 Lockless Inc. | Both the MIT and BSD notices are retained in [upstream COPYING](LICENSES/mingw-winpthreads-COPYING.txt). They apply separately from the GCC Runtime Library Exception. |
 | Microsoft Visual C++ Redistributable | Microsoft Corporation | Proprietary redistribution terms for the selected toolset; not relicensed under the application's GPL. Retained MSVC development audit artifacts are excluded from formal release. MinGW application selection does not establish the statically built IFW container's runtime provenance. |
 | Installer/AppImage runtime and bundled dependencies | Qt Installer Framework, AppImage runtime and the actual staged transitive libraries | IFW 4.8.1 uses [GPLv3 with the Qt exception](LICENSES/QtIFW-GPL3-Exception.txt); its actual installer embeds Qt 6.6.0 and OpenSSL 3.0.14, separately from application Qt. Preserve [libarchive notices](LICENSES/IFW-libarchive-COPYING.txt) and the [OpenSSL license](LICENSES/OpenSSL-3.0-LICENSE.txt), plus the exact linked Qt/component sources and notices. AppImage and graphics support libraries retain their own terms. Versioned upstream sources alone do not clear an unbound static build. |
-| Scientific tables and examples | Retained QualX3 inputs and cited scientific sources, including NIST and International Tables references | Provenance and scientific citations do not by themselves establish a redistribution grant. Rights review remains open for the retained tables, their preferred modification inputs and example data. Do not alter accepted values to avoid this review. |
+| Scientific tables | Retained QualX3 inputs and cited scientific sources, including NIST and International Tables references | The publisher follows QualX3's project-level GPL distribution approach for the five inherited table scopes, retaining their source references, copyright statements and preferred modification inputs. The recorded upstream-policy disposition is separate from independently verified third-party grants. Accepted values remain unchanged; excluded examples/CIF are outside this decision. |
 | Original QualX3 artwork and documentation | Original authors and any external asset authors | All 29 inherited action images were replaced by independent QualPF artwork. The user manual was independently authored and inherited document branding removed. Original text/image identities and earlier grant findings are retained in the rights inventory and Git history. Excluded originals are not relicensed; reintroducing them requires their own review. |
 | Independent QualPF artwork | QualPF contributors; application raster master/prompt and action SVG masters are retained in the resource guides | Supplied with the QualPF additions under GPL-3.0-only to the extent applicable rights exist. This is not a claim to third-party institutional marks. |
 
 Material-specific findings are recorded in `deploy/rights-review.json` and the
 developer rights review. NIST FFAST is SRD 66 with a reserved compilation
 copyright; the general grant for non-SRD NIST data must not be substituted for
-its actual terms. Retained scientific-data grants remain unresolved. Replaced
+its actual terms. FFAST is credited to C. T. Chantler; NIST identifies compilation
+copyright held by the U.S. Secretary of Commerce (1995, 1996, 2001). AtomProperties
+retains its International Tables, Bondi/Rowland-Taylor and atomic-weight references;
+electron parameters retain the Lobato/Van Dyck and other original citations.
+CCP4 format/source references and the exact symmetry catalogue's provenance are
+retained. QualPF follows the owner's upstream policy for these five scopes;
+separate third-party data grants remain unverified and are not relabeled as GPL
+permissions from those third parties. The source and generator inputs accompany
+delivery; this policy alone no longer blocks it. Replaced
 action artwork and documentation originals are excluded, not relicensed. The new
 manual and original workflow illustration are QualPF contributions under
 GPL-3.0-only to the extent applicable rights exist; source/master files are supplied.

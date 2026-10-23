@@ -206,12 +206,12 @@
       ],
       "source": "Retained QualX3 tables, scientific references and frozen exact generator inputs",
       "version": "hash-pinned current scientific manifests; no numerical changes",
-      "copyright": "Original table/data authors; independent redistribution scope not established by citations alone",
-      "license": "unresolved for parts of the delivered tables; optional uncleared examples are excluded",
+      "copyright": "Original table/data authors; retain their source references and copyright statements",
+      "license": "QualX3 project-level GPLv3 distribution basis; separate third-party data grants have not been independently verified",
       "modifications": "Accepted generated C++ tables and preserved binary32/exact-rational semantics",
-      "license_files": [],
-      "status": "blocked",
-      "obligations": "Establish grants for AtomProperties.xen, syminfo.lib, scattering/NIST source tables and the exact symmetry catalogue. Optional powder examples and the reserved CIF are excluded from delivery; permission is needed if reintroduced. Preserve all accepted bytes while reviewing. Per-input findings and required owner information: deploy/rights-review.json and docs/developer/distribution-rights.md."
+      "license_files": ["LICENSE"],
+      "status": "upstream-policy",
+      "obligations": "Follow the owner's recorded QualX3 distribution approach for the five specified table scopes: retain the project GPL, original source references, NIST compilation-copyright qualification, preferred inputs and corresponding source. This disposition does not assert separate third-party grants. Excluded examples/CIF, replaced artwork/manual originals and runtime reviews remain outside this policy."
     },
     {
       "id": "inherited-artwork-docs",
@@ -261,7 +261,7 @@
       "tests/regression/references/provenance/resource-inputs/fortran/crystallography/nist_table.f90.txt",
       "tests/regression/references/cif/site-symmetry/constraint-catalogue.json"
     ],
-    "obligations": "Include preferred modification inputs and generators in corresponding source after rights clearance; a successful compile of committed generated tables is not sufficient. Never regenerate scientific expected results from the product."
+    "obligations": "Include preferred modification inputs and generators in corresponding source under the recorded scientific-data distribution policy; a successful compile of committed generated tables is not sufficient. Never regenerate scientific expected results from the product."
   },
   "excluded_legacy_assets": [
     "deploy/Windows/licence.txt",
@@ -346,5 +346,15 @@
     "src/gui/resources/images/reset_zoom.xpm",
     "src/gui/resources/images/preferences.png",
     "src/gui/resources/images/stop.png"
-  ]
+  ],
+  "scientific_data_policy": {
+    "mode": "follow-upstream",
+    "adopted_on": "2026-10-23",
+    "adopted_by": "adnxuic",
+    "upstream_ref": "f98a51da8435fef0f730b513e76c820fb879865d",
+    "materials": ["atom-properties", "ffast-srd66", "electron-scattering", "syminfo", "symmetry-preferred-input"],
+    "basis": "Owner instruction to follow QualX3's handling of these five inherited scientific table scopes: retain the tables and scientific references, use the upstream project-level GPL distribution basis and provide corresponding source.",
+    "separate_data_grants_verified": false,
+    "qualifications": "The earlier public-source findings remain recorded, including NIST SRD 66 compilation copyright. This decision is not evidence of a separate NIST or other third-party grant. It does not cover excluded examples/CIF, replaced artwork/manual originals, databases or runtime components."
+  }
 }
