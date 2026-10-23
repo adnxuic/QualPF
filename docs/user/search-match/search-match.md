@@ -1,265 +1,134 @@
-# Search & Match
+# Matching and quantification
+
+Inspect method settings before starting an analysis. **CSM Options** and
+**PFSM Options** edit the current project; the **Setting** window defines defaults
+for future projects. Changing one method's profile does not configure the other.
 
 ## Classical matching
 
-QualPF prepares any missing background and experimental peaks before searching.
-A compatible manually prepared or imported peak table skips peak extraction.
-Missing dependencies use the CSM profile, independently of other workflows.
-Classical matching still uses the real diffraction pattern. The search then follows these steps:
+CSM prepares missing background and formal peaks, or uses compatible manually
+prepared peak evidence. It prescreens reference cards, evaluates reflection
+matches and ranks the retained cards by figure of merit (FOM). Position agreement,
+intensity agreement and the coverage of experimental and database peaks all
+contribute. FOM is a ranking statistic, not an identification probability.
 
-1. **Strongest peaks filter**: for each database card, only the _N_ strongest
-   reference peaks are compared against the experimental peak list (fast pre-filter).
-2. **FOM calculation**: a weighted Figure of Merit combines peak-position
-   matching and intensity matching.
-3. **Results**: only cards above **Min. FOM** are retained. The table displays
-   them by FOM by default; click headers to change the displayed order. This does
-   not change saved candidate order or the order of later equal-score results.
+In **S&M > CSM Options**, review the minimum FOM, position/intensity/phase
+weights, angular tolerance, strongest-peak screening, deleted-card choice and
+result limit. Automatic tolerance depends on peak-width preparation. These
+controls affect classical matching rather than PFSM's candidate universe.
 
-## Classical Figure of Merit
+Select entries and use **Entry > Accept Selected Entries** to retain phases.
+When residual searching is enabled, accepting a phase updates the residual peak
+evidence and rescores existing candidates. It does not query the database again.
+Start another search when a new database query is intended. Multiple selected
+entries are processed in their displayed order.
 
-At the end of the search–match step a list of plausible database crystalline
-phases are ranked according to the decreasing values of a FOM. The FOM
-includes four contributions, three of them suitably weighted, according to
-the following formula:
+## PFSM preparation and options
 
-$$
-\mathrm{FOM}=\sqrt{\frac{\mathrm{FOM}_{db}\cdot\left(w_{\theta}\,\mathrm{FOM}_{\theta}
-+w_{I}\,\mathrm{FOM}_{I}+w_{ph}\,\mathrm{FOM}_{ph}\right)}{w_{\theta}+w_{I}+w_{ph}}}
-$$
+PFSM fits reference profiles to continuous observations. It needs the original
+source and processing evidence; reimport the measurement if the required evidence
+is missing. It uses a fixed intermediate-Lorentzian profile shape and joint
+fitting of selected phases.
 
-where FOM<sub>θ</sub> takes into account the average difference between the
-2θ values of the observed and matched database peaks; FOM<sub>I</sub> is
-related to the average difference between the intensity values of the
-observed and matched database peaks; FOM<sub>ph</sub> depends on the
-percentage of the matched experimental peaks and on their intensity; and
-FOM<sub>db</sub> depends on the percentage of the matched database peaks and
-on their intensity.
+Width selection first honors an explicitly configured valid fixed width, then a
+compatible manually estimated width. Otherwise PFSM measures geometric FWHM
+automatically. The initial value shown in an editor is not a measurement, and
+automatic estimation failure stops preparation. Geometric minimum sampling
+density defaults to 6. The classical width conversion is not applied to PFSM.
 
-FOM<sub>θ</sub> is the contribution coming from the 2θ differences between
-the experimental and the associated database peaks:
+**S&M > PFSM Options** has General and Candidate Recall tabs. Shift bounds
+default to -0.500 and +0.500 degrees two-theta; equal bounds fix the shift.
+Automatic weighting uses supplied statistical evidence. Unknown noise is reported
+as equal weighting rather than interpreted as measured counting statistics.
 
-$$
-\mathrm{FOM}_{\theta} = 1 - \dfrac{\displaystyle\sum_{i}^{N_{db}^{ass}}
-\left|2\theta_i^{\mathrm{exp}} - 2\theta_i^{db}\right|}{N_{db}^{ass}\cdot\Delta}
-$$
+The minimum relative FOM is a display filter in the range 0 to 1. Worker selection
+applies to the next run. Template caching is enabled by default: fitting iterations
+may use interpolation, with final fits verified by direct evaluation. Turning it
+off avoids cache preparation and uses direct evaluation throughout.
 
-where the summation is over the associated database peaks (a database peak
-is considered associated if its 2θ distance from the experimental peak is
-less than Δ), 2θ<sup>exp</sup> and 2θ<sup>db</sup> are the positions of the
-experimental and database peaks, respectively.
+### Candidate recall
 
-FOM<sub>I</sub> is the contribution due to the differences between the
-intensities of the experimental and the associated database peaks:
+Recall is enabled by default and selects candidates for formal fitting. Disabling
+it fits the full pool. The normal recall controls have these defaults:
 
-$$
-\mathrm{FOM}_{I} = 1 - \dfrac{\displaystyle\sum_{i}^{N_{\mathrm{exp}}^{ass}}
-\left|I_i^{\mathrm{exp}} - I_i^{db}\right|}{N_{\mathrm{exp}}^{ass}}
-$$
-
-where I<sup>exp</sup> and I<sup>db</sup> are the experimental and database
-intensity respectively, the summation is over the associated experimental
-peaks.
-
-FOM<sub>ph</sub> is the contribution due to the intensities of the
-associated experimental peaks and their percentage:
-
-$$
-\mathrm{FOM}_{ph} = \sqrt{\dfrac{\displaystyle\sum_{i=1}^{N_{\mathrm{exp}}^{ass}}
-I_i^{\mathrm{exp}}}{\displaystyle\sum_{i=1}^{N_{\mathrm{exp}}} I_i^{\mathrm{exp}}}
-\cdot\dfrac{N_{\mathrm{exp}}^{ass}}{N_{\mathrm{exp}}}}
-$$
-
-where N<sub>exp</sub> is the total number of experimental peaks.
-
-FOM<sub>db</sub> is the contribution due to the intensities of the
-associated database peaks and their percentage:
-
-$$
-\mathrm{FOM}_{db} = \sqrt{\dfrac{\displaystyle\sum_{i=1}^{N_{db}^{ass}}
-I_i^{db}}{\displaystyle\sum_{i=1}^{N_{db}} I_i^{db}}
-\cdot\dfrac{N_{db}^{ass}}{N_{db}}}
-$$
-
-where I<sub>db</sub> is the database intensity and the summation at the
-numerator is over the associated database peaks; N<sub>db</sub> is the total
-number of the database peaks.
-
-The weighting factors w<sub>θ</sub>, w<sub>I</sub>, w<sub>ph</sub> and Δ
-(default heuristic values are set for them) can be adjusted directly by the
-user via the graphical interface. w<sub>ph</sub> is related to the number of
-expected phases.
-
-The default value of the weights w<sub>θ</sub>, w<sub>I</sub>, and
-w<sub>ph</sub> is 0.5, but it can be changed by the dialogue window in
-Figure 1 (via the "2θ", "Intensity" and "Phases" trackbars).
-
-## CSM Options
-
-Open **S&M → CSM Options** to use the original weight sliders and search controls.
-OK saves these options to the current project; run CSM from its menu command.
-Setting → CSM edits defaults for new projects in a separate window.
-The separate Setting dialog's module tabs include independent background, initial
-peaks and FWHM defaults.
-
-| Option | Description |
-|--------|-------------|
-| **Min. FOM** | Discard cards below this threshold |
-| **2θ / d weight** | Contribution of peak-position agreement to FOM |
-| **Intensity weight** | Contribution of intensity agreement to FOM |
-| **Phases weight** | Bias towards single-phase vs. multi-phase solutions |
-| **Δ2θ** | Peak matching tolerance in degrees (Auto = calculated from peak widths) |
-| **Max. entries** | Maximum number of results to display |
-| **Check strongest peaks** | Use only the N strongest peaks for the pre-filter |
-| **Check deleted cards** | Include cards marked as deleted in the database |
-| **Residual searching** | After accepting a phase, automatically re-search on residual peaks |
-
-## Accepting a CSM Phase
-
-1. Select a card in the Results List.
-2. Click **Accept** (check-mark icon). The card is moved to the **Quantitative** dock.
-3. If **Residual searching** is enabled, QualPF subtracts the accepted phase
-   contribution and rescores the existing candidates on the remaining peaks.
-   It does not query the database again. A new Search & Match command performs
-   a new database search.
-
-## PFSM Options and width selection
-
-**S&M → PFSM Options** opens the original General and Candidate Recall tabs. OK validates and
-stores the current project's settings. Run PFSM from its menu command. Cancel
-discards drafts. Restore Defaults restores the original dialog defaults. Setting →
-PFSM edits defaults for new projects. Errors appear beside the relevant fields.
-CSM's score, peak prefilter and deleted-card options do not filter the PFSM pool;
-the explicit restraints define its candidate universe.
-
-| Module option | Default and effect |
+| Control | Default |
 | --- | --- |
-| Shift bounds | −0.500 to +0.500 °2θ; finite ordered bounds, equal values fix the shift |
-| FWHM | Read-only current source; PFSM owns its defaults and compatible manual width can be reused |
-| Signal | Current working observations, with preserved units and processing evidence |
-| Weighting | Auto from explicitly supplied statistics; unknown noise uses labelled equal weights; equal weights can also be chosen |
-| Min. relative FOM | 0, in [0,1]; immediate display filter only |
-| General → Advanced → Workers | Auto (internal 0); applies to the next run |
-| General → Advanced → Template cache | On; interpolated fitting iterations always have direct final verification |
+| Recall candidates | 500 |
+| Local shortlist | 20 |
+| Protected candidates per channel | 5 |
+| Review set size | 80 |
+| Formal candidate set size | 80 |
 
-Template caching can speed up searches by reducing repeated profile calculations
-during fitting iterations. Preparing and storing the cache costs time and memory,
-so small searches may not benefit. Disabling it evaluates profiles directly
-throughout fitting, avoiding interpolation and its cache overhead, but repeated
-calculations can be slower. Both modes verify final fits by direct evaluation.
-Saved off choices and existing project settings are retained. Restore Defaults
-enables caching; Setting → PFSM → Profile Expansion controls defaults for new
-projects.
+Counts must be positive integers. Protection cannot exceed the local shortlist,
+which cannot exceed the recall target. Both fallback thresholds must be at least
+the shortlist size. Ties and numerical protection can enlarge a set: these
+thresholds trigger full-pool fallback when exceeded, rather than clipping entries.
 
-| Candidate Recall option | Default and effect |
-| --- | --- |
-| Enable candidate recall | On for first use or missing settings; an explicit off choice is remembered |
-| On resource limit | Bounded integral recall; choose Full-pool formal fitting to fit every candidate when the v2 grid or shift scan is too large |
-| Recall candidates | 500; total target from alternating original/residual channels |
-| Local shortlist | 20; Top-K for both initial selection and local review |
-| Protected candidates per channel | 5; protect each channel's top candidates within the recalled set |
-| Review set size | 80; fall back to the full pool if the review set exceeds this threshold |
-| Formal candidate set size | 80; fall back to the full pool if the proposed formal set exceeds this threshold |
+**On resource limit** defaults to bounded integral recall when the normal grid or
+shift scan is too large. Its fixed channel budgets differ from the five controls
+above. Choose **Full-pool formal fitting** to use that alternative resource-limit
+route. The choice takes effect in the next new analysis.
 
-The five counts apply to normal v2 recall. Bounded integral recall has fixed
-channel budgets and keeps ties and numerical protection without a final cap.
-The resource-limit choice applies to the next new analysis, including saved
-defaults for new projects. Missing settings use bounded integral recall.
+Scientific preparation and recall settings freeze when an analysis begins.
+Accepting, removing or rescoring phases uses the same frozen candidate universe
+and configuration. Changes to scientific settings require confirmation before
+dependent results are invalidated; display filtering does not refit the analysis.
 
-Counts are integers from 1 to 2147483647. Channel protection must not exceed the
-local shortlist, which must not exceed the recall target. Both fallback thresholds
-must be at least the local shortlist. Ties and numerical protection can add
-candidates; a threshold is not a truncation cap. Equality does not trigger fallback.
-Disabling recall fits the full pool and disables recall controls while retaining
-their values. Internal solver accuracy, starts, step counts and risk coefficients
-remain fixed. Shadow mode is available only in the benchmark CLI, whose default
-remains off.
+## Read PFSM results
 
-Execution reads only this project's profile. Defaults are copied at project
-creation; opening/cancelling Options never writes
-preferences. Invalid persisted settings are rejected before publication.
+Each formally fitted candidate is tried with the selected phases against a common
+baseline. Its improvement is the reduction in net Rwp from that baseline. The
+displayed FOM divides this improvement by the largest improvement among the
+formally fitted candidates in that round. If all improvements are zero, FOM is
+zero and the interface reports **Current candidates show no improvement**.
 
-A new analysis first uses an explicitly configured valid fixed width, then a
-manually estimated Gaussian or geometric width compatible with the current input
-and processing history. Otherwise it estimates geometric FWHM automatically,
-using configured sampling density Q (default 6). A historical estimate or initial
-display value 0.1 is not a measurement; PFSM does not apply CSM's 0.9 conversion.
-An automatic estimation failure reports its reason and stops the search.
+FOM therefore cannot be compared directly across rounds. Hiding rows, changing
+page, filtering or sorting does not change its denominator. Candidate Rwp, Shift
+and Scale describe the joint trial containing that candidate, not an independently
+confirmed phase composition.
 
-Width, weights, shift bounds, cache and all candidate-recall settings freeze when
-the analysis starts. Workflow Details records the actual parameters. Saving changed
-scientific parameters confirms and invalidates dependent results; the relative
-display threshold applies immediately and
-workers apply to the next run. Solver tolerances, budgets and IL shape are fixed.
-If original-source evidence is missing, reimport the measurement before PFSM.
+Accepting or removing a phase refits the selected set and reevaluates remaining
+candidates under the frozen recall configuration. A removed phase becomes a
+candidate again without another database query. The plot shows observations,
+background, joint calculation and residual. **View > Subtract Background** changes
+the view of observations and calculation without changing the fit or residual.
 
-## PFSM candidates and selected phases
+## Quantification
 
-PFSM fits selected phases jointly, then formally tries the shortlisted candidates,
-including ties and protected entries, against that common baseline. It fits the
-full pool when recall is disabled or falls back. With the final baseline fixed, define
+The **Quantitative analysis · PFSM/RIR** panel uses the selected-phase joint
+scales, each full reference card's intensity maximum and its effective RIR.
+For phase i, its unnormalized contribution is scale times reference maximum
+divided by RIR. Percentages normalize these contributions over the selected set.
+Candidate-preview scales and maxima of a clipped plotted curve are not used.
 
-$$
-d_j = R_{\mathrm{wp,baseline}}-R_{\mathrm{wp,trial},j},\qquad
-\mathrm{FOM}_j =
-\begin{cases}
-d_j/\max_{k\in C_g} d_k,&\max_{k\in C_g} d_k>0,\\
-0,&\max_{k\in C_g} d_k=0.
-\end{cases}
-$$
+Every selected phase needs a finite positive RIR and a supported Cu K-alpha
+reference convention. Missing or invalid RIR, unsupported radiation, zero or
+dependent templates, or unverified fitting can make the whole composition
+unavailable. Read the reasons in the panel or report; unavailable percentages
+are not zero. A pie chart appears only for a fully quantifiable selected set.
 
-Here $C_g$ is the formally fitted set for this round: the selected subset when
-screening succeeds, or the complete unselected universe for a full-pool run. Filtering,
-pagination, hidden/deleted display rows and header sorting do not change the
-denominator. If every improvement is zero, the status reports **Current candidates
-show no improvement**. FOM is not an identification probability and cannot be
-compared directly between rounds. CLI raw-improvement output stays unchanged.
+Select a phase and choose **Edit RIR...** to record a positive replacement RIR
+and its source or calibration. **Restore reference RIR** removes that revision.
+The database value remains unchanged. Revisions survive removal and reselection
+of the same card within the analysis and are saved in QPF. Changing RIR does not
+refit the profiles or reorder the candidate ranking.
 
-Accepting or removing a phase refits the selected phases jointly and reevaluates
-the full frozen universe through the same frozen recall configuration. Rescoring
-also retains that configuration. A removed card participates again, without a new
-database query. The **Quantitative analysis · PFSM/RIR** panel shows wt.%, joint
-Scale, Shift, effective RIR and baseline Rwp. QPF 1.0 preserves the full PFSM analysis for continued work after reopening.
-A mismatched reference database requires restarting the analysis before new retrieval.
+Percentages cover only selected crystalline phases. They exclude unidentified
+and amorphous material. Library RIR provenance is unverified; preferred
+orientation, microabsorption, reference choice and profile mismatch can bias the
+estimate. Treat the result as semi-quantitative and retain those qualifications
+when reporting it. Display rounding may leave a total slightly different from
+100 percent; stored values are not adjusted to force the rounded sum.
 
-## PFSM/RIR semi-quantitative analysis
+## Export and continuation
 
-For selected-phase joint coefficients $s_i$, complete frozen reference-card
-intensity maxima $M_i$ and effective RIR values, the mass percentages are
+Reports and printing use the same selected-phase result as the panel.
+**Export CSV...** writes phase identities, full-precision values, RIR sources,
+diagnostics and availability reasons. Unavailable percentages are empty fields.
+The `joint_rwp_net` CSV value is a dimensionless fraction. If atomic writing
+fails, the previous destination is retained.
 
-$$
-a_i=s_i M_i/RIR_i,\qquad w_i=100a_i/\sum_j a_j.
-$$
-
-The common fixed IL width factor cancels. Candidate-preview coefficients and
-clipped/sample-grid maxima do not determine percentages. Each selected phase
-needs a finite positive RIR and a supported Cu Kα reference convention. Missing
-or invalid data, unsupported radiation, zero templates, dependent templates or
-unverified joint fitting make the entire composition unavailable; the panel and
-report show reasons and no pie chart. An otherwise valid zero-scale phase is 0%.
-
-Select a phase and choose **Edit RIR…**. Enter a finite positive RIR, the source
-or calibration description and its Cu Kα applicability. The original library value
-remains visible; **Restore reference RIR** removes the revision. Busy, editing,
-Closing and stale-snapshot checks prevent partial changes. Cancel and owner-window
-close discard the private draft. Revisions bind the frozen library/card ID, survive
-removal/reselection, end with the analysis and never refit, reorder candidates or
-write to the database.
-
-Reports and printing share the panel's Application result. **Export CSV…** writes
-UTF-8 with full round-trip precision, identities, wt.%, Scale/Shift, original and
-effective RIR/source, fit diagnostics, state reasons and revision/generation/database
-identifiers. CSV `joint_rwp_net` is the dimensionless net Rwp fraction, matching the
-panel/report diagnostic. The display rounds percentages to two decimals; internal
-values are not adjusted to force a rounded total of 100%.
-
-These percentages describe only the selected crystalline phases. Unidentified and
-amorphous material are excluded; library RIR provenance is explicitly unverified.
-Preferred orientation, microabsorption, reference choice and fixed-profile mismatch
-can produce substantial errors. A frozen 28-scan evaluation gave mean absolute
-phase errors of 13.55 percentage points for IUCr CPD 1a–1h and 7.70 for the binary
-development scans. CPD uses organizer weighing results; the binary values use
-nominal author sample-label masses, with no separately retained weighing log.
-These measured errors qualify mass estimates separately from phase identification.
-See the
-[ICDD RIR explanation](https://www.icdd.com/assets/tutorials/Quantitative-Analysis-RIR.pdf)
-for the method and its assumptions.
+QPF retains the frozen analysis and RIR revisions for continuation. Opening a
+saved project does not search or fit again. Frozen results can be inspected
+offline; retrieving new references after a database identity change requires
+restarting the analysis.

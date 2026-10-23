@@ -1,52 +1,58 @@
 # Settings and workflow history
 
-**Setting** on the menu bar opens four independent defaults: Preprocessing, CSM,
-PFSM and Peak Search. These settings initialize new projects; saving defaults
-never changes the current project. No imported data is required.
+QualPF separates defaults for future projects from the parameters of the open
+project. Check which editor you are using before changing an option.
 
-The left column selects the workflow and the top tabs follow its module order.
-Switching tabs preserves drafts. **Restore Page Defaults** restores the current
-module's factory parameters. **Save Defaults** validates all edited pages and
-locates the first error. Unopened workflows retain their saved defaults. Cancel
-discards all drafts.
+## Defaults and project options
 
-**Setting → PFSM → Initial Peaks** edits PFSM's own derivative threshold,
-automatic/manual window and SG polynomial degree. These values are saved
-independently of the other workflows. Current automatic PFSM preparation uses
-geometric FWHM, which detects its own local peak candidates before measuring
-half-height crossings. It does not call the separate SG initial-peak module, so
-these SG parameters do not affect automatic geometric FWHM; the page states this
-explicitly.
+| Entry | What it changes |
+| --- | --- |
+| **Setting** on the menu bar | Saved defaults for new projects |
+| A workflow's **Options** command | That workflow in the current project |
+| A preprocessing editor | Its private preview, followed by the project on successful acceptance |
 
-**Setting → PFSM → Profile Expansion** enables template caching by default.
-During fitting iterations, cached interpolation reduces repeated profile
-calculations and can speed up searches. Cache preparation takes time and uses
-extra memory, so small searches may not benefit. Final fits always use direct
-profile evaluation for verification. Turning caching off evaluates profiles
-directly throughout fitting and avoids interpolation and its cache overhead,
-but repeated calculations can make searches slower. Existing saved choices and
-project settings are preserved; **Restore Page Defaults** enables the cache.
+The Setting window has independent Preprocessing, CSM, PFSM and Peak Search
+profiles. You can edit them without a loaded pattern. **Restore Page Defaults**
+resets the current module's draft; **Save Defaults** validates the complete draft.
+Changing pages retains unsaved input, and Cancel discards it. Profiles you did
+not open retain their previous values.
 
-Each **Options** entry opens its established independent dialog, with its original
-controls, tabs, preview and buttons. CSM retains its weight sliders; PFSM retains
-General and Candidate Recall; Initial Peak Search retains Settings and Initial
-Peak Candidates. Options edit only the current project's corresponding workflow.
-OK saves CSM/PFSM options; preprocessing editors apply their preview or calculate
-on OK as before. Cancel discards the draft. Range, smoothing and Kalpha2 remain
-explicit operations. Setting is the separate default editor for new projects.
+A new project or replacement main-pattern import copies saved defaults. Opening
+a QPF project restores that project's parameters instead. Importing a comparison
+pattern does not replace the main project's settings.
 
-Missing dependencies use the target workflow's own parameters. Compatible manual
-preprocessing can be reused across workflows; automatic results from another
-workflow do not count as manual preparation. PFSM automatic width is geometric.
+Options dialogs retain their workflow-specific controls. Saving CSM or PFSM
+options updates the project; running the menu command starts the calculation.
+Preprocessing editors can preview changes before acceptance. Cancelling a draft
+does not change the saved defaults or the committed scientific result.
 
-**View → Workflow** shows completed steps, their sources and the last attempt.
-Select a step for **Details** or **Undo Selected**. Undoing an earlier step also
-removes dependent results, with a confirmation listing the affected steps. Cancel
-leaves the project unchanged. Undo history is restricted to this session; there
-is no redo. Search is one undo step; accepting/removing phases has its own step.
+## Preparation belongs to a workflow
 
-QPF 1.0 saves project parameters, current results and their sources, including a
-continuable PFSM analysis and project graph settings. Reopening starts a new undo
-history. QXP v1/v2/v3 files are rejected. A different
-reference database permits viewing saved results but requires restarting the
-analysis before retrieving new references. Failed saves leave the original file.
+CSM, PFSM and Peak Search resolve missing preparation using their own profiles.
+Compatible manually prepared evidence may be shared, but an automatic result
+from another workflow is not automatically considered manual preparation.
+
+The PFSM defaults include an **Initial Peaks** page. Its saved SG controls are
+independent of other profiles; automatic PFSM width preparation currently uses
+geometric detection rather than that SG module. Changing those controls therefore
+does not change automatic geometric FWHM.
+
+Under PFSM **Profile Expansion**, template caching is enabled by default. It
+uses extra preparation time and memory to reduce repeated profile evaluation;
+final fits are checked by direct evaluation. Disabling it retains direct
+evaluation throughout fitting. Existing saved choices remain effective.
+
+## Inspect and undo
+
+Open **View > Workflow**, select a step and inspect **Details** for its inputs,
+parameters and dependencies. Failed or cancelled attempts are reported without
+being presented as successful outputs.
+
+**Undo Selected** rolls back the selected step and the results that depend on it.
+Read the affected-step confirmation; cancelling it leaves the project unchanged.
+Unrelated display state and current configuration are retained. Undo is confined
+to the open session and has no redo. Reopening a project starts a new undo history.
+
+Changes that would invalidate dependent scientific results require confirmation.
+Wait for running work to finish or cancel it before editing analysis settings,
+opening or saving a project, or attempting a rollback.

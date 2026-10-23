@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="420" viewBox="0 0 960 420" role="img" aria-labelledby="title desc">
+  <title id="title">From a measurement to a saved QualPF analysis</title>
+  <desc id="desc">Import your measurement, choose CSM with measured peaks or PFSM with continuous observations, review phases and residuals, and save the analysis as QPF.</desc>
+  <!-- Original QualPF illustration, 2026-10-23. GPL-3.0-only where applicable. -->
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#466079"/></marker>
+  </defs>
+  <rect width="960" height="420" rx="18" fill="#f4f7fb"/>
+  <g font-family="DejaVu Sans, sans-serif" fill="#17324d">
+    <text x="32" y="44" font-size="23" font-weight="bold">One measurement, two analysis routes</text>
+    <text x="32" y="75" font-size="16">Preparation uses the selected workflow's settings.</text>
+    <g fill="none" stroke="#466079" stroke-width="2.5" marker-end="url(#arrow)">
+      <path d="M 237 223 H 263 V 155 H 292"/>
+      <path d="M 263 223 V 291 H 292"/>
+      <path d="M 548 155 H 574 V 223 H 600"/>
+      <path d="M 548 291 H 574 V 223" marker-end="none"/>
+      <path d="M 792 223 H 820"/>
+    </g>
+    <rect x="32" y="175" width="205" height="96" rx="10" fill="#fff" stroke="#b4c4d6"/>
+    <text x="49" y="209" font-size="19" font-weight="bold">Import your data</text>
+    <text x="49" y="239" font-size="16">Keep the original file</text>
+    <rect x="295" y="107" width="253" height="96" rx="10" fill="#e2edff" stroke="#7797ca"/>
+    <text x="315" y="141" font-size="20" font-weight="bold">CSM</text>
+    <text x="315" y="173" font-size="16">Compare measured peaks</text>
+    <rect x="295" y="243" width="253" height="96" rx="10" fill="#dcf2ee" stroke="#77a99e"/>
+    <text x="315" y="277" font-size="20" font-weight="bold">PFSM</text>
+    <text x="315" y="309" font-size="16">Fit continuous observations</text>
+    <rect x="603" y="175" width="189" height="96" rx="10" fill="#fff" stroke="#b4c4d6"/>
+    <text x="621" y="209" font-size="19" font-weight="bold">Review phases</text>
+    <text x="621" y="239" font-size="16">Inspect residuals</text>
+    <rect x="823" y="175" width="105" height="96" rx="10" fill="#17324d"/>
+    <text x="845" y="209" font-size="19" font-weight="bold" fill="#fff">Save</text>
+    <text x="845" y="239" font-size="19" fill="#fff">QPF</text>
+    <text x="32" y="387" font-size="16">A ranked candidate still needs interpretation; a saved project preserves the analysis evidence.</text>
+  </g>
+</svg>

@@ -545,7 +545,7 @@
     "docs/user/images/qualx_icon.svg"
   ],
   "owner_information": [
-    "Permission or an applicable public grant covering retained NIST SRD 66 extraction, AtomProperties compilation and referenced tables, Lobato coefficient version, exact symmetry tables and inherited graphics/documentation. No private authorization is supplied; continue public-source review and report unresolved grants."
+    "Permission or an applicable public grant covering retained NIST SRD 66 extraction, AtomProperties compilation and referenced tables, Lobato coefficient version and exact symmetry tables remains required. Removed/replaced artwork and manual originals remain excluded, not relicensed. Excluded measured examples and the reserved CIF need permission if reintroduced."
   ],
   "decisions": {
     "windows_formal_distribution": "MinGW only; MSVC development validation retained",
@@ -555,5 +555,175 @@
     "https://www.ic.cnr.it/en/software/qualx-2/",
     "https://www.ba.ic.cnr.it/softwareic/qualx/"
   ],
-  "upstream_official_reference_scope": "Official CNR pages link to the QualX3 GitHub releases. This corroborates repository provenance, not an asset-specific grant or permission for externally authored tables."
+  "upstream_official_reference_scope": "Official CNR pages link to the QualX3 GitHub releases. This corroborates repository provenance, not an asset-specific grant or permission for externally authored tables.",
+  "documentation_replacement": {
+    "date": "2026-10-23",
+    "retained_revision": "8f9678158ee5a9369ec7cb55141e29de02b3d561",
+    "scope": "All 17 user manual pages independently authored from current product contracts and implementation. Old document branding and unused MathJax setup removed; no old screenshots or measured examples delivered.",
+    "original_status": "No new grant asserted. Original text and removed assets remain recoverable only from the recorded Git revision, outside current manual delivery.",
+    "originals": [
+      {
+        "path": "docs/user/data-reduction/background.md",
+        "git_blob": "cd8605d688a3ffd7aa709f73e8d0dfdb06e2938c",
+        "sha256_git_bytes": "36e0eb374f452a53d08b4e6d57f8a304ea9e780b23bb119c4826282c09a2527f",
+        "disposition": "rewritten"
+      },
+      {
+        "path": "docs/user/data-reduction/index.md",
+        "git_blob": "4b8028909293dc1c7123570fe607ede5a8056f54",
+        "sha256_git_bytes": "a91a0020c25185af3ec20d21d2eb855a2ef07e0ec6511388661e2ade9da6e93f",
+        "disposition": "rewritten"
+      },
+      {
+        "path": "docs/user/data-reduction/initial-peak-search.md",
+        "git_blob": "9c993e9640b6d9457ede3b782bddbda058d6db76",
+        "sha256_git_bytes": "c8d94633c6f51e83c8dd6fa28a67b10fe861b751a7fb240ec207c7eaebaf89a6",
+        "disposition": "rewritten"
+      },
+      {
+        "path": "docs/user/data-reduction/kalpha2-stripping.md",
+        "git_blob": "984947309090ddcda8722539ab3af3181e59cd2f",
+        "sha256_git_bytes": "aeea8c620bfca6aefd324961438765244306c95188fe9445fc57b7929aa26b01",
+        "disposition": "rewritten"
+      },
+      {
+        "path": "docs/user/data-reduction/peak-search.md",
+        "git_blob": "4fe40489bae6fe1c502b3adb4773abb329ba8903",
+        "sha256_git_bytes": "c09f50997460b5e8fbee680f3c4991d4dd4d4ce51129a66651d198b70ff57ef6",
+        "disposition": "rewritten"
+      },
+      {
+        "path": "docs/user/data-reduction/smoothing.md",
+        "git_blob": "f8a9ed947fcbc712f3be3ed7c39c5de7c8894034",
+        "sha256_git_bytes": "0f12be3205567e884143e3ae581f67e440d5fe85fbae3622a872cf63f32e1e87",
+        "disposition": "rewritten"
+      },
+      {
+        "path": "docs/user/database-installation.md",
+        "git_blob": "5815b46d3108fd9d4d8ea29882be5ffe8105c7e4",
+        "sha256_git_bytes": "a7f2e40506158a5e88df8ffc766612229f3e6bed75172b10bac6b1079ceddb34",
+        "disposition": "rewritten"
+      },
+      {
+        "path": "docs/user/index.md",
+        "git_blob": "d56a8813ed69ef892dd1ad4a9d18aee87188d4d8",
+        "sha256_git_bytes": "6dc6955751ad79172c3c76a63cc9f182f52bc42fe5135c3e92ee593caadbc973",
+        "disposition": "rewritten"
+      },
+      {
+        "path": "docs/user/installation.md",
+        "git_blob": "615eafc28f06eadfd6da7d5509aa461d4dd0c495",
+        "sha256_git_bytes": "d14e892a3bab2f7ff786c0f83f4fd4134f03ea3a7ff14d8cbb478fc3e744b0a4",
+        "disposition": "rewritten"
+      },
+      {
+        "path": "docs/user/introduction/examples.md",
+        "git_blob": "8fe9ab63d3ff23908e22625cc3a1ce92aa274463",
+        "sha256_git_bytes": "9ac1c8c4d846b3c7ca5ae57147719b755c49af7d7b24dab6e0e758cabf73a5c1",
+        "disposition": "rewritten"
+      },
+      {
+        "path": "docs/user/introduction/getting-started.md",
+        "git_blob": "6efa8abeff44b3c5eeb81ecc66c471b3e5106612",
+        "sha256_git_bytes": "53db779c15e65350311bfa8e638a0e7df7b1813a7c9103fedd37993fb9325f71",
+        "disposition": "rewritten"
+      },
+      {
+        "path": "docs/user/introduction/index.md",
+        "git_blob": "d0ee5c7cb4c4d5111ddda30aa6b6b847182c7f12",
+        "sha256_git_bytes": "98290b2de26fb5f4f8249bacc5abdfd0f7157e48c777aa73793e5c67059b44f7",
+        "disposition": "rewritten"
+      },
+      {
+        "path": "docs/user/references.md",
+        "git_blob": "922a9573a600c4f8efe3f7638021204d77ddf1c9",
+        "sha256_git_bytes": "2b234976dbd2e3e432b834eb744d8f0e3f7d531f5354675a3b4662330c6c7629",
+        "disposition": "rewritten"
+      },
+      {
+        "path": "docs/user/search-match/index.md",
+        "git_blob": "cae46758ec682f5c44a449a5c6a5614a7f1ae151",
+        "sha256_git_bytes": "f3e762551667e6635c28b4242e701dbba03efb1dbc40d98e91885b15acff1954",
+        "disposition": "rewritten"
+      },
+      {
+        "path": "docs/user/search-match/restraints.md",
+        "git_blob": "884501f95baec02d7afd593580609d0ddc025a79",
+        "sha256_git_bytes": "d8afdc88b670daab0d0e7e67b3f2155b592cc3594aad8a7d8abd8c42498f482e",
+        "disposition": "rewritten"
+      },
+      {
+        "path": "docs/user/search-match/search-match.md",
+        "git_blob": "450514b0304c392ded177ad993183eadcbc5fc0f",
+        "sha256_git_bytes": "8fc010482d96aec1e6929ef1a9cece713ffc0c241e2629894d9f7ae35e0efd56",
+        "disposition": "rewritten"
+      },
+      {
+        "path": "docs/user/settings.md",
+        "git_blob": "4d486dd9440486ddb1ef60f5ebcb45369ab56c08",
+        "sha256_git_bytes": "d4a9c8af5efa6240f7752c327b4b1dd59d3f0baf4edf89750e6b31ae36448486",
+        "disposition": "rewritten"
+      },
+      {
+        "path": "docs/user/images/favicon.png",
+        "git_blob": "ee7f3473381a0c22a5510d5e915bc3cf78cc5ad7",
+        "sha256_git_bytes": "b5db5f1f201068cde6ac626b72e00c243be678b8a2f38f951b55add538b9f943",
+        "disposition": "removed"
+      },
+      {
+        "path": "docs/user/images/qualx_icon.svg",
+        "git_blob": "065d0770a5c42d9f02ee581360a9bd68fbe2d943",
+        "sha256_git_bytes": "a7ad24d117a600e70540975f3aedd5060375bc47197c403eea4a2a2956e8ee2d",
+        "disposition": "removed"
+      },
+      {
+        "path": "docs/user/javascripts/mathjax.js",
+        "git_blob": "0525879da80531a8bfecf975c9c2db79c6a6b20c",
+        "sha256_git_bytes": "f49921fed8797c7b5b4619ebe5e13c6031d7101a9abb906c84510d89e66e3138",
+        "disposition": "removed"
+      }
+    ],
+    "authored_sources": [
+      "docs/user/data-reduction/background.md",
+      "docs/user/data-reduction/index.md",
+      "docs/user/data-reduction/initial-peak-search.md",
+      "docs/user/data-reduction/kalpha2-stripping.md",
+      "docs/user/data-reduction/peak-search.md",
+      "docs/user/data-reduction/smoothing.md",
+      "docs/user/database-installation.md",
+      "docs/user/index.md",
+      "docs/user/installation.md",
+      "docs/user/introduction/examples.md",
+      "docs/user/introduction/getting-started.md",
+      "docs/user/introduction/index.md",
+      "docs/user/references.md",
+      "docs/user/search-match/index.md",
+      "docs/user/search-match/restraints.md",
+      "docs/user/search-match/search-match.md",
+      "docs/user/settings.md",
+      "docs/user/images/analysis-route.svg"
+    ],
+    "implementation_sources": [
+      "src/gui/mainwindow.ui",
+      "src/gui/dialogs/",
+      "src/gui/state/workspace_context.cpp",
+      "src/infrastructure/settings/",
+      "docs/developer/architecture/workflow-settings.md",
+      "docs/developer/architecture/project-format.md",
+      "docs/developer/architecture/search-algorithms.md",
+      "docs/developer/numerical/policy.md"
+    ],
+    "artwork": {
+      "master": "docs/user/images/analysis-route.svg",
+      "export": "docs/user/images/analysis-route.png",
+      "renderer": "tools/documentation/render_diagram.cjs",
+      "branding": "Existing QualPF logo/favicon derived from src/gui/resources/branding/qualpf-master.png"
+    },
+    "license": "GPL-3.0-only",
+    "copyright": "Copyright (C) 2026 QualPF contributors, to the extent applicable rights exist",
+    "license_files": [
+      "LICENSE"
+    ],
+    "qualifications": "Bibliographic facts, upstream attribution and third-party notices remain. No scientific table, reference fixture, product behavior or historical acceptance record is replaced."
+  }
 }

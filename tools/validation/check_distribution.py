@@ -212,10 +212,48 @@ def rights_review_errors(root, data):
             if not relative(root, name).is_file():
                 errors.append("material license missing: " + name)
     statuses = {entry["id"]: entry["status"] for entry in data["components"]}
+    if review.get("documentation_replacement") or (review.get("excluded_document_brand_assets") and
+            statuses.get("inherited-artwork-docs") == "reviewed"):
+        errors.extend(documentation_replacement_errors(root, review))
     for component, entries in (("scientific-data", science), ("inherited-artwork-docs", images)):
         if statuses.get(component) == "reviewed" and any(entry["status"] != "reviewed" and
                 entry.get("delivery") != "excluded" for entry in entries):
             errors.append("unresolved material grants cannot clear component: " + component)
+    return errors
+
+
+def documentation_replacement_errors(root, review):
+    """Check the recorded delivery disposition, not authorship or legal clearance."""
+    replacement = review.get("documentation_replacement", {})
+    if not re.fullmatch(r"[0-9a-f]{40}", replacement.get("retained_revision", "")):
+        return ["documentation replacement lacks original revision identity"]
+    errors = []
+    originals = replacement.get("originals", [])
+    names = [entry["path"] for entry in originals]
+    if not originals or len(names) != len(set(names)):
+        errors.append("documentation original inventory missing/duplicated")
+    for entry in originals:
+        path = relative(root, entry["path"])
+        if not re.fullmatch(r"[0-9a-f]{40}", entry.get("git_blob", "")) or not re.fullmatch(
+                r"[0-9a-f]{64}", entry.get("sha256_git_bytes", "")):
+            errors.append("documentation original lacks byte identity: " + entry["path"])
+        if entry.get("disposition") == "removed":
+            if path.exists():
+                errors.append("removed document asset reintroduced: " + entry["path"])
+        elif entry.get("disposition") == "rewritten":
+            if not path.is_file():
+                errors.append("rewritten manual source missing: " + entry["path"])
+            elif hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest() == entry["sha256_git_bytes"]:
+                errors.append("original manual source restored unchanged: " + entry["path"])
+        else:
+            errors.append("invalid documentation disposition: " + entry["path"])
+    if not set(review.get("excluded_document_brand_assets", [])).issubset(names):
+        errors.append("removed document branding lacks original identity")
+    authored = replacement.get("authored_sources", [])
+    current = {p.relative_to(root).as_posix() for p in (root / "docs/user").rglob("*")
+               if p.is_file() and p.suffix in {".md", ".svg"}}
+    if len(authored) != len(set(authored)) or set(authored) != current:
+        errors.append("authored manual inventory differs from current sources")
     return errors
 
 
@@ -230,6 +268,10 @@ def email_error(email):
 
 def manual_sources(root):
     files = [root / "docs/make_pdf.sh", root / "docs/mkdocs.yml"]
+    # Older isolated fixtures predate the portable builder. Current manuals bind
+    # the builder and publisher input too, so changing either invalidates a PDF.
+    files += [root / name for name in ("tools/documentation/build_manual.py", MANIFEST)
+              if (root / name).is_file()]
     files += sorted(path for path in (root / "docs/user").rglob("*") if path.is_file())
     return {path.relative_to(root).as_posix(): digest(path) for path in files}
 
@@ -789,6 +831,40 @@ def self_test():
                 self.assertEqual(manual_errors(root, pdf, proof), [])
                 (root / "docs/user/index.md").write_text("updated publisher", encoding="utf-8")
                 self.assertTrue(manual_errors(root, pdf, proof))
+                for name in ("tools/documentation/build_manual.py", MANIFEST):
+                    source = root / name
+                    source.parent.mkdir(parents=True, exist_ok=True)
+                    source.write_text("original build input", encoding="utf-8")
+                    write_json(proof, dict(schema="qualpf.manual_provenance.v1", pdf_sha256=digest(pdf), sources=manual_sources(root)))
+                    self.assertEqual(manual_errors(root, pdf, proof), [])
+                    source.write_text("changed build input", encoding="utf-8")
+                    self.assertTrue(manual_errors(root, pdf, proof))
+
+        def test_document_replacement_disposition(self):
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                source = root / "docs/user/index.md"
+                source.parent.mkdir(parents=True)
+                source.write_bytes(b"independent current manual")
+                original = dict(path="docs/user/index.md", disposition="rewritten", git_blob="b" * 40,
+                                sha256_git_bytes=hashlib.sha256(b"original manual").hexdigest())
+                removed = dict(path="docs/user/old.png", disposition="removed", git_blob="c" * 40,
+                               sha256_git_bytes=hashlib.sha256(b"old image").hexdigest())
+                replacement = dict(retained_revision="a" * 40, originals=[original, removed],
+                                   authored_sources=["docs/user/index.md"])
+                review = dict(documentation_replacement=replacement, excluded_document_brand_assets=["docs/user/old.png"])
+                self.assertEqual(documentation_replacement_errors(root, review), [])
+                source.write_bytes(b"original manual")
+                self.assertTrue(any("restored unchanged" in e for e in documentation_replacement_errors(root, review)))
+                source.write_bytes(b"independent current manual")
+                old = root / "docs/user/old.png"
+                old.write_bytes(b"old image")
+                self.assertTrue(any("reintroduced" in e for e in documentation_replacement_errors(root, review)))
+                old.unlink()
+                replacement["authored_sources"] = []
+                self.assertTrue(any("inventory differs" in e for e in documentation_replacement_errors(root, review)))
+                replacement["retained_revision"] = ""
+                self.assertTrue(any("revision identity" in e for e in documentation_replacement_errors(root, review)))
 
         def test_source_archive_contents(self):
             with tempfile.TemporaryDirectory() as directory:

@@ -1,56 +1,57 @@
-# Getting Started
+# Getting started
 
-## Step 1 — Install a reference database
+Use a measurement you are entitled to analyze, together with its radiation and
+acquisition information. Keep the original file so you can start again without
+depending on an edited export.
 
-Before running the first search, at least one crystallographic reference
-database must be installed. QualPF automatically detects databases placed in the
-**QualXDB** folder inside your home directory.
+## 1. Load and inspect
 
-For download links, installation instructions and advanced configuration see
-the [Database Installation](../database-installation.md) page.
+Choose **File > Import Diffraction Pattern**. The chooser includes XY columns,
+ASCII profiles, GSAS, XYE and XRDML formats, among others. Select the format that
+matches the contents; changing an extension does not convert a file.
 
-## Step 2 — Import a diffraction pattern
+Inspect the plotted angular range, intensity scale and radiation information.
+If the import fails, resolve the reported format or data problem before
+proceeding. Register your reference database through
+**S&M > Manage Databases** if it is not already available.
 
-1. **File → Import Diffraction Pattern** (or drag-and-drop a file onto the graphic area)
-2. Supported formats: `.xy`, `.dat`, `.xrdml`, `.gda`, `.xye`, `.rtv`
-3. The pattern appears in the graphic area
+## 2. Choose preparation deliberately
 
-## Step 3 — Background
+For a first inspection, **Preprocessing > Generate Background** estimates a
+background. Open **Background Options** if the curve needs examination or
+adjustment. **View > Subtract Background** changes the displayed signal only.
 
-1. **Preprocessing → Generate Background**
-2. Adjust parameters with **Preprocessing → Background Options** if needed
-3. Optionally view the net signal with **View → Subtract Background**
+Range selection, smoothing and K-alpha2 stripping are explicit operations.
+Apply them only when appropriate to the measurement. They are not mandatory
+steps for every pattern. See [Data reduction](../data-reduction/index.md).
 
-## Step 4 — Peak Search
+## 3. Run a matching method
 
-1. **Peak Search → Peak Search**
-2. The detected peaks appear as vertical markers in the graphic area
-3. Fine-tune with **Peak Search → Peak Search Options**
+For peak-based matching, choose **S&M > CSM (Classical SM)**. You can first run
+**Peak Search > Peak Search** to examine a peak list; otherwise CSM prepares
+missing dependencies with its own settings.
 
-## Step 5 — Search & Match
+For continuous-profile fitting, inspect **S&M > PFSM Options**, then choose
+**S&M > PFSM**. PFSM prepares its required background and width evidence without
+running a formal peak search. If automatic width estimation fails, read the
+diagnostic and resolve the preparation problem instead of interpreting an absent
+result as a negative phase identification.
 
-1. **S&M → CSM (Classical SM)**
-2. QualPF queries the database and shows ranked results in the **Results List**
-3. Select a card to view its reflections overlaid on the experimental pattern
+## 4. Evaluate and accept
 
-If Step 3 and/or Step 4 are skipped and **CSM (Classical SM)** is run directly,
-QualPF automatically performs the missing steps (Background and/or Peak Search)
-before running the search.
+Select a candidate to inspect its card and overlay. Check several reflections
+and inspect signal that the candidate leaves unexplained. Select the entries
+you want to retain and use **Entry > Accept Selected Entries**. Accepting a phase
+can update the remaining ranking; read the method-specific explanation in
+[Search and match](../search-match/search-match.md).
 
-## Step 6 — Accept a phase
+The Quantitative panel may report percentages or explain why they are unavailable.
+Neither a leading score nor a displayed percentage independently verifies the
+sample composition.
 
-1. Select a card in the Results List
-2. Click **Accept** (check-mark button) — the phase moves to the **Quantitative** panel
-3. If residual search is enabled in the **CSM Options** dialog,
-   QualPF automatically performs a residual search on remaining peaks — see the
-   [Search & Match](../search-match/search-match.md) page for details
+## 5. Preserve the analysis
 
-## Step 7 — Save the project
-
-**File → Save Project As** saves a `.qpf` file containing the pattern data,
-peaks, results and accepted phases.
-
-The native `.qpf` format also saves workflow evidence, comparison patterns and
-project graph settings. QXP v1/v2/v3 projects cannot be opened. Opening an existing
-QPF project uses its own settings and does not require the original reference
-database for inspecting the saved analysis.
+Save with **File > Save Project As** and choose a `.qpf` destination. Record the
+measurement source and database version in your accompanying experiment notes.
+Use the [worked procedure](examples.md) as a review checklist. Reopen the saved
+project to inspect retained results; its session undo history starts empty.

@@ -34,6 +34,10 @@ user manual; an academic citation does not replace a copyright/license notice.
 - All 29 inherited runtime action images were replaced by independently drawn
   QualPF SVG artwork on 23 October 2026. Removed files retain their original
   provenance and grant findings in the rights inventory and Git history.
+- The 17 Markdown pages of the user manual were independently authored from current product
+  contracts and implementation on 23 October 2026, with an original workflow
+  illustration. Inherited document branding was removed. The rights inventory
+  records the old source identities; no ownership of the old text is asserted.
 
 Original copyrights are not transferred to the QualPF publisher. Existing
 third-party file notices must remain intact. The GPL text's Free Software

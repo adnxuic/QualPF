@@ -31,9 +31,36 @@ From the repository root:
 ```sh
 python -m pip install -r docs/requirements.txt
 python -m mkdocs build --strict -f docs/mkdocs.yml
-bash docs/make_pdf.sh
+python -B tools/documentation/build_manual.py
 ```
 
 The website publishes only `user/`, with the existing page URLs. Developer guides
 are read in the repository. The optional PDF requires Pandoc, XeLaTeX and DejaVu
 fonts. Generated `site/` and `qualpf_manual.pdf` stay outside version control.
+The shell wrapper `bash docs/make_pdf.sh` calls the same portable PDF builder.
+Both preserve navigation order, resolve page/section links to internal PDF
+destinations and produce `build/documentation/qualpf_manual-provenance.json`.
+That proof binds all user sources, the builder, publication configuration and
+distribution metadata. A change to any bound input requires regeneration.
+
+## Manual source and artwork
+
+The 23 October 2026 manual replaces the earlier prose with independent guidance
+derived from current implementation and technical contracts. Keep existing page
+URLs, necessary attribution and scientific qualifications when editing it.
+The tutorial uses the reader's own measurement, not delivered historical data.
+The rights inventory records the old manual's recoverable Git identities;
+do not copy an old manual or its assets into the current publication tree.
+
+`user/images/analysis-route.svg` is the editable original workflow illustration.
+Its PNG is used in both HTML and PDF. With Node.js and sharp available, regenerate
+or verify it from the repository root:
+
+```sh
+node tools/documentation/render_diagram.cjs
+node tools/documentation/render_diagram.cjs --check
+```
+
+Current exports use sharp 0.35.5. The logo and favicon are derived from the
+existing [QualPF branding master](../src/gui/resources/branding/README.md).
+Publication has no inherited analytics account or remote mathematics script.

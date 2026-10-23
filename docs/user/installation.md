@@ -1,141 +1,55 @@
 # Installation
 
-## Windows
+Use a QualPF build with its matching runtime files. The application executable is
+`qualpf` on Linux and `qualpf.exe` on Windows. Databases and experimental patterns
+are separate inputs; installing the program does not supply either.
 
-1. Build the Windows installer with CPack, or obtain the resulting `QualPF-<version>-win64.exe` from this project's local `releases` or build output. No public QualPF download endpoint is currently configured.
-2. Run the installer and follow the on-screen instructions. The default installation folder is `C:\Program Files\QualPF`.
-3. QualPF will be available from the Start Menu and the desktop shortcut.
+## Obtain a build
 
-> **Note:**
-> If a previous version of QualPF is already installed, it must be uninstalled
-> first before installing into the same folder.
->
----
+The project has no configured public binary download endpoint. Local packages
+marked `audit` are inspection artifacts, not a formal release. Consult the
+repository's developer build and distribution guides when producing a package;
+package generation alone does not establish release readiness.
 
-## Linux
+On Windows, a prepared installer guides directory selection and shortcut creation.
+Keep the executable with the Qt plugins and runtime libraries supplied by that
+build. Copying only the executable can prevent startup. When replacing an
+installation, follow the installer's instructions for the existing version.
 
-### Option A — AppImage (recommended)
+For a prepared Linux AppImage, make the file executable and launch it from your
+file manager or terminal. If its FUSE integration is unavailable, the AppImage
+runtime also provides `--appimage-extract`; run `squashfs-root/AppRun` from the
+extracted directory. Availability on a particular system depends on the build's
+runtime requirements, not just the filename.
 
-The AppImage is a self-contained executable that bundles Qt6 and its other runtime dependencies. It runs on most recent x86_64 Linux
-distributions without installing anything.
+## Build from source
 
-**1. Download**
+The supported build uses CMake 3.20 or later, a C++20 compiler, matching Qt 6
+development libraries, Eigen 3.4 and Boost headers. PFSM execution also uses
+compiler OpenMP support. A Fortran compiler is not needed. Dependencies must be
+provided before configuring; CMake does not download them.
 
-Build `qualpf-<version>-x86_64.AppImage` with `scripts/package/build_appimage.sh`.
-The resulting file is copied to `releases/<version>/linux-appimage/`.
-The upstream QualX releases contain a different product.
+From a configured source checkout, the usual sequence is:
 
-**2. Make it executable and run it**
-
-```bash
-chmod +x qualpf-<version>-x86_64.AppImage
-./qualpf-<version>-x86_64.AppImage
+```sh
+cmake -S . -B build/local -DCMAKE_BUILD_TYPE=Release
+cmake --build build/local --parallel
+cmake --install build/local --prefix /your/install/directory
 ```
 
-> **Note:**
-> AppImages require FUSE. If you get a "FUSE not found" error, either
-> install `libfuse2` (`sudo apt-get install libfuse2` on Debian/Ubuntu) or
-> extract and run the AppImage without FUSE:
-> ```bash
-> ./qualpf-<version>-x86_64.AppImage --appimage-extract
-> ./squashfs-root/AppRun
-> ```
->
----
+Use a writable installation prefix or the platform's normal installation
+permissions. Windows builds require a compiler-compatible Qt kit. Consult
+`docs/developer/building.md` in the source distribution for presets and platform
+setup; the commands above assume that CMake can already locate the dependencies.
 
-### Option B — Compilation from source (.tar.gz)
+## First session
 
-Use this method on Linux when building from source with a C++20 compiler.
+Launch the installed executable and follow [Database setup](database-installation.md).
+You may postpone database configuration to inspect a pattern or an existing QPF
+project. A new database search requires an available reference database.
 
-**Requirements**
-
-| Tool | Minimum version |
-|------|-----------------|
-| CMake | 3.20 |
-| C++ compiler | C++20 support |
-| Qt6 | 6.5 (Widgets, Sql, PrintSupport, Network) |
-| Eigen | 3.4 |
-| Boost | Multiprecision headers |
-
-Install build dependencies on Debian/Ubuntu:
-
-```bash
-sudo apt-get install cmake build-essential pkg-config \
-    qt6-base-dev libeigen3-dev libboost-dev
-```
-
-On Fedora/RHEL:
-
-```bash
-sudo dnf install cmake gcc gcc-c++ make pkgconfig \
-    qt6-qtbase-devel eigen3-devel boost-devel
-```
-
-**Automated installation with `install.sh`**
-
-```bash
-tar xzf qualpf-<version>-Source.tar.gz
-cd qualpf-<version>-Source
-./install.sh
-```
-
-The script configures, compiles, and installs QualPF to `/opt/qualpf-<version>`.
-To run it afterwards:
-
-```bash
-/opt/qualpf-<version>/bin/qualpf
-# or add to PATH:
-export PATH=/opt/qualpf-<version>/bin:$PATH
-```
-
-Pass an optional Qt6 prefix to `install.sh`:
-
-```bash
-./install.sh /home/user/Qt/6.5.0/gcc_64
-```
-
-A Fortran compiler is not required. Select a C++ compiler through `CXX` or CMake.
-
-**Manual CMake build**
-
-```bash
-tar xzf qualpf-<version>-Source.tar.gz
-cd qualpf-<version>-Source
-
-cmake -DCMAKE_BUILD_TYPE=Release \
-      -S . -B build
-cmake --build build -j$(nproc)
-sudo cmake --install build
-```
-
----
-
-## Databases
-
-QualPF requires at least one crystallographic reference database.
-
-| Database | Format | Notes |
-|----------|--------|-------|
-| COD (Crystallography Open Database) | COD/CIF | Free — download separately, not bundled with QualPF |
-| PDF-2 | PDF-2 DAT | Commercial — ICDD license required |
-
-Database files are managed through **S&M → Manage Databases**.
-
-For instructions on installing a database, see [Database Installation](database-installation.md).
-
----
-
-## First Launch
-
-On first launch QualPF will ask you to configure the path to the database files.
-See [Getting Started](introduction/getting-started.md) for a step-by-step guide.
-
-## Product name transition
-
-The current command is `qualpf` (`qualpf.exe` on Windows); no old command alias is installed.
-Install the renamed product into its new default directory rather than replacing an older installation.
-Existing databases and the `QualXDB` folder stay in place.
-At the first normal startup, QualPF imports application-specific settings from its previous identity
-into the new user store. Existing new values win; the old store is retained. After a successful
-import, deleted preferences are not imported again. `--settings-dir` confines the import to that
-explicit directory, and help/version/invalid-command exits do not write settings.
+The compatibility folder name `QualXDB` is retained. Existing QualPF settings take
+precedence when the first normal startup imports older application preferences;
+the older settings store is kept. This import is not repeated after it succeeds.
+Preferences and dock layouts are local to your installation, while project
+analysis settings are stored in QPF files.

@@ -1,43 +1,41 @@
 # Background
 
-## Generate and configure
+A background estimate is stored alongside the working observations. It is not
+defined by whether a background curve is visible on the plot.
 
-**Preprocessing → Generate Background** immediately estimates the background over
-the full current pattern using the current background options. It replaces previous
-background points and background-filter history. A failed estimate leaves the
-previous data intact. Range, smoothing and Kα2 processing remain part of the
-current working signal.
+## Estimate and inspect
 
-**Preprocessing → Background Options** opens the original independent background
-editor. Choose a method, adjust its coefficients or apply/reset the Bruckner
-filter while previewing the curve. OK applies the preview and its requested
-parameters to the current project; Cancel discards them. Dependent results
-require confirmation before replacement. **Setting → Preprocessing** edits
-defaults for new projects in the separate workflow settings window.
+Choose **Preprocessing > Generate Background** to calculate a new estimate over
+the current pattern. Successful generation replaces the earlier background
+points and background-filter history while retaining the current working signal's
+range, smoothing and stripping. Failure leaves the prior data in place.
 
-## Background points
+Open **Preprocessing > Background Options** to inspect a private preview, select
+the method and adjust its coefficients. The editor also provides the Bruckner
+filter controls. Accept a successful preview to apply it with its requested
+parameters. Cancel discards the draft. If other results depend on the old
+background, inspect the replacement confirmation before continuing.
 
-The main plot normally shows the working observations and background points,
-with the background curve hidden. Add or delete points with the corresponding
-Preprocessing actions. Background Options and point editing restore the
-unsubtracted display before editing. Algorithms use the background independently
-of its plot visibility.
+The **Add Background Point** and **Delete Background Point** commands permit
+point editing. Entering background editing restores the unsubtracted view so
+you can place points against the observations.
 
-## Display subtraction
+## View a net signal
 
-**View → Subtract Background** is a display-only checkbox, initially off. It is
-available when a complete aligned background exists. The checked display shows
-`Y - B`, preserving negative values and the current intensity units without
-clipping or renormalization. Background points are hidden until the checkbox is
-cleared. PFSM displays its joint calculation minus the same background; its
-residual, fitted parameters, FOM and quantification do not change.
+**View > Subtract Background** displays observations minus the aligned background.
+It retains negative values and the working intensity units. The checkbox is
+available only when a complete background is present and is initially off.
+Background points are hidden in this display mode.
 
-Switching the checkbox never edits or dirties the project and never changes
-numerical exports. Image export and plot printing reflect the displayed view.
-All algorithm inputs contain the unsubtracted working signal and its background;
-the algorithm prepares its own analysis buffer. Background changes invalidate
-dependent numerical evidence under the normal source rules.
+For PFSM, the displayed joint calculation uses the same subtraction. The fit,
+residual, scores and composition are unchanged. Numerical exports retain their
+scientific values; a printed plot or exported image follows the displayed view.
+The checkbox itself does not mark the project as scientifically edited.
 
-Historical projects retain their stored values. An already-subtracted or unknown
-subtraction state requires an explicit preprocessing restart or reimport before
-new calculations; no background is added back to clipped historical data.
+## When preparation cannot continue
+
+Algorithms require a known subtraction history and aligned observations and
+background. If that evidence is missing or already-subtracted input is refused,
+restart preprocessing or reimport the measurement as instructed by the error.
+Do not add an estimated background back to clipped data to manufacture an
+unsubtracted measurement.

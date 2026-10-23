@@ -43,15 +43,30 @@ supply a usable author/license statement. In particular, a file name such as
 `pan_121784.png` is a search lead, not attribution. The upstream GPL change alone
 is not treated as proof that an external icon author's rights were granted.
 
-The inactive original documentation favicon and QualX SVG are now excluded from
-source delivery as well as from current documentation branding. Their originals
-are retained. Current QualPF branding and original action SVG masters remain
+The original documentation favicon and QualX SVG were removed from current source
+on 23 October 2026 and remain excluded from delivery. Their original Git identities
+are recorded in the documentation replacement inventory. QualPF branding and action SVG masters remain
 separate from these excluded inherited graphics. Consistency checks reject old
 resource registrations (including renamed prefixes), reintroduced old source
 files, missing exclusion rules and absent/unregistered replacements. Runtime
 tests decode every replacement at 100/150/200% scale, including disabled states.
-Remaining inherited text/example grants
-also require confirmation; the inventory does not relabel them as QualPF-owned.
+
+All 17 user manual pages were independently authored on 23 October 2026 from
+current UI implementation and accepted product contracts. The manual now uses
+the reader's own measurement, without delivering historical experimental examples
+or reproducing their claimed compositions. Its new analysis-route illustration
+has an original editable SVG master and a reproducible PNG export. The existing
+QualPF logo/favicon retain their independent branding source. Old analytics and
+unused MathJax assets are removed from publication.
+
+`documentation_replacement` in the rights inventory records the entry revision,
+original Git blobs and hashes, authored sources and artwork derivation. Original
+manual content is recoverable from that revision, not shipped as a second manual.
+Bibliographic facts and required upstream/third-party attributions remain.
+The `inherited-artwork-docs` component's reviewed status describes the completed
+replacement/exclusion disposition; it grants no rights in excluded originals.
+New contributions follow GPL-3.0-only to the extent applicable rights exist.
+Scientific-data grants and package-specific runtime reviews remain separate.
 
 ## Actual Windows runtime findings
 
@@ -189,7 +204,9 @@ installer/graphics runtime review.
 
 No private grants were supplied, and no authors were contacted. The remaining
 external information is an applicable public license or rights-holder grant for
-the exact scientific compilations and inherited graphics/text still delivered.
+the exact scientific compilations still delivered. Inherited action artwork and
+user manual originals have been replaced or removed; no new grant is asserted
+for those originals.
 The excluded examples and reserved CIF require permission if they are to be
 redistributed later; they are no longer current payload prerequisites.
 Any grant must cover modification and redistribution with the intended GPL

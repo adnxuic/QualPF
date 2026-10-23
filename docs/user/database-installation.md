@@ -1,72 +1,54 @@
-# Database Installation
+# Database setup
 
-QualPF requires at least one crystallographic reference database in its own
-compiled format (`.sq` file). Database files are not included in the QualPF
-installation and must be downloaded separately.
+Search and match reads reference cards from a registered database. Obtain a
+database appropriate to your experiment and retain its source and usage terms.
+QualPF does not bundle a reference database or turn a database citation into
+permission to redistribute its contents.
 
-## Available databases
+## Keep the database files together
 
-Pre-built databases are available for download from the
-[QualX Databases page](https://www.ba.ic.cnr.it/content/old/qualx3/Databases/).
+A compiled database uses a `.sq` file with companion files. For example, a
+database called `my_reference` has these members:
 
-| File | Contents | Size |
-|------|----------|------|
-| `cod_inorg.zip` | COD — inorganic phases only | 304 MB |
-| `cod.zip` | COD — complete database | 2.7 GB |
+```text
+my_reference.sq
+my_reference.sq.info
+my_reference.sq.infostat
+my_reference.sq.search
+```
 
-Each archive contains a single folder (`cod_inorg` or `cod`) with all the
-required files. Extract it into your `QualXDB` folder following the
-instructions below.
+Keep the complete set from the same database build in one directory. An archive
+must be extracted before use. A CIF collection is source material for database
+creation, not a replacement for the compiled file set.
 
-## Default database folder
+## Register and select
 
-QualPF looks for databases in a dedicated folder called **QualXDB** inside your
-home directory:
+The default discovery directory is `QualXDB` in your home folder. Subdirectories
+are searched for `.sq` databases at startup. On Windows this is normally
+`C:\Users\<username>\QualXDB`; on Linux it is `~/QualXDB`.
 
-| Platform | Default path |
-|----------|-------------|
-| Linux | `~/QualXDB` |
-| Windows | `C:\Users\<username>\QualXDB` |
+Open **S&M > Manage Databases** to inspect registrations, add a `.sq` file from
+another location and select the database to use. If the initial missing-folder
+prompt appears, **Choose folder...** selects a discovery directory; **Manage
+Databases later** leaves configuration for a later session.
 
-**At every launch** QualPF scans this folder recursively for `.sq` files and
-registers any database it finds automatically — no manual configuration needed.
-You can organise the folder freely: subfolders are fully supported.
+The manager's **Create** command opens database creation. For your own CIF
+collection, choose **User database** and **Source from CIF files**. Check the
+import outcome before relying on the new database. Removing a registration and
+deleting its files are different actions: inspect the deletion dialog's
+file-removal choice before accepting it.
 
-## Setting up the QualXDB folder
+## Troubleshooting and saved analyses
 
-1. Create the `QualXDB` folder in your home directory.
-2. Download one of the zip archives from the link above and extract it
-   directly into `QualXDB`. After extraction the folder should look like:
-   ```
-   ~/QualXDB/
-   └── cod_inorg/          (or cod/)
-       ├── cod_inorg.sq
-       ├── cod_inorg.sq.info
-       ├── cod_inorg.sq.infostat
-       └── cod_inorg.sq.search
-   ```
-3. Launch QualPF — the database is detected and registered automatically.
+If registration or search fails, check that all four members exist, can be read
+and belong together. Do not repair a database by mixing companion files from
+different downloads. Record the reported error along with the database source.
 
-## What happens if the folder is not found
+A QPF project stores the cards and evidence already used in its analysis, so
+viewing those results does not require the original database. Retrieving new
+cards does require a compatible database identity. After changing the database,
+restart the analysis before requesting new references.
 
-If QualPF starts without any configured database and the `QualXDB` folder does
-not exist, a dialog is shown with two options:
-
-- **Choose folder…** — lets you select a different folder that will be saved
-  as the new default. QualPF scans it immediately and registers all databases
-  found inside.
-- **Manage Databases later** — dismiss the dialog and configure databases
-  manually via **S&M → Manage Databases**.
-
-## Adding a database manually
-
-If you prefer not to use the default folder, or need to register an additional
-database stored elsewhere:
-
-1. Open **S&M → Manage Databases**
-2. Click **Add** and browse to your `.sq` database file
-3. Click **OK** — the database is now active
-
-Alternatively, click **Create** to open a graphical interface for building
-databases from various sources, including a set of CIF files: select
-**User database** and choose **Source from CIF files**.
+Database providers and relevant research resources are listed in
+[References](references.md). This manual does not promise availability or a
+particular size for a provider's downloadable archives.

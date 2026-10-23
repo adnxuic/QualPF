@@ -4,13 +4,10 @@
 #
 # Usage: bash make_pdf.sh [output.pdf]
 
-set -e
+set -eu
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 OUT="${1:-${SCRIPT_DIR}/qualpf_manual.pdf}"
-PUBLISHER=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["product"]["publisher"])' \
-  "${SCRIPT_DIR}/../deploy/distribution.json")
-
-pandoc \
+python3 "${SCRIPT_DIR}/../tools/documentation/build_manual.py" --output "${OUT}" \
   "${SCRIPT_DIR}/user/index.md" \
   "${SCRIPT_DIR}/user/installation.md" \
   "${SCRIPT_DIR}/user/database-installation.md" \
@@ -27,21 +24,5 @@ pandoc \
   "${SCRIPT_DIR}/user/search-match/index.md" \
   "${SCRIPT_DIR}/user/search-match/search-match.md" \
   "${SCRIPT_DIR}/user/search-match/restraints.md" \
-  "${SCRIPT_DIR}/user/references.md" \
-  -o "${OUT}" \
-  --pdf-engine=xelatex \
-  --toc \
-  --toc-depth=2 \
-  -V geometry:margin=2.5cm \
-  -V fontsize=11pt \
-  -V lang=en \
-  -V mainfont="DejaVu Serif" \
-  -V sansfont="DejaVu Sans" \
-  -V monofont="DejaVu Sans Mono" \
-  --metadata title="QualPF Manual" \
-  --metadata author="${PUBLISHER}"
-
-python3 -B "${SCRIPT_DIR}/../tools/validation/check_distribution.py" \
-  --root "${SCRIPT_DIR}/.." --write-manual-proof --manual-file "${OUT}" \
-  --manual-proof "${SCRIPT_DIR}/../build/documentation/qualpf_manual-provenance.json"
+  "${SCRIPT_DIR}/user/references.md"
 echo "PDF generated with source provenance: ${OUT}"

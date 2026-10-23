@@ -1,5 +1,67 @@
 {
   "schema": "qualpf.agent_task_state.v1",
   "baseline_ref": "docs/developer/project-baseline.json",
-  "active_task": null
+  "active_task": {
+    "id": "independent-user-manual",
+    "goal": "Replace inherited user documentation and document artwork with independently authored QualPF guidance and verify publication inputs.",
+    "in_scope": [
+      "docs/user/**",
+      "docs/mkdocs.yml",
+      "docs/make_pdf.sh",
+      "docs/README.md",
+      "docs/developer/distribution-rights.md",
+      "docs/developer/releasing.md",
+      "deploy/distribution.json",
+      "deploy/rights-review.json",
+      "NOTICE.md",
+      "THIRD_PARTY_NOTICES.md",
+      "CHANGELOG.md",
+      "tools/validation/check_documentation.py",
+      "tools/validation/check_distribution.py",
+      "tools/documentation/**",
+      ".agent/TASK_STATE.json"
+    ],
+    "out_of_scope": [
+      "Product behavior and public APIs",
+      "Scientific inputs and frozen evidence",
+      "Program artwork",
+      "Push or publication"
+    ],
+    "status": "in_progress",
+    "base_commit": "8f9678158ee5a9369ec7cb55141e29de02b3d561",
+    "checkpoint_commit": null,
+    "completed": [
+      "Independently authored all 17 user pages and original workflow illustration; removed inherited branding/analytics/MathJax.",
+      "Updated rights disposition and original Git identities without changing scientific inputs or prior icon records.",
+      "Added portable PDF publication with internal links and source/publisher/builder binding."
+    ],
+    "next_action": "Commit verified documentation batch, then audit the clean source export and finish task state.",
+    "blockers": [],
+    "checks": [
+      {
+        "command": "python -B tools/validation/check_distribution.py --self-test",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/documentation/distribution-check.log"
+      },
+      {
+        "command": "python -B tools/validation/check_documentation.py --self-test",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/documentation/manual-check.log"
+      },
+      {
+        "command": "python -B tools/validation/check_references.py",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/documentation/reference-check.log"
+      },
+      {
+        "command": "python -m mkdocs build --strict -f docs/mkdocs.yml",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/documentation/site-build-verified.log"
+      }
+    ]
+  }
 }

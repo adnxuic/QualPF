@@ -20,14 +20,16 @@ not permission to distribute an unresolved work.**
 | Microsoft Visual C++ Redistributable | Microsoft Corporation | Proprietary redistribution terms for the selected toolset; not relicensed under the application's GPL. Retained MSVC development audit artifacts are excluded from formal release. MinGW application selection does not establish the statically built IFW container's runtime provenance. |
 | Installer/AppImage runtime and bundled dependencies | Qt Installer Framework, AppImage runtime and the actual staged transitive libraries | IFW 4.8.1 uses [GPLv3 with the Qt exception](LICENSES/QtIFW-GPL3-Exception.txt); its actual installer embeds Qt 6.6.0 and OpenSSL 3.0.14, separately from application Qt. Preserve [libarchive notices](LICENSES/IFW-libarchive-COPYING.txt) and the [OpenSSL license](LICENSES/OpenSSL-3.0-LICENSE.txt), plus the exact linked Qt/component sources and notices. AppImage and graphics support libraries retain their own terms. Versioned upstream sources alone do not clear an unbound static build. |
 | Scientific tables and examples | Retained QualX3 inputs and cited scientific sources, including NIST and International Tables references | Provenance and scientific citations do not by themselves establish a redistribution grant. Rights review remains open for the retained tables, their preferred modification inputs and example data. Do not alter accepted values to avoid this review. |
-| Original QualX3 artwork and documentation | Original authors and any external asset authors | All 29 inherited action images have been removed from current source and delivery and replaced by independent QualPF artwork. Their original identities and grant findings are retained in the rights inventory. QualX/CNR/IC brand images remain excluded from delivery; remaining inherited documentation assets still require review. |
+| Original QualX3 artwork and documentation | Original authors and any external asset authors | All 29 inherited action images were replaced by independent QualPF artwork. The user manual was independently authored and inherited document branding removed. Original text/image identities and earlier grant findings are retained in the rights inventory and Git history. Excluded originals are not relicensed; reintroducing them requires their own review. |
 | Independent QualPF artwork | QualPF contributors; application raster master/prompt and action SVG masters are retained in the resource guides | Supplied with the QualPF additions under GPL-3.0-only to the extent applicable rights exist. This is not a claim to third-party institutional marks. |
 
 Material-specific findings are recorded in `deploy/rights-review.json` and the
 developer rights review. NIST FFAST is SRD 66 with a reserved compilation
 copyright; the general grant for non-SRD NIST data must not be substituted for
-its actual terms. Retained scientific data and remaining inherited documentation
-grants remain unresolved. Removed action artwork is excluded, not relicensed.
+its actual terms. Retained scientific-data grants remain unresolved. Replaced
+action artwork and documentation originals are excluded, not relicensed. The new
+manual and original workflow illustration are QualPF contributions under
+GPL-3.0-only to the extent applicable rights exist; source/master files are supplied.
 The owner has selected MinGW for formal Windows binaries; MSVC and
 VC++ runtime delivery are excluded from that release scope.
 

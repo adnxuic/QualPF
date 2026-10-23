@@ -1,53 +1,42 @@
-# Peak Search
+# Formal peak search
 
-## Overview
+The formal peak list contains measured positions, intensities and widths. CSM
+uses this evidence to compare reference reflections. PFSM instead uses the
+continuous signal and does not require this list.
 
-QualPF locates peaks in the diffraction pattern and records their 2θ position,
-intensity and FWHM. CSM uses these peaks; PFSM fits continuous observations and
-does not require a peak table.
+## Detect and inspect
 
-## Running Peak Search
+Choose **Peak Search > Peak Search**. The operation prepares missing dependencies
+with the Peak Search profile and publishes the resulting peaks together. Inspect
+the **Peaks** dock and the corresponding plot markers before using them in an
+interpretation.
 
-**Peak Search → Peak Search** runs the automatic formal peak search with the
-current conditions. Detected peaks appear as vertical markers in the graphic area
-and are listed in the **Peaks** dock.
+**Peak Search > Peak Search Options** opens the peak editor. Its Interval and
+Settings controls cover the angular bounds, append choice, intensity threshold,
+sensitivity and requested number of peaks. Inspect the preview and accept it
+only when it represents the features you intend to measure. **Setting > Peak
+Search** is the separate editor for defaults used by future projects.
 
-After background estimation or smoothing, some detected locations may have
-coincident local-baseline endpoints and cannot be measured. QualPF skips these
-candidates and continues with valid peaks. The options dialog displays
-**Skipped N unmeasurable candidates**; **Candidate details...** lists the initial
-or formal stage, candidate index, original input sample index, angle and reason.
-Indices start at zero. Valid previews can still be applied. Automatic peak search
-and Search preparation use the same rule and display the skipped count.
+Peak selection from an existing candidate pool is distinct from a fresh detection.
+Reselecting peaks preserves that pool's original detection evidence. To change
+the measurement conditions, rerun detection with the intended preparation.
 
-If every candidate is unmeasurable, or another numerical error occurs, the
-operation fails and applies no changes. Adjust the conditions, cancel, restart
-preprocessing or add measured peaks manually. Candidate diagnostics follow the
-current detection and are cleared by input changes; QPF 1.0 preserves them.
+## Handle rejected candidates
 
-## Peak Search Options
+A candidate whose local-baseline endpoints coincide cannot be measured. The
+program can skip such candidates and still return valid peaks. **Candidate
+details...** identifies the stage, candidate, input sample, angle and rejection
+reason. These diagnostic indices start at zero, unlike the initial-candidate
+table's displayed sample numbers.
 
-**Peak Search → Peak Search Options** opens the current-project Peak Search
-workflow. Its Background, Initial Peaks, FWHM, Peak Extraction and Peak Selection
-pages are independent of CSM and Preprocessing. Save changes parameters; Save &
-Run then calculates. Setting → Peak Search edits defaults for new projects.
+If no measurable candidate remains, the operation fails without replacing the
+previous result. Inspect the signal and preparation, adjust suitable options or
+use manual editing. A failed calculation is not an empty, successful peak set.
 
-| Parameter | Description |
-|-----------|-------------|
-| **Min. 2θ / Max. 2θ** | Search range |
-| **Threshold** | Minimum peak height relative to the pattern maximum |
-| **Sensitivity** | Controls smoothing before peak detection |
-| **Max. peaks** | Maximum number of peaks to detect |
-| **Append** | Add new peaks to the existing list instead of replacing it |
+## Edit or exchange peaks
 
-## Manual editing
-
-- **Add peak**: View → Selection Mode, then right-click on the pattern
-- **Delete peak**: select a peak marker and press Delete
-- **Add inferred peak** and **Delete all peaks** are also available in the
-  **Peak Search** menu's editing group.
-- **Load / Save**: Peak Search → Load Peaks / Save Peaks
-
-> **Tip:**
-> If too many or too few peaks are found, adjust **Threshold** and
-> **Sensitivity** in the Peak Search Options dialog.
+The Peak Search menu offers **Add Peak**, **Delete Peak**, **Add inferred peak**,
+**Delete all peaks**, **Load Peaks** and **Save Peaks**. Review manually added or
+imported coordinates against the measurement; they do not substitute for a
+continuous experimental signal. Dependent analyses may need to be invalidated
+when you change their peak evidence.

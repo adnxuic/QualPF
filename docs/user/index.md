@@ -1,62 +1,43 @@
-# QualPF
+# QualPF user manual
 
-**QualPF** is a software for qualitative X-ray powder diffraction analysis.
-It allows phase identification of crystalline materials by comparing experimental
-diffraction patterns against reference databases.
+QualPF helps you examine a powder diffraction measurement, compare it with
+reference cards and assemble a candidate phase composition. This manual follows
+the desktop application's current commands and the native QPF project format.
 
-## Download
+Start with [Installation](installation.md), register a
+[reference database](database-installation.md), then work through
+[Getting started](introduction/getting-started.md) using your own measurement.
+The [worked procedure](introduction/examples.md) provides a checklist for
+recording what you did and reviewing the result.
 
-- **Software** — see [Software Installation](installation.md) for download links (Windows, Linux)
-- **Databases** — see [Database Installation](database-installation.md) for download links (required to run QualPF)
+## Choose a route
 
-## Features
+| Task | Read next |
+| --- | --- |
+| Understand the workspace and analysis choices | [Overview](introduction/index.md) |
+| Prepare a signal and inspect peaks | [Data reduction](data-reduction/index.md) |
+| Compare reference phases with a measurement | [Search and match](search-match/index.md) |
+| Change defaults or inspect earlier operations | [Settings and history](settings.md) |
+| Find methodological and upstream references | [References](references.md) |
 
-- Import and visualize powder diffraction patterns
-- Background estimation and subtraction
-- Automatic and manual peak search
-- Search/Match against crystallographic databases (COD, PDF-2)
-- Figure of Merit (FOM) scoring for phase identification
-- Quantitative phase analysis (RIR method)
-- Project save/load (.qpf format)
+## Reading results
 
-Installation packages omit the inherited demonstration patterns whose
-redistribution rights remain unconfirmed. Use diffraction data you are entitled
-to use and install reference databases under their separate terms.
+A high score identifies a candidate worth examining. It does not establish the
+sample's identity or a probability of correctness. Check the positions and
+intensities of multiple reflections, competing candidates and unexplained signal.
+RIR percentages describe the selected crystalline phases and require additional
+assumptions; see [interpreting quantification](search-match/search-match.md#quantification).
 
-## Quick Links
+## Origin and this edition
 
-- [Installation](installation.md)
-- [Database Installation](database-installation.md)
-- [Settings and workflow history](settings.md)
-- [Getting Started](introduction/getting-started.md)
-- [Search & Match](search-match/search-match.md)
+QualPF is developed from QualX3. Upstream scientific and software contributions
+remain acknowledged in the [references](references.md) and the distribution's
+origin and third-party notices. QualPF is a separate project, published by adnxuic;
+no institutional endorsement is implied.
 
-## Citing QualX
-
-If you use QualX in your research, please cite one of the following works:
-
-1. Altomare, A., Corriero, N., Cuocci, C., Falcicchio, A., Moliterni, A. and Rizzi, R.,
-   *'Main features of QUALX2.0 software for qualitative phase analysis'* (2017). *Powder Diffr.*
-   [https://doi.org/10.1017/S0885715617000240](https://doi.org/10.1017/S0885715617000240)
-
-2. Altomare, A., Corriero, N., Cuocci, C., Falcicchio, A., Moliterni, A. and Rizzi, R.,
-   *'QUALX2.0: a qualitative phase analysis software using the freely available database POW_COD'* (2015). *J. Appl. Cryst.* **48**, 598–603.
-   [https://doi.org/10.1107/S1600576715002319](https://doi.org/10.1107/S1600576715002319)
-
-3. Altomare, A., Cuocci, C., Giacovazzo, C., Moliterni, A. and Rizzi, R.,
-   *'QUALX: A computer program for qualitative analysis using powder diffraction data'* (2008). *J. Appl. Cryst.* **41**(4), 815–817.
-   [https://doi.org/10.1107/S0021889808016956](https://doi.org/10.1107/S0021889808016956)
-
-## License and support
-
-QualPF is independently maintained and published by **adnxuic** under
-**GPL-3.0-only**. It derives from QualX3, originally developed at IC-CNR, Bari;
-original authorship and the research references above are retained. No official
-QualX distribution status or institutional endorsement is claimed.
-
-Use [QualPF Issues](https://github.com/adnxuic/QualPF/issues) for QualPF support.
-**Help → About → License and notices** displays the application license, origin
-and third-party notices offline. There is no warranty to the extent permitted
-by law. Database licenses and the documented qualifications of search/RIR results
-remain applicable. Local packages marked **audit** have unresolved distribution
-obligations and are not cleared releases.
+This English manual was independently written for QualPF on 23 October 2026
+from current implementation and accepted technical contracts. Its prose and
+original illustrations are QualPF contributions under GPL-3.0-only, to the
+extent applicable rights exist. Earlier manual versions remain in Git history.
+This statement does not change the terms of the application’s third-party
+components, scientific tables or reference databases.

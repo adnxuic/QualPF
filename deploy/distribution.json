@@ -216,31 +216,32 @@
     {
       "id": "inherited-artwork-docs",
       "paths": [
-        "src/gui/resources/images/",
-        "docs/user/images/",
-        "inherited documentation and example material"
+        "Historical inherited action artwork and user documentation; originals excluded from current delivery"
       ],
       "source": "QualX3 and any external original asset authors",
-      "version": "retained documentation assets; all 29 inherited action images removed from current source and delivery",
+      "version": "All 29 action images and inherited user manual replaced; old document branding removed on 2026-10-23",
       "copyright": "Original asset/document authors; institutional marks are not QualPF marks",
-      "license": "asset-specific scope unresolved",
-      "modifications": "All inherited runtime action images replaced by independently drawn QualPF SVG masters and PNG exports; original identities retained in the rights review",
-      "license_files": [],
-      "status": "blocked",
-      "obligations": "Confirm grants for remaining delivered inherited documentation/assets. Removed action images are excluded, not relicensed; their original identities and replacement paths remain in deploy/rights-review.json."
+      "license": "Original grants unresolved; no originals delivered. Replacement contributions use GPL-3.0-only.",
+      "modifications": "Independently drawn action artwork and independently authored manual replace the old materials. Git identities preserve the originals without relabeling them.",
+      "license_files": [
+        "LICENSE"
+      ],
+      "status": "reviewed",
+      "obligations": "Reviewed replacement/exclusion disposition, not a license grant for originals. Preserve recovery identities in deploy/rights-review.json. Any reintroduction requires material-specific review; LICENSE applies only to the QualPF replacements."
     },
     {
       "id": "qualpf-additions",
       "paths": [
         "QualPF changes recorded in Git",
         "src/gui/resources/branding/",
-        "src/gui/resources/icons/"
+        "src/gui/resources/icons/",
+        "docs/user/"
       ],
-      "source": "QualPF contributors; preserved raster master/prompt and SVG masters",
+      "source": "QualPF contributors; preserved raster master/prompt, action SVG masters, independently authored manual and original analysis-route SVG",
       "version": "current committed QualPF revision",
       "copyright": "Copyright (C) 2026 QualPF contributors, to the extent applicable rights exist",
       "license": "GPL-3.0-only",
-      "modifications": "Independent artwork and implementation; upstream and third-party notices remain separate",
+      "modifications": "Independent implementation, artwork and user documentation; upstream and third-party notices remain separate",
       "license_files": [
         "LICENSE"
       ],

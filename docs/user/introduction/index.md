@@ -1,31 +1,44 @@
-# Introduction
+# Workspace and analysis choices
 
-QualPF is designed around a simple workflow:
+The central plot shows the working diffraction signal and any visible analysis
+layers. The surrounding docks expose different parts of the same project:
 
-```
-Import pattern → Data Reduction → Search & Match → Accept phases
-```
+| Dock | Purpose |
+| --- | --- |
+| Peaks | Examine the measured peak list used by classical matching |
+| Results List | Inspect and sort candidate reference cards |
+| Card | Read the selected reference card and its reflections |
+| Quantitative | Review accepted phases and available composition estimates |
+| Compare | Work with comparison patterns |
+| Report | Review the report for the current analysis |
+| Workflow | Inspect calculation sources, parameters and session history |
 
-## Main Window
+Use the **View** menu to expose the panels you need. Zooming, panning and changing
+plot styles help inspection; they do not rerun a scientific calculation.
 
-The main window is divided into several panels:
+## Two matching methods
 
-- **Graphic area** (centre): displays the diffraction pattern, background,
-  peaks and accepted phase reflections
-- **Results List** (bottom/right dock): ranked list of candidate phases
-- **Peaks** (dock): list of experimental peaks
-- **Peak Compare** (dock): overlay of selected card reflections vs. experimental peaks
-- **Quantitative** (dock): accepted phases with RIR percentages. The RIR value is
-  actively used to perform a semi-quantitative analysis, shown as a pie chart
-- **Report** (dock): summary report of the analysis
+![Measurement, matching, review and project saving](../images/analysis-route.png)
 
-## Workflow Overview
+**CSM (Classical SM)** compares a measured peak list with reference reflections.
+It can prepare missing background and peaks using the project's CSM settings.
+It is useful when you want to inspect the peak evidence behind a match.
 
-1. **Import** a diffraction pattern (File → Import Diffraction Pattern)
-2. **Background**: estimate the background and optionally view the net signal
-3. **Peak Search**: detect peak positions and intensities
-4. **Search/Match**: query the database and rank candidate phases by FOM
-5. **Accept**: move identified phases to the Quantitative panel
-6. **Save** the project (.qpf) to resume later
+**PFSM** compares continuous observations with expanded reference profiles and
+jointly fits selected phases. It requires the original measurement evidence and
+does not need a formal peak list. Its settings, width preparation and scoring
+are independent of CSM.
 
-See the individual sections for detailed instructions.
+Both methods require interpretation. Use measured sample information to justify
+[restraints](../search-match/restraints.md), then review alternative phases and
+unexplained reflections before accepting a result.
+
+## Keep a complete project
+
+Use **File > Save Project As** to create a `.qpf` file. QPF retains analysis
+parameters, source evidence, reference cards, selected phases and project plot
+settings. Opening it restores the saved analysis without running a new search.
+The database itself and session undo stack are not embedded. QXP projects are
+not supported, including files renamed with a `.qpf` extension.
+
+For a practical sequence, continue to [Getting started](getting-started.md).

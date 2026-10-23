@@ -38,6 +38,15 @@ reports are no longer used for routine development.
 
 ### Changed
 
+- Replaced inherited user-manual prose with independently authored QualPF
+  instructions and an original workflow illustration. The tutorial uses the
+  reader's own data; current UI controls, project persistence and scientific
+  interpretation limits are documented. Original text/artwork identities remain
+  recoverable in Git, with replacement scope recorded in the rights inventory.
+  Removed old documentation branding, analytics and unused MathJax assets.
+  PDF publication now resolves internal page links and binds its portable
+  builder and publisher inputs in the generated source proof.
+
 - Replaced all 29 inherited action images with independently drawn colorful SVG
   masters and 24px/48px PNG exports. Removed old PNG/XPM files and resource URLs,
   preserved action behavior and legend states, and retained original provenance

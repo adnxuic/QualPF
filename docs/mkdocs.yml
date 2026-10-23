@@ -29,7 +29,7 @@ nav:
     - Overview: introduction/index.md
     - Getting Started: introduction/getting-started.md
     - Settings and Workflow History: settings.md
-    - Examples: introduction/examples.md
+    - Worked Procedure: introduction/examples.md
   - Data Reduction:
     - Overview: data-reduction/index.md
     - Background: data-reduction/background.md
@@ -48,23 +48,9 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.highlight
-  - pymdownx.arithmatex:
-      generic: true
   - tables
   - toc:
       permalink: true
 
-extra_javascript:
-  - javascripts/mathjax.js
-  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
-
 extra:
-  analytics:
-    provider: google
-    property: G-CHZH4B9K16
-  consent:
-    title: Cookie consent
-    description: >-
-      We use cookies to recognize your repeated visits and understand how
-      you use this documentation, so we can improve it.
   generator: false

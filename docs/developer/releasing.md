@@ -25,12 +25,14 @@ packaging does not establish grants for all inherited material.
 
 The inventory distinguishes reviewed source grants, blocked material and
 package-specific review. Outstanding rights include retained scientific
-data/examples and inherited artwork/documentation: AtomProperties.xen,
-syminfo.lib, scattering/NIST source tables, the exact symmetry catalogue and
-remaining documentation assets. All 29 inherited runtime action images have
+data: AtomProperties.xen, syminfo.lib, scattering/NIST source tables and the exact
+symmetry catalogue. All 29 inherited runtime action images have
 been independently redrawn and their original files excluded from current source
 and delivery. The rights inventory retains original identities and replacement
-paths; their exclusion does not grant rights to the old artwork.
+paths; their exclusion does not grant rights to the old artwork. The user manual
+has also been independently authored, its inherited branding removed, and its
+originals indexed by Git identity. The reviewed artwork/documentation component
+records this replacement disposition, not a grant for the old materials.
 Citations do not by themselves grant rights.
 Preserve accepted data, frozen evidence, original failures and notices throughout
 the review; never generate replacement references from product output.
@@ -94,8 +96,9 @@ MSVC packaging must also run in the matching Visual Studio developer shell.
 If deployment omits the VC++ runtime bootstrap required by the installer script,
 the generated-IFW check rejects the artifact, including in audit mode.
 
-An existing local PDF is preserved but installed only with matching documentation
-input/PDF hashes from `docs/make_pdf.sh`. The generated proof stays under
+An existing local PDF is preserved but installed only with matching documentation,
+builder, publisher-input and PDF hashes from `docs/make_pdf.sh` or the portable
+`tools/documentation/build_manual.py` entry. The generated proof stays under
 `build/documentation` and accompanies an installed manual. Generate before CMake
 configuration; stale local manuals must not silently carry old identity/contact
 information into a new package. HTML Help always points to the current guide.
