@@ -26,8 +26,19 @@ original failures available during review.
 
 ## Inherited artwork and documents
 
-All **29** images still registered under `:/images/` are listed individually with
-SHA-256 and original QualX Git blob identities. Their PNG/XPM metadata did not
+All **29** formerly registered action images were independently redrawn on
+23 October 2026. The old PNG/XPM files and `:/images/` registrations have been
+removed from current source and delivery; new original SVG masters and 24px/48px
+PNG exports use `:/icons/`. Their construction follows operation semantics and
+the existing QualPF palette, without tracing or importing old artwork.
+
+The rights inventory retains each original SHA-256, QualX Git blob/path and grant
+finding, plus the last retained QualPF revision and replacement SVG path. It
+marks the originals excluded and removed from source, not licensed or cleared.
+Retained Git blob IDs identify repository content; `retained_checkout_eol: crlf`
+records the Windows XPM checkout conversion needed to reproduce the original
+review's byte hash. PNGs recover directly from the recorded Git revision/path.
+The old PNG/XPM metadata did not
 supply a usable author/license statement. In particular, a file name such as
 `pan_121784.png` is a search lead, not attribution. The upstream GPL change alone
 is not treated as proof that an external icon author's rights were granted.
@@ -35,7 +46,11 @@ is not treated as proof that an external icon author's rights were granted.
 The inactive original documentation favicon and QualX SVG are now excluded from
 source delivery as well as from current documentation branding. Their originals
 are retained. Current QualPF branding and original action SVG masters remain
-separate from these inherited graphics. Remaining inherited text/example grants
+separate from these excluded inherited graphics. Consistency checks reject old
+resource registrations (including renamed prefixes), reintroduced old source
+files, missing exclusion rules and absent/unregistered replacements. Runtime
+tests decode every replacement at 100/150/200% scale, including disabled states.
+Remaining inherited text/example grants
 also require confirmation; the inventory does not relabel them as QualPF-owned.
 
 ## Actual Windows runtime findings

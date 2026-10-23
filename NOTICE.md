@@ -31,6 +31,9 @@ user manual; an academic citation does not replace a copyright/license notice.
   independent product identity and distribution configuration. Relevant dates
   and changes are recorded in Git and CHANGELOG.md.
 - Independent distribution notices and branding were revised on 22 October 2026.
+- All 29 inherited runtime action images were replaced by independently drawn
+  QualPF SVG artwork on 23 October 2026. Removed files retain their original
+  provenance and grant findings in the rights inventory and Git history.
 
 Original copyrights are not transferred to the QualPF publisher. Existing
 third-party file notices must remain intact. The GPL text's Free Software

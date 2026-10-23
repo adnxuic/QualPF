@@ -147,9 +147,9 @@ void PeakListWidget::createPeakListModel()
 
 void PeakListWidget::createContextMenuActions()
 {
-    deletePeakAction = new QAction(QIcon(":/images/images/delpeak.xpm"), "Delete Peaks", this);
+    deletePeakAction = new QAction(QIcon(":/icons/delete-peak.png"), "Delete Peaks", this);
     connect(deletePeakAction, &QAction::triggered, this, &PeakListWidget::deletePeaks);
-    addPeakAction = new QAction(QIcon(":/images/images/addpeak.xpm"), "Add Peak", this);
+    addPeakAction = new QAction(QIcon(":/icons/add-peak.png"), "Add Peak", this);
     connect(addPeakAction, &QAction::triggered, this, &PeakListWidget::addPeak);
     clearSelectionAction = new QAction(tr("Clear Selection"), this);
     clearSelectionAction->setShortcut(QKeySequence(Qt::Key_Escape));

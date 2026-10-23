@@ -38,6 +38,12 @@ reports are no longer used for routine development.
 
 ### Changed
 
+- Replaced all 29 inherited action images with independently drawn colorful SVG
+  masters and 24px/48px PNG exports. Removed old PNG/XPM files and resource URLs,
+  preserved action behavior and legend states, and retained original provenance
+  identities with replacement mappings. Distribution checks reject reintroduced
+  old resources and missing replacements; unrelated rights remain unresolved.
+
 - Restricted formal Windows distribution to the owner's selected MinGW kit;
   retained MSVC development validation and reject formal VC++ runtime delivery.
   Recorded the supplied DEB maintainer email without filling the empty build

@@ -415,7 +415,7 @@
       <widget class="QPushButton" name="loadCardsButton">
        <property name="icon">
         <iconset resource="../resources/resource.qrc">
-         <normaloff>:/images/images/load_entry.png</normaloff>:/images/images/load_entry.png</iconset>
+         <normaloff>:/icons/load-entry.png</normaloff>:/icons/load-entry.png</iconset>
        </property>
        <property name="text">
         <string>Load Cards</string>

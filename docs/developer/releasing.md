@@ -27,7 +27,11 @@ The inventory distinguishes reviewed source grants, blocked material and
 package-specific review. Outstanding rights include retained scientific
 data/examples and inherited artwork/documentation: AtomProperties.xen,
 syminfo.lib, scattering/NIST source tables, the exact symmetry catalogue and
-remaining image/document assets. Citations do not by themselves grant rights.
+remaining documentation assets. All 29 inherited runtime action images have
+been independently redrawn and their original files excluded from current source
+and delivery. The rights inventory retains original identities and replacement
+paths; their exclusion does not grant rights to the old artwork.
+Citations do not by themselves grant rights.
 Preserve accepted data, frozen evidence, original failures and notices throughout
 the review; never generate replacement references from product output.
 

@@ -164,8 +164,12 @@ def rights_review_errors(root, data):
     qrc = ET.parse(root / "src/gui/resources/resource.qrc").getroot()
     active_images = {"src/gui/resources/" + file.text for resource in qrc.findall("qresource")
                      if resource.get("prefix") == "/images" for file in resource.findall("file")}
-    if active_images != {entry["path"] for entry in images}:
+    if active_images != {entry["path"] for entry in images if entry.get("delivery") != "excluded"}:
         errors.append("active inherited images differ from the rights inventory")
+    registered = {"src/gui/resources/" + file.text for resource in qrc.findall("qresource")
+                  for file in resource.findall("file")}
+    aliases = {(resource.get("prefix"), file.get("alias")): "src/gui/resources/" + file.text
+               for resource in qrc.findall("qresource") for file in resource.findall("file")}
     required = set(data["source_inputs"]["tracked_generator_inputs"] + data["source_inputs"]["generator_archives"])
     required.update(path.relative_to(root).as_posix() for path in (root / "share/qualx/files").rglob("*") if path.is_file())
     if not required.issubset({entry["path"] for entry in science}):
@@ -179,6 +183,21 @@ def rights_review_errors(root, data):
         excluded = entry.get("delivery") == "excluded"
         if excluded and entry["path"] not in data.get("excluded_distribution_materials", []):
             errors.append("material claims exclusion without a distribution rule: " + entry["path"])
+        if excluded and entry["path"] in registered:
+            errors.append("excluded inherited image registered in runtime: " + entry["path"])
+        if entry.get("removed_from_source"):
+            if entry not in images or not excluded or not re.fullmatch(r"[0-9a-f]{40}", entry.get("retained_revision", "")):
+                errors.append("removed image lacks exclusion/history identity: " + entry["path"])
+            if path.exists():
+                errors.append("removed inherited image reintroduced into source: " + entry["path"])
+            replacement = relative(root, entry.get("replacement", ""))
+            if not replacement.is_relative_to(root / "src/gui/resources/icons") or replacement.suffix != ".svg" or not replacement.is_file():
+                errors.append("removed image lacks independent SVG replacement: " + entry["path"])
+            else:
+                for suffix in (".png", "@2x.png"):
+                    png = replacement.with_name(replacement.stem + suffix)
+                    if not png.is_file() or aliases.get(("/icons", png.name)) != png.relative_to(root).as_posix():
+                        errors.append("replacement PNG missing/unregistered: " + png.relative_to(root).as_posix())
         if excluded and not path.exists():
             continue  # A portable source export deliberately omits this original.
         raw = path.read_bytes()
@@ -562,6 +581,53 @@ def self_test():
             info["compiler"] = "GNU 13.1 (Windows/AMD64)"
             self.assertEqual(release_errors(data, info, "IFW"), [])
             self.assertEqual(runtime_component("bin/libwinpthread-1.dll"), "mingw-winpthreads")
+
+        def test_removed_image_replacement(self):
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                resources = root / "src/gui/resources"
+                icons = resources / "icons"
+                icons.mkdir(parents=True)
+                old = resources / "images/old.png"
+                old.parent.mkdir()
+                qrc = resources / "resource.qrc"
+                qrc.write_text('<RCC><qresource prefix="/icons"><file alias="new.png">icons/new.png</file>'
+                               '<file alias="new@2x.png">icons/new@2x.png</file></qresource></RCC>')
+                for name in ("new.svg", "new.png", "new@2x.png"):
+                    (icons / name).write_bytes(b"independent replacement fixture")
+                original_path = "src/gui/resources/images/old.png"
+                row = dict(path=original_path, sha256=hashlib.sha256(b"old artwork").hexdigest(),
+                           status="blocked", delivery="excluded", removed_from_source=True,
+                           retained_revision="a" * 40, replacement="src/gui/resources/icons/new.svg")
+                review = dict(schema="qualpf.distribution_rights_review.v1", scientific_inputs=[], inherited_images=[row])
+                data = dict(rights_review="review.json", source_inputs=dict(tracked_generator_inputs=[], generator_archives=[]),
+                            components=[dict(id="inherited-artwork-docs", status="blocked")],
+                            excluded_distribution_materials=[original_path])
+                write_json(root / "review.json", review)
+                self.assertEqual(rights_review_errors(root, data), [])
+                data["excluded_distribution_materials"] = []
+                self.assertTrue(any("without a distribution rule" in x for x in rights_review_errors(root, data)))
+                data["excluded_distribution_materials"] = [original_path]
+                old.write_bytes(b"old artwork")
+                self.assertTrue(any("reintroduced" in x for x in rights_review_errors(root, data)))
+                old.unlink()
+                valid_qrc = qrc.read_text()
+                # A renamed resource prefix must not bypass the exclusion.
+                qrc.write_text(valid_qrc.replace('</RCC>', '<qresource prefix="/renamed"><file>images/old.png</file></qresource></RCC>'))
+                self.assertTrue(any("excluded inherited image registered" in x for x in rights_review_errors(root, data)))
+                qrc.write_text(valid_qrc)
+                for name in ("new.svg", "new.png", "new@2x.png"):
+                    png = icons / name
+                    original = png.read_bytes()
+                    png.unlink()
+                    self.assertTrue(rights_review_errors(root, data), name)
+                    png.write_bytes(original)
+                qrc.write_text(valid_qrc.replace('alias="new@2x.png"', 'alias="wrong@2x.png"'))
+                self.assertTrue(any("unregistered" in x for x in rights_review_errors(root, data)))
+                qrc.write_text(valid_qrc)
+                row["retained_revision"] = ""
+                write_json(root / "review.json", review)
+                self.assertTrue(any("history identity" in x for x in rights_review_errors(root, data)))
 
         def test_material_rights_binding(self):
             with tempfile.TemporaryDirectory() as directory:

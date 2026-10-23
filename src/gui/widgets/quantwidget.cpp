@@ -102,7 +102,7 @@ QuantWidget::QuantWidget(QWidget *parent)
     connect(m_clearSelAction, &QAction::triggered, ui->tableView, &QAbstractItemView::clearSelection);
     ui->tableView->addAction(m_clearSelAction);
 
-    m_removePhaseAction = new QAction(QIcon(":/images/images/delete_entry.png"), tr("Remove Phase"), this);
+    m_removePhaseAction = new QAction(QIcon(":/icons/delete-entry.png"), tr("Remove Phase"), this);
     connect(m_removePhaseAction, &QAction::triggered, this, &QuantWidget::removeSelectedPhase);
 
     ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);

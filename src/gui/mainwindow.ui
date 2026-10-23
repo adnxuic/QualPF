@@ -476,7 +476,7 @@
   <action name="actionLoad_Add">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/load_entry.png</normaloff>:/images/images/load_entry.png</iconset>
+     <normaloff>:/icons/load-entry.png</normaloff>:/icons/load-entry.png</iconset>
    </property>
    <property name="text">
     <string>Load/Add Entry by ID...</string>
@@ -488,7 +488,7 @@
   <action name="actionAccept_Selected_Entries">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/accept_entry.png</normaloff>:/images/images/accept_entry.png</iconset>
+     <normaloff>:/icons/accept-entry.png</normaloff>:/icons/accept-entry.png</iconset>
    </property>
    <property name="text">
     <string>Accept Selected Entries</string>
@@ -503,7 +503,7 @@
   <action name="actionDelete">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/delete_entry.png</normaloff>:/images/images/delete_entry.png</iconset>
+     <normaloff>:/icons/delete-entry.png</normaloff>:/icons/delete-entry.png</iconset>
    </property>
    <property name="text">
     <string>Delete Selected Entries</string>
@@ -515,7 +515,7 @@
   <action name="actionExit">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/quit.png</normaloff>:/images/images/quit.png</iconset>
+     <normaloff>:/icons/quit.png</normaloff>:/icons/quit.png</iconset>
    </property>
    <property name="text">
     <string>Quit</string>
@@ -573,7 +573,7 @@
   <action name="actionAdd_Background_Point">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/addpoint.png</normaloff>:/images/images/addpoint.png</iconset>
+     <normaloff>:/icons/add-point.png</normaloff>:/icons/add-point.png</iconset>
    </property>
    <property name="text">
     <string>Add Background Point</string>
@@ -582,7 +582,7 @@
   <action name="actionDelete_Background_Point">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/deletepoint.xpm</normaloff>:/images/images/deletepoint.xpm</iconset>
+     <normaloff>:/icons/delete-point.png</normaloff>:/icons/delete-point.png</iconset>
    </property>
    <property name="text">
     <string>Delete Background Point</string>
@@ -681,7 +681,7 @@
   <action name="actionAdd_Peak">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/addpeak.xpm</normaloff>:/images/images/addpeak.xpm</iconset>
+     <normaloff>:/icons/add-peak.png</normaloff>:/icons/add-peak.png</iconset>
    </property>
    <property name="text">
     <string>Add Peak</string>
@@ -708,7 +708,7 @@
   <action name="actionDelete_Peak">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/delpeak.xpm</normaloff>:/images/images/delpeak.xpm</iconset>
+     <normaloff>:/icons/delete-peak.png</normaloff>:/icons/delete-peak.png</iconset>
    </property>
    <property name="text">
     <string>Delete Peak</string>
@@ -736,7 +736,7 @@
   <action name="actionSearch_Match">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/search_match.png</normaloff>:/images/images/search_match.png</iconset>
+     <normaloff>:/icons/search-match.png</normaloff>:/icons/search-match.png</iconset>
    </property>
    <property name="text">
     <string>CSM (Classical SM)</string>
@@ -754,7 +754,7 @@
   <action name="actionRestraints">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/filter.png</normaloff>:/images/images/filter.png</iconset>
+     <normaloff>:/icons/filter-entries.png</normaloff>:/icons/filter-entries.png</iconset>
    </property>
    <property name="text">
     <string>Restraints</string>
@@ -763,7 +763,7 @@
   <action name="actionSearch_Match_Options">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/search_match_options.png</normaloff>:/images/images/search_match_options.png</iconset>
+     <normaloff>:/icons/search-match-options.png</normaloff>:/icons/search-match-options.png</iconset>
    </property>
    <property name="text">
     <string>CSM Options</string>
@@ -808,7 +808,7 @@
   <action name="actionChange_Color">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/change_color.png</normaloff>:/images/images/change_color.png</iconset>
+     <normaloff>:/icons/change-color.png</normaloff>:/icons/change-color.png</iconset>
    </property>
    <property name="text">
     <string>Change Color</string>
@@ -844,7 +844,7 @@
   <action name="actionPlot_Style">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/change_color.png</normaloff>:/images/images/change_color.png</iconset>
+     <normaloff>:/icons/change-color.png</normaloff>:/icons/change-color.png</iconset>
    </property>
    <property name="text">
     <string>Plot Style</string>
@@ -856,7 +856,7 @@
    </property>
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/computermousecursor.png</normaloff>:/images/images/computermousecursor.png</iconset>
+     <normaloff>:/icons/select-pointer.png</normaloff>:/icons/select-pointer.png</iconset>
    </property>
    <property name="text">
     <string>Selection Mode</string>
@@ -871,7 +871,7 @@
    </property>
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/horizontal_zoom.png</normaloff>:/images/images/horizontal_zoom.png</iconset>
+     <normaloff>:/icons/horizontal-zoom.png</normaloff>:/icons/horizontal-zoom.png</iconset>
    </property>
    <property name="text">
     <string>Horizontal Zoom</string>
@@ -886,7 +886,7 @@
    </property>
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/rectangle_zoom.png</normaloff>:/images/images/rectangle_zoom.png</iconset>
+     <normaloff>:/icons/rectangle-zoom.png</normaloff>:/icons/rectangle-zoom.png</iconset>
    </property>
    <property name="text">
     <string>Rectangle Zoom</string>
@@ -901,7 +901,7 @@
    </property>
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/pan_121784.png</normaloff>:/images/images/pan_121784.png</iconset>
+     <normaloff>:/icons/pan.png</normaloff>:/icons/pan.png</iconset>
    </property>
    <property name="text">
     <string>Pan</string>
@@ -913,7 +913,7 @@
   <action name="actionReset_Zoom">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/reset_zoom.xpm</normaloff>:/images/images/reset_zoom.xpm</iconset>
+     <normaloff>:/icons/reset-zoom.png</normaloff>:/icons/reset-zoom.png</iconset>
    </property>
    <property name="text">
     <string>Reset Zoom</string>
@@ -925,7 +925,7 @@
   <action name="actionAutoscale">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/autoscale.xpm</normaloff>:/images/images/autoscale.xpm</iconset>
+     <normaloff>:/icons/autoscale.png</normaloff>:/icons/autoscale.png</iconset>
    </property>
    <property name="text">
     <string>Autoscale</string>
@@ -940,8 +940,8 @@
    </property>
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/legendaon.xpm</normaloff>
-     <normalon>:/images/images/legendaoff.xpm</normalon>:/images/images/legendaon.xpm</iconset>
+     <normaloff>:/icons/legend-show.png</normaloff>
+     <normalon>:/icons/legend-hide.png</normalon>:/icons/legend-show.png</iconset>
    </property>
    <property name="text">
     <string>Legend</string>
@@ -1064,7 +1064,7 @@
   <action name="actionCancel_Search">
    <property name="icon">
     <iconset resource="resources/resource.qrc">
-     <normaloff>:/images/images/stop.png</normaloff>:/images/images/stop.png</iconset>
+     <normaloff>:/icons/stop.png</normaloff>:/icons/stop.png</iconset>
    </property>
    <property name="text">
     <string>Cancel Search</string>

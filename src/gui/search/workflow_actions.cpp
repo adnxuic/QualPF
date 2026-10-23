@@ -16,7 +16,7 @@ void MainWindow::createWorkflowUi() {
         QIcon icon;
         switch (flow) {
         case WorkflowId::preprocessing: icon = QIcon(":/icons/preprocessing-options.png"); break;
-        case WorkflowId::csm: icon = QIcon(":/images/images/search_match_options.png"); break;
+        case WorkflowId::csm: icon = QIcon(":/icons/search-match-options.png"); break;
         case WorkflowId::pfsm: icon = QIcon(":/icons/pfsm-options.png"); break;
         case WorkflowId::peak_search: icon = QIcon(":/icons/peak-search-options.png"); break;
         }

@@ -221,13 +221,13 @@
         "inherited documentation and example material"
       ],
       "source": "QualX3 and any external original asset authors",
-      "version": "current retained assets; legacy brand images excluded from active resources",
+      "version": "retained documentation assets; all 29 inherited action images removed from current source and delivery",
       "copyright": "Original asset/document authors; institutional marks are not QualPF marks",
       "license": "asset-specific scope unresolved",
-      "modifications": "Independent application mark and new action icons coexist with some inherited action/document images",
+      "modifications": "All inherited runtime action images replaced by independently drawn QualPF SVG masters and PNG exports; original identities retained in the rights review",
       "license_files": [],
       "status": "blocked",
-      "obligations": "Identify remaining inherited asset origins/grants. Removing institutional branding alone does not clear unrelated graphics or documentation assets. Per-input findings and required owner information: deploy/rights-review.json and docs/developer/distribution-rights.md."
+      "obligations": "Confirm grants for remaining delivered inherited documentation/assets. Removed action images are excluded, not relicensed; their original identities and replacement paths remain in deploy/rights-review.json."
     },
     {
       "id": "qualpf-additions",
@@ -315,6 +315,35 @@
     "share/qualx/examples/CPD2.dat",
     "share/qualx/examples/example1.dat",
     "share/qualx/examples/MIXT_5.dat",
-    "tests/real_example_data/03_reference_structures/CoO.cif"
+    "tests/real_example_data/03_reference_structures/CoO.cif",
+    "src/gui/resources/images/quit.png",
+    "src/gui/resources/images/addpoint.png",
+    "src/gui/resources/images/deletepoint.xpm",
+    "src/gui/resources/images/addpeak.xpm",
+    "src/gui/resources/images/delpeak.xpm",
+    "src/gui/resources/images/filter.png",
+    "src/gui/resources/images/Database_add.png",
+    "src/gui/resources/images/Database_delete.png",
+    "src/gui/resources/images/rename.png",
+    "src/gui/resources/images/search_match_options.png",
+    "src/gui/resources/images/search_match.png",
+    "src/gui/resources/images/first_view.png",
+    "src/gui/resources/images/last_view.png",
+    "src/gui/resources/images/go_next.png",
+    "src/gui/resources/images/go_previous.png",
+    "src/gui/resources/images/load_entry.png",
+    "src/gui/resources/images/accept_entry.png",
+    "src/gui/resources/images/change_color.png",
+    "src/gui/resources/images/delete_entry.png",
+    "src/gui/resources/images/autoscale.xpm",
+    "src/gui/resources/images/computermousecursor.png",
+    "src/gui/resources/images/horizontal_zoom.png",
+    "src/gui/resources/images/legendaoff.xpm",
+    "src/gui/resources/images/legendaon.xpm",
+    "src/gui/resources/images/pan_121784.png",
+    "src/gui/resources/images/rectangle_zoom.png",
+    "src/gui/resources/images/reset_zoom.xpm",
+    "src/gui/resources/images/preferences.png",
+    "src/gui/resources/images/stop.png"
   ]
 }

@@ -1,39 +1,66 @@
 <RCC>
-    <qresource prefix="/images">
-        <file>images/quit.png</file>
-        <file>images/addpoint.png</file>
-        <file>images/deletepoint.xpm</file>
-        <file>images/addpeak.xpm</file>
-        <file>images/delpeak.xpm</file>
-        <file>images/filter.png</file>
-        <file>images/Database_add.png</file>
-        <file>images/Database_delete.png</file>
-        <file>images/rename.png</file>
-        <file>images/search_match_options.png</file>
-        <file>images/search_match.png</file>
-        <file>images/first_view.png</file>
-        <file>images/last_view.png</file>
-        <file>images/go_next.png</file>
-        <file>images/go_previous.png</file>
-        <file>images/load_entry.png</file>
-        <file>images/accept_entry.png</file>
-        <file>images/change_color.png</file>
-        <file>images/delete_entry.png</file>
-        <file>images/autoscale.xpm</file>
-        <file>images/computermousecursor.png</file>
-        <file>images/horizontal_zoom.png</file>
-        <file>images/legendaoff.xpm</file>
-        <file>images/legendaon.xpm</file>
-        <file>images/pan_121784.png</file>
-        <file>images/rectangle_zoom.png</file>
-        <file>images/reset_zoom.xpm</file>
-        <file>images/preferences.png</file>
-        <file>images/stop.png</file>
-    </qresource>
     <qresource prefix="/branding">
         <file alias="qualpf.png">branding/qualpf.png</file>
     </qresource>
     <qresource prefix="/icons">
+        <file alias="quit.png">icons/quit.png</file>
+        <file alias="quit@2x.png">icons/quit@2x.png</file>
+        <file alias="add-point.png">icons/add-point.png</file>
+        <file alias="add-point@2x.png">icons/add-point@2x.png</file>
+        <file alias="delete-point.png">icons/delete-point.png</file>
+        <file alias="delete-point@2x.png">icons/delete-point@2x.png</file>
+        <file alias="add-peak.png">icons/add-peak.png</file>
+        <file alias="add-peak@2x.png">icons/add-peak@2x.png</file>
+        <file alias="delete-peak.png">icons/delete-peak.png</file>
+        <file alias="delete-peak@2x.png">icons/delete-peak@2x.png</file>
+        <file alias="filter-entries.png">icons/filter-entries.png</file>
+        <file alias="filter-entries@2x.png">icons/filter-entries@2x.png</file>
+        <file alias="create-database.png">icons/create-database.png</file>
+        <file alias="create-database@2x.png">icons/create-database@2x.png</file>
+        <file alias="delete-database.png">icons/delete-database.png</file>
+        <file alias="delete-database@2x.png">icons/delete-database@2x.png</file>
+        <file alias="rename.png">icons/rename.png</file>
+        <file alias="rename@2x.png">icons/rename@2x.png</file>
+        <file alias="search-match.png">icons/search-match.png</file>
+        <file alias="search-match@2x.png">icons/search-match@2x.png</file>
+        <file alias="search-match-options.png">icons/search-match-options.png</file>
+        <file alias="search-match-options@2x.png">icons/search-match-options@2x.png</file>
+        <file alias="first-page.png">icons/first-page.png</file>
+        <file alias="first-page@2x.png">icons/first-page@2x.png</file>
+        <file alias="previous-page.png">icons/previous-page.png</file>
+        <file alias="previous-page@2x.png">icons/previous-page@2x.png</file>
+        <file alias="next-page.png">icons/next-page.png</file>
+        <file alias="next-page@2x.png">icons/next-page@2x.png</file>
+        <file alias="last-page.png">icons/last-page.png</file>
+        <file alias="last-page@2x.png">icons/last-page@2x.png</file>
+        <file alias="load-entry.png">icons/load-entry.png</file>
+        <file alias="load-entry@2x.png">icons/load-entry@2x.png</file>
+        <file alias="accept-entry.png">icons/accept-entry.png</file>
+        <file alias="accept-entry@2x.png">icons/accept-entry@2x.png</file>
+        <file alias="delete-entry.png">icons/delete-entry.png</file>
+        <file alias="delete-entry@2x.png">icons/delete-entry@2x.png</file>
+        <file alias="change-color.png">icons/change-color.png</file>
+        <file alias="change-color@2x.png">icons/change-color@2x.png</file>
+        <file alias="autoscale.png">icons/autoscale.png</file>
+        <file alias="autoscale@2x.png">icons/autoscale@2x.png</file>
+        <file alias="select-pointer.png">icons/select-pointer.png</file>
+        <file alias="select-pointer@2x.png">icons/select-pointer@2x.png</file>
+        <file alias="horizontal-zoom.png">icons/horizontal-zoom.png</file>
+        <file alias="horizontal-zoom@2x.png">icons/horizontal-zoom@2x.png</file>
+        <file alias="rectangle-zoom.png">icons/rectangle-zoom.png</file>
+        <file alias="rectangle-zoom@2x.png">icons/rectangle-zoom@2x.png</file>
+        <file alias="reset-zoom.png">icons/reset-zoom.png</file>
+        <file alias="reset-zoom@2x.png">icons/reset-zoom@2x.png</file>
+        <file alias="legend-show.png">icons/legend-show.png</file>
+        <file alias="legend-show@2x.png">icons/legend-show@2x.png</file>
+        <file alias="legend-hide.png">icons/legend-hide.png</file>
+        <file alias="legend-hide@2x.png">icons/legend-hide@2x.png</file>
+        <file alias="pan.png">icons/pan.png</file>
+        <file alias="pan@2x.png">icons/pan@2x.png</file>
+        <file alias="preferences.png">icons/preferences.png</file>
+        <file alias="preferences@2x.png">icons/preferences@2x.png</file>
+        <file alias="stop.png">icons/stop.png</file>
+        <file alias="stop@2x.png">icons/stop@2x.png</file>
         <file alias="about.png">icons/about.png</file>
         <file alias="about@2x.png">icons/about@2x.png</file>
         <file alias="apply.png">icons/apply.png</file>

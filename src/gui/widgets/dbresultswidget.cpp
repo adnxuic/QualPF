@@ -155,8 +155,8 @@ DbResultsWidget::DbResultsWidget(QWidget* parent)
         act->setToolTip(tip);
         return qobject_cast<QToolButton *>(navToolBar->widgetForAction(act));
     };
-    firstBtn = addNavAction(tr("Go to first page"),    ":/images/images/first_view.png");
-    prevBtn  = addNavAction(tr("Go to previous page"), ":/images/images/go_previous.png");
+    firstBtn = addNavAction(tr("Go to first page"),    ":/icons/first-page.png");
+    prevBtn  = addNavAction(tr("Go to previous page"), ":/icons/previous-page.png");
 
     pageSpin = new QSpinBox(this);
     pageSpin->setMinimum(1);
@@ -165,8 +165,8 @@ DbResultsWidget::DbResultsWidget(QWidget* parent)
     pageSpin->setSuffix(QString("/%1").arg(pageModel->pageCount()));
     navToolBar->addWidget(pageSpin);
 
-    nextBtn  = addNavAction(tr("Go to next page"),  ":/images/images/go_next.png");
-    lastBtn  = addNavAction(tr("Go to last page"),  ":/images/images/last_view.png");
+    nextBtn  = addNavAction(tr("Go to next page"),  ":/icons/next-page.png");
+    lastBtn  = addNavAction(tr("Go to last page"),  ":/icons/last-page.png");
     navToolBar->addSeparator();
     navToolBar->addWidget(new QLabel(tr("Max rows:"), this));
 

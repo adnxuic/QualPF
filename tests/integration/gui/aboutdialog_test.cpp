@@ -6,6 +6,10 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QIcon>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QLabel>
 #include <QPushButton>
 #include <QTabWidget>
@@ -70,6 +74,26 @@ int main(int argc, char **argv)
         auto *tabs = child<QTabWidget>(*legal, "legalNoticesTabs");
         check(tabs->count() == 3, "offline application, origin and third-party documents");
         const QString sourceRoot = QString::fromUtf8(QUALPF_ABOUT_SOURCE_ROOT);
+        const auto review = QJsonDocument::fromJson(read(sourceRoot + "/deploy/rights-review.json")).object();
+        const auto replaced = review.value("inherited_images").toArray();
+        check(replaced.size() == 29, "all 29 inherited action images have replacement coverage");
+        for (const auto &value : replaced) {
+            const auto entry = value.toObject();
+            check(entry.value("removed_from_source").toBool(), "old action image removed from current source");
+            const QString oldName = QFileInfo(entry.value("path").toString()).fileName();
+            check(!QFile::exists(":/images/images/" + oldName), "old action resource must not be embedded");
+            const QString name = QFileInfo(entry.value("replacement").toString()).completeBaseName();
+            const QString url = ":/icons/" + name + ".png";
+            check(QFile::exists(":/icons/" + name + "@2x.png"), "replacement includes high density resource");
+            const QIcon icon(url);
+            for (const auto mode : {QIcon::Normal, QIcon::Disabled}) {
+                const auto pixmap = icon.pixmap(QSize(16, 16), app.devicePixelRatio(), mode);
+                check(!pixmap.isNull(), "replacement icon decodes in enabled and disabled modes");
+                check(pixmap.width() == qRound(16 * app.devicePixelRatio()), "replacement renders at requested screen density");
+            }
+        }
+        check(QIcon(":/icons/legend-show.png").pixmap(24).toImage() !=
+              QIcon(":/icons/legend-hide.png").pixmap(24).toImage(), "legend states have distinct artwork");
         const auto license = read(sourceRoot + "/LICENSE");
         check(read(":/legal/LICENSE") == license, "embedded GPL must match the canonical source text");
         check(child<QTextBrowser>(*legal, "LICENSE")->toPlainText().contains("Conveying Non-Source Forms"), "full GPL is available offline");

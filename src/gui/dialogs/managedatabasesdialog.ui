@@ -61,7 +61,7 @@
        </property>
        <property name="icon">
         <iconset resource="../resources/resource.qrc">
-         <normaloff>:/images/images/rename.png</normaloff>:/images/images/rename.png</iconset>
+         <normaloff>:/icons/rename.png</normaloff>:/icons/rename.png</iconset>
        </property>
       </widget>
      </item>
@@ -86,7 +86,7 @@
        </property>
        <property name="icon">
         <iconset resource="../resources/resource.qrc">
-         <normaloff>:/images/images/Database_add.png</normaloff>:/images/images/Database_add.png</iconset>
+         <normaloff>:/icons/create-database.png</normaloff>:/icons/create-database.png</iconset>
        </property>
       </widget>
      </item>
@@ -100,7 +100,7 @@
        </property>
        <property name="icon">
         <iconset resource="../resources/resource.qrc">
-         <normaloff>:/images/images/Database_delete.png</normaloff>:/images/images/Database_delete.png</iconset>
+         <normaloff>:/icons/delete-database.png</normaloff>:/icons/delete-database.png</iconset>
        </property>
       </widget>
      </item>
