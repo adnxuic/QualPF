@@ -86,6 +86,11 @@ audit DEB. Normal builds, IFW and AppImage need no email. The source helper
 Both Linux binary helpers respect `CMAKE_BUILD_PARALLEL_LEVEL`; set it explicitly
 on a memory-constrained runner. AppImage forwards the runtime-review and exact
 source-archive environment values into CMake as well as the final staged check.
+Its private SQL plugin directory retains only `libqsqlite.so`, matching the
+product's database backend; optional SDK drivers and their unsupplied clients
+are excluded before linuxdeploy walks plugin dependencies.
+Each AppImage run retains the previous AppDir below the build directory and
+assembles a fresh payload; cached tools and compiled objects are reused.
 
 CPack checks component staging; AppImage inventory runs after linuxdeploy and
 includes AppRun and transitive libraries. Inspect the final container/runtime as

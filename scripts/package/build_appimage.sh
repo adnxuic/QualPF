@@ -58,6 +58,17 @@ fi
 
 # Reuse this configuration and cached packaging tools.
 mkdir -p "$TOOLS_DIR"
+# Retain prior staging as evidence, and assemble a fresh payload so libraries
+# copied by an earlier partial deployment cannot survive into the new image.
+if [ -e "$APPDIR" ]; then
+    case "$(realpath "$APPDIR")" in
+        "$BUILD_DIR"/*) ;;
+        *) echo "ERROR: AppDir must remain inside $BUILD_DIR" >&2; exit 1 ;;
+    esac
+    PREVIOUS_APPDIR=$(mktemp -d "$BUILD_DIR/previous-AppDir.XXXXXX")
+    mv -- "$APPDIR" "$PREVIOUS_APPDIR/"
+    echo "Retained prior AppDir in: $PREVIOUS_APPDIR"
+fi
 
 # Step 1: configure + build + install into a portable AppDir/usr tree
 # (same "bundle everything" layout as a manual /opt install, just
@@ -79,6 +90,18 @@ echo ""
 echo -e "${YELLOW}Step 2/5: Compilation (using ${NUM_THREADS} threads)...${NC}"
 cmake --build "$BUILD_DIR/cmake" -j${NUM_THREADS}
 cmake --install "$BUILD_DIR/cmake"
+# Product database connections use QSQLITE. Other SDK drivers require clients
+# that are neither used nor supplied by this application (for example Mimer).
+# Keep this private AppDir's SQL payload limited to the actual product backend.
+if [ ! -f "$APPDIR/usr/plugins/sqldrivers/libqsqlite.so" ]; then
+    echo "ERROR: required QSQLITE plugin is missing from the AppDir" >&2
+    exit 1
+fi
+while IFS= read -r -d '' sql_driver; do
+    echo "Excluding unused SQL driver: $(basename "$sql_driver")"
+    rm -- "$sql_driver"
+done < <(find "$APPDIR/usr/plugins/sqldrivers" -maxdepth 1 \
+    \( -type f -o -type l \) -name '*.so' ! -name 'libqsqlite.so' -print0)
 echo -e "${GREEN}✓ Compilation and install completed${NC}"
 echo ""
 

@@ -23,13 +23,15 @@
     ],
     "status": "in_progress",
     "base_commit": "e746cb95fbccc4ce6d20eda4d3ac69ad6263a921",
-    "checkpoint_commit": null,
+    "checkpoint_commit": "955d3a8355ffdfd55f0155670293b3f45c7fc8f8",
     "completed": [
       "Confirmed a clean main worktree and read the current runtime/source and distribution contracts.",
       "Matched three GCC DLLs, winpthreads and SDK build-info byte-for-byte to the vendor release; retained the unpinned workflow/source and IFW CRT qualifications.",
-      "Added repeatable isolated installed-product checks; fixed AppImage configuration review forwarding and bounded Linux package parallelism."
+      "Added repeatable isolated installed-product checks; fixed AppImage configuration review forwarding and bounded Linux package parallelism.",
+      "Paired fresh clean-revision MinGW IFW/source artifacts; all 127 normal tests, no-Git source build/generators and actual CLI install/database/settings/uninstall passed, with GPL/About UI inspected.",
+      "Retained the actual Mimer deployment failure, restricted the AppImage SQL payload to SQLite and preserved previous AppDirs; the resulting actual-image installed-product probe passed."
     ],
-    "next_action": "Commit the verified tooling/provenance batch, then regenerate clean-revision MinGW artifacts and finish native Windows/Linux package acceptance.",
+    "next_action": "Commit the verified AppImage deployment repair, regenerate a clean image/source pair and complete Linux regressions, DEB lifecycle and actual runtime-source review.",
     "blockers": [],
     "checks": [
       {
@@ -55,6 +57,24 @@
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": null
+      },
+      {
+        "command": "ctest --test-dir build/distribution-readiness/windows-gnu -L normal --output-on-failure --parallel 2",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/runtime-acceptance/windows-normal-01.xml"
+      },
+      {
+        "command": "MinGW IFW actual installation, isolated installed-product checks and CLI purge",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/runtime-acceptance/windows-lifecycle-01.json"
+      },
+      {
+        "command": "xvfb-run -a python3 -B tools/validation/check_installed_product.py --executable <actual AppImage probe> --prefix <extracted usr> --work-dir <new isolated directory>",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/runtime-acceptance/appimage-installed-smoke-03/observations.json"
       }
     ]
   }

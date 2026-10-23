@@ -317,7 +317,9 @@ reports are no longer used for routine development.
 ### Fixed
 
 - Forwarded AppImage runtime/source review settings into configuration and made
-  both Linux package helpers respect the requested build parallelism.
+  both Linux package helpers respect the requested build parallelism. AppImage
+  retains only the product's SQLite SQL driver, avoiding unused Mimer and other
+  client-library dependencies copied from the Qt SDK.
 
 - Prevent Qt deployment from adding PATH-selected MinGW runtime DLLs alongside
   the compiler-matched IFW component. Reject conflicting bytes targeting the same
