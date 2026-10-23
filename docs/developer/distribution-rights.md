@@ -112,6 +112,16 @@ future payloads with different bytes.
   That snapshot and MinGW-w64 v11.0.0 source were acquired too. The SDK omits its
   exact build-script Git revision, so the date-matched snapshot remains a
   reconstruction candidate rather than an attested vendor build input.
+  The follow-up compared the selected SDK's three GCC DLLs, winpthreads and
+  `build-info.txt` against the vendor's original
+  [13.1.0-rt_v11-rev1 archive](https://github.com/niXman/mingw-builds-binaries/releases/tag/13.1.0-rt_v11-rev1):
+  all five are byte-identical. The vendor archive SHA-256 is
+  `6b41fdf246756c04d2ac413d8835e347ffc18fdeda265f5310ac6aeb3c1dbbcf`.
+  The [tagged build workflow](https://github.com/niXman/mingw-builds-binaries/blob/ecaa196ea0a8c39f77a44cb9760c1cc8160f67dd/.github/workflows/build.yml)
+  matches the SDK arguments but checks out mutable `develop`. No retained run
+  was returned for that release commit. Binary identity is now established;
+  the exact resolved source recipe commit remains unverified. These distinct
+  results are recorded under `runtime_provenance_followup` in the rights inventory.
 - QtIFW 4.8.1 `installerbase.exe` contains the build marker **Qt 6.6.0**, and
   its embedded OpenSSL marker is **3.0.14**. Its corresponding sources and
   notices must be reviewed independently of application Qt 6.8.3. Versioned IFW,
@@ -232,3 +242,18 @@ The decision authorizes no numerical changes, replacement scientific data or
 weaker assertions. Existing audit artifacts predate this policy and the completed
 artwork/manual replacements; regenerate them before final distribution instead
 of relabeling their recorded provenance or review results.
+
+For the runtime gaps, useful owner-supplied material is the original MinGW build
+log/resolved source snapshot and the IFW vendor's static Qt/dependency configure,
+patch and link records, including CRT origin and redistribution terms. Public
+release downloads and version strings alone do not supply these records. If
+they are unavailable, record that fact; a controlled build from supplied sources
+is an alternative, requiring its own artifact and regression verification.
+
+QualX3's public Windows script at revision
+`6bdb8644b975efc394bf2116cf7405334b82782d` uses oneAPI/MSVC and Qt 6.8.1. It
+does not bind QualPF's MinGW DLLs or establish this IFW container's CRT source.
+Its AppImage script uses the same linuxdeploy/appimagetool packaging mechanism;
+QualPF retains that approach and audits the actual assembled libraries and
+container separately. Do not infer a grant or a matching tool build from the
+upstream project's use of a packaging tool.

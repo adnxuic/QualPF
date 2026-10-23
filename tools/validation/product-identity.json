@@ -7,12 +7,15 @@
       "QSettings source(QSettings::NativeFormat, QSettings::UserScope, organization, \"qualxpf\");",
       "const auto sourcePath = settingsRoot + \"/IC/qualxpf.ini\";"
     ],
+    "tools/validation/check_installed_product.py": [
+      "old = settings / \"IC/qualxpf.ini\""
+    ],
     ".gitignore": [
       "/QualXPF-*-win64.exe"
     ]
   },
   "reasons": [
     "Previous application user-store identity is a supported settings import contract",
-    "The source tests retain that same identity; ignored original installers are user files"
+    "The source tests and isolated installed-product acceptance fixture retain that same import identity; ignored original installers are user files"
   ]
 }

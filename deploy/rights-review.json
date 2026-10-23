@@ -739,5 +739,104 @@
       "references/PFSM/性能优化.md"
     ],
     "bibliography_scope": "27 numbered entries from the first three notes consolidated into 23 reference groups, retaining shared sources once. Fast and performance notes have no additional numbered bibliography. Notes are not redistributed; only bibliographic facts and independently written context enter the manual."
+  },
+  "runtime_provenance_followup": {
+    "reviewed_on": "2026-10-23",
+    "mingw_vendor_archive": {
+      "url": "https://github.com/niXman/mingw-builds-binaries/releases/download/13.1.0-rt_v11-rev1/x86_64-13.1.0-release-posix-seh-msvcrt-rt_v11-rev1.7z",
+      "sha256": "6b41fdf246756c04d2ac413d8835e347ffc18fdeda265f5310ac6aeb3c1dbbcf",
+      "bytes": 72222605,
+      "files": [
+        {
+          "path": "build-info.txt",
+          "sha256": "b695a15b07be3e1a974d320fe06cc103c81fca3f7e247ed023aaf31177678823",
+          "vendor_sha256": "b695a15b07be3e1a974d320fe06cc103c81fca3f7e247ed023aaf31177678823",
+          "equal": true
+        },
+        {
+          "path": "bin/libgcc_s_seh-1.dll",
+          "sha256": "5e27589147caa6d7a30f4cc058a14c455dc62233901ffff9a1797ede425e9f86",
+          "vendor_sha256": "5e27589147caa6d7a30f4cc058a14c455dc62233901ffff9a1797ede425e9f86",
+          "equal": true
+        },
+        {
+          "path": "bin/libgomp-1.dll",
+          "sha256": "765a4a0c6c4c16cc294b46f7ec0a343fc0f9c787f44f7b50256b5b365192b65c",
+          "vendor_sha256": "765a4a0c6c4c16cc294b46f7ec0a343fc0f9c787f44f7b50256b5b365192b65c",
+          "equal": true
+        },
+        {
+          "path": "bin/libstdc++-6.dll",
+          "sha256": "8013488c5528bad7966ca07f3ea2e7a9b743cacb258fe76b46a326f821cc83b0",
+          "vendor_sha256": "8013488c5528bad7966ca07f3ea2e7a9b743cacb258fe76b46a326f821cc83b0",
+          "equal": true
+        },
+        {
+          "path": "bin/libwinpthread-1.dll",
+          "sha256": "c7c7dced65fff71c7bb61f80c771c562f533d26d72722d9d6091129a3b03d5ce",
+          "vendor_sha256": "c7c7dced65fff71c7bb61f80c771c562f533d26d72722d9d6091129a3b03d5ce",
+          "equal": true
+        }
+      ],
+      "workflow_url": "https://github.com/niXman/mingw-builds-binaries/blob/ecaa196ea0a8c39f77a44cb9760c1cc8160f67dd/.github/workflows/build.yml",
+      "workflow_git_blob": "e6ae8dc759f3988abcaa7d0d77fb5777d314a54d",
+      "source_binding": "Binary and vendor build-info match verified. All ten named patches and upstream archives are supplied; exact resolved source recipe commit remains unrecorded. Workflow checks out mutable develop; public historic run query returned no retained run.",
+      "required_information": "The resolved niXman/mingw-builds commit/source snapshot used for the 13.1.0-rt_v11-rev1 POSIX/SEH/MSVCRT build, or original build logs establishing it. A controlled rebuild is an alternative; no toolchain or DLL is silently substituted."
+    },
+    "ifw_container": {
+      "version": "4.8.1",
+      "installerbase_sha256": "98e0cf71e5bd569ca047b4157c20152fcf0aea4db56b105a3fa4c45597eee398",
+      "embedded_markers": [
+        "IFW Version: 4.8.1, built with Qt 6.6.0.",
+        "Based on Qt 6.6.0",
+        "OpenSSL 3.0.14 4 Jun 2024"
+      ],
+      "system_dll_imports": [
+        "USER32.dll",
+        "IMM32.dll",
+        "SETUPAPI.dll",
+        "SHLWAPI.dll",
+        "WTSAPI32.dll",
+        "api-ms-win-shcore-scaling-l1-1-1.dll",
+        "COMDLG32.dll",
+        "d3d9.dll",
+        "OLEAUT32.dll",
+        "bcrypt.dll",
+        "ncrypt.dll",
+        "dwmapi.dll",
+        "UxTheme.dll",
+        "d3d11.dll",
+        "dxgi.dll",
+        "d3d12.dll",
+        "GDI32.dll",
+        "DWrite.dll",
+        "IPHLPAPI.DLL",
+        "Secur32.dll",
+        "WINHTTP.dll",
+        "CRYPT32.dll",
+        "api-ms-win-core-synch-l1-2-0.dll",
+        "MPR.dll",
+        "USERENV.dll",
+        "ADVAPI32.dll",
+        "AUTHZ.dll",
+        "KERNEL32.dll",
+        "NETAPI32.dll",
+        "ole32.dll",
+        "SHELL32.dll",
+        "VERSION.dll",
+        "WINMM.dll",
+        "WS2_32.dll",
+        "api-ms-win-core-winrt-string-l1-1-0.dll",
+        "api-ms-win-core-winrt-l1-1-0.dll"
+      ],
+      "source_binding": "PE imports and embedded markers identify dependencies but do not exclude a static MSVC CRT or attest complete source/build inputs.",
+      "required_information": "The exact static Qt/dependency source revisions, patches, configure/link recipe and CRT provenance/redistribution basis for this vendor installerbase; alternatively a separately recorded controlled installer tool build."
+    },
+    "upstream_comparison": {
+      "repository": "https://github.com/ccorrado71/qualx3",
+      "revision": "6bdb8644b975efc394bf2116cf7405334b82782d",
+      "windows_build": "script/build_windows.cmd uses oneAPI/MSVC and Qt 6.8.1, so it does not attest the QualPF MinGW DLLs or the IFW container.",
+      "linux_packaging": "script/build_appimage.sh uses linuxdeploy and appimagetool. Follow the same packaging mechanisms while checking actual container contents and keeping their source/notices."
+    }
   }
 }

@@ -12,6 +12,11 @@ reports are no longer used for routine development.
 
 ### Added
 
+- Added repeatable installed-package checks for offline notices, native startup,
+  SQLite database access and preserved legacy settings using isolated fixtures.
+  Bound MinGW runtime DLLs and build metadata to the original vendor binary
+  archive; retained the separate unresolved source-recipe and IFW static/CRT gaps.
+
 - Recorded per-input scientific-data and inherited-image rights findings, actual
   Windows Qt/installer runtime origins, and verified versioned dependency source
   archives. Preserved separate winpthreads, MinGW CRT, IFW, libarchive and OpenSSL
@@ -310,6 +315,9 @@ reports are no longer used for routine development.
 - Exposed source-bound Application common-preprocessing and independent formal-peak-extraction evaluations; product peak preparation consumes these stages through its existing checked transaction.
 
 ### Fixed
+
+- Forwarded AppImage runtime/source review settings into configuration and made
+  both Linux package helpers respect the requested build parallelism.
 
 - Prevent Qt deployment from adding PATH-selected MinGW runtime DLLs alongside
   the compiler-matched IFW component. Reject conflicting bytes targeting the same

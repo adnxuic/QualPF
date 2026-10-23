@@ -30,7 +30,7 @@ SRC_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 if [ "$#" -gt 0 ] && [ "${1:-}" != --audit-only ]; then
     echo "Deprecated compiler selector ignored; building C++ only."
 fi
-NUM_THREADS=$(nproc)
+NUM_THREADS=${CMAKE_BUILD_PARALLEL_LEVEL:-$(nproc)}
 AUDIT_ONLY=${QUALPF_DISTRIBUTION_AUDIT_ONLY:-OFF}
 if [ "${1:-}" = --audit-only ]; then AUDIT_ONLY=ON; fi
 DIST_ARGS=(--release)
@@ -68,6 +68,8 @@ cmake -B "$BUILD_DIR/cmake" -S "$SRC_DIR" \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_APPIMAGE=ON \
     -DQUALPF_DISTRIBUTION_AUDIT_ONLY="$AUDIT_ONLY" \
+    -DQUALPF_DISTRIBUTION_RUNTIME_REVIEW="${QUALPF_DISTRIBUTION_RUNTIME_REVIEW:-}" \
+    -DQUALPF_CORRESPONDING_SOURCE_ARCHIVE="${QUALPF_CORRESPONDING_SOURCE_ARCHIVE:-}" \
     -DCMAKE_INSTALL_PREFIX="$APPDIR/usr"
 python3 -B "$SRC_DIR/tools/validation/check_distribution.py" --root "$SRC_DIR" \
     --build "$BUILD_DIR/cmake" --kind AppImage "${DIST_ARGS[@]}"

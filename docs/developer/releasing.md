@@ -83,6 +83,9 @@ supplied `QUALPF_RELEASE_CONTACT_EMAIL` environment value. Missing, placeholder
 and Issues-URL contacts fail only when DEB packaging is selected, including an
 audit DEB. Normal builds, IFW and AppImage need no email. The source helper
 `scripts/package/make_tar_gz.sh` forwards CMake options, including the audit flag.
+Both Linux binary helpers respect `CMAKE_BUILD_PARALLEL_LEVEL`; set it explicitly
+on a memory-constrained runner. AppImage forwards the runtime-review and exact
+source-archive environment values into CMake as well as the final staged check.
 
 CPack checks component staging; AppImage inventory runs after linuxdeploy and
 includes AppRun and transitive libraries. Inspect the final container/runtime as
@@ -90,6 +93,25 @@ well as the application payload. Verify publisher, canonical GPL text, icons,
 desktop/shortcut targets, offline notices, installed startup, settings inheritance
 and uninstall using isolated installation/settings directories. Record only the
 native platforms and actions actually executed; retain original diagnostics.
+
+The repeatable installed-product control accepts an existing installation or
+extracted package, uses a new isolated settings/data directory, verifies offline
+legal texts, builds/searches a local independent COD CIF database, checks legacy
+settings migration/preservation and starts the native GUI with `--auto`:
+
+```sh
+python -B tools/validation/check_installed_product.py \
+  --executable /path/to/installation/bin/qualpf \
+  --prefix /path/to/installation \
+  --work-dir build/installed-check-01
+```
+
+Windows uses `qualpf.exe` and system-only PATH. Linux uses `xcb` by default and
+requires an available display or Xvfb; it clears inherited SDK/library overrides.
+For an AppImage, pass the image as `--executable` and the extracted `usr` tree as
+`--prefix`; the image runs in extract-and-run mode. The resulting observations
+identify the exact executable hash. This control does not install, uninstall,
+verify shortcut creation or replace the final container/source review.
 
 Installed `distribution-inventory.json` records actual file sizes/SHA-256,
 component classifications and review blockers. Missing/stale notices fail even

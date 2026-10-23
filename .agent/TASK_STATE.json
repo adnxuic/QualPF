@@ -1,5 +1,61 @@
 {
   "schema": "qualpf.agent_task_state.v1",
   "baseline_ref": "docs/developer/project-baseline.json",
-  "active_task": null
+  "active_task": {
+    "id": "runtime-source-and-package-acceptance",
+    "goal": "Advance MinGW runtime corresponding-source bindings, installer provenance and native Windows/Linux package acceptance without publication.",
+    "in_scope": [
+      "deploy/",
+      "cmake/packaging/",
+      "scripts/package/",
+      "tools/validation/",
+      "docs/developer/",
+      "THIRD_PARTY_NOTICES.md",
+      "LICENSES/",
+      "CHANGELOG.md",
+      ".agent/TASK_STATE.json"
+    ],
+    "out_of_scope": [
+      "Scientific values, algorithms, PFSM and public APIs",
+      "MSVC formal distribution",
+      "Uploading, publishing or messaging third parties",
+      "Changing user data or unrelated installed applications"
+    ],
+    "status": "in_progress",
+    "base_commit": "e746cb95fbccc4ce6d20eda4d3ac69ad6263a921",
+    "checkpoint_commit": null,
+    "completed": [
+      "Confirmed a clean main worktree and read the current runtime/source and distribution contracts.",
+      "Matched three GCC DLLs, winpthreads and SDK build-info byte-for-byte to the vendor release; retained the unpinned workflow/source and IFW CRT qualifications.",
+      "Added repeatable isolated installed-product checks; fixed AppImage configuration review forwarding and bounded Linux package parallelism."
+    ],
+    "next_action": "Commit the verified tooling/provenance batch, then regenerate clean-revision MinGW artifacts and finish native Windows/Linux package acceptance.",
+    "blockers": [],
+    "checks": [
+      {
+        "command": "python -B tools/validation/check_distribution.py --self-test",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": null
+      },
+      {
+        "command": "python -B tools/validation/check_installed_product.py --executable <staged MinGW executable> --prefix <stage> --work-dir <new isolated directory>",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/runtime-acceptance/windows-staged-smoke-01/observations.json"
+      },
+      {
+        "command": "installed-product existing-directory negative control",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/runtime-acceptance/installed-workdir-rejection-01.log"
+      },
+      {
+        "command": "python -B tools/validation/check_references.py",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": null
+      }
+    ]
+  }
 }

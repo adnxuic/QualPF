@@ -24,7 +24,7 @@ if [ "$#" -gt 0 ] && [ "${1:-}" != --audit-only ]; then
 fi
 
 # Number of threads for parallel compilation
-NUM_THREADS=$(nproc)
+NUM_THREADS=${CMAKE_BUILD_PARALLEL_LEVEL:-$(nproc)}
 AUDIT_ONLY=${QUALPF_DISTRIBUTION_AUDIT_ONLY:-OFF}
 if [ "${1:-}" = --audit-only ]; then AUDIT_ONLY=ON; fi
 
