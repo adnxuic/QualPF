@@ -51,6 +51,11 @@ URLs, necessary attribution and scientific qualifications when editing it.
 The tutorial uses the reader's own measurement, not delivered historical data.
 The rights inventory records the old manual's recoverable Git identities;
 do not copy an old manual or its assets into the current publication tree.
+The FWHM/PFSM bibliography incorporates the numbered references from the local
+`references/IFwhmEstimator/` and `references/PFSM/` notes. Shared entries are
+listed once, with chapter links and explicit limits on cross-domain evidence.
+The notes themselves stay outside publication and source delivery; current
+product contracts remain the authority for implemented behavior.
 
 `user/images/analysis-route.svg` is the editable original workflow illustration.
 Its PNG is used in both HTML and PDF. With Node.js and sharp available, regenerate

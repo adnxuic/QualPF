@@ -33,7 +33,7 @@ def build(output, sources):
     for source in sources:
         source = source.resolve()
         name = source.relative_to(USER).as_posix()
-        document = json.loads(run("pandoc", str(source), "-f", "markdown", "-t", "json",
+        document = json.loads(run("pandoc", str(source), "-f", "markdown+gfm_auto_identifiers", "-t", "json",
                                   capture_output=True).stdout)
         documents[name] = document
         prefix = name.removesuffix(".md").replace("/", "-") + "--"

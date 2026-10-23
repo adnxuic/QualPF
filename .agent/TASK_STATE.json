@@ -19,7 +19,8 @@
       "tools/validation/check_documentation.py",
       "tools/validation/check_distribution.py",
       "tools/documentation/**",
-      ".agent/TASK_STATE.json"
+      ".agent/TASK_STATE.json",
+      ".gitattributes"
     ],
     "out_of_scope": [
       "Product behavior and public APIs",
@@ -29,13 +30,15 @@
     ],
     "status": "in_progress",
     "base_commit": "8f9678158ee5a9369ec7cb55141e29de02b3d561",
-    "checkpoint_commit": null,
+    "checkpoint_commit": "04bc8d6f5ab79e4d0a5085b9eed39117d1dcccb6",
     "completed": [
       "Independently authored all 17 user pages and original workflow illustration; removed inherited branding/analytics/MathJax.",
       "Updated rights disposition and original Git identities without changing scientific inputs or prior icon records.",
-      "Added portable PDF publication with internal links and source/publisher/builder binding."
+      "Added portable PDF publication with internal links and source/publisher/builder binding.",
+      "First independently authored manual batch committed locally; user requested FWHM/PFSM design-note bibliography integration.",
+      "Integrated 27 numbered FWHM/PFSM bibliography entries into 23 groups, preserved methodological limits and verified chapter citations."
     ],
-    "next_action": "Commit verified documentation batch, then audit the clean source export and finish task state.",
+    "next_action": "Commit bibliography follow-up, audit clean final source export, then clear the task handoff.",
     "blockers": [],
     "checks": [
       {
@@ -61,6 +64,12 @@
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": "build/documentation/site-build-verified.log"
+      },
+      {
+        "command": "PDF render and internal-link inspection",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/documentation/manual-inspection-bibliography-final.log"
       }
     ]
   }

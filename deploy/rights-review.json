@@ -724,6 +724,14 @@
     "license_files": [
       "LICENSE"
     ],
-    "qualifications": "Bibliographic facts, upstream attribution and third-party notices remain. No scientific table, reference fixture, product behavior or historical acceptance record is replaced."
+    "qualifications": "Bibliographic facts, upstream attribution and third-party notices remain. No scientific table, reference fixture, product behavior or historical acceptance record is replaced.",
+    "reference_notes_consulted": [
+      "references/IFwhmEstimator/IFwhmEstimator.md",
+      "references/PFSM/PFSM.md",
+      "references/PFSM/候选预筛选.md",
+      "references/PFSM/Fast.md",
+      "references/PFSM/性能优化.md"
+    ],
+    "bibliography_scope": "27 numbered entries from the first three notes consolidated into 23 reference groups, retaining shared sources once. Fast and performance notes have no additional numbered bibliography. Notes are not redistributed; only bibliographic facts and independently written context enter the manual."
   }
 }

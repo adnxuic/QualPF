@@ -46,6 +46,9 @@ reports are no longer used for routine development.
   Removed old documentation branding, analytics and unused MathJax assets.
   PDF publication now resolves internal page links and binds its portable
   builder and publisher inputs in the generated source proof.
+  Integrated the FWHM/PFSM design notes' bibliography with deduplicated references
+  and chapter citations, distinguishing methodological context from implementation
+  and scientific validation claims.
 
 - Replaced all 29 inherited action images with independently drawn colorful SVG
   masters and 24px/48px PNG exports. Removed old PNG/XPM files and resource URLs,

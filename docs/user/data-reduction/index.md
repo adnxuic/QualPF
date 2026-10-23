@@ -33,6 +33,25 @@ dependent preparation rather than silently reusing an old displayed value.
 PFSM uses an explicitly configured fixed width, a compatible manual estimate,
 or automatic geometric estimation. See [matching options](../search-match/search-match.md).
 
+## Method references
+
+The geometric route uses three-point peak-top interpolation and locates
+half-height crossings on the measured trace. See
+[IAEA guidance](../references.md#f1-iaea-fwhm-procedure),
+[Rainio et al.](../references.md#f2-comparison-of-width-estimators) and
+[AAPM guidance](../references.md#f3-aapm-measurement-guidance) for that measurement
+context. Their imaging applications do not validate powder-diffraction accuracy.
+[Kisch](../references.md#f4-fitted-and-trace-widths) discusses why a fitted width
+and a trace width need not coincide. The
+[diffraction guidelines](../references.md#f5-diffraction-data-and-uncertainty)
+provide sampling and background context.
+
+Candidate prominence can help selection, but half prominence and half of a
+background-corrected peak height are different definitions. Compare the
+[prominence](../references.md#f6-peak-prominence) and
+[width](../references.md#f7-prominence-based-widths) definitions before using
+external tools to check a width.
+
 ## Revisit a decision
 
 Inspect [Workflow history](../settings.md#inspect-and-undo) before replacing

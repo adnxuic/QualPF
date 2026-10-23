@@ -255,6 +255,9 @@
 /docs/*.yml text eol=lf
 /docs/*.sh text eol=lf
 /docs/*.txt text eol=lf
+/docs/user/images/*.svg text eol=lf
+/tools/documentation/*.py text eol=lf
+/tools/documentation/*.cjs text eol=lf
 /apps/**/README.md text eol=lf
 /src/**/README.md text eol=lf
 /tests/data/pfsm-quantification/README.md text eol=lf

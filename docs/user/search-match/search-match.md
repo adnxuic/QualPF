@@ -120,6 +120,33 @@ estimate. Treat the result as semi-quantitative and retain those qualifications
 when reporting it. Display rounding may leave a total slightly different from
 100 percent; stored values are not adjusted to force the rounded sum.
 
+## Method references
+
+The public PFSM concept is acknowledged in the
+[Match! reference](../references.md#p1-public-pfsm-description). Profile-shape
+background is provided by [Young and Wiles](../references.md#p2-profile-shapes).
+These sources do not establish Match!'s internal solver or imply identical
+implementations. QualPF does not refine crystal-structure parameters in PFSM.
+
+The numerical background includes
+[separable least squares](../references.md#p5-separable-least-squares),
+[linear bounds](../references.md#p6-linear-constraints-in-separable-fitting),
+[NNLS](../references.md#p7-nonnegative-least-squares),
+[variable projection](../references.md#p8-variable-projection-in-practice) and
+[bound-constrained trust regions](../references.md#p9-bound-constrained-trust-regions).
+The bibliography also identifies the
+[subspace method](../references.md#p10-subspace-bound-constrained-minimization),
+[SciPy comparison tools](../references.md#p11-numerical-comparison-tools) and
+[Brent comparison method](../references.md#p12-one-dimensional-minimization).
+
+For interpreting fit quality, consult
+[Toby](../references.md#p3-interpreting-r-factors),
+[Hill and Fischer](../references.md#p4-agreement-index-conventions) and the
+[count-weighting discussion](../references.md#p13-count-weighting-and-statistical-bias).
+The [screening and pattern-comparison references](../references.md#candidate-screening-and-pattern-comparison)
+describe related work; they do not promise that a screened-out phase is absent
+or substitute for independent identification evidence.
+
 ## Export and continuation
 
 Reports and printing use the same selected-phase result as the panel.
