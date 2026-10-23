@@ -85,9 +85,10 @@ The scoped scientific-data policy and package-specific runtime reviews remain se
 
 ## Actual Windows runtime findings
 
-The inspected artifacts identify payload revision
-`a8bc3dbec1f80dfb916474e7f856a46c0c127d1d`; these findings do not silently approve
-future payloads with different bytes.
+The initial inspected artifacts identify payload revision
+`a8bc3dbec1f80dfb916474e7f856a46c0c127d1d`. The later vendor comparisons and
+[current acceptance](releasing.md#current-native-package-acceptance) record their
+own artifact scopes; earlier findings do not silently approve different bytes.
 
 - MinGW has 17 deployed Qt DLL/plugin files, and MSVC has 20, including Qt SVG.
   Each is byte-identical to its selected Qt 6.8.3 SDK file. The official QtBase
@@ -122,6 +123,11 @@ future payloads with different bytes.
   was returned for that release commit. Binary identity is now established;
   the exact resolved source recipe commit remains unverified. These distinct
   results are recorded under `runtime_provenance_followup` in the rights inventory.
+  A reconstruction applied all ten named patches successfully to the original
+  GNU 13.1.0 archive. Comparison found 668 installed libstdc++ headers identical
+  after LF normalization, no mismatches in those direct mappings, and 146 headers
+  without a direct source mapping. The unmapped headers are listed separately;
+  neither result attests the vendor's exact build recipe or clears the three DLLs.
 - QtIFW 4.8.1 `installerbase.exe` contains the build marker **Qt 6.6.0**, and
   its embedded OpenSSL marker is **3.0.14**. Its corresponding sources and
   notices must be reviewed independently of application Qt 6.8.3. Versioned IFW,
@@ -216,6 +222,56 @@ licensed development fixtures and independent archives. Their absence is a test
 prerequisite failure, never permission to skip or regenerate an assertion. The
 ordinary application build does not require these optional examples.
 
+## Actual Linux runtime and source bindings
+
+The Ubuntu 22.04 / Qt 6.8.3 AppImage payload contains **143 unique regular ELF
+files**: the product and 142 runtime libraries/plugins. The actual libraries map
+to 80 installed Ubuntu binary packages, official Qt 6.8.3 modules and ICU 73.2.
+All **63 exact Ubuntu source-package versions**, including Eigen/Boost, were
+downloaded through signed APT indexes with their original archives, Debian patches
+and `.dsc` files. The 80 original package copyright notices and full referenced
+common license texts are supplied, including notices not copied by linuxdeploy.
+Qt's source SBOM comparison has 21,617 raw matches and no non-bookkeeping
+differences; the `.tag` and absent Git attribute/ignore files remain qualified.
+
+Deployment changes from loader-path editing and stripping were compared against
+the original ELF files, preserving the raw differences. No unexplained change to
+allocated code/data remains; dynamic symbol comparisons resolve section names
+before comparing, so stripped section-index renumbering is not confused with
+changed symbols.
+No unresolved allocated-content differences or private build RPATHs remain.
+Actual Eigen/Boost SDK headers and their original notices are supplied separately
+for the Ubuntu and Debian kits.
+
+The AppImage type-2 runtime is pinned to
+[`fedfad51acc2860b2916a1eef32ba4a500ff31ef`](https://github.com/AppImage/type2-runtime/tree/fedfad51acc2860b2916a1eef32ba4a500ff31ef),
+SHA-256 `617aa77314d57c8b8e4fae9c3f0b35af7b30d5529cb69e98f64f92510ed98a46`.
+Its [public build log](https://github.com/AppImage/type2-runtime/actions/runs/39320578745)
+identifies the static build and dependency versions. Original runtime, FUSE,
+squashfuse, musl, zstd, zlib and mimalloc sources, full notices and patches are
+retained. Exact Alpine package metadata binds the musl 1.2.5-r11, zstd 1.5.6-r2,
+zlib 1.3.2-r1 and mimalloc2 2.1.7-r0 recipe commits. All 21 collected recipe/helper
+Git blobs and 21 named source/patch SHA-512 checks match. File-specific terms are
+retained; no blanket license for the entire Alpine repository is inferred.
+The delivered runtime prefix may change only its 16-byte `.digest_md5` section;
+the actual image inspection checks this and the SquashFS offset. This is a vendor
+source/build binding, not a controlled bit-for-bit rebuild claim.
+
+The Debian 13 package uses GCC 14.2 and system Qt **6.8.2+dfsg-9+deb13u2**,
+Eigen **3.4.0-5** and Boost **1.83.0-4.2**. Their exact signed-APT source packages,
+patches, SDK headers and original notices are separately supplied. This DEB does
+not ship the system Qt DSOs. Its actual generated dependencies require the native
+ABI, including Qt 6.8.2, glibc 2.38 and libstdc++ 14; it is not an Ubuntu 22.04 DEB.
+
+The local combined offline bundle is
+`build/runtime-acceptance/linux-dependency-bundle-01`. Actual staged reviews bind
+hashes of delivered files to source and notice paths in that bundle, rather than
+inferring clearance from a build-dependency list. The bundle also retains earlier
+collected Windows sources with their original qualifications; unused archives do
+not clear the Windows GCC/IFW gaps. Its collection-level `release_clearance` remains
+false. Package-specific inventories and actual container inspections are separate.
+The five scientific-table scopes still record `separate_data_grants_verified:false`.
+
 ## Owner decisions and information still needed
 
 The supplied public DEB maintainer email is **uncercalculate@163.com**. The CMake
@@ -239,16 +295,24 @@ or removed; no new grant is asserted for those originals.
 The excluded examples and reserved CIF require permission if they are to be
 redistributed later; they are no longer current payload prerequisites.
 The decision authorizes no numerical changes, replacement scientific data or
-weaker assertions. Existing audit artifacts predate this policy and the completed
-artwork/manual replacements; regenerate them before final distribution instead
-of relabeling their recorded provenance or review results.
+weaker assertions. The earlier audits in the distribution guide predate this
+policy and the completed artwork/manual replacements. Retain their recorded
+provenance and review results; the current acceptance section identifies the
+subsequently regenerated audit pairs. A formal candidate still requires its own
+matching clean revision and completed package review.
 
-For the runtime gaps, useful owner-supplied material is the original MinGW build
-log/resolved source snapshot and the IFW vendor's static Qt/dependency configure,
-patch and link records, including CRT origin and redistribution terms. Public
-release downloads and version strings alone do not supply these records. If
-they are unavailable, record that fact; a controlled build from supplied sources
-is an alternative, requiring its own artifact and regression verification.
+The owner confirmed that the original MinGW build log/resolved source snapshot
+and IFW static Qt/dependency/CRT build records are unavailable. No additional copy
+of those owner-held records is available. The two remaining formal Windows
+evidence groups are the resolved recipe/source binding for the three GCC DLLs
+and the IFW container's
+complete static sources, patches, configure/link inputs and CRT redistribution
+basis. Public archive identity and embedded version strings do not supply that
+missing evidence. Vendor-attested records or separately recorded controlled builds
+are the available routes; a different tool build must receive its own matching
+source package and affected regression/package acceptance. No kit or runtime has
+been silently substituted. The [current acceptance scope](releasing.md#current-native-package-acceptance)
+records the completed platform work and retained failures.
 
 QualX3's public Windows script at revision
 `6bdb8644b975efc394bf2116cf7405334b82782d` uses oneAPI/MSVC and Qt 6.8.1. It

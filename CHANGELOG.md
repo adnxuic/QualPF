@@ -12,6 +12,13 @@ reports are no longer used for routine development.
 
 ### Added
 
+- Bound actual Linux runtime files to exact Ubuntu/Debian source packages,
+  patches, original notices and separate SDK headers. Traced the fixed AppImage
+  runtime's static dependencies to public build logs and Alpine recipe inputs;
+  kept the unproved Windows vendor recipe and IFW CRT bindings explicit.
+  Recorded native MinGW/Debian full regressions and actual package lifecycles
+  with matching clean-revision source and artifact hashes.
+
 - Added repeatable installed-package checks for offline notices, native startup,
   SQLite database access and preserved legacy settings using isolated fixtures.
   Bound MinGW runtime DLLs and build metadata to the original vendor binary
@@ -315,6 +322,10 @@ reports are no longer used for routine development.
 - Exposed source-bound Application common-preprocessing and independent formal-peak-extraction evaluations; product peak preparation consumes these stages through its existing checked transaction.
 
 ### Fixed
+
+- Include AppImage `.DirIcon` before payload inventorying, and support an explicit
+  reviewed type-2 runtime with its hash in artifact provenance. Formal assembly
+  rejects absent or mismatched runtime/review inputs before configuration.
 
 - Forwarded AppImage runtime/source review settings into configuration and made
   both Linux package helpers respect the requested build parallelism. AppImage

@@ -21,9 +21,9 @@
       "Uploading, publishing or messaging third parties",
       "Changing user data or unrelated installed applications"
     ],
-    "status": "in_progress",
+    "status": "blocked",
     "base_commit": "e746cb95fbccc4ce6d20eda4d3ac69ad6263a921",
-    "checkpoint_commit": "5d0c84d190c8616253d0a203e4be1bc3c7a5a4f9",
+    "checkpoint_commit": "8e645c1e1f6ee9f5e453956f44a9b86257b5f52e",
     "completed": [
       "Confirmed a clean main worktree and read the current runtime/source and distribution contracts.",
       "Matched three GCC DLLs, winpthreads and SDK build-info byte-for-byte to the vendor release; retained the unpinned workflow/source and IFW CRT qualifications.",
@@ -31,10 +31,18 @@
       "Paired fresh clean-revision MinGW IFW/source artifacts; all 127 normal tests, no-Git source build/generators and actual CLI install/database/settings/uninstall passed, with GPL/About UI inspected.",
       "Retained the actual Mimer deployment failure, restricted the AppImage SQL payload to SQLite and preserved previous AppDirs; the resulting actual-image installed-product probe passed.",
       "Mapped 143 AppImage ELF origins, acquired all 63 exact Ubuntu source versions, matched Qt source SBOM content and assembled full offline Linux source/notices/header evidence.",
-      "Fixed the DEB staged callback's omitted contact argument; a native Debian 13 / system Qt audit probe now packages successfully after provisioning file."
+      "Fixed the DEB staged callback's omitted contact argument; a native Debian 13 / system Qt audit probe now packages successfully after provisioning file.",
+      "Applied all ten SDK-named GCC patches and matched 668 direct libstdc++ headers after LF normalization; retained 146 unmapped headers and the unattested vendor recipe qualification.",
+      "Bound the AppImage runtime static inputs to public build logs, exact Alpine package recipe commits, 21 Git blobs and 21 matching SHA-512 source/patch inputs.",
+      "Completed native Debian 127/127 normal tests, zero-Fortran checks, actual 920-file DEB install/startup/database/settings/removal and exact matching clean source. Original excluded fixtures remained outside delivery.",
+      "Regenerated AppImage configure output with the checkout's actual CRLF Git policy, checked all product code/data against the rebuilt executable and verified 1180 actual image files plus native image startup/database/settings/offline texts.",
+      "Added explicit reviewed AppImage runtime selection and pre-inventory DirIcon registration; all five actual runtime-input rejection controls pass. Detached the four task chroot mounts and retained original evidence/caches."
     ],
-    "next_action": "Commit the verified DEB callback repair, regenerate clean Linux pairs, complete DEB lifecycle and rerun Linux normal checks with stable Python 3.11 and native Git/filesystem access.",
-    "blockers": [],
+    "next_action": "Resolve the two remaining vendor evidence groups through vendor-attested source/build records or separately recorded controlled tool builds with matching source and affected acceptance; regenerate the intended clean formal candidate without relabeling retained audit artifacts. Do not upload or publish.",
+    "blockers": [
+      "Selected MinGW vendor archive/DLL identity is verified, but the resolved source-recipe commit for the three GCC DLLs remains unattested. The owner has no original build log or source snapshot.",
+      "QtIFW 4.8.1 vendor installerbase still lacks complete static dependency/patch/configure/link and CRT origin/redistribution binding. The owner has no original records; application MinGW selection does not establish the container's provenance."
+    ],
     "checks": [
       {
         "command": "python -B tools/validation/check_distribution.py --self-test",
@@ -89,6 +97,66 @@
         "result": "FAIL",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": "build/runtime-acceptance/linux-normal-01.xml"
+      },
+      {
+        "command": "Ubuntu mounted-tree normal suite with Python 3.11; 126/127, strict scan timeout retained",
+        "result": "FAIL",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/runtime-acceptance/linux-normal-02.xml"
+      },
+      {
+        "command": "Unchanged Ubuntu strict architecture test on native filesystem; 4.79 seconds",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/runtime-acceptance/linux-native-strict-01.xml"
+      },
+      {
+        "command": "Native Debian GCC normal suite with original independent fixtures; 127/127",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/runtime-acceptance/debian-normal-02.xml"
+      },
+      {
+        "command": "Native Debian zero-Fortran check: 435 C++ units and 107 binaries",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/runtime-acceptance/debian-zero-fortran-01.json"
+      },
+      {
+        "command": "All four maintained generators on the clean no-Git source archive",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/runtime-acceptance/linux-generators-01.log"
+      },
+      {
+        "command": "Actual Debian package install, installed payload/database/settings/native startup and removal",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/runtime-acceptance/debian-lifecycle-04.json"
+      },
+      {
+        "command": "Actual fixed-runtime AppImage extraction and all 1180 payload hashes",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/runtime-acceptance/appimage-inspection-06.json"
+      },
+      {
+        "command": "Actual final AppImage native startup, SQLite, offline text and legacy settings acceptance",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/runtime-acceptance/appimage-installed-smoke-06/observations.json"
+      },
+      {
+        "command": "AppImage helper syntax and five actual runtime-input rejection controls",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/runtime-acceptance/appimage-helper-inputs-06/observations.json"
+      },
+      {
+        "command": "Verify four isolated Debian task mounts are detached; retain caches and evidence",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/runtime-acceptance/debian-environment-cleanup-01.json"
       }
     ]
   }

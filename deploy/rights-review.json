@@ -1,7 +1,7 @@
 {
   "schema": "qualpf.distribution_rights_review.v1",
-  "reviewed_on": "2026-10-22",
-  "scope": "Scientific preferred inputs and the 29 removed inherited action images. Original findings and byte identities are preserved; independently drawn SVG replacements are delivered instead. Scientific values remain unchanged.",
+  "reviewed_on": "2026-10-23",
+  "scope": "Scoped inherited-material dispositions, independent artwork/manual replacements and actual Windows/Linux runtime/source bindings. Original scientific values, grant qualifications and failed comparisons are preserved.",
   "scientific_inputs": [
     {
       "id": "atom-properties",
@@ -781,7 +781,19 @@
       "workflow_url": "https://github.com/niXman/mingw-builds-binaries/blob/ecaa196ea0a8c39f77a44cb9760c1cc8160f67dd/.github/workflows/build.yml",
       "workflow_git_blob": "e6ae8dc759f3988abcaa7d0d77fb5777d314a54d",
       "source_binding": "Binary and vendor build-info match verified. All ten named patches and upstream archives are supplied; exact resolved source recipe commit remains unrecorded. Workflow checks out mutable develop; public historic run query returned no retained run.",
-      "required_information": "The resolved niXman/mingw-builds commit/source snapshot used for the 13.1.0-rt_v11-rev1 POSIX/SEH/MSVCRT build, or original build logs establishing it. A controlled rebuild is an alternative; no toolchain or DLL is silently substituted."
+      "required_information": "The resolved niXman/mingw-builds commit/source snapshot used for the 13.1.0-rt_v11-rev1 POSIX/SEH/MSVCRT build, or original build logs establishing it. A controlled rebuild is an alternative; no toolchain or DLL is silently substituted.",
+      "reconstruction_checks": {
+        "named_patches_applied": 10,
+        "direct_header_lf_matches": 668,
+        "direct_header_mismatches": 0,
+        "headers_without_direct_source_mapping": 146,
+        "vendor_recipe_attested": false,
+        "evidence": [
+          "build/runtime-acceptance/gcc-patch-reconstruction-01.json",
+          "build/runtime-acceptance/gcc-header-comparison-01.json"
+        ]
+      },
+      "owner_original_records": "Unavailable; owner confirmed no original source snapshot or build log. Public evidence has not established the resolved vendor recipe commit."
     },
     "ifw_container": {
       "version": "4.8.1",
@@ -830,13 +842,158 @@
         "api-ms-win-core-winrt-l1-1-0.dll"
       ],
       "source_binding": "PE imports and embedded markers identify dependencies but do not exclude a static MSVC CRT or attest complete source/build inputs.",
-      "required_information": "The exact static Qt/dependency source revisions, patches, configure/link recipe and CRT provenance/redistribution basis for this vendor installerbase; alternatively a separately recorded controlled installer tool build."
+      "required_information": "The exact static Qt/dependency source revisions, patches, configure/link recipe and CRT provenance/redistribution basis for this vendor installerbase; alternatively a separately recorded controlled installer tool build.",
+      "owner_original_records": "Unavailable; owner confirmed no static dependency/build/link or CRT-origin records."
     },
     "upstream_comparison": {
       "repository": "https://github.com/ccorrado71/qualx3",
       "revision": "6bdb8644b975efc394bf2116cf7405334b82782d",
       "windows_build": "script/build_windows.cmd uses oneAPI/MSVC and Qt 6.8.1, so it does not attest the QualPF MinGW DLLs or the IFW container.",
       "linux_packaging": "script/build_appimage.sh uses linuxdeploy and appimagetool. Follow the same packaging mechanisms while checking actual container contents and keeping their source/notices."
+    },
+    "linux_source_bindings": {
+      "ubuntu": {
+        "base": "Ubuntu 22.04",
+        "qt": "6.8.3",
+        "icu": "73.2",
+        "actual_unique_elf_files": 143,
+        "system_binary_packages": 80,
+        "exact_source_package_versions": 63,
+        "apt_sources": "build/runtime-acceptance/ubuntu-runtime-source-download-01.json",
+        "qt_source_sbom_raw_matches": 21617,
+        "non_bookkeeping_source_differences": 0,
+        "qt_source_evidence": "build/runtime-acceptance/qt-linux-source-comparison-01.json",
+        "library_allocated_content_comparisons": 142,
+        "unresolved_allocated_content_differences": 0,
+        "elf_evidence": [
+          "build/runtime-acceptance/appimage-allocated-sections-03.json",
+          "build/runtime-acceptance/appimage-allocated-sections-04.json"
+        ]
+      },
+      "debian": {
+        "base": "Debian 13",
+        "gcc": "14.2.0",
+        "qt_source_version": "6.8.2+dfsg-9+deb13u2",
+        "eigen_source_version": "3.4.0-5",
+        "boost_source_version": "1.83.0-4.2",
+        "system_qt_dsos_shipped": false,
+        "source_review": "build/runtime-acceptance/debian-runtime-review-04.json"
+      },
+      "appimage_runtime": {
+        "commit": "fedfad51acc2860b2916a1eef32ba4a500ff31ef",
+        "sha256": "617aa77314d57c8b8e4fae9c3f0b35af7b30d5529cb69e98f64f92510ed98a46",
+        "bytes": 944632,
+        "allowed_artifact_mutation": "Only the 16-byte ELF .digest_md5 section",
+        "build_log": "https://github.com/AppImage/type2-runtime/actions/runs/39320578745",
+        "static_sources": [
+          "type2-runtime",
+          "libfuse 3.15.0",
+          "squashfuse 0.5.2",
+          "musl 1.2.5-r11",
+          "zstd 1.5.6-r2",
+          "zlib 1.3.2-r1",
+          "mimalloc2 2.1.7-r0"
+        ],
+        "exact_alpine_recipe_git_blobs": 21,
+        "matched_recipe_source_sha512": 21,
+        "package_metadata": "build/runtime-acceptance/appimage-alpine-package-bindings-01.json",
+        "recipe_input_evidence": "build/runtime-acceptance/alpine-recipe-input-comparison-01.json",
+        "controlled_bit_reproducible_build": false,
+        "qualifications": "Original source/file terms retained; no blanket aports repository license inferred. Vendor build/source binding is distinct from a controlled rebuild."
+      },
+      "offline_bundle": "build/runtime-acceptance/linux-dependency-bundle-01/dependency-bundle.json",
+      "collection_release_clearance": false,
+      "scientific_separate_data_grants_verified": false
+    },
+    "native_package_acceptance": {
+      "reviewed_on": "2026-10-23",
+      "published": false,
+      "release_clearance": false,
+      "windows": {
+        "source_revision": "955d3a8355ffdfd55f0155670293b3f45c7fc8f8",
+        "audit_only": true,
+        "compiler": "GNU 13.1.0 (Windows/AMD64)",
+        "qt": "6.8.3",
+        "artifacts": [
+          {
+            "file": "QualPF-1.0.0-Windows-AMD64-audit.exe",
+            "bytes": 327827430,
+            "sha256": "0777ff32caea6dc97ac3b5bfbff135e8b7b1aa4b4db7f7e14c7918793bca868d"
+          }
+        ],
+        "corresponding_source": [
+          {
+            "file": "qualpf-1.0.0-Source-audit.tar.gz",
+            "bytes": 11262733,
+            "sha256": "962af56a73013fa6c8c2c1a38555ef60c5b14d06a371618fdfa17b093059d436"
+          }
+        ],
+        "artifact_evidence": "build/runtime-acceptance/windows-packages/QualPF-1.0.0-Windows-AMD64-audit-artifacts.json"
+      },
+      "debian": {
+        "source_revision": "8e645c1e1f6ee9f5e453956f44a9b86257b5f52e",
+        "audit_only": true,
+        "compiler": "GNU 14.2.0 (Linux/x86_64)",
+        "qt": "6.8.2",
+        "artifacts": [
+          {
+            "file": "qualpf-1.0.0-debian_amd64-audit.deb",
+            "bytes": 801365188,
+            "sha256": "f120203d648a5572a229e778bf20d6cd6bfcdc794fe4c9bd3da5c78f3c95a1c2"
+          }
+        ],
+        "corresponding_source": [
+          {
+            "file": "qualpf-1.0.0-Source-audit.tar.gz",
+            "bytes": 11262957,
+            "sha256": "0c7845f7ae00943883c7d70121d4e6dbb7e41d5f97a2fde772bc938bd2e09788"
+          }
+        ],
+        "artifact_evidence": "build/runtime-acceptance/linux-clean-packages/QualPF-1.0.0-Linux-x86_64-audit-artifacts.json"
+      },
+      "appimage": {
+        "source_revision": "8e645c1e1f6ee9f5e453956f44a9b86257b5f52e",
+        "audit_only": true,
+        "compiler": "GNU 11.4.0 (Linux/x86_64)",
+        "qt": "6.8.3",
+        "artifacts": [
+          {
+            "file": "qualpf-1.0.0-x86_64-audit.AppImage",
+            "bytes": 834828792,
+            "sha256": "d7df5a1e4c54f36e2e82cfe704f344264b5f60bbc86646200a4ce63b5d6df5d9"
+          }
+        ],
+        "corresponding_source": [
+          {
+            "file": "qualpf-1.0.0-Source-audit.tar.gz",
+            "bytes": 11262957,
+            "sha256": "0c7845f7ae00943883c7d70121d4e6dbb7e41d5f97a2fde772bc938bd2e09788"
+          }
+        ],
+        "artifact_evidence": "build/runtime-acceptance/linux-clean-packages/appimage-artifacts-06.json"
+      },
+      "normal_regressions": {
+        "windows_mingw": "127/127 PASS",
+        "native_debian_gcc": "127/127 PASS",
+        "ubuntu_mounted": "126/127; unchanged strict timeout on mounted storage",
+        "native_ubuntu_strict": "1/1 PASS in 4.79 seconds; not combined into a fresh 127-test claim"
+      },
+      "lifecycle_evidence": [
+        "build/runtime-acceptance/windows-lifecycle-01.json",
+        "build/runtime-acceptance/debian-lifecycle-04.json",
+        "build/runtime-acceptance/appimage-inspection-06.json",
+        "build/runtime-acceptance/appimage-installed-smoke-06/observations.json"
+      ],
+      "final_deb_installed_payload_files": 920,
+      "final_appimage_extracted_files": 1180,
+      "final_linux_runtime_review_blockers": [],
+      "remaining_windows_review_blockers": [
+        "unreviewed shipped runtime: bin/libgcc_s_seh-1.dll",
+        "unreviewed shipped runtime: bin/libgomp-1.dll",
+        "unreviewed shipped runtime: bin/libstdc++-6.dll",
+        "missing package-specific header/SDK review: package-runtimes"
+      ],
+      "qualifications": "Windows installation/purge used supported CLI; GPL/About/legal UI inspected. Linux native startup used Xvfb. Complete GUI wizard, GNOME integration and a fresh MSVC lifecycle are not claimed. Private original fixtures stayed outside delivery. Subsequent helper/documentation commits do not relabel these artifacts."
     }
   }
 }

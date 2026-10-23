@@ -37,6 +37,45 @@ DIST_ARGS=(--release)
 SUFFIX=""
 if [ "$AUDIT_ONLY" = ON ]; then DIST_ARGS=(--audit-only); SUFFIX=-audit; fi
 
+# A formal container must use the exact runtime covered by its source review.
+# Audit probes may still let appimagetool select a runtime for inspection.
+RUNTIME_FILE=${QUALPF_APPIMAGE_RUNTIME_FILE:-}
+RUNTIME_ARGS=()
+RUNTIME_TOOL_ARGS=()
+if [ -z "$RUNTIME_FILE" ] && [ "$AUDIT_ONLY" != ON ]; then
+    echo "ERROR: formal AppImage requires QUALPF_APPIMAGE_RUNTIME_FILE from the runtime review" >&2
+    exit 1
+fi
+if [ -n "$RUNTIME_FILE" ]; then
+    if [ ! -f "$RUNTIME_FILE" ]; then
+        echo "ERROR: AppImage runtime file is missing: $RUNTIME_FILE" >&2
+        exit 1
+    fi
+    RUNTIME_FILE=$(realpath "$RUNTIME_FILE")
+    RUNTIME_ARGS=(--runtime-file "$RUNTIME_FILE")
+    RUNTIME_TOOL_ARGS=(--tool "$RUNTIME_FILE")
+    if [ -n "${QUALPF_DISTRIBUTION_RUNTIME_REVIEW:-}" ]; then
+        python3 - "$RUNTIME_FILE" "$QUALPF_DISTRIBUTION_RUNTIME_REVIEW" "$AUDIT_ONLY" <<'PY'
+import hashlib
+import json
+from pathlib import Path
+import sys
+
+runtime, review, audit = sys.argv[1:]
+expected = json.loads(Path(review).read_text(encoding="utf-8-sig")).get(
+    "components", {}).get("package-runtimes", {}).get("runtime_sha256")
+actual = hashlib.sha256(Path(runtime).read_bytes()).hexdigest()
+if expected is not None and expected != actual:
+    raise SystemExit("AppImage runtime SHA-256 differs from its source review")
+if expected is None and audit != "ON":
+    raise SystemExit("Formal AppImage review must identify package-runtimes.runtime_sha256")
+PY
+    elif [ "$AUDIT_ONLY" != ON ]; then
+        echo "ERROR: formal AppImage requires a package-specific runtime review" >&2
+        exit 1
+    fi
+fi
+
 BUILD_DIR="$SRC_DIR/build/linux-appimage"
 PROG_NAME=$(grep -m1 'EXECUTABLE_NAME' "$SRC_DIR/CMakeLists.txt" | sed 's/.*set(EXECUTABLE_NAME[[:space:]]*"\([^"]*\)").*/\1/')
 APPDIR="$BUILD_DIR/${PROG_NAME}.AppDir"
@@ -160,6 +199,15 @@ while IFS= read -r -d '' plugin_lib; do
 done < <(find "$APPDIR/usr/plugins" -name '*.so' -print0)
 
 "$LINUXDEPLOY" "${linuxdeploy_args[@]}"
+# appimagetool creates this entry if absent. Include it before hashing so the
+# final extracted image has exactly the staged file set, including symlinks.
+if [ ! -e "$APPDIR/.DirIcon" ]; then
+    ln -s qualpf.png "$APPDIR/.DirIcon"
+fi
+if ! cmp -s "$APPDIR/.DirIcon" "$APPDIR/qualpf.png"; then
+    echo "ERROR: AppDir icon entry differs from the deployed QualPF icon" >&2
+    exit 1
+fi
 DIST_REVIEW_ARGS=()
 if [ -n "${QUALPF_DISTRIBUTION_RUNTIME_REVIEW:-}" ]; then
     DIST_REVIEW_ARGS+=(--review "$QUALPF_DISTRIBUTION_RUNTIME_REVIEW")
@@ -174,14 +222,15 @@ python3 -B "$SRC_DIR/tools/validation/check_distribution.py" --root "$SRC_DIR" \
 
 VERSION="$(grep -m1 'project\s*(' "$SRC_DIR/CMakeLists.txt" | sed 's/.*VERSION[[:space:]]\+\([0-9][0-9.]*\).*/\1/')"
 OUTPUT="$BUILD_DIR/${PROG_NAME}-${VERSION:-unknown}-x86_64${SUFFIX}.AppImage"
-ARCH=x86_64 "$APPIMAGETOOL" "$APPDIR" "$OUTPUT"
+ARCH=x86_64 "$APPIMAGETOOL" "${RUNTIME_ARGS[@]}" "$APPDIR" "$OUTPUT"
 
 RELEASE_DIR="$SRC_DIR/releases/${VERSION:-unknown}/linux-appimage"
 mkdir -p "$RELEASE_DIR"
 cp "$OUTPUT" "$RELEASE_DIR/"
 python3 -B "$SRC_DIR/tools/validation/check_distribution.py" --root "$SRC_DIR" \
     --build "$BUILD_DIR/cmake" --record-artifacts "$RELEASE_DIR/artifacts.json" \
-    --artifact "$RELEASE_DIR/$(basename "$OUTPUT")" --tool "$LINUXDEPLOY" --tool "$APPIMAGETOOL"
+    --artifact "$RELEASE_DIR/$(basename "$OUTPUT")" --tool "$LINUXDEPLOY" --tool "$APPIMAGETOOL" \
+    "${RUNTIME_TOOL_ARGS[@]}"
 echo -e "${GREEN}=========================================="
 echo "✓ AppImage created successfully!"
 echo -e "==========================================${NC}"

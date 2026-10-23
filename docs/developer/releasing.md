@@ -201,7 +201,62 @@ does not authorize scientific model, precision, compiler-flag or PFSM changes.
 Pass `--build` when manually running formal staged checks, so preflight uses the
 selected build's compiler and provenance rather than unspecified CLI defaults.
 
-## Local 1.0.0 audit scope
+## Current native package acceptance
+
+The 23 October 2026 follow-up evidence is under `build/runtime-acceptance`.
+These are local **audit** artifacts, not published release files. Each binary is
+paired with its own exact clean-revision source archive; later guide or helper
+commits do not change the recorded artifact provenance. A formal candidate must
+be regenerated from its intended final committed revision with audit mode OFF
+after the remaining Windows source/container evidence gaps are closed.
+
+| Configuration or action | Freshly executed scope |
+| --- | --- |
+| Windows MinGW 13.1 / Qt 6.8.3, clean `955d3a8355ffdfd55f0155670293b3f45c7fc8f8` | Product build and **127/127** normal tests passed, including About/offline text at 100%, 150% and 200%. The no-Git source archive completed all 279 product steps and all four generators. |
+| Actual MinGW IFW lifecycle | All **537** installed payload files matched component bytes. Actual CLI installation, system-only-PATH startup, SQLite, legacy settings import/preservation, three shortcuts and CLI purge passed. The GPL installer page and native installed About/legal tabs were inspected interactively; a second complete GUI wizard run is not claimed. Installation and task shortcuts were removed, and isolated settings retained. |
+| Linux GCC 14.2 / Debian Qt 6.8.2, clean `8e645c1e1f6ee9f5e453956f44a9b86257b5f52e` | Native no-Git product build and **127/127** normal tests passed; zero-Fortran checks inspected 435 C++ units and 107 binaries. All four preferred-input generator checks also passed on the clean source export. |
+| Actual Debian 13 DEB lifecycle, same `8e645c1e` source | All **920** package files and their installed copies matched. The real maintainer field is `adnxuic <uncercalculate@163.com>`. Actual install, native Xvfb startup, SQLite, offline notices, legacy settings and removal passed; executable/desktop entry were removed and isolated settings retained. Qt is a system dependency, and the native Debian ABI minimums apply. No full GNOME session or interactive package-manager UI is claimed. |
+| Actual Ubuntu 22.04 / Qt 6.8.3 AppImage, same `8e645c1e` source | All **1,180** extracted files matched their inventory, including `.DirIcon`; actual pinned type-2 runtime, independent icon and SQLite-only SQL plugin checks passed. Running the actual image in extract-and-run mode passed native Xvfb startup, SQLite create/search, offline notices and legacy settings checks with SDK overrides cleared. The inventory has zero material/runtime review blockers and retains the unverified separate-scientific-grant qualification. Desktop integration services were not exercised. |
+
+Actual lifecycle/source/runtime receipts are `windows-lifecycle-01.json`,
+`debian-lifecycle-04.json`, `appimage-inspection-06.json`,
+`appimage-installed-smoke-06/observations.json` and the platform-specific
+artifact sidecars. The final DEB and AppImage/source pair is in
+`build/runtime-acceptance/linux-clean-packages`; MinGW files are in
+`build/runtime-acceptance/windows-packages`. Source and artifact SHA-256 values
+are recorded in those sidecars, together with the actual toolchain and packaging
+tool hashes. The DEB has no missing runtime/source review item. Windows retains
+three GCC DLL bindings and the separate IFW static-dependency/CRT review.
+
+Original failures remain available: Ubuntu Qt 6.2 compilation, Python 3.10
+validation prerequisites, mounted-filesystem strict-check timeout, missing private
+test inputs, missing DEB `file` utility/contact forwarding, unused Mimer driver,
+and the AppImage dirty-source/unlisted-`.DirIcon` checks. No assertion or timeout
+was weakened. The mounted Ubuntu run was **126/127**, followed by the unchanged
+strict test passing in **4.79 seconds** on native storage; those two runs are not
+presented as one fresh 127-test invocation. The complete final 127/127 Linux run
+above used native Debian storage and the exact original development fixtures,
+including the three separately excluded powder examples. None entered delivery.
+
+For reproducible AppImage assembly, set `QUALPF_APPIMAGE_RUNTIME_FILE` to the
+reviewed runtime and provide its `runtime_sha256` in the package-runtime review.
+The helper rejects a missing file, absent review/hash or mismatched bytes before
+configuration and records the runtime alongside linuxdeploy/appimagetool. It
+registers `.DirIcon` before inventorying rather than allowing appimagetool to add
+an unlisted file. Retain tools and the runtime by hash; a mutable `continuous`
+download alone is not a corresponding-source binding. See the
+[Linux source findings](distribution-rights.md#actual-linux-runtime-and-source-bindings).
+
+MSVC remains a development configuration. No fresh MSVC installation or complete
+interactive Linux desktop integration is asserted by this follow-up. The remaining
+two Windows evidence groups and the owner's lack of original vendor records are
+listed in the [rights review](distribution-rights.md#owner-decisions-and-information-still-needed).
+No package was uploaded or published.
+
+## Earlier local 1.0.0 audit scope
+
+This section retains earlier checkpoint scopes. The current native acceptance
+above supersedes their then-unexecuted Linux and MinGW lifecycle items.
 
 The earlier local audit artifacts checked on 22 October 2026 identify clean payload
 revision `a8bc3dbec1f80dfb916474e7f856a46c0c127d1d`. Both Windows IFW packages
@@ -251,7 +306,9 @@ isolated system-only-PATH startup, SQLite and legacy settings checks.
 `clean-artifact-inspection-03.json` retains those comparisons;
 `actual-ifw-reviewed-03-inventory.json` binds 18 runtime files and the header/SDK
 materials, retaining three unreviewed GCC DLLs and the incomplete IFW container
-review. Scientific and inherited-asset grants remain unresolved. Formal checks
+review. At that checkpoint the scientific and inherited-asset findings were still
+unresolved; the later scoped table policy and independent replacements are recorded
+above. Formal checks
 still reject these audit artifacts. The earlier conflicting IFW artifact and
 both failed byte comparisons are preserved.
 
@@ -262,5 +319,5 @@ the subsequent `QtDeployment.cmake` ownership fix was verified through fresh
 configuration, component staging and actual archive extraction. This is not a
 second full source compilation or a fresh 127-test platform matrix. The latest
 installer's interactive install/uninstall and supported Linux package acceptance
-remain **NOT_VERIFIED**. Later documentation-only commits do not change this
+were **NOT_VERIFIED** at that checkpoint. Later documentation-only commits do not change this
 recorded artifact revision. No audit artifact is cleared for publication.

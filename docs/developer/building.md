@@ -1,11 +1,16 @@
 # Building and contributing
 
-Use CMake 3.20+, Ninja, a C++20 compiler, Qt 6 matching the compiler ABI, Eigen 3.4
+Use CMake 3.20+, Ninja, a C++20 compiler, Qt 6.7+ matching the compiler ABI, Eigen 3.4
 and Boost headers, with compiler OpenMP support for PFSM candidate execution.
 Run Windows MSVC from its developer shell. Windows GNU requires
 MinGW and the corresponding Qt `bin` on PATH. Linux GNU uses installed C++/Qt/
 Eigen/Boost development packages. Configuration downloads no dependencies.
 Developers supply optional GoogleTest; Google Benchmark remains a reserved entry.
+Current QPF decoding uses the [Qt 6.7 stream-reader APIs](https://doc.qt.io/qt-6/qcborstreamreader.html#readAndAppendToString).
+The native package checks used Qt 6.8.3 on Ubuntu 22.04 and Qt 6.8.2 on Debian 13;
+Ubuntu 22.04's original Qt 6.2 package is insufficient. Use Python 3.11+ for the
+normal validation suite, which uses `hashlib.file_digest`. Supply that interpreter
+with `Python3_EXECUTABLE` when the system Python is older.
 
 ## GUI icon resources
 
@@ -71,6 +76,13 @@ payloads remain in
 the protected local development history and pinned main ancestor. See
 [independent reference prerequisites](../../tests/README.md#independent-references)
 for shallow clones and source archives. Missing/changed data remains a failure.
+Full regression also needs the unchanged private development fixtures under
+`tests/real_example_data` and the three original powder examples in
+`share/qualx/examples`. They are intentionally excluded from deliverable archives;
+provision authorized original copies for development and verify their recorded
+bytes. Their absence does not prevent the ordinary product build or the four
+maintained table-generator checks. Never manufacture replacements from product
+results or include these private fixtures in a release package.
 
 The example keeps the shared `binaryDir`, so shared build/test presets apply.
 Use `linux-gnu` for all three commands when system dependencies are discoverable.
@@ -231,6 +243,13 @@ before and after. Leave current build configurations and running campaigns alone
 Run Linux build and packaging commands inside the configured Linux environment.
 The qualified WSL2 SDK used for the Linux closure requires no Docker; the native
 packaging entry points below use that environment's toolchain.
+Use the native Linux filesystem for source/build/staging during WSL validation.
+Scanning the Windows-mounted tree can exceed the unchanged strict-check timeout:
+the retained mounted run passed 126/127, while that same strict control passed
+in 4.79 seconds on native storage. The final native Debian run passed 127/127.
+When intentionally building a Windows checkout through WSL, match its Git
+`core.autocrlf` setting through process-local Git configuration. Otherwise CRLF
+conversion can be reported as source edits; do not overwrite dirty provenance.
 
 ```sh
 cmake --install build/linux-gnu --prefix /your/staging/prefix
@@ -243,6 +262,13 @@ release copies belong to `releases/<version>/<type>`. Direct CPack output belong
 to the selected configuration's `packages` directory. Portable Linux Qt deployment
 requires patchelf. The AppImage script also needs curl and caches linuxdeploy/
 appimagetool under its configuration's build directory after first retrieval.
+For a formal AppImage, set `QUALPF_APPIMAGE_RUNTIME_FILE` to the exact reviewed
+type-2 runtime. Its SHA-256 must equal `components.package-runtimes.runtime_sha256`
+in `QUALPF_DISTRIBUTION_RUNTIME_REVIEW`. The runtime is passed to appimagetool
+explicitly and recorded with the packaging tools; an audit may inspect a default
+runtime but that does not establish its source provenance. The helper registers
+`.DirIcon` before inventorying the tree so the final image has no unlisted icon
+entry. See [actual package acceptance](releasing.md#current-native-package-acceptance).
 
 Root `install.sh` remains the installation entry; its implementation is in
 `scripts/install.sh`. Historical qmake/Fortran build fragments are recoverable
