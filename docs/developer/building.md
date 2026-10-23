@@ -234,9 +234,12 @@ Retired task-build object files and static libraries are disposable; complete
 build-tree backups are unnecessary. Keep current configurations, active or paused
 campaign inputs, release copies, frozen references and original failed
 comparisons. Inspect `git worktree list` before cleaning nested directories and
-preserve their checkouts. On Windows, retained historical logs, result tables and
-source snapshots can use lossless NTFS compression after checking file hashes
-before and after. Leave current build configurations and running campaigns alone.
+preserve their checkouts. On Windows, retained historical logs, result tables,
+source snapshots and retired executables/private DLL copies can use lossless NTFS
+compression after checking file hashes before and after. Leave current build
+configurations and running campaigns alone. Keep runtime-source caches and package
+acceptance directories untouched while their owning task remains open, including
+when it is blocked.
 
 ## Installation, packaging and documentation
 

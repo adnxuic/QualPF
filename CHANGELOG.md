@@ -124,8 +124,9 @@ reports are no longer used for routine development.
   development branch and a local protection tag for final-tree squash publication.
 
 - Reclaimed local storage from retired compilation intermediates and losslessly
-  compressed retained build logs and result tables, preserving current builds,
-  releases, frozen references, original failures and nested Git worktrees.
+  compressed retained build logs, result tables and retired binaries, preserving
+  current builds, release/source acceptance inputs, frozen references, original
+  failures and nested Git worktrees.
 
 - Enabled PFSM profile template caching by default for new settings and factory
   restoration, preserving saved off choices and existing projects. Added the
