@@ -23,7 +23,7 @@
     ],
     "status": "blocked",
     "base_commit": "e746cb95fbccc4ce6d20eda4d3ac69ad6263a921",
-    "checkpoint_commit": "8e645c1e1f6ee9f5e453956f44a9b86257b5f52e",
+    "checkpoint_commit": "f4a3c34879659be3a471a7aa1ad5acefa7198ddb",
     "completed": [
       "Confirmed a clean main worktree and read the current runtime/source and distribution contracts.",
       "Matched three GCC DLLs, winpthreads and SDK build-info byte-for-byte to the vendor release; retained the unpinned workflow/source and IFW CRT qualifications.",
@@ -36,12 +36,13 @@
       "Bound the AppImage runtime static inputs to public build logs, exact Alpine package recipe commits, 21 Git blobs and 21 matching SHA-512 source/patch inputs.",
       "Completed native Debian 127/127 normal tests, zero-Fortran checks, actual 920-file DEB install/startup/database/settings/removal and exact matching clean source. Original excluded fixtures remained outside delivery.",
       "Regenerated AppImage configure output with the checkout's actual CRLF Git policy, checked all product code/data against the rebuilt executable and verified 1180 actual image files plus native image startup/database/settings/offline texts.",
-      "Added explicit reviewed AppImage runtime selection and pre-inventory DirIcon registration; all five actual runtime-input rejection controls pass. Detached the four task chroot mounts and retained original evidence/caches."
+      "Added explicit reviewed AppImage runtime selection and pre-inventory DirIcon registration; all five actual runtime-input rejection controls pass. Detached the four task chroot mounts and retained original evidence/caches.",
+      "Verified eight public QualX3 v1.0.8 build/install/document Git blobs and release metadata. Adopted its vendor-SDK deployment procedure while keeping MinGW and actual runtime checks; clarified that private vendor logs, attestation and bit-identical rebuilds are not mandatory evidence formats."
     ],
-    "next_action": "Resolve the two remaining vendor evidence groups through vendor-attested source/build records or separately recorded controlled tool builds with matching source and affected acceptance; regenerate the intended clean formal candidate without relabeling retained audit artifacts. Do not upload or publish.",
+    "next_action": "Continue the vendor-SDK distribution route and establish complete actual GCC DLL/IFW source and redistribution coverage from supplier or independently verified public materials. Private original logs are optional evidence, not a required format; controlled tool builds are a fallback. Preserve MinGW formal delivery, recorded package scopes and no-publication policy.",
     "blockers": [
-      "Selected MinGW vendor archive/DLL identity is verified, but the resolved source-recipe commit for the three GCC DLLs remains unattested. The owner has no original build log or source snapshot.",
-      "QtIFW 4.8.1 vendor installerbase still lacks complete static dependency/patch/configure/link and CRT origin/redistribution binding. The owner has no original records; application MinGW selection does not establish the container's provenance."
+      "Complete corresponding-source/build coverage for the three actual shipped GCC DLLs remains unreviewed. Vendor binary identity, ten applied patches and direct header comparisons are established; the unknown original recipe commit is a provenance qualification, not a mandatory certification field.",
+      "The actual IFW container still needs coverage of embedded Qt/static dependencies, applicable build inputs and CRT redistribution basis. Installed vendor IFW is allowed; lack of private factory logs alone is not the blocker. No automatic source exception or upstream-derived clearance is asserted."
     ],
     "checks": [
       {
@@ -157,6 +158,12 @@
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": "build/runtime-acceptance/debian-environment-cleanup-01.json"
+      },
+      {
+        "command": "Verify eight pinned upstream QualX3 build/install/document Git blobs and the v1.0.8 tag commit",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/runtime-acceptance/qualx-reference-20261023/verified.json"
       }
     ]
   }

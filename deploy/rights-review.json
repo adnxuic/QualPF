@@ -781,7 +781,7 @@
       "workflow_url": "https://github.com/niXman/mingw-builds-binaries/blob/ecaa196ea0a8c39f77a44cb9760c1cc8160f67dd/.github/workflows/build.yml",
       "workflow_git_blob": "e6ae8dc759f3988abcaa7d0d77fb5777d314a54d",
       "source_binding": "Binary and vendor build-info match verified. All ten named patches and upstream archives are supplied; exact resolved source recipe commit remains unrecorded. Workflow checks out mutable develop; public historic run query returned no retained run.",
-      "required_information": "The resolved niXman/mingw-builds commit/source snapshot used for the 13.1.0-rt_v11-rev1 POSIX/SEH/MSVCRT build, or original build logs establishing it. A controlled rebuild is an alternative; no toolchain or DLL is silently substituted.",
+      "required_information": "Coverage of the actual three GCC DLLs by complete corresponding source, patches and a usable build recipe, or an applicable supplier source package. The resolved vendor commit or original logs can establish this, but they are not mandatory evidence formats. Independently verified public materials are acceptable; a controlled rebuild is a fallback when coverage cannot otherwise be established.",
       "reconstruction_checks": {
         "named_patches_applied": 10,
         "direct_header_lf_matches": 668,
@@ -842,14 +842,40 @@
         "api-ms-win-core-winrt-l1-1-0.dll"
       ],
       "source_binding": "PE imports and embedded markers identify dependencies but do not exclude a static MSVC CRT or attest complete source/build inputs.",
-      "required_information": "The exact static Qt/dependency source revisions, patches, configure/link recipe and CRT provenance/redistribution basis for this vendor installerbase; alternatively a separately recorded controlled installer tool build.",
+      "required_information": "Coverage of the actual embedded Qt/static dependency sources and applicable build/link inputs, plus CRT identification and redistribution basis. Existing supplier sources/terms and independently verified recipes may establish coverage without private factory logs; assess any source exception on its actual terms rather than inferring it from imports. A controlled build is an alternative.",
       "owner_original_records": "Unavailable; owner confirmed no static dependency/build/link or CRT-origin records."
     },
     "upstream_comparison": {
       "repository": "https://github.com/ccorrado71/qualx3",
       "revision": "6bdb8644b975efc394bf2116cf7405334b82782d",
       "windows_build": "script/build_windows.cmd uses oneAPI/MSVC and Qt 6.8.1, so it does not attest the QualPF MinGW DLLs or the IFW container.",
-      "linux_packaging": "script/build_appimage.sh uses linuxdeploy and appimagetool. Follow the same packaging mechanisms while checking actual container contents and keeping their source/notices."
+      "linux_packaging": "script/build_appimage.sh uses linuxdeploy and appimagetool. Follow the same packaging mechanisms while checking actual container contents and keeping their source/notices.",
+      "reviewed_on": "2026-10-23",
+      "public_tag": "v1.0.8",
+      "verified_public_source_files": 8,
+      "evidence": "build/runtime-acceptance/qualx-reference-20261023/evidence.json",
+      "verification": "build/runtime-acceptance/qualx-reference-20261023/verified.json",
+      "upstream_ifw": "CMakeLists.txt selects installed C:/Qt/QtIFW-4.8.1 and canonical root GPL; no IFW/static dependency rebuild recipe appears in the inspected scripts.",
+      "upstream_vc_runtime": "deploy/Windows/installscript.qs executes vc_redist.x64.exe; QualPF MinGW formal delivery does not import this bootstrap.",
+      "public_release_assets": [
+        "qualx-1.0.8-arm64.dmg",
+        "qualx-1.0.8-x86_64.AppImage",
+        "qualx3-1.0.8-win64.exe"
+      ],
+      "public_evidence_limit": "Only public tracked scripts/documentation and release asset metadata were checked. The asset list has no separate vendor runtime source bundle or factory logs. Upstream installer contents and private arrangements were not inspected.",
+      "adopted_procedure": {
+        "mode": "vendor-sdk-binary-deployment",
+        "formal_windows_toolchain": "MinGW/GNU",
+        "installed_vendor_ifw": true,
+        "private_original_build_logs_mandatory": false,
+        "vendor_attestation_mandatory": false,
+        "bit_identical_rebuild_mandatory": false,
+        "actual_license_and_source_coverage_required": true,
+        "source_review_status_changed": false,
+        "unknown_dependency_clearance": false,
+        "scientific_data_policy_changed": false,
+        "basis": "Follow the observed upstream packaging mechanism while retaining existing notices/source bundles and actual package checks. Complete independently verified source/build materials can resolve gaps; absence of private logs alone does not require rebuilding a toolchain."
+      }
     },
     "linux_source_bindings": {
       "ubuntu": {

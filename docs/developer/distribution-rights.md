@@ -307,17 +307,39 @@ of those owner-held records is available. The two remaining formal Windows
 evidence groups are the resolved recipe/source binding for the three GCC DLLs
 and the IFW container's
 complete static sources, patches, configure/link inputs and CRT redistribution
-basis. Public archive identity and embedded version strings do not supply that
-missing evidence. Vendor-attested records or separately recorded controlled builds
-are the available routes; a different tool build must receive its own matching
-source package and affected regression/package acceptance. No kit or runtime has
-been silently substituted. The [current acceptance scope](releasing.md#current-native-package-acceptance)
+basis. Public archive identity and embedded version strings alone do not establish
+that all required source and redistribution terms are covered. Complete source,
+patches and a usable build recipe established by independently checked public
+materials can also resolve a gap; a private original vendor log is not the only
+acceptable evidence. A controlled rebuild is an alternative when the supplied
+artifact cannot otherwise be covered, not a default prerequisite. A different
+tool build needs its own matching source and affected regression/package
+acceptance. No kit or runtime has been silently substituted. The
+[current acceptance scope](releasing.md#current-native-package-acceptance)
 records the completed platform work and retained failures.
 
-QualX3's public Windows script at revision
-`6bdb8644b975efc394bf2116cf7405334b82782d` uses oneAPI/MSVC and Qt 6.8.1. It
-does not bind QualPF's MinGW DLLs or establish this IFW container's CRT source.
-Its AppImage script uses the same linuxdeploy/appimagetool packaging mechanism;
-QualPF retains that approach and audits the actual assembled libraries and
-container separately. Do not infer a grant or a matching tool build from the
-upstream project's use of a packaging tool.
+## QualX3 runtime distribution comparison
+
+The public `v1.0.8` tag was checked on 23 October 2026 and resolves to
+`6bdb8644b975efc394bf2116cf7405334b82782d`, also the inspected main revision.
+Eight cached build/install/document files match that tree's Git blobs. The local
+evidence is `build/runtime-acceptance/qualx-reference-20261023/evidence.json` and
+`verified.json`. The comparison covers public scripts and release metadata;
+upstream installer binaries and private supplier records were not inspected.
+
+| Subject | Observed upstream procedure | QualPF application |
+| --- | --- | --- |
+| Windows compiler/runtime | The [Windows build example](https://github.com/ccorrado71/qualx3/blob/6bdb8644b975efc394bf2116cf7405334b82782d/script/build_windows.cmd) selects installed oneAPI/MSVC and Qt 6.8.1. [CMake](https://github.com/ccorrado71/qualx3/blob/6bdb8644b975efc394bf2116cf7405334b82782d/CMakeLists.txt#L188) copies the Intel runtime DLLs from the configured SDK directory and uses Qt's generated deployment script. It does not rebuild those SDKs. | Keep vendor-SDK deployment, using the owner's selected MinGW kit and its compiler-resolved DLLs. Do not import Intel/Fortran or switch formal distribution to MSVC. This upstream example supplies no source binding for QualPF's three GCC DLLs. |
+| Installer container | [CMake](https://github.com/ccorrado71/qualx3/blob/6bdb8644b975efc394bf2116cf7405334b82782d/CMakeLists.txt#L395) uses the installed `C:/Qt/QtIFW-4.8.1`, selects IFW and displays the root GPL text. The [component script](https://github.com/ccorrado71/qualx3/blob/6bdb8644b975efc394bf2116cf7405334b82782d/deploy/Windows/installscript.qs) runs `vc_redist.x64.exe`. No IFW/static-Qt/CRT rebuild recipe is provided in these files. | Continue using the selected vendor IFW with canonical GPL and independent metadata. Keep the container's own terms/source review separate; do not add the upstream VC++ bootstrap to the MinGW application. |
+| Linux dependencies | The [AppImage helper](https://github.com/ccorrado71/qualx3/blob/6bdb8644b975efc394bf2116cf7405334b82782d/script/build_appimage.sh) installs an AppDir and uses linuxdeploy/appimagetool to collect and package existing libraries. Its [Docker recipe](https://github.com/ccorrado71/qualx3/blob/6bdb8644b975efc394bf2116cf7405334b82782d/script/Dockerfile.appimage) obtains SDKs from Ubuntu APT and tools from `continuous` downloads. DEB uses system dependencies. | Retain these packaging mechanisms, plus the already verified file hashes, corresponding-source/notices and pinned AppImage runtime. Preserve the Qt version required by current QPF decoding. |
+| Public source/release evidence | The [v1.0.8 release](https://github.com/ccorrado71/qualx3/releases/tag/v1.0.8) has three attached assets: Windows EXE, macOS DMG and Linux AppImage. The public repository/tag supplies application source. No separate vendor-runtime source bundle or original compiler/IFW build logs appear among those attached assets. | Preserve the stronger source bundles and actual-package inventories already prepared. Absence from the inspected asset list does not establish what an upstream binary contains or what private arrangements exist. |
+
+QualPF therefore follows the vendor-SDK/binary-deployment route. Rebuilding GCC,
+Qt or IFW is not required merely because an old original build log is unavailable.
+[GPLv3 section 1](https://www.gnu.org/licenses/gpl.en.html#section1) defines the
+required corresponding source, including necessary build/install scripts and its
+exclusions; it does not prescribe a particular vendor-log or attestation format.
+Qt's [installation guide](https://doc.qt.io/qtinstallerframework/ifw-installation.html)
+also supports using prebuilt IFW. This procedural choice does not establish that
+an unidentified static dependency is covered or supply missing redistribution
+terms. It changes neither runtime review status nor the five-table policy.

@@ -51,6 +51,12 @@ reports are no longer used for routine development.
 
 ### Changed
 
+- Documented QualX3 v1.0.8's vendor-SDK/runtime deployment and IFW packaging as
+  the reference procedure. Kept MinGW formal distribution and clarified that
+  complete independently verified source/build materials can resolve a runtime
+  review without private factory logs or a compulsory toolchain rebuild.
+  Preserved unresolved source coverage and redistribution findings.
+
 - Adopted the owner's QualX3 distribution approach for the five inherited
   scientific table scopes: retain the upstream project GPL basis, original
   references, copyright qualifications and corresponding sources. Recorded this

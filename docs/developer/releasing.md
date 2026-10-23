@@ -201,6 +201,15 @@ does not authorize scientific model, precision, compiler-flag or PFSM changes.
 Pass `--build` when manually running formal staged checks, so preflight uses the
 selected build's compiler and provenance rather than unspecified CLI defaults.
 
+The [upstream runtime comparison](distribution-rights.md#qualx3-runtime-distribution-comparison)
+records the adopted vendor-SDK/binary-deployment approach. Original private vendor
+logs, a vendor attestation or a bit-identical rebuild are not mandatory evidence
+formats. Independently verified source, patches, notices and a complete applicable
+build recipe can establish coverage instead. Actual corresponding-source and
+redistribution obligations still apply to delivered components; the existence of
+a QualX release does not clear an unknown QualPF runtime. Keep the selected MinGW
+formal configuration and current package-specific checks.
+
 ## Current native package acceptance
 
 The 23 October 2026 follow-up evidence is under `build/runtime-acceptance`.
