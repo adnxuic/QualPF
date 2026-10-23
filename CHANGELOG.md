@@ -321,6 +321,9 @@ reports are no longer used for routine development.
   retains only the product's SQLite SQL driver, avoiding unused Mimer and other
   client-library dependencies copied from the Qt SDK.
 
+- Preserve the explicitly supplied DEB maintainer email in the staged-payload
+  check as well as package preflight, so a valid contact can complete packaging.
+
 - Prevent Qt deployment from adding PATH-selected MinGW runtime DLLs alongside
   the compiler-matched IFW component. Reject conflicting bytes targeting the same
   installed path, including in audit packages.

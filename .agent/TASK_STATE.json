@@ -23,15 +23,17 @@
     ],
     "status": "in_progress",
     "base_commit": "e746cb95fbccc4ce6d20eda4d3ac69ad6263a921",
-    "checkpoint_commit": "955d3a8355ffdfd55f0155670293b3f45c7fc8f8",
+    "checkpoint_commit": "5d0c84d190c8616253d0a203e4be1bc3c7a5a4f9",
     "completed": [
       "Confirmed a clean main worktree and read the current runtime/source and distribution contracts.",
       "Matched three GCC DLLs, winpthreads and SDK build-info byte-for-byte to the vendor release; retained the unpinned workflow/source and IFW CRT qualifications.",
       "Added repeatable isolated installed-product checks; fixed AppImage configuration review forwarding and bounded Linux package parallelism.",
       "Paired fresh clean-revision MinGW IFW/source artifacts; all 127 normal tests, no-Git source build/generators and actual CLI install/database/settings/uninstall passed, with GPL/About UI inspected.",
-      "Retained the actual Mimer deployment failure, restricted the AppImage SQL payload to SQLite and preserved previous AppDirs; the resulting actual-image installed-product probe passed."
+      "Retained the actual Mimer deployment failure, restricted the AppImage SQL payload to SQLite and preserved previous AppDirs; the resulting actual-image installed-product probe passed.",
+      "Mapped 143 AppImage ELF origins, acquired all 63 exact Ubuntu source versions, matched Qt source SBOM content and assembled full offline Linux source/notices/header evidence.",
+      "Fixed the DEB staged callback's omitted contact argument; a native Debian 13 / system Qt audit probe now packages successfully after provisioning file."
     ],
-    "next_action": "Commit the verified AppImage deployment repair, regenerate a clean image/source pair and complete Linux regressions, DEB lifecycle and actual runtime-source review.",
+    "next_action": "Commit the verified DEB callback repair, regenerate clean Linux pairs, complete DEB lifecycle and rerun Linux normal checks with stable Python 3.11 and native Git/filesystem access.",
     "blockers": [],
     "checks": [
       {
@@ -75,6 +77,18 @@
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": "build/runtime-acceptance/appimage-installed-smoke-03/observations.json"
+      },
+      {
+        "command": "native Debian 13 CPack DEB contact-forwarding audit probe",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/runtime-acceptance/debian-package-03.log"
+      },
+      {
+        "command": "ctest --test-dir build/runtime-acceptance/linux-gnu -L normal --output-on-failure --parallel 2",
+        "result": "FAIL",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/runtime-acceptance/linux-normal-01.xml"
       }
     ]
   }

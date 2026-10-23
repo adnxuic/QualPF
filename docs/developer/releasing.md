@@ -81,7 +81,9 @@ cpack --config build/windows-gnu/CPackConfig.cmake -G IFW
 Linux helpers accept `--audit-only`. DEB additionally requires an explicitly
 supplied `QUALPF_RELEASE_CONTACT_EMAIL` environment value. Missing, placeholder
 and Issues-URL contacts fail only when DEB packaging is selected, including an
-audit DEB. Normal builds, IFW and AppImage need no email. The source helper
+audit DEB. Normal builds, IFW and AppImage need no email. CPack forwards this
+contact through both preflight and staged-payload checks; the cache default
+remains empty. The source helper
 `scripts/package/make_tar_gz.sh` forwards CMake options, including the audit flag.
 Both Linux binary helpers respect `CMAKE_BUILD_PARALLEL_LEVEL`; set it explicitly
 on a memory-constrained runner. AppImage forwards the runtime-review and exact
