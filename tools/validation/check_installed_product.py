@@ -65,7 +65,7 @@ def check(executable, prefix, work, qpa):
             raise ValueError(f"installed {name} failed: {result.returncode}: {text}")
 
     try:
-        for name in ("LICENSE", "NOTICE.md", "THIRD_PARTY_NOTICES.md"):
+        for name in ("LICENSE", "NOTICE.md", "THIRD_PARTY_NOTICES.md", "SOURCE_CODE.md"):
             if (prefix / "share/qualpf" / name).read_bytes() != (ROOT / name).read_bytes():
                 raise ValueError("missing/stale offline legal material: " + name)
         run("version", ["--nogui", "--version"], "1.0.0")

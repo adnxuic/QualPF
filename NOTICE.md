@@ -105,6 +105,9 @@ or grant permission for third-party material.
 
 Each distributed binary must identify its exact committed source revision and
 provide the matching corresponding source, notices and build instructions.
+For filenames, checksums and the slim Windows installer's independent dependency
+source archive, see [Obtaining QualPF source code](SOURCE_CODE.md). Keep those
+source downloads available alongside the binary at no additional charge.
 A link to a moving branch alone is not a corresponding-source delivery record.
 Local packages marked **audit** are for inspection and are not cleared for
 distribution. Outstanding rights and package-specific obligations are recorded

@@ -22,6 +22,8 @@ from check_distribution import ROOT, digest, read_json, relative, write_json
 
 CATALOGUE = "deploy/dependency-sources.json"
 INDEX = "dependency-bundle.json"
+DELIVERY = "dependency-delivery.json"
+SOURCE_INDEX = "dependency-source-index.json"
 LEGAL = re.compile(r"^(?:licen[cs]e[^/]*|copying[^/]*|copyright[^/]*|authors|qt_attribution\.json)$", re.I)
 
 
@@ -236,23 +238,108 @@ def prepare(root, cache, output, sdks, mingw, inventories, eigen=None, boost=Non
     return gaps
 
 
-def verify(root, bundle):
-    info = read_json(bundle / INDEX)
+def check_index(root, info, actual):
     if info.get("schema") != "qualpf.dependency_bundle.v1" or info.get("release_clearance") is not False:
         raise ValueError("dependency evidence cannot declare release clearance")
     if info.get("source_catalogue_sha256") != digest(root / CATALOGUE):
         raise ValueError("dependency source catalogue changed after bundle preparation")
-    actual = {path.relative_to(bundle).as_posix() for path in bundle.rglob("*") if path.is_file()}
-    if actual != set(info["files"]) | {INDEX}:
+    if set(actual) != set(info["files"]):
         raise ValueError("dependency bundle file list differs")
     for name, expected in info["files"].items():
-        if digest(relative(bundle, name)) != expected:
+        archive_name(name)
+        if actual[name] != expected:
             raise ValueError("dependency source/notice changed: " + name)
     # Bind archives independently to the committed catalogue, not merely to an editable index.
     for entry in read_json(root / CATALOGUE)["sources"]:
-        if digest(relative(bundle, "SOURCES/" + entry["file"])) != entry["sha256"]:
+        if actual.get("SOURCES/" + entry["file"]) != entry["sha256"]:
             raise ValueError("bundled archive differs from source catalogue: " + entry["file"])
+
+
+def verify(root, bundle):
+    info = read_json(bundle / INDEX)
+    names = {path.relative_to(bundle).as_posix() for path in bundle.rglob("*") if path.is_file()}
+    if names != set(info["files"]) | {INDEX}:
+        raise ValueError("dependency bundle file list differs")
+    check_index(root, info, {name: digest(relative(bundle, name)) for name in info["files"]})
     return info
+
+
+def verify_archive(root, source):
+    """Read every member without extracting or executing archive-controlled content."""
+    actual, seen, top, info, index_sha = {}, set(), None, None, None
+    with tarfile.open(source, "r:gz") as archive:
+        for member in archive:
+            path = archive_name(member.name)
+            if ":" in member.name or not path.parts or (not member.isdir() and not member.isfile()):
+                raise ValueError("unsafe dependency delivery archive member: " + member.name)
+            top = top or path.parts[0]
+            if path.parts[0] != top or path.as_posix() in seen:
+                raise ValueError("ambiguous dependency delivery archive root/member")
+            seen.add(path.as_posix())
+            if member.isdir():
+                continue
+            if len(path.parts) < 2:
+                raise ValueError("dependency delivery requires one source root")
+            name = PurePosixPath(*path.parts[1:]).as_posix()
+            with archive.extractfile(member) as stream:
+                if name == INDEX:
+                    if member.size > 8 * 1024 * 1024:
+                        raise ValueError("dependency source index is unexpectedly large")
+                    raw = stream.read()
+                    info, index_sha = json.loads(raw), hashlib.sha256(raw).hexdigest()
+                else:
+                    actual[name] = hashlib.file_digest(stream, "sha256").hexdigest()
+    if info is None:
+        raise ValueError("dependency delivery archive has no index")
+    check_index(root, info, actual)
+    return info, index_sha
+
+
+def verify_notices(root, notices, source):
+    delivery = read_json(notices / DELIVERY)
+    if (delivery.get("schema") != "qualpf.dependency_delivery.v1" or delivery.get("mode") != "separate" or
+            delivery.get("collection_release_clearance") is not False):
+        raise ValueError("unsupported separate dependency delivery")
+    if source is None or not source.is_file():
+        raise ValueError("separate dependency source archive is required")
+    expected = delivery["archive"]
+    if (source.name != expected["file"] or source.stat().st_size != expected["bytes"] or
+            digest(source) != expected["sha256"]):
+        raise ValueError("separate dependency source archive identity differs")
+    info, index_sha = verify_archive(root, source)
+    if index_sha != delivery["index_sha256"] or digest(notices / SOURCE_INDEX) != index_sha:
+        raise ValueError("separate dependency source index differs")
+    retained = {name: sha for name, sha in info["files"].items() if not name.startswith("SOURCES/")}
+    names = {path.relative_to(notices).as_posix() for path in notices.rglob("*") if path.is_file()}
+    if names != set(retained) | {DELIVERY, SOURCE_INDEX} or (notices / "SOURCES").exists():
+        raise ValueError("installed dependency notice file list differs")
+    for name, sha in retained.items():
+        if digest(relative(notices, name)) != sha:
+            raise ValueError("installed dependency notice changed: " + name)
+    return info, delivery
+
+
+def prepare_notices(root, bundle, source, output):
+    """Retain all original notices/configuration; sources travel as a separate TGZ."""
+    info = verify(root, bundle)
+    archived, index_sha = verify_archive(root, source)
+    if archived != info or index_sha != digest(bundle / INDEX):
+        raise ValueError("separate archive differs from the selected dependency bundle")
+    if not output.is_relative_to((root / "build").resolve()) or output == (root / "build").resolve():
+        raise ValueError("generated dependency notices must stay inside this project's build directory")
+    if output.exists():
+        verify_notices(root, output, source)  # Idempotent; never overwrite modified/user files.
+        return
+    output.mkdir(parents=True)
+    for name in info["files"]:
+        if not name.startswith("SOURCES/"):
+            target = relative(output, name)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(relative(bundle, name), target)
+    shutil.copyfile(bundle / INDEX, output / SOURCE_INDEX)
+    write_json(output / DELIVERY, dict(schema="qualpf.dependency_delivery.v1", mode="separate",
+        archive=dict(file=source.name, bytes=source.stat().st_size, sha256=digest(source)),
+        index_sha256=index_sha, collection_release_clearance=False))
 
 
 def compare_source_sbom(source, sbom):
@@ -294,6 +381,82 @@ def compare_source_sbom(source, sbom):
 
 def self_test():
     class Controls(unittest.TestCase):
+        def test_separate_delivery_requires_exact_sources_and_original_notices(self):
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                bundle, output = root / "build/bundle", root / "build/installed-notices"
+                files = {"SOURCES/component.tar.gz": b"original preferred source",
+                         "NOTICES/component/LICENSE": b"original copyright and permission"}
+                for name, raw in files.items():
+                    target = relative(bundle, name)
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_bytes(raw)
+                source = dict(id="component", file="component.tar.gz", sha256=digest(bundle / "SOURCES/component.tar.gz"))
+                write_json(root / CATALOGUE, dict(sources=[source]))
+                info = dict(schema="qualpf.dependency_bundle.v1", release_clearance=False,
+                            source_catalogue_sha256=digest(root / CATALOGUE), sources=[source],
+                            files={name: digest(bundle / name) for name in files})
+                write_json(bundle / INDEX, info)
+                archive = root / "dependencies.tar.gz"
+                with tarfile.open(archive, "w:gz") as package:
+                    for name in [*files, INDEX]:
+                        package.add(bundle / name, arcname="sources/" + name, recursive=False)
+                original = archive.read_bytes()
+                prepare_notices(root, bundle, archive, output)
+                prepare_notices(root, bundle, archive, output)  # Safe repeat configuration.
+                self.assertFalse((output / "SOURCES").exists())
+                verified, delivery = verify_notices(root, output, archive)
+                self.assertEqual(verified, info)
+                self.assertFalse(delivery["collection_release_clearance"])
+                with self.assertRaisesRegex(ValueError, "required"):
+                    verify_notices(root, output, None)
+                archive.write_bytes(b"different archive")
+                with self.assertRaisesRegex(ValueError, "identity"):
+                    verify_notices(root, output, archive)
+                archive.write_bytes(original)
+                notice = output / "NOTICES/component/LICENSE"
+                notice.write_bytes(b"altered permission")
+                with self.assertRaisesRegex(ValueError, "notice changed"):
+                    verify_notices(root, output, archive)
+                notice.unlink()
+                with self.assertRaisesRegex(ValueError, "file list"):
+                    verify_notices(root, output, archive)
+
+        def test_separate_archive_rejects_forged_index_members_and_links(self):
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                raw = b"independent original source"
+                expected = hashlib.sha256(raw).hexdigest()
+                write_json(root / CATALOGUE, dict(sources=[dict(file="component.tar.gz", sha256=expected)]))
+                info = dict(schema="qualpf.dependency_bundle.v1", release_clearance=False,
+                            source_catalogue_sha256=digest(root / CATALOGUE),
+                            files={"SOURCES/component.tar.gz": expected})
+                archive = root / "source.tar.gz"
+                def package(body, index, extra=None):
+                    with tarfile.open(archive, "w:gz") as out:
+                        for name, content in (("sources/SOURCES/component.tar.gz", body),
+                                               ("sources/" + INDEX, json.dumps(index).encode())):
+                            entry = tarfile.TarInfo(name)
+                            entry.size = len(content)
+                            out.addfile(entry, io.BytesIO(content))
+                        if extra:
+                            out.addfile(extra, io.BytesIO(b""))
+                package(raw, info)
+                self.assertEqual(verify_archive(root, archive)[0], info)
+                forged = json.loads(json.dumps(info))
+                forged["files"]["SOURCES/component.tar.gz"] = hashlib.sha256(b"forged source").hexdigest()
+                package(b"forged source", forged)
+                with self.assertRaisesRegex(ValueError, "source catalogue"):
+                    verify_archive(root, archive)
+                for name, kind in (("../outside", tarfile.REGTYPE), ("sources/link", tarfile.SYMTYPE),
+                                    ("sources/SOURCES/component.tar.gz", tarfile.REGTYPE)):
+                    extra = tarfile.TarInfo(name)
+                    extra.type, extra.linkname = kind, "../../outside"
+                    package(raw, info, extra)
+                    with self.assertRaises(ValueError):
+                        verify_archive(root, archive)
+                self.assertFalse((root.parent / "outside").exists())
+
         def test_archive_escape(self):
             for name in ("../secret", "/secret", "C:/secret", "root/../../secret", "root\\secret"):
                 with self.assertRaises(ValueError):
@@ -397,6 +560,8 @@ def main():
     parser.add_argument("--boost-include", type=Path, help="SDK include directory containing boost/version.hpp")
     parser.add_argument("--inventory", action="append", type=Path, default=[])
     parser.add_argument("--verify-bundle", type=Path)
+    parser.add_argument("--prepare-notices", type=Path, help="Generate installed notices for a separately supplied source archive")
+    parser.add_argument("--verify-notices", type=Path)
     parser.add_argument("--source-sbom", type=Path, help="Compare a vendor Qt source SBOM without erasing any differences")
     parser.add_argument("--source-archive", type=Path)
     parser.add_argument("--report", type=Path)
@@ -413,6 +578,14 @@ def main():
               "line-ending-only matches,", len(result["mismatches"]), "mismatches,", len(result["missing"]), "missing")
         if result["non_bookkeeping_differences"]:
             return 1
+    elif args.prepare_notices:
+        if not args.verify_bundle or not args.source_archive:
+            raise ValueError("separate notices require --verify-bundle and --source-archive")
+        prepare_notices(args.root.resolve(), args.verify_bundle.resolve(), args.source_archive.resolve(), args.prepare_notices.resolve())
+        print("PASS: separate dependency sources and installed notices match")
+    elif args.verify_notices:
+        verify_notices(args.root.resolve(), args.verify_notices.resolve(), args.source_archive)
+        print("PASS: separate dependency source/notice integrity")
     elif args.verify_bundle:
         info = verify(args.root, args.verify_bundle.resolve())
         print("PASS: dependency bundle integrity;", len(info["sources"]), "sources; release clearance remains false")

@@ -83,6 +83,7 @@ actual QtIFW installation and build before packaging:
 cmake --preset local-windows-gnu -DCPACK_IFW_ROOT=/path/to/QtIFW \
   -DQUALPF_DISTRIBUTION_AUDIT_ONLY=OFF \
   -DQUALPF_DEPENDENCY_BUNDLE_DIR=/path/to/verified-bundle \
+  -DQUALPF_DEPENDENCY_SOURCE_ARCHIVE=/path/to/qualpf-1.0.0-Windows-Dependencies.tar.gz \
   -DQUALPF_DISTRIBUTION_RUNTIME_REVIEW=/path/to/runtime-review.json \
   -DQUALPF_CORRESPONDING_SOURCE_ARCHIVE=/path/to/qualpf-1.0.0-Source.tar.gz
 cmake --build --preset windows-gnu --parallel 4
@@ -196,8 +197,9 @@ configure audit mode OFF and supply:
 - `QUALPF_DISTRIBUTION_RUNTIME_REVIEW`: JSON bound to `source_revision`. Its
   `files` object maps runtime paths to exact `sha256`, `component`, `copyright`,
   installed `notices` and hash-identified local `source_artifacts` (`path` and
-  `sha256`), or a specific reviewed `source_exception`. Shared linking alone is
-  not a source exception.
+  `sha256`), or a specific reviewed `source_exception`. Separate delivery uses
+  `bundle_path` and `sha256` for entries inside the independently verified
+  dependency archive. Shared linking alone is not a source exception.
 - That review's `components` object identifies actual Qt/Eigen/Boost versions,
   copyrights and installed notices. IFW/AppImage also require `package-runtimes`
   review covering the final container/runtime. Qt/Eigen reviews also bind
@@ -230,6 +232,35 @@ a QualX release does not clear an unknown QualPF runtime. Keep the selected MinG
 formal configuration and current package-specific checks.
 
 ## Current native package acceptance
+
+### Slim Windows dependency source delivery
+
+Set `QUALPF_DEPENDENCY_SOURCE_ARCHIVE` to the exact dependency TGZ accompanying
+the installer, together with `QUALPF_DEPENDENCY_BUNDLE_DIR`. This opt-in Windows
+layout installs all original notices, attribution files, SDK metadata and supplier
+instructions, plus the exact source index and `dependency-delivery.json` under
+`share/qualpf/DEPENDENCIES`. The large `SOURCES` archive directory stays in the
+independent dependency TGZ. Bundled delivery remains the default for other builds;
+existing Linux and earlier Windows candidate bytes retain their original scopes.
+
+Configuration and CPack staging read every separate archive member without
+extracting or executing it, compare its index and all nineteen source pins with
+the committed catalogue, and verify the installed notices. Runtime/header/IFW
+reviews resolve `bundle_path` against that verified index; missing or altered
+sources, notices, runtime bytes or the delivery descriptor still fail. Supply
+`--dependency-archive /path/to/exact-dependency.tar.gz` when manually checking a
+separate-source stage or installation. The archive's filename, size, SHA-256 and
+index hash are retained in the installed delivery record and artifact sidecar.
+
+Keep the independent dependency TGZ and matching application-source TGZ beside
+the binary, with the candidate manifest and SHA256SUMS. Before publication,
+provide equivalent free source access from the binary download location and
+clear retrieval instructions. The offline source-code link in Origin and changes
+opens [SOURCE_CODE.md](../../SOURCE_CODE.md). Separate delivery changes no
+third-party terms or unverified vendor/scientific-data findings, and the collection
+still records `release_clearance:false`.
+
+### Earlier bundled-source Windows candidate
 
 The local Windows MinGW **non-audit** candidate prepared on 24 October uses clean
 revision `6b343c324b30563b3c59136c625e1485ae379567`. Its installer, matching

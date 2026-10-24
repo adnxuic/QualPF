@@ -302,6 +302,11 @@ qualifications and the publisher's distribution decision are disclosed in
 **uncercalculate@163.com**; confirmed infringing material will be removed from
 official distribution after review.
 
+The slim Windows installer retains runtime libraries and legal notices; complete
+dependency sources are provided as a separate archive alongside the installer.
+See [Obtaining QualPF source code](SOURCE_CODE.md) for exact filenames, checksums
+and build instructions.
+
 ## Authors and acknowledgments
 
 QualPF is independently maintained and published by **adnxuic**. It derives from

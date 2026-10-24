@@ -3,6 +3,7 @@
     <file alias="LICENSE">@PROJECT_SOURCE_DIR@/LICENSE</file>
     <file alias="NOTICE.md">@PROJECT_SOURCE_DIR@/NOTICE.md</file>
     <file alias="THIRD_PARTY_NOTICES.md">@PROJECT_SOURCE_DIR@/THIRD_PARTY_NOTICES.md</file>
+    <file alias="SOURCE_CODE.md">@PROJECT_SOURCE_DIR@/SOURCE_CODE.md</file>
     <file alias="deploy/distribution.json">@PROJECT_SOURCE_DIR@/deploy/distribution.json</file>
     <file alias="LICENSES/LGPL-3.0-only.txt">@PROJECT_SOURCE_DIR@/LICENSES/LGPL-3.0-only.txt</file>
     <file alias="LICENSES/MPL-2.0.txt">@PROJECT_SOURCE_DIR@/LICENSES/MPL-2.0.txt</file>

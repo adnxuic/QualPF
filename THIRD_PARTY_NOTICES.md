@@ -85,11 +85,14 @@ Copyright/licensing concerns may be reported to **uncercalculate@163.com**;
 confirmed infringing material will be removed from official distribution after
 review, as described in NOTICE.md.
 
-When supplied, the installed `share/qualpf/DEPENDENCIES` directory carries
-hash-identified upstream source archives, actual Eigen/Boost SDK header sources,
-full legal/attribution files and original SDK build metadata for offline use.
-Its integrity record explicitly does not declare release clearance; the package
-runtime review must bind those materials to the exact delivered binaries.
+Bundled packages carry source archives, actual SDK header sources, notices and
+build metadata under `share/qualpf/DEPENDENCIES`. The slim Windows installer
+retains the full original legal/attribution and SDK metadata there, with an exact
+dependency source index and `dependency-delivery.json`; the complete source
+archives travel in the separate dependency TGZ beside the installer. See
+[Obtaining QualPF source code](SOURCE_CODE.md) for retrieval instructions.
+Both layouts retain the collection's `release_clearance:false`; the package
+review binds the exact delivered runtime bytes to those source materials.
 
 The standard texts in LICENSES are unmodified legal documents. Their origins
 and hashes are recorded in the distribution inventory. Generic license texts do

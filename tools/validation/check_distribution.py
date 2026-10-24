@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = "deploy/distribution.json"
 STAMP = "distribution-source.json"
 INVENTORY = "distribution-inventory.json"
-LICENSE_FILES = ("LICENSE", "NOTICE.md", "THIRD_PARTY_NOTICES.md")
+LICENSE_FILES = ("LICENSE", "NOTICE.md", "THIRD_PARTY_NOTICES.md", "SOURCE_CODE.md")
 FIELDS = {"id", "paths", "source", "version", "copyright", "license",
           "modifications", "license_files", "status", "obligations"}
 UPSTREAM_SCIENTIFIC_MATERIALS = {"atom-properties", "ffast-srd66", "electron-scattering",
@@ -191,7 +191,17 @@ def ifw_tool_errors(data, tools):
     return errors
 
 
-def ifw_review_errors(root, prefix, data, entry):
+def source_artifact_verified(prefix, item, external=None):
+    if "bundle_path" in item:
+        if "path" in item:
+            return False
+        relative(prefix, item["bundle_path"])  # Same safe relative-path boundary.
+        return external is not None and external.get(item["bundle_path"]) == item["sha256"]
+    path = relative(prefix, item["path"])
+    return path.is_file() and digest(path) == item["sha256"]
+
+
+def ifw_review_errors(root, prefix, data, entry, external=None):
     policy = data.get("ifw_vendor_policy")
     if not policy:
         return ["formal IFW requires a recorded vendor disposition"]
@@ -204,8 +214,7 @@ def ifw_review_errors(root, prefix, data, entry):
     sources = entry.get("source_artifacts", [])
     catalogue = read_json(root / "deploy/dependency-sources.json")["sources"]
     required = {row["sha256"] for row in catalogue if row["id"] in IFW_SOURCE_IDS}
-    present = {row["sha256"] for row in sources if relative(prefix, row["path"]).is_file()
-               and digest(relative(prefix, row["path"])) == row["sha256"]}
+    present = {row["sha256"] for row in sources if source_artifact_verified(prefix, row, external)}
     if len(required) != len(IFW_SOURCE_IDS) or not required.issubset(present):
         errors.append("missing/changed collected IFW dependency sources")
     if not {"NOTICE.md", "THIRD_PARTY_NOTICES.md", "QtIFW-GPL3-Exception.txt"}.issubset(
@@ -495,7 +504,7 @@ def runtime_component(name):
     return "package-runtimes"
 
 
-def stage_inventory(root, stage, data, review=None, kind=None):
+def stage_inventory(root, stage, data, review=None, kind=None, dependency_archive=None):
     candidates = [path.parent for path in stage.rglob("distribution-build.json")
                   if path.parent.name == "qualpf" and path.parent.parent.name == "share"]
     if len(candidates) != 1:
@@ -516,7 +525,17 @@ def stage_inventory(root, stage, data, review=None, kind=None):
     if pdf.is_file():
         errors.extend("missing/stale installed PDF provenance: " + error
                       for error in manual_errors(root, pdf, materials / "docs/qualpf_manual.provenance.json"))
-    if (materials / "DEPENDENCIES").is_dir():
+    external, delivery = None, None
+    if (materials / "DEPENDENCIES/dependency-delivery.json").is_file():
+        from prepare_dependency_bundle import verify_notices
+        try:
+            source_index, delivery = verify_notices(root, materials / "DEPENDENCIES", dependency_archive)
+            external = source_index["files"]
+        except (OSError, ValueError, KeyError, TypeError, tarfile.TarError) as error:
+            errors.append("missing/stale separate dependency source/notice delivery: " + str(error))
+    elif dependency_archive is not None:
+        errors.append("missing/stale separate dependency delivery descriptor")
+    elif (materials / "DEPENDENCIES").is_dir():
         from prepare_dependency_bundle import verify
         try:
             verify(root, materials / "DEPENDENCIES")
@@ -563,8 +582,7 @@ def stage_inventory(root, stage, data, review=None, kind=None):
                 source_terms = accepted.get("source_artifacts", [])
                 if accepted.get("copyright") and notices and all(relative(prefix, notice).is_file() for notice in notices):
                     source_terms_verified = bool(source_terms) and all(
-                        relative(prefix, item["path"]).is_file() and digest(relative(prefix, item["path"])) == item["sha256"]
-                        for item in source_terms)
+                        source_artifact_verified(prefix, item, external) for item in source_terms)
                     if source_terms_verified:
                         value["review_status"] = "reviewed"
                     elif accepted.get("source_exception"):
@@ -595,11 +613,10 @@ def stage_inventory(root, stage, data, review=None, kind=None):
                 errors.append("package-specific SDK version differs from the build: " + component["id"])
             elif component["id"] in {"qt", "eigen"}:
                 sources = entry.get("source_artifacts", [])
-                if not sources or not all(relative(prefix, item["path"]).is_file() and
-                        digest(relative(prefix, item["path"])) == item["sha256"] for item in sources):
+                if not sources or not all(source_artifact_verified(prefix, item, external) for item in sources):
                     errors.append("missing/changed package-specific corresponding source: " + component["id"])
     if kind == "IFW" and data.get("ifw_vendor_policy"):
-        errors.extend(ifw_review_errors(root, prefix, data, review.get("components", {}).get("package-runtimes", {})))
+        errors.extend(ifw_review_errors(root, prefix, data, review.get("components", {}).get("package-runtimes", {}), external))
     report = dict(schema="qualpf.distribution_inventory.v1", build=info, files=files,
                   component_reviews=review.get("components", {}),
                   review_blockers=errors,
@@ -608,6 +625,8 @@ def stage_inventory(root, stage, data, review=None, kind=None):
         report["scientific_data_policy"] = data["scientific_data_policy"]
     if kind == "IFW" and data.get("ifw_vendor_policy"):
         report["ifw_vendor_policy"] = data["ifw_vendor_policy"]
+    if delivery is not None:
+        report["dependency_delivery"] = delivery
     return report, materials
 
 
@@ -730,6 +749,54 @@ def self_test():
             info["compiler"] = "GNU 13.1 (Windows/AMD64)"
             self.assertEqual(release_errors(data, info, "IFW"), [])
             self.assertEqual(runtime_component("bin/libwinpthread-1.dll"), "mingw-winpthreads")
+
+        def test_separate_sources_preserve_runtime_and_notice_checks(self):
+            from prepare_dependency_bundle import prepare_notices
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                stage, bundle = root / "build/stage", root / "build/bundle"
+                materials = stage / "share/qualpf"
+                for name in (*LICENSE_FILES, MANIFEST):
+                    for base in (root, materials):
+                        target = base / name
+                        target.parent.mkdir(parents=True, exist_ok=True)
+                        target.write_bytes(b"original application notice")
+                source = bundle / "SOURCES/qt-source.tar.gz"
+                source.parent.mkdir(parents=True)
+                source.write_bytes(b"independent corresponding source")
+                notice = bundle / "NOTICES/qt/LICENSE"
+                notice.parent.mkdir(parents=True)
+                notice.write_bytes(b"original Qt copyright and license")
+                write_json(root / "deploy/dependency-sources.json", dict(sources=[dict(file=source.name, sha256=digest(source))]))
+                write_json(bundle / "dependency-bundle.json", dict(schema="qualpf.dependency_bundle.v1",
+                    release_clearance=False, source_catalogue_sha256=digest(root / "deploy/dependency-sources.json"),
+                    files={"SOURCES/" + source.name: digest(source), "NOTICES/qt/LICENSE": digest(notice)}))
+                archive = root / "dependencies.tar.gz"
+                with tarfile.open(archive, "w:gz") as out:
+                    for name in ("SOURCES/" + source.name, "NOTICES/qt/LICENSE", "dependency-bundle.json"):
+                        out.add(bundle / name, arcname="dependencies/" + name, recursive=False)
+                prepare_notices(root, bundle, archive, materials / "DEPENDENCIES")
+                runtime = stage / "bin/Qt6Core.dll"
+                runtime.parent.mkdir()
+                runtime.write_bytes(b"independently reviewed Qt runtime")
+                write_json(materials / "distribution-build.json", dict(source_revision="a" * 40, qt="6.8.3"))
+                entry = dict(version="6.8.3", copyright="Qt fixture authors",
+                    notices=["share/qualpf/DEPENDENCIES/NOTICES/qt/LICENSE"],
+                    source_artifacts=[dict(bundle_path="SOURCES/" + source.name, sha256=digest(source))])
+                review = dict(source_revision="a" * 40, components=dict(qt=entry),
+                    files={"bin/Qt6Core.dll": dict(entry, component="qt", sha256=digest(runtime))})
+                data = dict(components=[dict(id="qt", status="package-review")])
+                report, _ = stage_inventory(root, stage, data, review, dependency_archive=archive)
+                self.assertEqual(report["review_blockers"], [])
+                self.assertEqual(report["dependency_delivery"]["archive"]["sha256"], digest(archive))
+                report, _ = stage_inventory(root, stage, data, review)
+                self.assertTrue(any("separate dependency" in e for e in report["review_blockers"]))
+                runtime.write_bytes(b"unreviewed replacement runtime")
+                report, _ = stage_inventory(root, stage, data, review, dependency_archive=archive)
+                self.assertTrue(any("unreviewed shipped runtime" in e for e in report["review_blockers"]))
+                (materials / "DEPENDENCIES/NOTICES/qt/LICENSE").unlink()
+                report, _ = stage_inventory(root, stage, data, review, dependency_archive=archive)
+                self.assertTrue(any("missing/stale" in e for e in report["review_blockers"]))
 
         def test_official_ifw_disposition_preserves_limits_and_tool_identity(self):
             data = read_json(ROOT / MANIFEST)
@@ -1109,6 +1176,7 @@ def main():
     parser.add_argument("--audit-only", action="store_true")
     parser.add_argument("--review", type=Path)
     parser.add_argument("--source-artifact", type=Path)
+    parser.add_argument("--dependency-archive", type=Path, help="Exact separate dependency TGZ supplied alongside the binary")
     parser.add_argument("--source-tree", action="store_true")
     parser.add_argument("--ifw-metadata", type=Path)
     parser.add_argument("--prepare-source", type=Path)
@@ -1154,13 +1222,16 @@ def main():
         errors.extend(check_source_tree(root, data))
     if args.ifw_metadata:
         errors.extend(ifw_metadata_errors(root, args.ifw_metadata, info, data))
+    if args.dependency_archive and not args.stage:
+        from prepare_dependency_bundle import verify_archive
+        verify_archive(root, args.dependency_archive)
     if args.check_manual:
         if not args.manual_file or not args.manual_proof:
             raise ValueError("manual check requires --manual-file and --manual-proof")
         errors.extend(manual_errors(root, args.manual_file, args.manual_proof))
     if args.stage:
         report, materials = stage_inventory(root, args.stage.resolve(), data,
-                                            read_json(args.review) if args.review else None, args.kind)
+                                            read_json(args.review) if args.review else None, args.kind, args.dependency_archive)
         if args.build and any(report["build"].get(key) != value for key, value in info.items() if key != "source_dirty"):
             errors.append("staged build metadata differs from the selected build")
         info = report["build"]

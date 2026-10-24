@@ -53,3 +53,12 @@ precedence when the first normal startup imports older application preferences;
 the older settings store is kept. This import is not repeated after it succeeds.
 Preferences and dock layouts are local to your installation, while project
 analysis settings are stored in QPF files.
+
+## Licenses and source code
+
+Open **Help → About → License and notices** for the GPL, origin and third-party
+notices. The **Origin and changes** page links to the offline source-retrieval
+instructions. A slim Windows distribution supplies the application and dependency
+source archives separately beside the installer, with their SHA256SUMS. Keep the
+matching archives if you want to inspect or rebuild that version; see
+[Obtaining QualPF source code](../../SOURCE_CODE.md).

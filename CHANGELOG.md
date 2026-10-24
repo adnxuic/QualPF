@@ -12,6 +12,11 @@ reports are no longer used for routine development.
 
 ### Added
 
+- Added a slim Windows installer layout with separately verified dependency
+  source archives. Original notices and SDK metadata remain installed; runtime
+  reviews bind external source members by hash. Offline source-retrieval
+  instructions identify the companion archives, build revision and checksums.
+
 - Prepared a local Windows MinGW 1.0.0 candidate and matching clean-revision
   application/dependency sources. Verified 127 normal regressions, a complete
   no-Git product build, actual installer payloads, GUI installation and installed

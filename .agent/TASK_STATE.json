@@ -1,5 +1,70 @@
 {
   "schema": "qualpf.agent_task_state.v1",
   "baseline_ref": "docs/developer/project-baseline.json",
-  "active_task": null
+  "active_task": {
+    "id": "windows-slim-installer-source-delivery",
+    "goal": "Repackage QualPF 1.0.0 Windows MinGW as a slim installer plus independent exact source archives, retaining notices and qualified vendor findings; repeat local installation/legal/uninstall acceptance without upload.",
+    "in_scope": [
+      "cmake/packaging/",
+      "cmake/templates/",
+      "tools/validation/",
+      "tests/integration/gui/aboutdialog_test.cpp",
+      "NOTICE.md",
+      "THIRD_PARTY_NOTICES.md",
+      "SOURCE_CODE.md",
+      "README.md",
+      "docs/",
+      "deploy/rights-review.json",
+      "CHANGELOG.md",
+      ".agent/TASK_STATE.json",
+      "releases/"
+    ],
+    "out_of_scope": [
+      "Scientific values, numerics, PFSM, precision and public Core/Application APIs",
+      "MSVC formal distribution and Linux candidate bytes",
+      "Uploading, publishing, contacting third parties or changing user data"
+    ],
+    "status": "in_progress",
+    "base_commit": "8d8f788925eb7f4865e009f4b57007a18927d645",
+    "checkpoint_commit": "8d8f788925eb7f4865e009f4b57007a18927d645",
+    "completed": [
+      "Verified the previous accepted candidate and its retained source collection; identified that bundled sources dominate installer size.",
+      "Implemented exact separate dependency archive verification and notice-only installation; retained the original source collection and qualified vendor/scientific findings.",
+      "Added offline source retrieval instructions and verified About at 100%, 150% and 200% scaling."
+    ],
+    "next_action": "Commit the verified implementation, freeze the clean application revision, build/package the slim MinGW candidate and its sources, then repeat installation/legal/uninstall acceptance.",
+    "blockers": [],
+    "checks": [
+      {
+        "command": "prepare_dependency_bundle.py --self-test",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/windows-slim-dependency-self-test-01.log"
+      },
+      {
+        "command": "check_distribution.py --self-test",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/windows-slim-distribution-self-test-01.log"
+      },
+      {
+        "command": "cmake configure local-windows-gnu with separate dependency archive",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/windows-slim-configure-01.log"
+      },
+      {
+        "command": "ctest qualpf.gui.about.scale100/150/200",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/windows-slim-20261024/about-precommit-01.xml"
+      },
+      {
+        "command": "check_documentation.py; check_product_identity.py; check_references.py",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": null
+      }
+    ]
+  }
 }
