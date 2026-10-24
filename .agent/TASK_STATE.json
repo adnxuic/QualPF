@@ -24,7 +24,7 @@
     ],
     "status": "in_progress",
     "base_commit": "e746cb95fbccc4ce6d20eda4d3ac69ad6263a921",
-    "checkpoint_commit": "b636a48eb2aab29db5ab04157cd4679b020d7db7",
+    "checkpoint_commit": "92ab1fed55a84c65a9c24a12f35fe4a530ea8008",
     "completed": [
       "Retained all earlier audit artifacts, original failed comparisons, independent fixtures and their exact scopes in the current rights/releasing guides and local evidence.",
       "Verified original MinGW vendor DLL/build-info bytes and the eight pinned QualX build/install/document blobs; vendor-SDK deployment remains the procedure and private original logs/attestation are not mandatory formats.",
@@ -39,7 +39,8 @@
       "Recovered Ubuntu using native in-place VHD compaction at its original D:/Ubuntu_WSL path; physical VHD allocation fell by 25736249344 bytes and normal default-user startup passed.",
       "Rechecked all 107 Debian binaries, four build/source fingerprints, 2329 bound source inputs, 479 original private inputs and installed system checksums before and after compaction. Full 127-test reuse is explicit, not a relabeled fresh run.",
       "Rejected the storage-truncated first DEB, retained its expected/actual comparisons and regenerated only the container in RAM. Fresh actual 920-file install/startup/SQLite/settings/offline-text/removal and About 100/150/200 passed.",
-      "Final non-audit DEB/AppImage and application/dependency sources share clean 983b485b, with candidate manifest, SHA256SUMS and preserved validation scope; nothing uploaded."
+      "Final non-audit DEB/AppImage and application/dependency sources share clean 983b485b, with candidate manifest, SHA256SUMS and preserved validation scope; nothing uploaded.",
+      "Resolved all 1635 target SDK source/template origins, including twelve CRT source copies, MinGW rules, GNU libiconv and the vendor three-patch zlib/configure reproduction; preserved earlier mismatches and qualified compiled DLL/IFW coverage."
     ],
     "next_action": "Linux candidates and in-place WSL recovery are complete and remain unpublished. Continue only the two remaining Windows compiled-source/configuration and IFW static-dependency/CRT reviews using the retained public source materials; keep vendor-SDK procedure and original qualifications. No upload.",
     "blockers": [
@@ -280,6 +281,18 @@
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": "releases/1.0.0/linux-candidate-20261024/candidate-manifest.json"
+      },
+      {
+        "command": "Rehash all 1635 actual SDK target files and reproduce all nineteen extra source/template origins",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/windows-source-20261024/mingw-target-source-resolution-07.json"
+      },
+      {
+        "command": "Verify all sixteen pinned source archives and the scoped target-source offline supplement",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/windows-source-20261024/target-source-supplement-07/source-materials.json"
       }
     ]
   }

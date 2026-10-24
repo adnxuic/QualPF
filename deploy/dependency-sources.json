@@ -188,6 +188,24 @@
       "url": "https://codeload.github.com/mingw-w64/mingw-w64/tar.gz/c3e587c067a00a561899d49d3e63a659e38802ec",
       "scope": "Public v11 branch at the vendor build date; SDK 11.0.1 macro blob and 1616 of 1635 target header contents match. Generated/extra headers retained separately.",
       "source_status": "independently compared public reconstruction; complete DLL build/source correspondence remains qualified"
+    },
+    {
+      "id": "mingw-libiconv-1.17",
+      "url": "https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.17.tar.gz",
+      "file": "libiconv-1.17.tar.gz",
+      "bytes": 5413283,
+      "sha256": "8f74213b56238c85a50a5329f77e06198771e70dd9a739779f4c02f65d971313",
+      "scope": "Actual MinGW SDK target-header inputs and generation templates; source supplement only, separate from the IFW zlib 1.3.1 build.",
+      "source_status": "Exact target-source/template reproduction verified; complete compiled DLL/CRT coverage remains qualified"
+    },
+    {
+      "id": "mingw-zlib-1.2.13",
+      "url": "https://zlib.net/fossils/zlib-1.2.13.tar.gz",
+      "file": "zlib-1.2.13.tar.gz",
+      "bytes": 1497445,
+      "sha256": "b3a24de97a8fdbc835b9833169501030b8977031bcb54b3b3ac13740f846ab30",
+      "scope": "Actual MinGW SDK target-header inputs and generation templates; source supplement only, separate from the IFW zlib 1.3.1 build.",
+      "source_status": "Exact target-source/template reproduction verified; complete compiled DLL/CRT coverage remains qualified"
     }
   ]
 }

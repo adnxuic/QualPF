@@ -817,6 +817,22 @@
         "unmapped_generated_or_extra_files": 19,
         "evidence": "build/windows-source-20261024/branch-source-supplement/source-materials.json",
         "qualification": "independently compared public reconstruction; complete DLL build/source correspondence remains qualified"
+      },
+      "complete_target_origin_followup": {
+        "reviewed_on": "2026-10-24",
+        "actual_target_files": 1635,
+        "previous_direct_matches": 1616,
+        "formerly_unmapped_files": 19,
+        "resolved_formerly_unmapped_files": 19,
+        "unexplained_origins": [],
+        "evidence": "build/windows-source-20261024/target-source-supplement-07/source-materials.json",
+        "generated_inputs": [
+          "_mingw.h",
+          "iconv.h",
+          "sdks/_mingw_ddk.h",
+          "zconf.h"
+        ],
+        "qualification": "All target source/template origins resolved, including vendor zlib patches; complete compiled DLL/source configuration coverage remains unverified. Original partial and failed comparisons retained."
       }
     },
     "ifw_container": {
@@ -901,6 +917,13 @@
           "build/windows-source-20261024/ifw-markers-source-01.json",
           "build/windows-source-20261024/ifw-bundled-dependencies-02.json"
         ]
+      },
+      "historical_public_recipe_probe": {
+        "repo": "qtproject/qtsdk",
+        "commit": "01d17cf6af71dab74831825887667611fc90234a",
+        "path": "packaging-tools/bld_ifw_tools.py",
+        "blob": "4077604165d1d9656cc9f1ca9195312c49aa5f1d",
+        "qualification": "Historical public helper defaults to Qt 5.12.7, not the observed Qt 6.6.0. It does not bind the actual IFW 4.8.1 build or establish CRT redistribution terms."
       }
     },
     "upstream_comparison": {

@@ -26,6 +26,9 @@ reports are no longer used for routine development.
   MinGW branch/configuration and IFW static-build/CRT qualifications explicit.
   Compared the public v11 branch at the supplier build date to the actual SDK
   version-header Git blob and 1,635 target files, retaining both comparisons.
+  Resolved all nineteen remaining target-source origins, including original
+  MinGW rules, libiconv inputs and the vendor-patched zlib generation sequence;
+  supplied the extra source archives/notices and retained the initial mismatches.
 
 - Bound actual Linux runtime files to exact Ubuntu/Debian source packages,
   patches, original notices and separate SDK headers. Traced the fixed AppImage

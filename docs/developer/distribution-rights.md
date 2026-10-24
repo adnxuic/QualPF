@@ -142,6 +142,14 @@ own artifact scopes; earlier findings do not silently approve different bytes.
   retained. This narrows the original branch reconstruction; complete compiled
   CRT/DLL source/configuration correspondence still requires review. Earlier
   receipts remain unchanged; these comparisons alone do not clear the three DLLs.
+  A further full-source review resolves all nineteen target-file origins:
+  twelve match CRT `libsrc` files, two reproduce from MinGW configuration
+  templates/rules, three match GNU libiconv 1.17 inputs and two come from zlib
+  1.2.13. All **1,635** actual target files were rehashed. The three zlib patches
+  named by the original SDK and the original configure sed rules reproduce
+  `zconf.h` exactly. The direct-source mismatch and earlier probe failures are
+  retained. Source/template origin coverage does not by itself establish complete
+  compiled DLL/configuration correspondence.
 - QtIFW 4.8.1 `installerbase.exe` contains the build marker **Qt 6.6.0**, and
   its embedded OpenSSL marker is **3.0.14**. Its corresponding sources and
   notices must be reviewed independently of application Qt 6.8.3. Versioned IFW,
@@ -174,7 +182,7 @@ original conflicting installer and failed byte comparisons remain retained.
 
 ## Offline dependency materials
 
-[`deploy/dependency-sources.json`](../../deploy/dependency-sources.json) pins fourteen
+[`deploy/dependency-sources.json`](../../deploy/dependency-sources.json) pins sixteen
 acquired upstream archives, their exact commits where available, SHA-256 and
 official checksum URLs where published. Their availability does not erase the
 vendor-build qualifications above. The preparer uses an existing local cache;
@@ -203,6 +211,14 @@ The additional `build/windows-source-20261024/branch-source-supplement` retains
 the public v11 branch snapshot, original notices, bounded history query, exact
 version-header Git blob and both target-header comparisons. Retain both local
 collections; neither declares complete Windows runtime/CRT clearance.
+
+`build/windows-source-20261024/target-source-supplement-07` adds the exact GNU
+libiconv 1.17 and zlib 1.2.13 sources, original legal texts and all nineteen
+target-origin findings. The latter zlib version belongs to the compiler SDK;
+it is separate from the IFW 1.3.1 source. All source pins and supplement hashes
+were verified. Earlier raw mismatches and failed probes remain, followed by the
+successful original-patch/template reproduction. No SDK/runtime was replaced,
+and no frozen Linux candidate source or artifact was changed.
 
 ```sh
 python -B tools/validation/prepare_dependency_bundle.py \
