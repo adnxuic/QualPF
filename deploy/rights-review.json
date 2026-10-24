@@ -807,6 +807,16 @@
           "build/windows-source-20261024/gcc-header-content-coverage-02.json",
           "build/windows-source-20261024/gcc-generated-header-inputs-02.json"
         ]
+      },
+      "target_source_followup": {
+        "public_branch_at_vendor_date_commit": "c3e587c067a00a561899d49d3e63a659e38802ec",
+        "sdk_version_header_git_blob": "2a05c7e8921399f2eb9f191f998455a7b9d746ab",
+        "source_archive_sha256": "62c20eefd0f884757e03ebbff66c167ecd18103fad2e48eb88f57f6f86af2c9a",
+        "target_files_compared": 1635,
+        "lf_content_matches": 1616,
+        "unmapped_generated_or_extra_files": 19,
+        "evidence": "build/windows-source-20261024/branch-source-supplement/source-materials.json",
+        "qualification": "independently compared public reconstruction; complete DLL build/source correspondence remains qualified"
       }
     },
     "ifw_container": {
@@ -1079,6 +1089,62 @@
       "vendor_binaries_replaced": false,
       "published": false,
       "qualification": "Additional source coverage evidence. Existing historical installers/inventories and their blocker results are not relabeled or overwritten."
+    },
+    "linux_formal_candidates_20261024": {
+      "source_revision": "983b485bc00ee5d6c10fd5eae681ee644bca4ae0",
+      "audit_only": false,
+      "source_dirty": false,
+      "published": false,
+      "artifact_directory": "releases/1.0.0/linux-candidate-20261024",
+      "accepted_appimage": {
+        "file": "qualpf-1.0.0-x86_64.AppImage",
+        "bytes": 834800120,
+        "sha256": "2bc34e39c0948f863764eaca731bbd927a474a34a392e887fcf9dac0f53bd4bc"
+      },
+      "application_source": {
+        "file": "qualpf-1.0.0-Source.tar.gz",
+        "bytes": 11265462,
+        "sha256": "ba8360bb68245b5de1a5c410d2c69a8aa66054bdd8b65327f6744261cad2e072"
+      },
+      "dependency_source": {
+        "file": "qualpf-1.0.0-Linux-Dependencies.tar.gz",
+        "bytes": 794658957,
+        "sha256": "828e6fc569d0bb2809bacb2c6c7ad3c551da6ee2246d796f785ede5900ad5145"
+      },
+      "delivered_dependency_files": 890,
+      "appimage_acceptance": "build/linux-candidate-20261024/appimage-acceptance-01.json",
+      "appimage_files_checked": 1180,
+      "normal_regression": {
+        "passed": 127,
+        "evidence": "build/linux-candidate-20261024/debian-normal-02.xml"
+      },
+      "zero_fortran": {
+        "cpp_units": 435,
+        "binaries": 107,
+        "evidence": "build/linux-candidate-20261024/debian-zero-fortran-01.json"
+      },
+      "debian_lifecycle": {
+        "status": "NOT_VERIFIED",
+        "package_generated": true,
+        "native_package": "/var/tmp/qualpf-linux-candidate-20261024/debian-build/packages/qualpf-1.0.0-debian_amd64.deb",
+        "package_sha256": null,
+        "copied_to_candidate_directory": false,
+        "reason": "dpkg could not acquire its lock on the read-only native filesystem; WSL then failed startup. D:, containing the Ubuntu VHD, had about 7.5 MiB free. Host space and WSL must recover before the original candidate is reverified and accepted.",
+        "evidence": [
+          "build/linux-candidate-20261024/debian-package-01.log",
+          "build/linux-candidate-20261024/debian-acceptance-driver-01.log",
+          "build/linux-candidate-20261024/wsl-readonly-probes-03.json",
+          "build/linux-candidate-20261024/wsl-host-storage-04.json"
+        ]
+      },
+      "scientific_data_policy": {
+        "disposition": "upstream-policy",
+        "separate_data_grants_verified": false
+      },
+      "qualifications": [
+        "Native Xvfb/extract-and-run scope; full desktop integration not exercised.",
+        "The frozen Linux source/bundle remains at 983b485b; later Windows-source catalogue expansions are separate."
+      ]
     }
   }
 }

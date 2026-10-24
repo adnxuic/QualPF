@@ -212,12 +212,72 @@ formal configuration and current package-specific checks.
 
 ## Current native package acceptance
 
+The 24 October 2026 local Linux **non-audit** candidate uses clean revision
+`983b485bc00ee5d6c10fd5eae681ee644bca4ae0`. Files are under
+`releases/1.0.0/linux-candidate-20261024`; receipts and original failures are
+under `build/linux-candidate-20261024`. Later Windows-source/guide commits do
+not relabel those source or binary bytes. No upload or publication occurred.
+
+| Candidate or check | Freshly executed scope |
+| --- | --- |
+| Ubuntu 22.04 AppImage, GCC 11.4 / Qt 6.8.3 | Audit mode OFF, clean source, zero material/runtime blockers. All **1,180** actual extracted files match; pinned runtime, independent icon, SQLite-only SQL plugin and exact application source passed inspection. Actual extract-and-run/Xvfb startup, SQLite create/search, offline texts and legacy settings checks passed with SDK overrides cleared. |
+| Matching application and dependency source | `qualpf-1.0.0-Source.tar.gz` is a tracked-only export of 2,329 delivered inputs, with original executable modes and commit timestamp. Fresh no-Git builds completed 277 AppImage product steps and 629 Debian product/test steps; all four maintained generators passed. The separate `qualpf-1.0.0-Linux-Dependencies.tar.gz` supplies all **890** exact source/patch/notice/SDK inputs from the candidate bundle. |
+| Debian 13 build and regression, GCC 14.2 / Qt 6.8.2 | **127/127** normal tests passed under Xvfb, including About at 100%, 150% and 200%; zero-Fortran checking passed for 435 C++ units and 107 binaries. The first run's five missing-display failures and subsequent unchanged five-test recheck remain preserved. No assertion or timeout changed. |
+| Formal DEB actual lifecycle | CPack generated the non-audit DEB with the real maintainer email. Extraction, controls, source and payload checks reached installation, but dpkg failed when the native WSL filesystem became read-only; subsequent Ubuntu startup failed with `Wsl/Service/E_UNEXPECTED`. **NOT_VERIFIED**: actual installation, installed startup/database/settings and removal of this new DEB. The package/sidecars remain in the native candidate cache until WSL is recovered and lifecycle acceptance/copy-out completes. |
+
+`APPIMAGE_README.md`, `appimage-candidate.json` and `APPIMAGE_SHA256SUMS` identify
+the accepted image and both source archives. AppImage SHA-256 is
+`2bc34e39c0948f863764eaca731bbd927a474a34a392e887fcf9dac0f53bd4bc`;
+application source SHA-256 is
+`ba8360bb68245b5de1a5c410d2c69a8aa66054bdd8b65327f6744261cad2e072`;
+dependency source SHA-256 is
+`828e6fc569d0bb2809bacb2c6c7ad3c551da6ee2246d796f785ede5900ad5145`.
+The bundle is the exact frozen Linux input, not the later expanded Windows
+source catalogue. It retains unused qualified Windows materials and collection
+`release_clearance:false`; package-specific Linux reviews are separate. The five
+scientific scopes still retain `separate_data_grants_verified:false`.
+
+These checks cover native Xvfb and AppImage extract-and-run. Full GNOME and
+desktop integration services were not exercised. The DEB targets **Debian 13**
+with its generated native ABI minimums (Qt 6.8.2, glibc 2.38, libstdc++ 14),
+not Ubuntu 22.04. Linux candidates do not inherit the separate Windows gaps;
+each platform needs its own completed package/runtime review.
+
+The WSL failure was followed up on the host: the Ubuntu VHD is
+`D:/Ubuntu_WSL/ext4.vhdx`, and D: had only about **7.5 MiB** free. C:/E: free
+space and the guest's virtual disk maximum did not measure that host capacity.
+Normal WSL shutdown and explicit root/system read-only startup probes did not
+restore execution; a service restart requires host administrator privileges.
+No VHD repair or reinstall was performed. Free host space first, then verify
+the original candidate/source/dependency hashes before resuming acceptance.
+Do not remove the VHD or treat the earlier audit DEB lifecycle as acceptance
+of this new package.
+
+Before substantial WSL builds/staging, check the Windows volume that contains
+the registered VHD, as well as guest free space. For the `Ubuntu` instance in
+PowerShell, this read-only probe identifies the actual host drive:
+
+```powershell
+$qualpfDistroKey = Get-ChildItem HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss |
+    Where-Object { $_.GetValue('DistributionName') -eq 'Ubuntu' }
+$qualpfVhdItem = Get-Item -LiteralPath (Join-Path $qualpfDistroKey.GetValue('BasePath') 'ext4.vhdx')
+$qualpfVhdItem | Select-Object FullName, Length
+$qualpfVhdItem.PSDrive | Select-Object Name, Used, Free
+```
+
+Budget for source/SDK copies, build objects, staging, compressed artifacts and
+extraction/installation copies together. Recheck after large batches; the guest's
+virtual free space cannot substitute for host capacity. Do not delete unrelated
+host files or compact/repair a user's VHD as routine packaging cleanup.
+
+### 23 October audit evidence
+
 The 23 October 2026 follow-up evidence is under `build/runtime-acceptance`.
 These are local **audit** artifacts, not published release files. Each binary is
 paired with its own exact clean-revision source archive; later guide or helper
-commits do not change the recorded artifact provenance. A formal candidate must
-be regenerated from its intended final committed revision with audit mode OFF
-after the remaining Windows source/container evidence gaps are closed.
+commits do not change the recorded artifact provenance. A formal Windows candidate
+still needs regeneration from its intended committed revision with audit mode
+OFF after its runtime/source/container review is completed.
 
 | Configuration or action | Freshly executed scope |
 | --- | --- |

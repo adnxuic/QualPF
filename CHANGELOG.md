@@ -12,10 +12,17 @@ reports are no longer used for routine development.
 
 ### Added
 
+- Prepared the local non-audit Linux 1.0.0 AppImage and matching application and
+  offline dependency sources at a single clean revision. Verified the actual
+  image payload and installed behavior, all 890 dependency-source inputs and
+  the fresh native Debian build's 127 normal regressions.
+
 - Expanded the Windows vendor-source materials with all 814 actual C++ header
   origins, generated thread-header rules, SDK source/configuration inputs and
   official IFW compression-library archives and full notices. Kept unresolved
   MinGW branch/configuration and IFW static-build/CRT qualifications explicit.
+  Compared the public v11 branch at the supplier build date to the actual SDK
+  version-header Git blob and 1,635 target files, retaining both comparisons.
 
 - Bound actual Linux runtime files to exact Ubuntu/Debian source packages,
   patches, original notices and separate SDK headers. Traced the fixed AppImage

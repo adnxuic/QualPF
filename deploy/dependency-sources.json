@@ -178,6 +178,16 @@
       "url": "https://github.com/tukaani-project/xz/releases/download/v5.6.2/xz-5.6.2.tar.xz",
       "scope": "Observed IFW installerbase liblzma 5.6.2 marker; library is 0BSD, not blanket GPL for the source package",
       "source_status": "official-source-acquired; not a complete IFW static build binding"
+    },
+    {
+      "id": "mingw-w64-v11-20230524",
+      "file": "mingw-w64-v11-c3e587c067a0.tar.gz",
+      "bytes": 13931225,
+      "sha256": "62c20eefd0f884757e03ebbff66c167ecd18103fad2e48eb88f57f6f86af2c9a",
+      "git_commit": "c3e587c067a00a561899d49d3e63a659e38802ec",
+      "url": "https://codeload.github.com/mingw-w64/mingw-w64/tar.gz/c3e587c067a00a561899d49d3e63a659e38802ec",
+      "scope": "Public v11 branch at the vendor build date; SDK 11.0.1 macro blob and 1616 of 1635 target header contents match. Generated/extra headers retained separately.",
+      "source_status": "independently compared public reconstruction; complete DLL build/source correspondence remains qualified"
     }
   ]
 }

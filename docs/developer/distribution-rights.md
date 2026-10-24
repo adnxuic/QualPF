@@ -134,9 +134,14 @@ own artifact scopes; earlier findings do not silently approve different bytes.
   The offline supplement supplies all actual C++/target SDK headers and original
   build metadata as additional source materials. This is not a factory-commit
   attestation or a bit-identical runtime rebuild. The candidate recipe retrieves
-  a mutable MinGW-w64 v11 branch; its exact original checkout and complete DLL
-  source/configuration correspondence still require review. Earlier receipts remain
-  unchanged; these comparisons alone do not clear the three DLLs.
+  a mutable MinGW-w64 v11 branch. Public branch history bounded by the original
+  build date identifies `c3e587c067a00a561899d49d3e63a659e38802ec`; its SDK
+  11.0.1 version-header Git blob matches, and **1,616/1,635** actual target files
+  match after LF normalization, including winpthreads. The older v11.0.0 input
+  matched 1,600. Both comparisons and all 19 remaining generated/extra files are
+  retained. This narrows the original branch reconstruction; complete compiled
+  CRT/DLL source/configuration correspondence still requires review. Earlier
+  receipts remain unchanged; these comparisons alone do not clear the three DLLs.
 - QtIFW 4.8.1 `installerbase.exe` contains the build marker **Qt 6.6.0**, and
   its embedded OpenSSL marker is **3.0.14**. Its corresponding sources and
   notices must be reviewed independently of application Qt 6.8.3. Versioned IFW,
@@ -169,7 +174,7 @@ original conflicting installer and failed byte comparisons remain retained.
 
 ## Offline dependency materials
 
-[`deploy/dependency-sources.json`](../../deploy/dependency-sources.json) pins thirteen
+[`deploy/dependency-sources.json`](../../deploy/dependency-sources.json) pins fourteen
 acquired upstream archives, their exact commits where available, SHA-256 and
 official checksum URLs where published. Their availability does not erase the
 vendor-build qualifications above. The preparer uses an existing local cache;
@@ -194,6 +199,10 @@ Its `SOURCE-MATERIALS.json` binds every delivered file by SHA-256 and keeps
 `release_clearance:false`; its README identifies usable supplier build commands
 and the remaining qualifications. It is separate from the frozen Linux candidate
 bundle and does not overwrite any earlier audit installer or inventory.
+The additional `build/windows-source-20261024/branch-source-supplement` retains
+the public v11 branch snapshot, original notices, bounded history query, exact
+version-header Git blob and both target-header comparisons. Retain both local
+collections; neither declares complete Windows runtime/CRT clearance.
 
 ```sh
 python -B tools/validation/prepare_dependency_bundle.py \
@@ -300,6 +309,19 @@ collected Windows sources with their original qualifications; unused archives do
 not clear the Windows GCC/IFW gaps. Its collection-level `release_clearance` remains
 false. Package-specific inventories and actual container inspections are separate.
 The five scientific-table scopes still record `separate_data_grants_verified:false`.
+
+The 24 October formal Linux candidate freezes these materials at clean source
+`983b485bc00ee5d6c10fd5eae681ee644bca4ae0`, with audit mode OFF. Its matching
+application source and independent 890-file dependency source archive are under
+`releases/1.0.0/linux-candidate-20261024`. All 1,180 actual AppImage files and
+native extract-and-run/database/settings/offline-text checks passed. The native
+Debian build passed 127/127 normal tests, all four generators and zero-Fortran
+checks. Its new DEB was generated, but actual installation/removal acceptance
+was interrupted by a read-only WSL filesystem and subsequent failed Ubuntu
+startup; that lifecycle remains unverified. The accepted AppImage and sources
+are available independently. The later expanded Windows source catalogue does
+not change or retroactively approve the frozen Linux inputs; see the
+[current package acceptance](releasing.md#current-native-package-acceptance).
 
 ## Owner decisions and information still needed
 
