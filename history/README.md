@@ -66,6 +66,39 @@ depend on this checkout. From that directory, use `python history_archive.py
 --catalog relocations.json --archive qualpf-history-41fb006c2951.zip` to verify,
 or add `--restore-to <new-directory>` to restore. Its parent directory must exist.
 
+## Retired local build records
+
+The independent 2026-10-24 recovery index, archive and standalone helper are at:
+
+```text
+D:/QualPF-evidence-backup/20261024/retired-builds-b5b5d42b31cd-e25813/BUILD-RETIREMENT-INDEX.json
+```
+
+Recovery-index SHA-256: `e8a86430d7ed89d24ca0ee824efadfcae201834e05c1aa923adfbc991d719bff`.
+Archive SHA-256: `d25dafc2633257d47fe9ae17f59a1e389498e19cc1fe3acf8b49fd5acf9c8a5c`.
+The index also binds the recovery helper and compressed original-path inventory.
+It preserves 263,866 original paths in 100,716 distinct payloads, including
+scientific inputs, original failures, source snapshots and raw results.
+All distinct members and the independent container were verified; four original
+paths were actually restored, including a failure record and a content alias.
+Bad archive identities and nonempty restoration destinations were rejected.
+
+With Python 3.11+, the helper next to that archive supports explicit verification
+or restoration:
+
+```text
+python restore_retired_builds.py <archive.zip> --sha256 <archive-sha256>
+python restore_retired_builds.py <archive.zip> --sha256 <archive-sha256> --destination <new-empty-view> --path <build/original/path>
+```
+
+Omit `--path` to restore all archived original paths. Restore into a separate view;
+no old program is executed. Source commits for the retired clean checkouts remain
+in the retained local Git refs recorded in the index. Recreate those source views
+separately when needed. Generated programs and compilation caches were deliberately
+discarded rather than backed up; this archive does not promise their original
+binary fingerprints or establish a new numerical/performance acceptance.
+Byte-identical package aliases point to the retained `releases/` files.
+
 ## Verify or restore the snapshot
 
 Normal checkout/source-package checks require only retained files and the index:

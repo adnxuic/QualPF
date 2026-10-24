@@ -9,6 +9,11 @@ This page describes the developer tool. The [numerical contract](pfsm.md) owns
 scientific behavior and limitations. The [original benchmark record](../../../history/README.md#pfsm-benchmark-evidence)
 preserves every recorded run, failed comparison, qualification and acceptance scope.
 
+Retired local `build/` inputs and observations are available through the
+[build-record recovery index](../../../history/README.md#retired-local-build-records).
+Restore a historical input when inspecting an old campaign; ordinary tests use
+their independent checked-in fixtures and do not need that archive.
+
 ## Current candidate-recall entry points
 
 `--search-diagnostics` enables runtime-only read and candidate-work diagnostics.

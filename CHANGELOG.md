@@ -146,6 +146,11 @@ reports are no longer used for routine development.
   current builds, release/source acceptance inputs, frozen references, original
   failures and nested Git worktrees.
 
+- Removed obsolete local build trees and four clean verification checkouts after
+  independently archiving, deduplicating and recovery-checking their original
+  records. Removed byte-identical package copies and regenerable project objects;
+  retained modified worktrees, runnable products and ongoing distribution inputs.
+
 - Enabled PFSM profile template caching by default for new settings and factory
   restoration, preserving saved off choices and existing projects. Added the
   speed, preparation-time and memory tradeoffs to both PFSM settings dialogs;

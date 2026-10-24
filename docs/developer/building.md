@@ -233,8 +233,11 @@ python -B tools/validation/check_product_identity.py --self-test
 Retired task-build object files and static libraries are disposable; complete
 build-tree backups are unnecessary. Keep current configurations, active or paused
 campaign inputs, release copies, frozen references and original failed
-comparisons. Inspect `git worktree list` before cleaning nested directories and
-preserve their checkouts. On Windows, retained historical logs, result tables,
+comparisons. Inspect `git worktree list` before cleaning nested directories.
+Preserve modified worktrees. A retired clean verification checkout can be removed
+with `git worktree remove` after checking ignored inputs and confirming that its
+commit remains reachable through retained refs; do not force removal.
+On Windows, retained historical logs, result tables,
 source snapshots and retired executables/private DLL copies can use lossless NTFS
 compression after checking file hashes before and after. Leave current build
 configurations and running campaigns alone. Keep runtime-source caches and package
@@ -249,6 +252,13 @@ metadata and failures. Delete disposable copies in place when relocation is
 excluded. Do not treat protected Git/LFS objects or unique scientific evidence
 as build cache. The [release guide](releasing.md#current-native-package-acceptance)
 records the scoped WSL recovery, RAM packaging and in-place allocation recovery.
+
+An explicit build-storage cleanup may also remove stopped project builds' object
+files and project static libraries while retaining their configuration, runnable
+executables and DLLs, SDKs and source. Rebuild before subsequent linking,
+installation or configured-binary validation. The
+[retired-build recovery index](../../history/README.md#retired-local-build-records)
+locates the verified original records; compiled caches are intentionally discarded.
 
 ## Installation, packaging and documentation
 
