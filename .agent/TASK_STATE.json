@@ -3,7 +3,7 @@
   "baseline_ref": "docs/developer/project-baseline.json",
   "active_task": {
     "id": "runtime-source-and-package-acceptance",
-    "goal": "Advance MinGW runtime corresponding-source bindings, installer provenance and native Windows/Linux package acceptance without publication.",
+    "goal": "Produce local non-audit Linux 1.0.0 candidate packages and matching source; continue MinGW GCC DLL and IFW supplier-source review without publication.",
     "in_scope": [
       "deploy/",
       "cmake/packaging/",
@@ -13,7 +13,8 @@
       "THIRD_PARTY_NOTICES.md",
       "LICENSES/",
       "CHANGELOG.md",
-      ".agent/TASK_STATE.json"
+      ".agent/TASK_STATE.json",
+      "releases/"
     ],
     "out_of_scope": [
       "Scientific values, algorithms, PFSM and public APIs",
@@ -21,9 +22,9 @@
       "Uploading, publishing or messaging third parties",
       "Changing user data or unrelated installed applications"
     ],
-    "status": "blocked",
+    "status": "in_progress",
     "base_commit": "e746cb95fbccc4ce6d20eda4d3ac69ad6263a921",
-    "checkpoint_commit": "f4a3c34879659be3a471a7aa1ad5acefa7198ddb",
+    "checkpoint_commit": "983b485bc00ee5d6c10fd5eae681ee644bca4ae0",
     "completed": [
       "Confirmed a clean main worktree and read the current runtime/source and distribution contracts.",
       "Matched three GCC DLLs, winpthreads and SDK build-info byte-for-byte to the vendor release; retained the unpinned workflow/source and IFW CRT qualifications.",
@@ -37,11 +38,15 @@
       "Completed native Debian 127/127 normal tests, zero-Fortran checks, actual 920-file DEB install/startup/database/settings/removal and exact matching clean source. Original excluded fixtures remained outside delivery.",
       "Regenerated AppImage configure output with the checkout's actual CRLF Git policy, checked all product code/data against the rebuilt executable and verified 1180 actual image files plus native image startup/database/settings/offline texts.",
       "Added explicit reviewed AppImage runtime selection and pre-inventory DirIcon registration; all five actual runtime-input rejection controls pass. Detached the four task chroot mounts and retained original evidence/caches.",
-      "Verified eight public QualX3 v1.0.8 build/install/document Git blobs and release metadata. Adopted its vendor-SDK deployment procedure while keeping MinGW and actual runtime checks; clarified that private vendor logs, attestation and bit-identical rebuilds are not mandatory evidence formats."
+      "Verified eight public QualX3 v1.0.8 build/install/document Git blobs and release metadata. Adopted its vendor-SDK deployment procedure while keeping MinGW and actual runtime checks; clarified that private vendor logs, attestation and bit-identical rebuilds are not mandatory evidence formats.",
+      "Froze clean revision 983b485bc00ee5d6c10fd5eae681ee644bca4ae0 as the formal 1.0.0 source archive with 2329 recorded inputs, audit_only false, original Git file modes and a fixed commit timestamp.",
+      "Resolved all 814 actual GCC C++ header origins: 809 patched-source content matches, four exact GNU-generated thread headers and retained c++config template/probes/SDK output. No factory-recipe attestation is inferred.",
+      "Collected and pinned actual IFW zlib 1.3.1, bzip2 1.0.8 and liblzma 5.6.2 official sources/full notices; identified bundled libarchive 3.7.4 and LZMA SDK 9.38.beta.",
+      "Verified 463 files in the separate Windows source supplement, including thirteen complete source archives and actual SDK headers/build metadata; old installers and unresolved source/CRT findings remain unchanged."
     ],
-    "next_action": "Continue the vendor-SDK distribution route and establish complete actual GCC DLL/IFW source and redistribution coverage from supplier or independently verified public materials. Private original logs are optional evidence, not a required format; controlled tool builds are a fallback. Preserve MinGW formal delivery, recorded package scopes and no-publication policy.",
+    "next_action": "Finish the non-audit Linux full regression, DEB actual lifecycle and independent dependency-source export; record exact candidate hashes and toolchain. Keep Windows source/configuration and IFW CRT qualifications separate; no upload.",
     "blockers": [
-      "Complete corresponding-source/build coverage for the three actual shipped GCC DLLs remains unreviewed. Vendor binary identity, ten applied patches and direct header comparisons are established; the unknown original recipe commit is a provenance qualification, not a mandatory certification field.",
+      "The vendor GCC binaries and all C++ header origins are bound to retained public/source materials. The complete DLL source/configuration correspondence, including the recipe mutable v11 branch checkout, remains unverified. A private original factory log or commit attestation is not mandatory.",
       "The actual IFW container still needs coverage of embedded Qt/static dependencies, applicable build inputs and CRT redistribution basis. Installed vendor IFW is allowed; lack of private factory logs alone is not the blocker. No automatic source exception or upstream-derived clearance is asserted."
     ],
     "checks": [
@@ -164,6 +169,24 @@
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": "build/runtime-acceptance/qualx-reference-20261023/verified.json"
+      },
+      {
+        "command": "Formal tracked-only source export and deterministic source archive from a clean committed tree",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/linux-candidate-20261024/candidate-inputs.json"
+      },
+      {
+        "command": "Verify thirteen Windows source archives and all 463 offline-supplement files",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/windows-source-20261024/offline-supplement/SOURCE-MATERIALS.json"
+      },
+      {
+        "command": "Resolve all 814 GCC C++ header origins against GNU source/generation inputs",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/windows-source-20261024/gcc-generated-header-inputs-02.json"
       }
     ]
   }

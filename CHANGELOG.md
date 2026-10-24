@@ -12,6 +12,11 @@ reports are no longer used for routine development.
 
 ### Added
 
+- Expanded the Windows vendor-source materials with all 814 actual C++ header
+  origins, generated thread-header rules, SDK source/configuration inputs and
+  official IFW compression-library archives and full notices. Kept unresolved
+  MinGW branch/configuration and IFW static-build/CRT qualifications explicit.
+
 - Bound actual Linux runtime files to exact Ubuntu/Debian source packages,
   patches, original notices and separate SDK headers. Traced the fixed AppImage
   runtime's static dependencies to public build logs and Alpine recipe inputs;

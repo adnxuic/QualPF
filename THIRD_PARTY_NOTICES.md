@@ -41,6 +41,18 @@ GPL-3.0-only to the extent applicable rights exist; source/master files are supp
 The owner has selected MinGW for formal Windows binaries; MSVC and
 VC++ runtime delivery are excluded from that release scope.
 
+The selected vendor IFW 4.8.1 container has additional observed compression
+dependencies: zlib 1.3.1, bzip2 1.0.8 and liblzma 5.6.2. Preserve the original
+[zlib notice](LICENSES/IFW-zlib-1.3.1-LICENSE.txt),
+[bzip2 notice](LICENSES/IFW-bzip2-1.0.8-LICENSE.txt) and
+[XZ component licensing](LICENSES/IFW-xz-5.6.2-COPYING.txt), including the
+[0BSD text](LICENSES/IFW-xz-5.6.2-0BSD.txt) for liblzma. Other XZ source files
+retain their own terms; the whole source archive is not assigned liblzma's
+license. IFW's supplied source identifies libarchive 3.7.4 and LZMA SDK
+9.38.beta; its generic SDK notice's 9.20 reference is retained as historical
+evidence. Source availability and these notices do not by themselves complete
+the actual IFW static build or CRT redistribution review.
+
 The original `CoO.cif` test fixture explicitly reserves PAULING FILE /
 SpringerMaterials rights (Springer/MPDS/NIMS, 2014). It is excluded from source
 delivery, together with all `tests/real_example_data`. The inherited powder

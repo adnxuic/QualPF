@@ -1,6 +1,6 @@
 {
   "schema": "qualpf.distribution_rights_review.v1",
-  "reviewed_on": "2026-10-23",
+  "reviewed_on": "2026-10-24",
   "scope": "Scoped inherited-material dispositions, independent artwork/manual replacements and actual Windows/Linux runtime/source bindings. Original scientific values, grant qualifications and failed comparisons are preserved.",
   "scientific_inputs": [
     {
@@ -741,7 +741,7 @@
     "bibliography_scope": "27 numbered entries from the first three notes consolidated into 23 reference groups, retaining shared sources once. Fast and performance notes have no additional numbered bibliography. Notes are not redistributed; only bibliographic facts and independently written context enter the manual."
   },
   "runtime_provenance_followup": {
-    "reviewed_on": "2026-10-23",
+    "reviewed_on": "2026-10-24",
     "mingw_vendor_archive": {
       "url": "https://github.com/niXman/mingw-builds-binaries/releases/download/13.1.0-rt_v11-rev1/x86_64-13.1.0-release-posix-seh-msvcrt-rt_v11-rev1.7z",
       "sha256": "6b41fdf246756c04d2ac413d8835e347ffc18fdeda265f5310ac6aeb3c1dbbcf",
@@ -793,7 +793,21 @@
           "build/runtime-acceptance/gcc-header-comparison-01.json"
         ]
       },
-      "owner_original_records": "Unavailable; owner confirmed no original source snapshot or build log. Public evidence has not established the resolved vendor recipe commit."
+      "owner_original_records": "Unavailable; owner confirmed no original source snapshot or build log. Public evidence has not established the resolved vendor recipe commit.",
+      "header_source_followup": {
+        "reviewed_on": "2026-10-24",
+        "compared_actual_cpp_headers": 814,
+        "patched_gnu_content_matches_after_lf_normalization": 809,
+        "thread_headers_reproduced_by_original_gnu_rules": 4,
+        "remaining_configuration_header": "Actual c++config.h, its GNU template, configure inputs and source version/date are retained; factory configure probes were not independently rerun.",
+        "unexplained_header_origins": [],
+        "source_scope": "Full GNU GCC archive, ten named patches, complete candidate build scripts, MinGW-w64 v11 source and actual SDK C++/target headers are supplied offline.",
+        "qualification": "The candidate script commit is not represented as the factory commit. The recipe downloads a mutable v11 branch; the exact original branch checkout and complete runtime source/configuration correspondence remain unverified. No bit-identical rebuild claim.",
+        "evidence": [
+          "build/windows-source-20261024/gcc-header-content-coverage-02.json",
+          "build/windows-source-20261024/gcc-generated-header-inputs-02.json"
+        ]
+      }
     },
     "ifw_container": {
       "version": "4.8.1",
@@ -843,7 +857,41 @@
       ],
       "source_binding": "PE imports and embedded markers identify dependencies but do not exclude a static MSVC CRT or attest complete source/build inputs.",
       "required_information": "Coverage of the actual embedded Qt/static dependency sources and applicable build/link inputs, plus CRT identification and redistribution basis. Existing supplier sources/terms and independently verified recipes may establish coverage without private factory logs; assess any source exception on its actual terms rather than inferring it from imports. A controlled build is an alternative.",
-      "owner_original_records": "Unavailable; owner confirmed no static dependency/build/link or CRT-origin records."
+      "owner_original_records": "Unavailable; owner confirmed no static dependency/build/link or CRT-origin records.",
+      "static_dependency_followup": {
+        "reviewed_on": "2026-10-24",
+        "observed_binary_versions": {
+          "zlib": "1.3.1",
+          "bzip2": "1.0.8",
+          "liblzma": "5.6.2",
+          "libpng": "1.6.40"
+        },
+        "bundled_ifw_source_versions": {
+          "libarchive": "3.7.4",
+          "LZMA SDK": "9.38.beta"
+        },
+        "stale_generic_sdk_notice": "3RDPARTY lists LZMA SDK 9.20; source attribution identifies 9.38.beta. Original evidence remains unchanged.",
+        "new_official_source_ids": [
+          "zlib-1.3.1",
+          "bzip2-1.0.8",
+          "xz-5.6.2"
+        ],
+        "bzip2_official_sha512_matches": true,
+        "liblzma_license": "0BSD; other files in the XZ source archive keep their own terms",
+        "full_legal_texts": [
+          "LICENSES/IFW-zlib-1.3.1-LICENSE.txt",
+          "LICENSES/IFW-bzip2-1.0.8-LICENSE.txt",
+          "LICENSES/IFW-xz-5.6.2-COPYING.txt",
+          "LICENSES/IFW-xz-5.6.2-0BSD.txt"
+        ],
+        "static_configuration_and_patch_coverage_verified": false,
+        "crt_redistribution_basis_verified": false,
+        "qualification": "Source defaults and embedded strings identify additional inputs but do not establish actual static build flags, all patches, or absence/redistribution terms of a static CRT.",
+        "evidence": [
+          "build/windows-source-20261024/ifw-markers-source-01.json",
+          "build/windows-source-20261024/ifw-bundled-dependencies-02.json"
+        ]
+      }
     },
     "upstream_comparison": {
       "repository": "https://github.com/ccorrado71/qualx3",
@@ -1020,6 +1068,17 @@
         "missing package-specific header/SDK review: package-runtimes"
       ],
       "qualifications": "Windows installation/purge used supported CLI; GPL/About/legal UI inspected. Linux native startup used Xvfb. Complete GUI wizard, GNOME integration and a fresh MSVC lifecycle are not claimed. Private original fixtures stayed outside delivery. Subsequent helper/documentation commits do not relabel these artifacts."
+    },
+    "windows_source_materials_20261024": {
+      "index": "build/windows-source-20261024/offline-supplement/SOURCE-MATERIALS.json",
+      "index_sha256": "9d4112f7554b4a24986d9cdc8fdef10ea85d6dcb0117a76bdb3ac2201dba8a84",
+      "readme": "build/windows-source-20261024/offline-supplement/README.md",
+      "archive_count": 13,
+      "actual_sdk_header_archive": "SOURCES/actual-mingw1310-sdk-headers.tar.gz",
+      "release_clearance": false,
+      "vendor_binaries_replaced": false,
+      "published": false,
+      "qualification": "Additional source coverage evidence. Existing historical installers/inventories and their blocker results are not relabeled or overwritten."
     }
   }
 }

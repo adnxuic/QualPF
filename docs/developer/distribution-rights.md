@@ -124,10 +124,19 @@ own artifact scopes; earlier findings do not silently approve different bytes.
   the exact resolved source recipe commit remains unverified. These distinct
   results are recorded under `runtime_provenance_followup` in the rights inventory.
   A reconstruction applied all ten named patches successfully to the original
-  GNU 13.1.0 archive. Comparison found 668 installed libstdc++ headers identical
-  after LF normalization, no mismatches in those direct mappings, and 146 headers
-  without a direct source mapping. The unmapped headers are listed separately;
-  neither result attests the vendor's exact build recipe or clears the three DLLs.
+  GNU 13.1.0 archive. The first direct comparison found 668 matching libstdc++
+  headers after LF normalization and retained 146 without a direct mapping.
+  The 24 October follow-up resolves target copies/aliases: **809 of 814** actual
+  headers match patched GNU source. Four generated thread headers reproduce
+  exactly from GNU's Makefile/sed rules. The last `c++config.h` has its template,
+  configure inputs, source version/date and actual generated SDK bytes retained.
+  No unexplained header origin remains; factory configure probes were not rerun.
+  The offline supplement supplies all actual C++/target SDK headers and original
+  build metadata as additional source materials. This is not a factory-commit
+  attestation or a bit-identical runtime rebuild. The candidate recipe retrieves
+  a mutable MinGW-w64 v11 branch; its exact original checkout and complete DLL
+  source/configuration correspondence still require review. Earlier receipts remain
+  unchanged; these comparisons alone do not clear the three DLLs.
 - QtIFW 4.8.1 `installerbase.exe` contains the build marker **Qt 6.6.0**, and
   its embedded OpenSSL marker is **3.0.14**. Its corresponding sources and
   notices must be reviewed independently of application Qt 6.8.3. Versioned IFW,
@@ -160,11 +169,31 @@ original conflicting installer and failed byte comparisons remain retained.
 
 ## Offline dependency materials
 
-[`deploy/dependency-sources.json`](../../deploy/dependency-sources.json) pins ten
+[`deploy/dependency-sources.json`](../../deploy/dependency-sources.json) pins thirteen
 acquired upstream archives, their exact commits where available, SHA-256 and
 official checksum URLs where published. Their availability does not erase the
 vendor-build qualifications above. The preparer uses an existing local cache;
 ordinary configuration/builds never download sources.
+
+The additional IFW archives are official zlib **1.3.1**, bzip2 **1.0.8** and XZ
+**5.6.2**, matching actual installerbase version strings. The bzip2 archive also
+matches Sourceware's published SHA-512 list. IFW's own source contains libarchive
+**3.7.4** and LZMA SDK **9.38.beta**; the SDK generic notice's 9.20 reference is
+stale. The original archives, full notices and both versions of that evidence
+remain retained. liblzma 5.6.2 is 0BSD; other XZ files keep their own terms.
+The observed zlib 1.3.1 differs from stock Qt 6.6.0's bundled 1.2.13, so the
+stock Qt source defaults alone do not establish the actual external-library or
+patch configuration. Static configure/link coverage and CRT redistribution basis
+remain unverified. No missing CRT DLL import is treated as proof that no static
+CRT is present.
+
+The local supplement `build/windows-source-20261024/offline-supplement` supplies
+all thirteen source archives, full legal texts, actual SDK header sources,
+original build metadata and the independently checked reconstruction receipts.
+Its `SOURCE-MATERIALS.json` binds every delivered file by SHA-256 and keeps
+`release_clearance:false`; its README identifies usable supplier build commands
+and the remaining qualifications. It is separate from the frozen Linux candidate
+bundle and does not overwrite any earlier audit installer or inventory.
 
 ```sh
 python -B tools/validation/prepare_dependency_bundle.py \

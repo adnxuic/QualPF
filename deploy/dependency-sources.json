@@ -149,6 +149,35 @@
       "bytes": 13932525,
       "scope": "MinGW-w64 v11.0.0 CRT/winpthreads source; exact SDK snapshot still needs vendor binding.",
       "source_status": "candidate vendor-source reconstruction; not a completed exact binary/source review"
+    },
+    {
+      "id": "zlib-1.3.1",
+      "file": "zlib-1.3.1.tar.gz",
+      "bytes": 1512791,
+      "sha256": "9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23",
+      "url": "https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.gz",
+      "scope": "Observed IFW installerbase zlib 1.3.1 marker; static link configuration remains unverified",
+      "source_status": "official-source-acquired; not a complete IFW static build binding"
+    },
+    {
+      "id": "bzip2-1.0.8",
+      "file": "bzip2-1.0.8.tar.gz",
+      "bytes": 810029,
+      "sha256": "ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269",
+      "sha512": "083f5e675d73f3233c7930ebe20425a533feedeaaa9d8cc86831312a6581cefbe6ed0d08d2fa89be81082f2a5abdabca8b3c080bf97218a1bd59dc118a30b9f3",
+      "url": "https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz",
+      "checksum_url": "https://sourceware.org/pub/bzip2/sha512.sum",
+      "scope": "Observed IFW installerbase bzip2 1.0.8 marker; static link configuration remains unverified",
+      "source_status": "official-source-and-SHA512-verified; not a complete IFW static build binding"
+    },
+    {
+      "id": "xz-5.6.2",
+      "file": "xz-5.6.2.tar.xz",
+      "bytes": 1307448,
+      "sha256": "a9db3bb3d64e248a0fae963f8fb6ba851a26ba1822e504dc0efd18a80c626caf",
+      "url": "https://github.com/tukaani-project/xz/releases/download/v5.6.2/xz-5.6.2.tar.xz",
+      "scope": "Observed IFW installerbase liblzma 5.6.2 marker; library is 0BSD, not blanket GPL for the source package",
+      "source_status": "official-source-acquired; not a complete IFW static build binding"
     }
   ]
 }
