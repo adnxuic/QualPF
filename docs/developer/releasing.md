@@ -222,11 +222,14 @@ not relabel those source or binary bytes. No upload or publication occurred.
 | --- | --- |
 | Ubuntu 22.04 AppImage, GCC 11.4 / Qt 6.8.3 | Audit mode OFF, clean source, zero material/runtime blockers. All **1,180** actual extracted files match; pinned runtime, independent icon, SQLite-only SQL plugin and exact application source passed inspection. Actual extract-and-run/Xvfb startup, SQLite create/search, offline texts and legacy settings checks passed with SDK overrides cleared. |
 | Matching application and dependency source | `qualpf-1.0.0-Source.tar.gz` is a tracked-only export of 2,329 delivered inputs, with original executable modes and commit timestamp. Fresh no-Git builds completed 277 AppImage product steps and 629 Debian product/test steps; all four maintained generators passed. The separate `qualpf-1.0.0-Linux-Dependencies.tar.gz` supplies all **890** exact source/patch/notice/SDK inputs from the candidate bundle. |
-| Debian 13 build and regression, GCC 14.2 / Qt 6.8.2 | **127/127** normal tests passed under Xvfb, including About at 100%, 150% and 200%; zero-Fortran checking passed for 435 C++ units and 107 binaries. The first run's five missing-display failures and subsequent unchanged five-test recheck remain preserved. No assertion or timeout changed. |
-| Formal DEB actual lifecycle | CPack generated the non-audit DEB with the real maintainer email. Extraction, controls, source and payload checks reached installation, but dpkg failed when the native WSL filesystem became read-only; subsequent Ubuntu startup failed with `Wsl/Service/E_UNEXPECTED`. **NOT_VERIFIED**: actual installation, installed startup/database/settings and removal of this new DEB. The package/sidecars remain in the native candidate cache until WSL is recovered and lifecycle acceptance/copy-out completes. |
+| Debian 13 build and regression, GCC 14.2 / Qt 6.8.2 | **127/127** normal tests passed under Xvfb; zero-Fortran checking covered 435 C++ units and 107 binaries. After storage recovery, all 107 binaries, build/compile fingerprints, 2,329 bound source inputs, 479 original private test inputs and installed system package checksums matched. The full-suite result is **REUSED_UNCHANGED_DEPENDENCIES**, not a new full-suite run. Fresh About checks at 100%, 150% and 200% also passed. The initial missing-display failures and five-test recheck remain preserved; no assertion or timeout changed. |
+| Formal DEB actual lifecycle after recovery | **PASS**: all **920** package files and their installed copies matched. Actual `dpkg --install`, system-only-PATH startup, SQLite create/search, offline legal texts, legacy settings import/preservation and removal passed in isolated Debian 13. The executable and desktop entry were removed; isolated settings remain. Maintainer is `adnxuic <uncercalculate@163.com>`. The original truncated package was rejected; the accepted container was regenerated from unchanged verified code using RAM for staging/extraction, then persisted and rehashed in the project output. |
 
-`APPIMAGE_README.md`, `appimage-candidate.json` and `APPIMAGE_SHA256SUMS` identify
-the accepted image and both source archives. AppImage SHA-256 is
+`RELEASE_NOTES.md`, `candidate-manifest.json` and `SHA256SUMS` identify both
+accepted packages, matching application/dependency sources, toolchains and
+verification scope. DEB SHA-256 is
+`f12836a9b1a1fa81f1e237a66c0375f7bf798c494c93dba843e689acef0d5b07`;
+AppImage SHA-256 is
 `2bc34e39c0948f863764eaca731bbd927a474a34a392e887fcf9dac0f53bd4bc`;
 application source SHA-256 is
 `ba8360bb68245b5de1a5c410d2c69a8aa66054bdd8b65327f6744261cad2e072`;
@@ -246,12 +249,40 @@ each platform needs its own completed package/runtime review.
 The WSL failure was followed up on the host: the Ubuntu VHD is
 `D:/Ubuntu_WSL/ext4.vhdx`, and D: had only about **7.5 MiB** free. C:/E: free
 space and the guest's virtual disk maximum did not measure that host capacity.
-Normal WSL shutdown and explicit root/system read-only startup probes did not
-restore execution; a service restart requires host administrator privileges.
-No VHD repair or reinstall was performed. Free host space first, then verify
-the original candidate/source/dependency hashes before resuming acceptance.
-Do not remove the VHD or treat the earlier audit DEB lifecycle as acceptance
-of this new package.
+Normal WSL shutdown and explicit root/system startup probes initially failed.
+The owner authorized deleting disposable caches/old derived outputs and
+explicitly rejected cross-volume relocation. Download caches were deleted in
+place, and WSL returned to a writable state. Inspection found that the first
+DEB had persisted only **390,070,272** of its recorded **801,362,516** bytes;
+the extracted inventory was empty. Original expected/actual hashes, sizes and
+sidecars remain in `build/wsl-storage-recovery-20261024`; damaged generated
+outputs were discarded instead of changing their expected values.
+
+Every retained image/source and every compiled Debian input was reverified.
+Seven derived directories, 272 retired object/archive files and one further
+metadata-variant extraction were deleted after comparison with the actual
+retained AppImages. The two unique original metadata files were preserved.
+All canonical source trees, current Debian binaries/configuration, independent
+references, protected historical backups and required logs remain. No cleanup
+directory was moved to another drive. The new DEB's actual lifecycle passed;
+the earlier audit lifecycle was not substituted for it.
+
+The native packaging/extraction workspace used `/dev/shm`, with the completed
+artifact copied to its normal project output. Its seven task mounts were verified
+detached and temporary RAM copies removed. The installed WSL **3.0.3** provides
+`wsl --manage Ubuntu --compact` for in-place VHD allocation recovery after the
+authorized deletions. Check installed support, drain workloads and retain source,
+valid artifacts and raw failure evidence before using this maintenance command.
+It does not relocate the VHD. Actual recovery receipts remain under
+`build/wsl-storage-recovery-20261024`; no reinstall or unsafe sparse-VHD option
+was used.
+
+The in-place command completed successfully on 24 October: the VHD fell from
+151,755,161,600 to **126,018,912,256 bytes**, releasing about **24.0 GiB**;
+D: then had about **26.3 GiB** free. Its original path did not change. Normal
+default-user Ubuntu startup passed, and all source/build fingerprints, 107
+binaries, original private inputs and installed system checksums matched again
+after compaction. Final candidate hashes also passed independently.
 
 Before substantial WSL builds/staging, check the Windows volume that contains
 the registered VHD, as well as guest free space. For the `Ubuntu` instance in
@@ -267,8 +298,9 @@ $qualpfVhdItem.PSDrive | Select-Object Name, Used, Free
 
 Budget for source/SDK copies, build objects, staging, compressed artifacts and
 extraction/installation copies together. Recheck after large batches; the guest's
-virtual free space cannot substitute for host capacity. Do not delete unrelated
-host files or compact/repair a user's VHD as routine packaging cleanup.
+virtual free space cannot substitute for host capacity. Routine packaging does
+not authorize unrelated host-file deletion or VHD relocation/repair. The scoped
+storage recovery above follows the owner's separate explicit cleanup request.
 
 ### 23 October audit evidence
 

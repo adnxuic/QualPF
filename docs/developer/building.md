@@ -241,6 +241,15 @@ configurations and running campaigns alone. Keep runtime-source caches and packa
 acceptance directories untouched while their owning task remains open, including
 when it is blocked.
 
+An explicit owner request for storage recovery can authorize retiring proven
+duplicate outputs during an open task. First verify retained release/source
+artifacts, source changes, independent inputs and required raw logs. Compare
+unpacked payloads to the retained archives before deleting them; preserve unique
+metadata and failures. Delete disposable copies in place when relocation is
+excluded. Do not treat protected Git/LFS objects or unique scientific evidence
+as build cache. The [release guide](releasing.md#current-native-package-acceptance)
+records the scoped WSL recovery, RAM packaging and in-place allocation recovery.
+
 ## Installation, packaging and documentation
 
 Run Linux build and packaging commands inside the configured Linux environment.

@@ -3,7 +3,7 @@
   "baseline_ref": "docs/developer/project-baseline.json",
   "active_task": {
     "id": "runtime-source-and-package-acceptance",
-    "goal": "Produce local non-audit Linux 1.0.0 candidate packages and matching source; continue MinGW GCC DLL and IFW supplier-source review without publication.",
+    "goal": "Keep the accepted local Linux 1.0.0 candidates and matching source/evidence; complete the remaining MinGW GCC DLL and IFW corresponding-source review. Authorized WSL recovery/cleanup is complete in place. No upload.",
     "in_scope": [
       "deploy/",
       "cmake/packaging/",
@@ -22,9 +22,9 @@
       "Uploading, publishing or messaging third parties",
       "Changing user data or unrelated installed applications"
     ],
-    "status": "blocked",
+    "status": "in_progress",
     "base_commit": "e746cb95fbccc4ce6d20eda4d3ac69ad6263a921",
-    "checkpoint_commit": "5a5a37b4612f186ca0a499f1cce987f624906e19",
+    "checkpoint_commit": "b636a48eb2aab29db5ab04157cd4679b020d7db7",
     "completed": [
       "Retained all earlier audit artifacts, original failed comparisons, independent fixtures and their exact scopes in the current rights/releasing guides and local evidence.",
       "Verified original MinGW vendor DLL/build-info bytes and the eight pinned QualX build/install/document blobs; vendor-SDK deployment remains the procedure and private original logs/attestation are not mandatory formats.",
@@ -34,11 +34,15 @@
       "Completed fresh native Debian 127/127 normal tests under Xvfb and zero-Fortran verification of 435 C++ units/107 binaries. The first missing-display failures and unchanged five-test recheck remain preserved.",
       "Generated the formal Debian 13 DEB with the actual contact email; control, source and extracted payload verification reached installation before the host-volume/WSL failure.",
       "Resolved all 814 actual GCC C++ header origins and retained their GNU inputs/generated SDK source; pinned IFW compression sources/full notices and the complete 463-file Windows supplement.",
-      "Pinned the public v11 branch-at-vendor-date c3e587c067a00a561899d49d3e63a659e38802ec; matched the SDK version-header Git blob and 1616/1635 target files, preserving the original 1600-match comparison and all residual files."
+      "Pinned the public v11 branch-at-vendor-date c3e587c067a00a561899d49d3e63a659e38802ec; matched the SDK version-header Git blob and 1616/1635 target files, preserving the original 1600-match comparison and all residual files.",
+      "Deleted authorized Windows/WSL pip download caches, Conda download archives, eight verified derived directories and 272 retired object/archive files in place; no cleanup data was relocated and all canonical source/required evidence remained.",
+      "Recovered Ubuntu using native in-place VHD compaction at its original D:/Ubuntu_WSL path; physical VHD allocation fell by 25736249344 bytes and normal default-user startup passed.",
+      "Rechecked all 107 Debian binaries, four build/source fingerprints, 2329 bound source inputs, 479 original private inputs and installed system checksums before and after compaction. Full 127-test reuse is explicit, not a relabeled fresh run.",
+      "Rejected the storage-truncated first DEB, retained its expected/actual comparisons and regenerated only the container in RAM. Fresh actual 920-file install/startup/SQLite/settings/offline-text/removal and About 100/150/200 passed.",
+      "Final non-audit DEB/AppImage and application/dependency sources share clean 983b485b, with candidate manifest, SHA256SUMS and preserved validation scope; nothing uploaded."
     ],
-    "next_action": "After the owner frees D: space and WSL can run, first verify the original source, dependency bundle, package and payload hashes; then run a fresh isolated DEB lifecycle and copy the unchanged formal candidate/sidecars out. Keep all failures and finish the paired candidate manifest/checksums. Continue Windows source/CRT review separately. No upload.",
+    "next_action": "Linux candidates and in-place WSL recovery are complete and remain unpublished. Continue only the two remaining Windows compiled-source/configuration and IFW static-dependency/CRT reviews using the retained public source materials; keep vendor-SDK procedure and original qualifications. No upload.",
     "blockers": [
-      "D:, hosting D:/Ubuntu_WSL/ext4.vhdx, had about 7.5 MiB free; native dpkg hit a read-only filesystem and Ubuntu/root/system probes now fail. The owner must free host space; no successful new DEB installation/removal or cache copy-out is claimed. No disk repair/reinstall was performed.",
       "Complete compiled source/configuration coverage for the three actual GCC DLLs remains unverified; all C++ header origins and the improved public v11 target-source candidate are supplied. A private factory log/attestation is not a mandatory evidence format.",
       "The actual vendor IFW container still needs complete static configuration/patch coverage and CRT identification/redistribution basis. Official IFW/Qt/OpenSSL and observed compression sources/notices are supplied; no automatic source exception is asserted."
     ],
@@ -234,6 +238,48 @@
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": "build/windows-source-20261024/branch-source-supplement/source-materials.json"
+      },
+      {
+        "command": "Authorized in-place cache/derived cleanup and native Ubuntu VHD compaction",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/wsl-storage-recovery-20261024/summary-01.json"
+      },
+      {
+        "command": "All 107 binary/build/source/reference and system checksums matched after compaction",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/wsl-storage-recovery-20261024/compiled-survivors-after-compaction-02.json"
+      },
+      {
+        "command": "Full Debian normal suite: 127/127, reused only after unchanged input/configuration/binary/system proof",
+        "result": "PASS",
+        "kind": "REUSED_UNCHANGED_DEPENDENCIES",
+        "evidence_ref": "build/wsl-storage-recovery-20261024/normal-regression-reuse-01.json"
+      },
+      {
+        "command": "Fresh About scale100/150/200 after storage recovery",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/linux-candidate-20261024/debian-about-recovery-02.xml"
+      },
+      {
+        "command": "Regenerated formal DEB actual 920-file source/control/install/start/SQLite/settings/offline-text/removal",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/linux-candidate-20261024/debian-acceptance-02.json"
+      },
+      {
+        "command": "Verify seven task mounts detached and RAM work removed after persisted artifacts",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/wsl-storage-recovery-20261024/acceptance-mount-cleanup-03.json"
+      },
+      {
+        "command": "Both final Linux candidates and matching source/dependency artifacts, metadata and checksums",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "releases/1.0.0/linux-candidate-20261024/candidate-manifest.json"
       }
     ]
   }

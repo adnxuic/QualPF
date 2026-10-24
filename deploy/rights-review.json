@@ -1116,7 +1116,11 @@
       "appimage_files_checked": 1180,
       "normal_regression": {
         "passed": 127,
-        "evidence": "build/linux-candidate-20261024/debian-normal-02.xml"
+        "evidence": "build/linux-candidate-20261024/debian-normal-02.xml",
+        "kind": "REUSED_UNCHANGED_DEPENDENCIES",
+        "binding": "build/wsl-storage-recovery-20261024/normal-regression-reuse-01.json",
+        "post_compaction_integrity": "build/wsl-storage-recovery-20261024/compiled-survivors-after-compaction-02.json",
+        "fresh_about_scales": "build/linux-candidate-20261024/debian-about-recovery-02.xml"
       },
       "zero_fortran": {
         "cpp_units": 435,
@@ -1124,18 +1128,32 @@
         "evidence": "build/linux-candidate-20261024/debian-zero-fortran-01.json"
       },
       "debian_lifecycle": {
-        "status": "NOT_VERIFIED",
+        "status": "PASS",
         "package_generated": true,
-        "native_package": "/var/tmp/qualpf-linux-candidate-20261024/debian-build/packages/qualpf-1.0.0-debian_amd64.deb",
-        "package_sha256": null,
-        "copied_to_candidate_directory": false,
-        "reason": "dpkg could not acquire its lock on the read-only native filesystem; WSL then failed startup. D:, containing the Ubuntu VHD, had about 7.5 MiB free. Host space and WSL must recover before the original candidate is reverified and accepted.",
-        "evidence": [
-          "build/linux-candidate-20261024/debian-package-01.log",
-          "build/linux-candidate-20261024/debian-acceptance-driver-01.log",
-          "build/linux-candidate-20261024/wsl-readonly-probes-03.json",
-          "build/linux-candidate-20261024/wsl-host-storage-04.json"
-        ]
+        "copied_to_candidate_directory": true,
+        "artifact": "qualpf-1.0.0-debian_amd64.deb",
+        "package_sha256": "f12836a9b1a1fa81f1e237a66c0375f7bf798c494c93dba843e689acef0d5b07",
+        "payload_files": 920,
+        "installed_files_match_package": true,
+        "native_smoke_passed": true,
+        "application_removed": true,
+        "desktop_removed": true,
+        "isolated_settings_preserved": true,
+        "evidence": "build/linux-candidate-20261024/debian-acceptance-02.json",
+        "qualification": "Native Debian 13 system Qt package lifecycle, Xvfb startup; no full GNOME session or package-manager UI is claimed.",
+        "superseded_truncated_output": {
+          "status": "NOT_VERIFIED",
+          "native_package": "/var/tmp/qualpf-linux-candidate-20261024/debian-build/packages/qualpf-1.0.0-debian_amd64.deb",
+          "original_failure": "dpkg could not acquire its lock on the read-only native filesystem; WSL then failed startup. D:, containing the Ubuntu VHD, had about 7.5 MiB free. Host space and WSL must recover before the original candidate is reverified and accepted.",
+          "evidence": [
+            "build/linux-candidate-20261024/debian-package-01.log",
+            "build/linux-candidate-20261024/debian-acceptance-driver-01.log",
+            "build/linux-candidate-20261024/wsl-readonly-probes-03.json",
+            "build/linux-candidate-20261024/wsl-host-storage-04.json"
+          ],
+          "integrity_comparison": "build/wsl-storage-recovery-20261024/debian-storage-damage-02.json",
+          "disposition": "Corrupted derived output discarded after retaining original comparisons/sidecars; no expected value changed."
+        }
       },
       "scientific_data_policy": {
         "disposition": "upstream-policy",
@@ -1144,7 +1162,17 @@
       "qualifications": [
         "Native Xvfb/extract-and-run scope; full desktop integration not exercised.",
         "The frozen Linux source/bundle remains at 983b485b; later Windows-source catalogue expansions are separate."
-      ]
+      ],
+      "artifact_manifest": "releases/1.0.0/linux-candidate-20261024/candidate-manifest.json",
+      "checksums": "releases/1.0.0/linux-candidate-20261024/SHA256SUMS",
+      "storage_recovery": {
+        "summary": "build/wsl-storage-recovery-20261024/summary-01.json",
+        "cleanup_data_relocated": false,
+        "vhd_path_changed": false,
+        "inplace_compaction": "PASS",
+        "source_binaries_original_references_unchanged": true,
+        "published": false
+      }
     }
   }
 }

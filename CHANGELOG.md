@@ -12,10 +12,13 @@ reports are no longer used for routine development.
 
 ### Added
 
-- Prepared the local non-audit Linux 1.0.0 AppImage and matching application and
-  offline dependency sources at a single clean revision. Verified the actual
-  image payload and installed behavior, all 890 dependency-source inputs and
-  the fresh native Debian build's 127 normal regressions.
+- Prepared local non-audit Linux 1.0.0 DEB/AppImage candidates and matching
+  application/offline dependency sources at one clean revision. Verified actual
+  payloads, DEB installation/removal, AppImage startup, all 890 source inputs and
+  the Debian build's 127 normal regressions. Bound reuse after storage recovery
+  to unchanged source, binaries, build options, references and system checksums.
+  Documented cache/duplicate deletion with source, valid artifacts and original
+  failures retained; RAM packaging avoids repeated host-volume exhaustion.
 
 - Expanded the Windows vendor-source materials with all 814 actual C++ header
   origins, generated thread-header rules, SDK source/configuration inputs and

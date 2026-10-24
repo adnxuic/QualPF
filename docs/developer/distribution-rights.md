@@ -316,10 +316,14 @@ application source and independent 890-file dependency source archive are under
 `releases/1.0.0/linux-candidate-20261024`. All 1,180 actual AppImage files and
 native extract-and-run/database/settings/offline-text checks passed. The native
 Debian build passed 127/127 normal tests, all four generators and zero-Fortran
-checks. Its new DEB was generated, but actual installation/removal acceptance
-was interrupted by a read-only WSL filesystem and subsequent failed Ubuntu
-startup; that lifecycle remains unverified. The accepted AppImage and sources
-are available independently. The later expanded Windows source catalogue does
+checks. The first DEB was truncated by host disk exhaustion and rejected.
+After storage recovery, all 107 compiled binaries, source/build fingerprints,
+original test inputs and installed system package checksums matched the prior
+evidence. The full regression is reused with unchanged dependencies. A fresh
+container was generated in RAM and passed actual 920-file extraction/install
+verification, native startup/database/settings/offline-text checks and removal.
+Both accepted packages and their exact sources are now in the candidate directory.
+Original failures and source/data qualifications remain. The later expanded Windows source catalogue does
 not change or retroactively approve the frozen Linux inputs; see the
 [current package acceptance](releasing.md#current-native-package-acceptance).
 
