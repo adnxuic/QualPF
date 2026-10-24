@@ -1428,6 +1428,62 @@
       "os_uninstall_registration_removed": true,
       "settings_files_preserved_unchanged": 2,
       "qualification": "Local acceptance is complete for the actual frozen candidate. Earlier failed/interrupted receipts are retained; vendor build details and separate scientific-data grants remain unverified under the recorded owner dispositions. No upload or third-party contact."
+    },
+    "windows_slim_candidate_20261024": {
+      "source_revision": "6e09a99fc5bb0ed04166a0149ea1ec350bf56f13",
+      "audit_only": false,
+      "source_dirty": false,
+      "published": false,
+      "acceptance_complete": true,
+      "artifact_directory": "releases/1.0.0/windows-slim-candidate-20261024",
+      "installer": {
+        "file": "QualPF-1.0.0-win64.exe",
+        "bytes": 52140466,
+        "sha256": "e68578899a005c7b24d2a7d6861edc3145d05db4e3c46ddeea127b0222bf2032"
+      },
+      "application_source": {
+        "file": "qualpf-1.0.0-Source.tar.gz",
+        "sha256": "f0ef11474c9df59568d62a51552212886f2ee8721ff733d02dea6047745b0bac",
+        "indexed_inputs": 2334
+      },
+      "dependency_source": {
+        "file": "qualpf-1.0.0-Windows-Dependencies.tar.gz",
+        "sha256": "b559f9402d3a58f5ba29909f695e4162edcbce0fec8ab9fd04e26de827413606",
+        "archives": 19,
+        "indexed_files": 527,
+        "collection_release_clearance": false
+      },
+      "delivery_mode": "separate dependency archive, original notices and source index installed",
+      "actual_payload_files": 564,
+      "installed_inventory_files": 576,
+      "gui_install": "PASS",
+      "native_startup_sqlite_settings_offline": "PASS",
+      "installed_legal_source_pages_interactive": "PASS",
+      "actual_cli_uninstall": "PASS",
+      "maintenance_self_removed": true,
+      "shortcuts_removed": 3,
+      "os_uninstall_registration_removed": true,
+      "settings_files_preserved_unchanged": 2,
+      "no_git_build_steps": 279,
+      "generators": 4,
+      "normal_regression": {
+        "passed": 127,
+        "kind": "FRESH_VALIDATION",
+        "evidence": "build/windows-slim-20261024/normal-01.xml",
+        "total_seconds": 1121.21
+      },
+      "vendor_build_details_verified": false,
+      "distribution_basis": "ifw_vendor_policy",
+      "scientific_separate_data_grants_verified": false,
+      "source_build_evidence": "build/windows-slim-20261024/source-build-acceptance-01.json",
+      "container_evidence": "build/windows-slim-20261024/actual-container-02.json",
+      "installed_runtime_evidence": "build/windows-slim-20261024/installed-runtime-inventory-01.json",
+      "gui_evidence": "build/windows-slim-20261024/gui-acceptance-01.json",
+      "uninstall_evidence": "build/windows-slim-20261024/windows-lifecycle-01.json",
+      "qualification": "Native GUI installation and legal/source inspection; official IFW CLI uninstall. Existing Windows/Linux candidates remain byte-identical. The scoped owner dispositions and false collection-clearance flag remain; no vendor/scientific-data grant is newly verified. No upload or third-party contact.",
+      "manifest": "releases/1.0.0/windows-slim-candidate-20261024/candidate-manifest.json",
+      "checksums": "releases/1.0.0/windows-slim-candidate-20261024/SHA256SUMS",
+      "final_verification": "build/windows-slim-20261024/candidate-final-verification-01.json"
     }
   }
 }

@@ -1,6 +1,7 @@
 # Current source and frozen regression bytes; historical attributes remain in protected Git snapshots.
 /NOTICE.md text eol=lf
 /THIRD_PARTY_NOTICES.md text eol=lf
+/SOURCE_CODE.md text eol=lf
 /LICENSES/** text eol=lf
 # Preserve whitespace present in these verbatim upstream legal texts.
 /LICENSES/MPL-2.0.txt -whitespace

@@ -16,6 +16,9 @@ reports are no longer used for routine development.
   source archives. Original notices and SDK metadata remain installed; runtime
   reviews bind external source members by hash. Offline source-retrieval
   instructions identify the companion archives, build revision and checksums.
+  The 1.0.0 MinGW installer is 49.7 MiB; its actual installation, offline
+  legal/source pages and official CLI uninstall passed, preserving isolated
+  settings and removing maintenance files, shortcuts and OS registration.
 
 - Prepared a local Windows MinGW 1.0.0 candidate and matching clean-revision
   application/dependency sources. Verified 127 normal regressions, a complete

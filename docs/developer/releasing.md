@@ -260,6 +260,46 @@ opens [SOURCE_CODE.md](../../SOURCE_CODE.md). Separate delivery changes no
 third-party terms or unverified vendor/scientific-data findings, and the collection
 still records `release_clearance:false`.
 
+### Slim Windows candidate, 24 October 2026
+
+The separately sourced MinGW candidate freezes clean revision
+`6e09a99fc5bb0ed04166a0149ea1ec350bf56f13`. Its local delivery directory is
+`releases/1.0.0/windows-slim-candidate-20261024`; acceptance-guide edits after
+that revision do not change the frozen binary or corresponding-source identity.
+The installer is **52,140,466 bytes (49.7 MiB)**, down from the earlier
+384,752,117-byte bundled-source installer. Its SHA-256 is
+`e68578899a005c7b24d2a7d6861edc3145d05db4e3c46ddeea127b0222bf2032`.
+The matching application source includes 2,334 indexed inputs, builds without
+Git metadata in 279 steps, and passes all four maintained table generators.
+The full dependency TGZ retains the earlier nineteen archives and 527 indexed
+files byte for byte; its SHA-256 remains
+`b559f9402d3a58f5ba29909f695e4162edcbce0fec8ab9fd04e26de827413606`.
+
+All **127/127 fresh native normal regressions** passed in 1,121.21 seconds,
+including the original long-running powder property test. The final manifest
+and SHA256SUMS bind the installer, both source archives and acceptance receipts.
+
+The actual five component archives contain 564 files matching the staged payload.
+The installed inventory checks 576 files, including the generated maintenance
+tool; formal runtime/source review reports no package review blockers. Native GUI
+installation, canonical GPL display, product icons, publisher/version registration
+and all three shortcuts passed. Installed startup with system-only PATH, SQLite
+database creation/search, legacy-settings inheritance and offline legal texts
+passed. Interactive inspection covered GPL header/final appendix, origin and
+third-party notices, retained vendor/scientific-data qualifications, and the new
+local source-retrieval link. About scale checks cover 100%, 150% and 200%.
+
+After normal application exit, the official IFW CLI purge returned zero and
+removed the installation, maintenance tool, three shortcuts, Start Menu directory
+and OS uninstall registration. The two isolated settings files retained identical
+hashes. This records an actual CLI uninstall, not an interactive uninstall-wizard
+run. Evidence is under `build/windows-slim-20261024`, particularly
+`actual-container-02.json`, `installed-runtime-inventory-01.json`,
+`gui-acceptance-01.json` and `windows-lifecycle-01.json`. Final regression and
+checksum results are recorded in the candidate manifest. Earlier Windows/Linux
+candidate checksum lists still verify unchanged. No upload or third-party contact
+is included, and the owner dispositions do not become verified vendor/data grants.
+
 ### Earlier bundled-source Windows candidate
 
 The local Windows MinGW **non-audit** candidate prepared on 24 October uses clean
