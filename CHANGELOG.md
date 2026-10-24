@@ -39,6 +39,8 @@ reports are no longer used for routine development.
   Bound the IFW public source tag and embedded OpenSSL static-runtime parameters;
   recorded the public CI/recipe coverage limits and retained the unresolved
   container findings under the owner's public-only review instruction.
+  Verified the matching online 4.8.1 component metadata checksum and recorded the
+  remaining actual-container evidence dependency after rechecking SDK/source bytes.
 
 - Bound actual Linux runtime files to exact Ubuntu/Debian source packages,
   patches, original notices and separate SDK headers. Traced the fixed AppImage

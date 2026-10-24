@@ -304,6 +304,25 @@ them; private original logs, private license records and a bit-identical rebuild
 are not mandatory formats. A build of different inputs would need its own source
 and package review and would not retroactively prove this vendor artifact.
 
+The final public source-index audit also found the official online component
+`qt.tools.ifw.48`, version **4.8.1-0-202409251146**, in the separate
+[`windows_x86/ifw/tools_ifw_48` repository](https://download.qt.io/online/qtsdkrepository/windows_x86/ifw/tools_ifw_48/Updates.xml).
+Its component metadata archive matches the published SHA-1, but contains no
+regular files; its update XML supplies no source/configuration fields. This is
+an additional metadata check, not an assertion that another executable payload
+matches the selected SDK. The current-state audit rechecked all ten selected SDK
+files, ten named GCC patch inputs and the 527-file/nineteen-archive source collection.
+The two IFW requirements remain **NOT_VERIFIED**.
+
+The current public-only review is therefore **blocked**, not complete. It needs
+new matching public source/patch/build information and applicable integrated CRT
+terms to close those requirements. No third-party contact, repeat request for
+unavailable owner records or replacement of the reviewed artifact is authorized
+by the owner's read-only direction. The evidence is
+`build/windows-source-20261024/compiled-review-01/runtime-review-state-audit-16.json`.
+The completed GCC source review and accepted Linux candidates keep their scopes;
+this finding does not turn passing collection/format checks into IFW clearance.
+
 The local supplement `build/windows-source-20261024/offline-supplement` supplies
 all thirteen source archives, full legal texts, actual SDK header sources,
 original build metadata and the independently checked reconstruction receipts.

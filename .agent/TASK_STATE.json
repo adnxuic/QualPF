@@ -22,9 +22,9 @@
       "Uploading, publishing or messaging third parties",
       "Changing user data or unrelated installed applications"
     ],
-    "status": "in_progress",
+    "status": "blocked",
     "base_commit": "e746cb95fbccc4ce6d20eda4d3ac69ad6263a921",
-    "checkpoint_commit": "f6ab113fa0dc9ca46bb6609e40b207a3b8a878db",
+    "checkpoint_commit": "59686c5bb9512b1f4cb292439eae2b04d1c6056a",
     "completed": [
       "Retained all earlier audit artifacts, original failed comparisons, independent fixtures and their exact scopes in the current rights/releasing guides and local evidence.",
       "Verified original MinGW vendor DLL/build-info bytes and the eight pinned QualX build/install/document blobs; vendor-SDK deployment remains the procedure and private original logs/attestation are not mandatory formats.",
@@ -48,9 +48,11 @@
       "Compared all 208 IFW embedded resources with public Qt source/generator inputs and identified an actual Visual C++ CRT diagnostic; retained the exact static configuration/patch and redistribution qualifications.",
       "Bound the IFW source archive tag to public 4.8.1/12eab2bb and verified embedded OpenSSL VC-WIN64A, /MT and original compiler parameters; preserved the actual Qt source-path evidence.",
       "Checked public IFW/product history, qtsdk master/refactor and Qt provisioning/source candidates; 41 returned public IFW tasks start in December 2025 and do not cover the September 2024 artifact. Rejected mismatched-version notices/recipes as actual-source bindings.",
-      "Recorded the owner's explicit read-only public review direction. The local Qt inquiry draft is marked unauthorized/unsent; no third-party message, SDK substitution or upload occurred."
+      "Recorded the owner's explicit read-only public review direction. The local Qt inquiry draft is marked unauthorized/unsent; no third-party message, SDK substitution or upload occurred.",
+      "Checked the separate official IFW online repository and checksum-verified the 4.8.1 component metadata; no regular metadata files or source/configuration fields supply the missing actual build binding.",
+      "Revalidated all ten selected SDK files, ten named GCC patches and the 527-file/nineteen-archive source collection. The final requirement audit retains two NOT_VERIFIED IFW findings and does not claim completion."
     ],
-    "next_action": "Continue only evidence-led public checks for a matching actual IFW source/patch/build manifest and applicable integrated CRT terms. The examined public candidates do not close these bindings. Do not contact third parties, repeat requests for unavailable owner records, substitute a different tool build or relabel retained reviews. Preserve the completed GCC source review and accepted Linux candidates; no upload.",
+    "next_action": "Resume when new matching public evidence can establish the actual IFW static Qt source/patch/build inputs and integrated CRT terms, or the owner explicitly changes the authorized artifact/scope. Preserve the public-only/no-contact boundary, completed GCC source review and accepted Linux candidates. Do not repeat exhausted queries without new leads, substitute a compatible build as proof, relabel retained reviews or upload.",
     "blockers": [
       "Matching actual vendor IFW static Qt source/patch/build-input coverage and the applicable integrated CRT redistribution/source-exclusion basis remain unverified. The framework source tag and OpenSSL static MSVC choice are identified; the inspected public product/history/recipe records do not supply the missing binding. The owner chose public-only review with no third-party contact."
     ],
@@ -336,6 +338,12 @@
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": "build/windows-source-20261024/compiled-review-01/ifw-public-followup-12.json"
+      },
+      {
+        "command": "Revalidate selected SDK files, named GCC patches, source collection and the scope of unresolved IFW requirements",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/windows-source-20261024/compiled-review-01/runtime-review-state-audit-16.json"
       }
     ]
   }

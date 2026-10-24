@@ -1064,6 +1064,29 @@
         "evidence": "build/windows-source-20261024/compiled-review-01/ifw-public-followup-12.json",
         "release_clearance": false,
         "qualification": "Observed configuration, tag correspondence and the scope of public queries are verified. Empty/404 public responses are not proof that private or deleted records never existed. No SDK, accepted Linux candidate, historical failed comparison or runtime review result was replaced."
+      },
+      "public_only_completion_audit": {
+        "reviewed_on": "2026-10-24",
+        "status": "blocked",
+        "official_online_component": "qt.tools.ifw.48",
+        "official_online_version": "4.8.1-0-202409251146",
+        "online_metadata_sha256": "31219ac9758b6a7aa44cf7fc4a48e85821020da496a10da4d91813e6a0737fb4",
+        "online_metadata_published_sha1_verified": true,
+        "regular_metadata_files": 0,
+        "xml_source_configuration_fields": 0,
+        "current_sdk_files_rechecked": 10,
+        "gcc_named_patch_inputs_rechecked": 10,
+        "source_collection_files_rechecked": 527,
+        "source_archives_rechecked": 19,
+        "remaining_unverified_requirements": [
+          "Complete actual supplier static Qt source/patch/build-input coverage",
+          "Applicable integrated CRT redistribution/source-exclusion basis for this selected container"
+        ],
+        "evidence": "build/windows-source-20261024/compiled-review-01/runtime-review-state-audit-16.json",
+        "metadata_evidence": "build/windows-source-20261024/compiled-review-01/public-materials-15/metadata-review.json",
+        "completion_proven": false,
+        "release_clearance": false,
+        "qualification": "Official online component metadata was also checked, without asserting its executable payload matches the selected SDK. The public-only review is at an evidence dependency; no equivalent replacement, private-record requirement, third-party contact or full-clearance claim is introduced."
       }
     },
     "upstream_comparison": {
