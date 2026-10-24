@@ -7,6 +7,11 @@ The corresponding byte/origin inventory is
 the [distribution procedure](releasing.md), not the scientific acceptance
 contracts. No scientific input, generated table or reference was changed.
 
+The owner's 24 October decision to use the pinned official prebuilt IFW is
+recorded under [official vendor disposition](#official-ifw-vendor-disposition).
+It changes the release treatment of the two unverified vendor findings while
+preserving their evidence and qualifications.
+
 ## Scientific inputs
 
 On 23 October 2026, the owner instructed QualPF to follow QualX3's handling of
@@ -314,7 +319,7 @@ matches the selected SDK. The current-state audit rechecked all ten selected SDK
 files, ten named GCC patch inputs and the 527-file/nineteen-archive source collection.
 The two IFW requirements remain **NOT_VERIFIED**.
 
-The current public-only review is therefore **blocked**, not complete. It needs
+At that checkpoint the public-only review was **blocked**, not complete. It needed
 new matching public source/patch/build information and applicable integrated CRT
 terms to close those requirements. No third-party contact, repeat request for
 unavailable owner records or replacement of the reviewed artifact is authorized
@@ -322,6 +327,34 @@ by the owner's read-only direction. The evidence is
 `build/windows-source-20261024/compiled-review-01/runtime-review-state-audit-16.json`.
 The completed GCC source review and accepted Linux candidates keep their scopes;
 this finding does not turn passing collection/format checks into IFW clearance.
+
+## Official IFW vendor disposition
+
+On 24 October 2026 the owner explicitly instructed QualPF to follow QualX3's
+official-prebuilt IFW distribution method, retain licenses, third-party notices
+and all collected sources, disclose vendor details that cannot be independently
+verified, and provide a copyright/licensing contact and takedown process. The
+selected tools remain the unchanged official **QtIFW 4.8.1**. No supplier was
+contacted and no artifact was uploaded.
+
+`ifw_vendor_policy` in `deploy/distribution.json` is the current disposition.
+The two source/configuration and integrated CRT findings above remain
+**NOT_VERIFIED**; they no longer alone block this specific vendor-based candidate.
+This is an owner distribution decision, not additional permission from Qt or
+Microsoft and not a claim that every factory input was reconstructed. Historical
+blocked inventories retain their bytes and results.
+
+Formal IFW packaging checks the selected binarycreator/installerbase hashes,
+requires the collected eleven IFW/Qt/OpenSSL/compression archives and original
+notices, and carries the qualifications into the actual package inventory.
+Missing materials, substituted tool bytes and unreviewed unrelated runtimes
+still fail. The application remains MinGW-only with no separate VC++ runtime
+payload. The full nineteen-archive Windows collection and source procedure are
+retained, including the completed GCC reconstruction.
+
+[NOTICE.md](../../NOTICE.md) supplies `uncercalculate@163.com` for substantiated
+copyright/licensing concerns and removal of confirmed infringing material from
+official distribution. A complaint notice does not replace a license grant.
 
 The local supplement `build/windows-source-20261024/offline-supplement` supplies
 all thirteen source archives, full legal texts, actual SDK header sources,
@@ -501,7 +534,8 @@ On 24 October 2026 the owner explicitly chose continued **read-only public revie
 instead of authorizing contact with Qt. No third-party message was sent. The local
 inquiry text is retained as an unsent, unauthorized draft, not a queued action.
 Do not repeat requests for the already unavailable owner-held factory records.
-The two remaining IFW findings above remain visible under this review boundary;
+The two remaining IFW findings above remain visible under this review boundary
+and the subsequently adopted [vendor disposition](#official-ifw-vendor-disposition);
 the accepted Linux candidates and the completed pinned GCC source review retain
 their scopes.
 
@@ -510,7 +544,7 @@ and IFW static Qt/dependency/CRT build records are unavailable. No additional co
 of those owner-held records is available. The three GCC DLLs now have a reviewed
 public corresponding-source reconstruction and usable build procedure, retaining
 their factory-checkout and rebuild qualifications. They still require their own
-actual-package source/notice bindings. The remaining source-review gap is the
+actual-package source/notice bindings. The retained source-review qualification concerns the
 IFW container's complete static sources, patches, configure/link inputs and CRT redistribution
 basis. Public archive identity and embedded version strings alone do not establish
 that all required source and redistribution terms are covered. Complete source,

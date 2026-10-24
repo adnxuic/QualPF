@@ -2,348 +2,79 @@
   "schema": "qualpf.agent_task_state.v1",
   "baseline_ref": "docs/developer/project-baseline.json",
   "active_task": {
-    "id": "runtime-source-and-package-acceptance",
-    "goal": "Keep the accepted local Linux 1.0.0 candidates and matching source/evidence; complete the remaining MinGW GCC DLL and IFW corresponding-source review. Authorized WSL recovery/cleanup is complete in place. No upload.",
+    "id": "windows-mingw-100-candidate-acceptance",
+    "goal": "Prepare and locally accept a non-audit Windows MinGW 1.0.0 candidate at one clean revision using the explicitly adopted official-prebuilt IFW disposition. Keep unverified vendor details, sources and notices; no contact or upload.",
     "in_scope": [
       "deploy/",
       "cmake/packaging/",
-      "scripts/package/",
+      "cmake/templates/",
       "tools/validation/",
       "docs/developer/",
+      "README.md",
+      "NOTICE.md",
       "THIRD_PARTY_NOTICES.md",
-      "LICENSES/",
       "CHANGELOG.md",
       ".agent/TASK_STATE.json",
       "releases/"
     ],
     "out_of_scope": [
       "Scientific values, algorithms, PFSM and public APIs",
-      "MSVC formal distribution",
+      "MSVC formal application distribution",
       "Uploading, publishing or messaging third parties",
-      "Changing user data or unrelated installed applications"
+      "User data, unrelated installations and accepted Linux candidate bytes"
     ],
-    "status": "blocked",
-    "base_commit": "e746cb95fbccc4ce6d20eda4d3ac69ad6263a921",
-    "checkpoint_commit": "59686c5bb9512b1f4cb292439eae2b04d1c6056a",
+    "status": "in_progress",
+    "base_commit": "6dfff1284d9089ff9fa5409868176844c3bfe240",
+    "checkpoint_commit": "6dfff1284d9089ff9fa5409868176844c3bfe240",
     "completed": [
-      "Retained all earlier audit artifacts, original failed comparisons, independent fixtures and their exact scopes in the current rights/releasing guides and local evidence.",
-      "Verified original MinGW vendor DLL/build-info bytes and the eight pinned QualX build/install/document blobs; vendor-SDK deployment remains the procedure and private original logs/attestation are not mandatory formats.",
-      "Bound Linux runtime bytes to exact Ubuntu/Debian and Qt sources, original notices, SDK headers, pinned AppImage runtime and its static Alpine recipe/input checks.",
-      "Froze clean 983b485bc00ee5d6c10fd5eae681ee644bca4ae0 as the non-audit Linux 1.0.0 source: 2329 delivered inputs, fresh no-Git 277-step AppImage and 629-step Debian builds and four generators passed.",
-      "Prepared and accepted the actual non-audit AppImage: all 1180 delivered files, runtime/source, native extract-and-run startup, SQLite, offline texts and legacy settings passed. Matching application source and independent 890-file dependency source archive are available with SHA-256.",
-      "Completed fresh native Debian 127/127 normal tests under Xvfb and zero-Fortran verification of 435 C++ units/107 binaries. The first missing-display failures and unchanged five-test recheck remain preserved.",
-      "Generated the formal Debian 13 DEB with the actual contact email; control, source and extracted payload verification reached installation before the host-volume/WSL failure.",
-      "Resolved all 814 actual GCC C++ header origins and retained their GNU inputs/generated SDK source; pinned IFW compression sources/full notices and the complete 463-file Windows supplement.",
-      "Pinned the public v11 branch-at-vendor-date c3e587c067a00a561899d49d3e63a659e38802ec; matched the SDK version-header Git blob and 1616/1635 target files, preserving the original 1600-match comparison and all residual files.",
-      "Deleted authorized Windows/WSL pip download caches, Conda download archives, eight verified derived directories and 272 retired object/archive files in place; no cleanup data was relocated and all canonical source/required evidence remained.",
-      "Recovered Ubuntu using native in-place VHD compaction at its original D:/Ubuntu_WSL path; physical VHD allocation fell by 25736249344 bytes and normal default-user startup passed.",
-      "Rechecked all 107 Debian binaries, four build/source fingerprints, 2329 bound source inputs, 479 original private inputs and installed system checksums before and after compaction. Full 127-test reuse is explicit, not a relabeled fresh run.",
-      "Rejected the storage-truncated first DEB, retained its expected/actual comparisons and regenerated only the container in RAM. Fresh actual 920-file install/startup/SQLite/settings/offline-text/removal and About 100/150/200 passed.",
-      "Final non-audit DEB/AppImage and application/dependency sources share clean 983b485b, with candidate manifest, SHA256SUMS and preserved validation scope; nothing uploaded.",
-      "Resolved all 1635 target SDK source/template origins, including twelve CRT source copies, MinGW rules, GNU libiconv and the vendor three-patch zlib/configure reproduction; preserved earlier mismatches and qualified compiled DLL/IFW coverage.",
-      "Mapped all 7695 actual GCC DLL exports to same-vendor static objects or eight independently compiled original GNU shared-compatibility units; verified fixed source-cache consumption and two rejection controls across all 5926 runtime source files.",
-      "Recovered IFW actual Coin dependency/build instructions, acquired all three previously omitted Qt 6.6.0 modules with official hashes/full notices, and corrected the Qt bundled zlib assumption while retaining original evidence.",
-      "Verified Qt's original IFW 4.8.1 SDK installer against the official checksum and matched all five selected SDK tools to its component bytes without installing it.",
-      "Completed the three pinned GCC DLL corresponding-source review through independently checked public reconstruction; supplied a verified 527-file source/notice collection and usable fixed-input supplier procedure without requiring private factory logs or byte-identical rebuilding.",
-      "Compared all 208 IFW embedded resources with public Qt source/generator inputs and identified an actual Visual C++ CRT diagnostic; retained the exact static configuration/patch and redistribution qualifications.",
-      "Bound the IFW source archive tag to public 4.8.1/12eab2bb and verified embedded OpenSSL VC-WIN64A, /MT and original compiler parameters; preserved the actual Qt source-path evidence.",
-      "Checked public IFW/product history, qtsdk master/refactor and Qt provisioning/source candidates; 41 returned public IFW tasks start in December 2025 and do not cover the September 2024 artifact. Rejected mismatched-version notices/recipes as actual-source bindings.",
-      "Recorded the owner's explicit read-only public review direction. The local Qt inquiry draft is marked unauthorized/unsent; no third-party message, SDK substitution or upload occurred.",
-      "Checked the separate official IFW online repository and checksum-verified the 4.8.1 component metadata; no regular metadata files or source/configuration fields supply the missing actual build binding.",
-      "Revalidated all ten selected SDK files, ten named GCC patches and the 527-file/nineteen-archive source collection. The final requirement audit retains two NOT_VERIFIED IFW findings and does not claim completion."
+      "Pinned GCC DLL public-source review and official IFW byte identity are complete; earlier failed comparisons and two unverified vendor-build/CRT findings are retained.",
+      "The owner now explicitly adopts the unchanged official-prebuilt IFW route with sources/notices and disclosed vendor qualifications. The accepted Linux candidates remain at their original revision.",
+      "Implemented scoped official IFW hash/source/notice checks and retained the two unverified findings in offline notices and the owner disposition. Copyright/licensing contact and confirmed-infringement removal process are present."
     ],
-    "next_action": "Resume when new matching public evidence can establish the actual IFW static Qt source/patch/build inputs and integrated CRT terms, or the owner explicitly changes the authorized artifact/scope. Preserve the public-only/no-contact boundary, completed GCC source review and accepted Linux candidates. Do not repeat exhausted queries without new leads, substitute a compatible build as proof, relabel retained reviews or upload.",
-    "blockers": [
-      "Matching actual vendor IFW static Qt source/patch/build-input coverage and the applicable integrated CRT redistribution/source-exclusion basis remain unverified. The framework source tag and OpenSSL static MSVC choice are identified; the inspected public product/history/recipe records do not supply the missing binding. The owner chose public-only review with no third-party contact."
-    ],
+    "next_action": "Verify and commit scoped vendor-policy checks and offline notices, then freeze matching source, build/package MinGW and execute actual isolated installation/startup/removal acceptance.",
+    "blockers": [],
     "checks": [
       {
-        "command": "python -B tools/validation/check_distribution.py --self-test",
+        "command": "python -B tools/validation/check_distribution.py --self-test (17 controls)",
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": null
       },
       {
-        "command": "python -B tools/validation/check_installed_product.py --executable <staged MinGW executable> --prefix <stage> --work-dir <new isolated directory>",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/runtime-acceptance/windows-staged-smoke-01/observations.json"
-      },
-      {
-        "command": "installed-product existing-directory negative control",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/runtime-acceptance/installed-workdir-rejection-01.log"
-      },
-      {
-        "command": "python -B tools/validation/check_references.py",
+        "command": "python -B tools/validation/check_product_identity.py (1010 inputs)",
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": null
       },
       {
-        "command": "ctest --test-dir build/distribution-readiness/windows-gnu -L normal --output-on-failure --parallel 2",
+        "command": "python -B tools/validation/check_documentation.py",
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/runtime-acceptance/windows-normal-01.xml"
-      },
-      {
-        "command": "MinGW IFW actual installation, isolated installed-product checks and CLI purge",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/runtime-acceptance/windows-lifecycle-01.json"
-      },
-      {
-        "command": "xvfb-run -a python3 -B tools/validation/check_installed_product.py --executable <actual AppImage probe> --prefix <extracted usr> --work-dir <new isolated directory>",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/runtime-acceptance/appimage-installed-smoke-03/observations.json"
-      },
-      {
-        "command": "native Debian 13 CPack DEB contact-forwarding audit probe",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/runtime-acceptance/debian-package-03.log"
-      },
-      {
-        "command": "ctest --test-dir build/runtime-acceptance/linux-gnu -L normal --output-on-failure --parallel 2",
-        "result": "FAIL",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/runtime-acceptance/linux-normal-01.xml"
-      },
-      {
-        "command": "Ubuntu mounted-tree normal suite with Python 3.11; 126/127, strict scan timeout retained",
-        "result": "FAIL",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/runtime-acceptance/linux-normal-02.xml"
-      },
-      {
-        "command": "Unchanged Ubuntu strict architecture test on native filesystem; 4.79 seconds",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/runtime-acceptance/linux-native-strict-01.xml"
-      },
-      {
-        "command": "Native Debian GCC normal suite with original independent fixtures; 127/127",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/runtime-acceptance/debian-normal-02.xml"
-      },
-      {
-        "command": "Native Debian zero-Fortran check: 435 C++ units and 107 binaries",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/runtime-acceptance/debian-zero-fortran-01.json"
-      },
-      {
-        "command": "All four maintained generators on the clean no-Git source archive",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/runtime-acceptance/linux-generators-01.log"
-      },
-      {
-        "command": "Actual Debian package install, installed payload/database/settings/native startup and removal",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/runtime-acceptance/debian-lifecycle-04.json"
-      },
-      {
-        "command": "Actual fixed-runtime AppImage extraction and all 1180 payload hashes",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/runtime-acceptance/appimage-inspection-06.json"
-      },
-      {
-        "command": "Actual final AppImage native startup, SQLite, offline text and legacy settings acceptance",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/runtime-acceptance/appimage-installed-smoke-06/observations.json"
-      },
-      {
-        "command": "AppImage helper syntax and five actual runtime-input rejection controls",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/runtime-acceptance/appimage-helper-inputs-06/observations.json"
-      },
-      {
-        "command": "Verify four isolated Debian task mounts are detached; retain caches and evidence",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/runtime-acceptance/debian-environment-cleanup-01.json"
-      },
-      {
-        "command": "Verify eight pinned upstream QualX3 build/install/document Git blobs and the v1.0.8 tag commit",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/runtime-acceptance/qualx-reference-20261023/verified.json"
-      },
-      {
-        "command": "Formal tracked-only source export and deterministic source archive from a clean committed tree",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/linux-candidate-20261024/candidate-inputs.json"
-      },
-      {
-        "command": "Verify thirteen Windows source archives and all 463 offline-supplement files",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/windows-source-20261024/offline-supplement/SOURCE-MATERIALS.json"
-      },
-      {
-        "command": "Resolve all 814 GCC C++ header origins against GNU source/generation inputs",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/windows-source-20261024/gcc-generated-header-inputs-02.json"
-      },
-      {
-        "command": "Non-audit AppImage full delivered-file/source/runtime and actual-image acceptance",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/linux-candidate-20261024/appimage-acceptance-01.json"
-      },
-      {
-        "command": "Export and verify all 890 Linux dependency-source inputs",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/linux-candidate-20261024/dependency-source-export-01.json"
-      },
-      {
-        "command": "Native Debian full normal suite without display service; preserve five GUI launch failures",
-        "result": "FAIL",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/linux-candidate-20261024/debian-normal-01.xml"
-      },
-      {
-        "command": "Unchanged five GUI tests with Xvfb",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/linux-candidate-20261024/debian-display-recheck-02.xml"
-      },
-      {
-        "command": "Fresh native Debian normal suite under Xvfb; 127/127",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/linux-candidate-20261024/debian-normal-02.xml"
-      },
-      {
-        "command": "Fresh native Debian zero-Fortran check: 435 C++ units and 107 binaries",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/linux-candidate-20261024/debian-zero-fortran-01.json"
-      },
-      {
-        "command": "Actual formal DEB install attempt; read-only filesystem/host storage failure retained",
-        "result": "FAIL",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/linux-candidate-20261024/debian-acceptance-driver-01.log"
-      },
-      {
-        "command": "Formal DEB installed startup/database/settings/removal after environment recovery",
-        "result": "NOT_VERIFIED",
-        "kind": "NOT_RUN",
         "evidence_ref": null
       },
       {
-        "command": "Compare public v11 branch source to actual SDK version blob and 1635 target files",
+        "command": "python -B tools/agent/check_current_context.py",
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/windows-source-20261024/branch-source-supplement/source-materials.json"
+        "evidence_ref": null
       },
       {
-        "command": "Authorized in-place cache/derived cleanup and native Ubuntu VHD compaction",
+        "command": "python -B tools/validation/check_references.py (169 references)",
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/wsl-storage-recovery-20261024/summary-01.json"
+        "evidence_ref": null
       },
       {
-        "command": "All 107 binary/build/source/reference and system checksums matched after compaction",
+        "command": "python -B tools/validation/prepare_dependency_bundle.py --verify-bundle build/windows-source-20261024/public-corresponding-source-02",
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/wsl-storage-recovery-20261024/compiled-survivors-after-compaction-02.json"
+        "evidence_ref": null
       },
       {
-        "command": "Full Debian normal suite: 127/127, reused only after unchanged input/configuration/binary/system proof",
-        "result": "PASS",
-        "kind": "REUSED_UNCHANGED_DEPENDENCIES",
-        "evidence_ref": "build/wsl-storage-recovery-20261024/normal-regression-reuse-01.json"
-      },
-      {
-        "command": "Fresh About scale100/150/200 after storage recovery",
+        "command": "cmake --preset local-windows-gnu -B build/windows-candidate-20261024 with official IFW/offline bundle and audit OFF",
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/linux-candidate-20261024/debian-about-recovery-02.xml"
-      },
-      {
-        "command": "Regenerated formal DEB actual 920-file source/control/install/start/SQLite/settings/offline-text/removal",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/linux-candidate-20261024/debian-acceptance-02.json"
-      },
-      {
-        "command": "Verify seven task mounts detached and RAM work removed after persisted artifacts",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/wsl-storage-recovery-20261024/acceptance-mount-cleanup-03.json"
-      },
-      {
-        "command": "Both final Linux candidates and matching source/dependency artifacts, metadata and checksums",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "releases/1.0.0/linux-candidate-20261024/candidate-manifest.json"
-      },
-      {
-        "command": "Rehash all 1635 actual SDK target files and reproduce all nineteen extra source/template origins",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/windows-source-20261024/mingw-target-source-resolution-07.json"
-      },
-      {
-        "command": "Verify all sixteen pinned source archives and the scoped target-source offline supplement",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/windows-source-20261024/target-source-supplement-07/source-materials.json"
-      },
-      {
-        "command": "Compile eight original GNU shared compatibility units and account for all 7695 actual GCC DLL exported symbols",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/windows-source-20261024/compiled-review-01/shared-compatibility-export-03.json"
-      },
-      {
-        "command": "Original supplier source-cache function: full pinned tree, missing-marker and update rejection controls; all 5926 source files unchanged",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/windows-source-20261024/compiled-review-01/frozen-source-fetch-01.json"
-      },
-      {
-        "command": "Acquire Qt5Compat/QtTools/QtTranslations 6.6.0 and verify official source SHA-256 and full original legal materials",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/windows-source-20261024/compiled-review-01/public-materials-01/additional-qt-sources-01.json"
-      },
-      {
-        "command": "Verify original official IFW SDK installer checksum, dump without installation and compare all five SDK tools byte-for-byte",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/windows-source-20261024/compiled-review-01/official-ifw-payload-correspondence-01.json"
-      },
-      {
-        "command": "Verify the 19-source/527-file Windows public corresponding-source collection, original vendor workflow Git blob and all selected GCC DLL hashes",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/windows-source-20261024/compiled-review-01/public-runtime-source-assessment-02.json"
-      },
-      {
-        "command": "Verify actual IFW/OpenSSL embedded configuration, official source/public-tag correspondence, public-query scope and candidate-version exclusions",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/windows-source-20261024/compiled-review-01/ifw-public-followup-12.json"
-      },
-      {
-        "command": "Revalidate selected SDK files, named GCC patches, source collection and the scope of unresolved IFW requirements",
-        "result": "PASS",
-        "kind": "FRESH_VALIDATION",
-        "evidence_ref": "build/windows-source-20261024/compiled-review-01/runtime-review-state-audit-16.json"
+        "evidence_ref": "build/windows-candidate-configure-02.log"
       }
     ]
   }

@@ -295,6 +295,13 @@ Public License, version 3 only (GPL-3.0-only)**. See [LICENSE](LICENSE), the
 own licenses. Outstanding rights and package-specific source obligations must be
 resolved before distributing a release; a local audit package is not a cleared release.
 
+The Windows installer uses the pinned official prebuilt QtIFW with its licenses,
+third-party notices and collected public sources. Remaining vendor build/CRT
+qualifications and the publisher's distribution decision are disclosed in
+[NOTICE.md](NOTICE.md). For copyright or licensing concerns, contact
+**uncercalculate@163.com**; confirmed infringing material will be removed from
+official distribution after review.
+
 ## Authors and acknowledgments
 
 QualPF is independently maintained and published by **adnxuic**. It derives from

@@ -193,7 +193,7 @@
         "LICENSES/IFW-libarchive-COPYING.txt"
       ],
       "status": "package-review",
-      "obligations": "IFW 4.8.1 installerbase embeds Qt 6.6.0 and OpenSSL 3.0.14, separately from application Qt 6.8.3. Public versioned sources are acquired; exact static build inputs/configuration and all embedded notices remain to be bound. Review DirectX/software-renderer payloads independently."
+      "obligations": "Review the final runtime/container and actual dependencies. For the pinned official IFW 4.8.1, apply ifw_vendor_policy with all collected public sources, original notices and explicit unverified vendor-build/CRT qualifications. AppImage and other runtimes require their own package-specific bindings."
     },
     {
       "id": "scientific-data",
@@ -356,5 +356,40 @@
     "basis": "Owner instruction to follow QualX3's handling of these five inherited scientific table scopes: retain the tables and scientific references, use the upstream project-level GPL distribution basis and provide corresponding source.",
     "separate_data_grants_verified": false,
     "qualifications": "The earlier public-source findings remain recorded, including NIST SRD 66 compilation copyright. This decision is not evidence of a separate NIST or other third-party grant. It does not cover excluded examples/CIF, replaced artwork/manual originals, databases or runtime components."
+  },
+  "ifw_vendor_policy": {
+    "mode": "official-prebuilt",
+    "version": "4.8.1",
+    "adopted_by": "adnxuic",
+    "adopted_on": "2026-10-24",
+    "basis": "Owner follows QualX3 vendor-SDK distribution: use the unchanged official prebuilt QtIFW, retain its licenses, third-party notices and all collected public sources. Unverified vendor details are disclosed and do not alone block this scoped candidate.",
+    "upstream_reference": "6bdb8644b975efc394bf2116cf7405334b82782d",
+    "official_url": "https://download.qt.io/archive/qt-installer-framework/4.8.1/QtInstallerFramework-windows-x64-4.8.1.exe",
+    "official_installer_sha256": "b0a7c6816dfaff7d571c9e5350fc08952f12022be87a28f6d8d36a78428c6210",
+    "tools": {
+      "installerbase.exe": "98e0cf71e5bd569ca047b4157c20152fcf0aea4db56b105a3fa4c45597eee398",
+      "binarycreator.exe": "d5d2611d352efe6cea5ae71fd0de5981802178427b8807d451aee451666e5ccd",
+      "devtool.exe": "505091148a9e7f5fd08b1caf139956a5ecf7fff5341da23085bc9a1ecaa0530e",
+      "archivegen.exe": "053f1d68c8fec180924c4a9c1d9cb08a0f03425099a1d7342e086c95d04cc76f",
+      "repogen.exe": "a0f4667e5114484e7b71cd5c62dc947391528b7c12c3845ed34734e8b66a53ec"
+    },
+    "source_ids": [
+      "qtifw-4.8.1",
+      "qtbase-6.6.0",
+      "qtsvg-6.6.0",
+      "qtdeclarative-6.6.0",
+      "qttools-6.6.0",
+      "qttranslations-6.6.0",
+      "qt5compat-6.6.0",
+      "openssl-3.0.14",
+      "zlib-1.3.1",
+      "bzip2-1.0.8",
+      "xz-5.6.2"
+    ],
+    "vendor_build_details_verified": false,
+    "qualifications": [
+      "The complete mapping of the vendor static Qt source, patches and configure/link inputs has not been independently verified. Collected versioned sources and public recipes are supplied without claiming an exact factory rebuild.",
+      "The embedded CRT origin and applicable vendor redistribution/source-exclusion basis have not been fully independently verified. This disposition follows the official vendor-distribution route; it does not add a separate VC++ redistributable payload or claim a verified system-library exception."
+    ]
   }
 }

@@ -68,8 +68,22 @@ and `distribution-inventory.json`: exact revision, toolchain, file sizes and
 SHA-256 identities. A release must also carry the selected SDK/runtime notices,
 an exact source retrieval location (and local corresponding-source artifacts for
 redistributed copyleft dependencies as required), and a completed rights review.
-Missing runtime provenance blocks release; it is not silently classified as a
+Unreviewed runtime provenance blocks release. The publisher's scoped official
+IFW disposition below retains its unverified findings and is not a verified
 system-library exception.
+
+For Windows candidates prepared from 24 October 2026, the publisher explicitly
+follows QualX3's official-prebuilt IFW route. The selected QtIFW 4.8.1 tools match
+Qt's original installer bytes; `ifw_vendor_policy` in `deploy/distribution.json`
+pins their hashes. The complete collected IFW/Qt/compression/OpenSSL sources,
+original licenses and notices are supplied. The full vendor static Qt
+source/patch/configuration mapping and integrated CRT redistribution/source-exclusion
+basis remain unverified. The owner accepts this disclosed vendor-distribution
+basis; it does not turn those findings into verified grants or clear unrelated
+runtimes. The MinGW application has no separate VC++ redistributable payload.
+Copyright/licensing concerns may be reported to **uncercalculate@163.com**;
+confirmed infringing material will be removed from official distribution after
+review, as described in NOTICE.md.
 
 When supplied, the installed `share/qualpf/DEPENDENCIES` directory carries
 hash-identified upstream source archives, actual Eigen/Boost SDK header sources,

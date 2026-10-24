@@ -74,6 +74,29 @@ Search results and RIR estimates retain the qualifications in the current manual
 the application is described as qualitative phase identification software, not a
 crystal-structure solution/refinement product.
 
+## Official prebuilt Windows installer framework
+
+On 24 October 2026 the publisher adopted QualX3's vendor-distribution approach
+for the unchanged official Qt Installer Framework 4.8.1. Its GPLv3/Qt exception,
+third-party notices and all collected public source archives accompany the
+Windows package. The package inventory identifies the official tool hashes and
+this scoped distribution decision separately from verified source findings.
+
+The complete vendor static Qt source/patch/configuration mapping and the
+integrated CRT redistribution/source-exclusion basis have not been fully
+independently verified. These qualifications remain disclosed; the supplied
+versioned sources do not claim to reproduce every factory input. The MinGW
+application carries no separate Visual C++ Redistributable payload. Other
+components retain their own review and terms.
+
+## Copyright and licensing concerns
+
+Please report copyright or licensing concerns to **uncercalculate@163.com**,
+identifying the material and the basis of the concern. The publisher will review
+credible reports promptly and remove affected material from official distribution
+if infringement is confirmed. This process does not replace applicable licenses
+or grant permission for third-party material.
+
 ## Support and source
 
 - Project: <https://github.com/adnxuic/QualPF>.

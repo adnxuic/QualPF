@@ -12,6 +12,12 @@ reports are no longer used for routine development.
 
 ### Added
 
+- Adopted the owner's scoped official-prebuilt QtIFW 4.8.1 distribution policy
+  for Windows MinGW candidates. Pinned selected vendor tools, required collected
+  IFW dependency sources/notices and retained unverified static-build/CRT findings
+  in the package inventory. Added a copyright/licensing report and confirmed
+  infringement removal process; historical blocked reviews remain unchanged.
+
 - Prepared local non-audit Linux 1.0.0 DEB/AppImage candidates and matching
   application/offline dependency sources at one clean revision. Verified actual
   payloads, DEB installation/removal, AppImage startup, all 890 source inputs and

@@ -1087,6 +1087,14 @@
         "completion_proven": false,
         "release_clearance": false,
         "qualification": "Official online component metadata was also checked, without asserting its executable payload matches the selected SDK. The public-only review is at an evidence dependency; no equivalent replacement, private-record requirement, third-party contact or full-clearance claim is introduced."
+      },
+      "current_distribution_disposition": {
+        "status": "owner-adopted-official-vendor-distribution",
+        "adopted_on": "2026-10-24",
+        "policy": "deploy/distribution.json#ifw_vendor_policy",
+        "vendor_build_details_verified": false,
+        "earlier_findings_retained": true,
+        "qualification": "The owner explicitly accepts unchanged official prebuilt IFW following QualX3, with collected sources/notices and honest unresolved vendor build/CRT details. This changes the release disposition, not the underlying NOT_VERIFIED findings. No third-party contact or upload is authorized."
       }
     },
     "upstream_comparison": {

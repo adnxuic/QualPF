@@ -27,6 +27,9 @@ FIELDS = {"id", "paths", "source", "version", "copyright", "license",
           "modifications", "license_files", "status", "obligations"}
 UPSTREAM_SCIENTIFIC_MATERIALS = {"atom-properties", "ffast-srd66", "electron-scattering",
                                  "syminfo", "symmetry-preferred-input"}
+IFW_SOURCE_IDS = {"qtifw-4.8.1", "qtbase-6.6.0", "qtsvg-6.6.0", "qtdeclarative-6.6.0",
+                  "qttools-6.6.0", "qttranslations-6.6.0", "qt5compat-6.6.0",
+                  "openssl-3.0.14", "zlib-1.3.1", "bzip2-1.0.8", "xz-5.6.2"}
 
 
 def read_json(path):
@@ -152,7 +155,64 @@ def check_inputs(root):
     if preferred.intersection(data.get("excluded_distribution_materials", [])):
         errors.append("required preferred modification inputs cannot be excluded to bypass their grants")
     errors.extend(rights_review_errors(root, data))
+    errors.extend(ifw_policy_errors(data))
     return errors, data
+
+
+def ifw_policy_errors(data):
+    policy = data.get("ifw_vendor_policy")
+    if policy is None:
+        return []  # Other platforms and older isolated test fixtures.
+    if (policy.get("mode") != "official-prebuilt" or policy.get("version") != "4.8.1" or
+            policy.get("adopted_by") != "adnxuic" or
+            not re.fullmatch(r"\d{4}-\d{2}-\d{2}", policy.get("adopted_on", "")) or
+            policy.get("vendor_build_details_verified") is not False or
+            len(policy.get("qualifications", [])) != 2 or not all(policy["qualifications"]) or
+            set(policy.get("source_ids", [])) != IFW_SOURCE_IDS or
+            set(policy.get("tools", {})) != {"binarycreator.exe", "installerbase.exe", "devtool.exe", "archivegen.exe", "repogen.exe"} or
+            any(not re.fullmatch(r"[0-9a-f]{64}", value) for value in policy.get("tools", {}).values()) or
+            not re.fullmatch(r"[0-9a-f]{64}", policy.get("official_installer_sha256", "")) or
+            not policy.get("official_url", "").startswith("https://download.qt.io/") or
+            not policy.get("basis")):
+        return ["invalid scoped official-prebuilt IFW disposition; retain the unverified vendor qualifications"]
+    return []
+
+
+def ifw_tool_errors(data, tools):
+    policy = data.get("ifw_vendor_policy")
+    if not policy:
+        return ["formal IFW requires a recorded vendor disposition"]
+    errors = ifw_policy_errors(data)
+    selected = {path.name.lower(): path for path in tools}
+    for name in ("binarycreator.exe", "installerbase.exe"):
+        path = selected.get(name)
+        if path is None or not path.is_file() or digest(path) != policy["tools"].get(name):
+            errors.append("IFW tool differs from the pinned official vendor binary: " + name)
+    return errors
+
+
+def ifw_review_errors(root, prefix, data, entry):
+    policy = data.get("ifw_vendor_policy")
+    if not policy:
+        return ["formal IFW requires a recorded vendor disposition"]
+    errors = []
+    if (entry.get("distribution_basis") != "official-prebuilt-ifw" or
+            entry.get("vendor_build_details_verified") is not False or
+            entry.get("qualifications") != policy["qualifications"] or
+            entry.get("vendor_tools") != policy["tools"]):
+        errors.append("IFW review must retain the scoped vendor basis, pinned tools and unverified build qualifications")
+    sources = entry.get("source_artifacts", [])
+    catalogue = read_json(root / "deploy/dependency-sources.json")["sources"]
+    required = {row["sha256"] for row in catalogue if row["id"] in IFW_SOURCE_IDS}
+    present = {row["sha256"] for row in sources if relative(prefix, row["path"]).is_file()
+               and digest(relative(prefix, row["path"])) == row["sha256"]}
+    if len(required) != len(IFW_SOURCE_IDS) or not required.issubset(present):
+        errors.append("missing/changed collected IFW dependency sources")
+    if not {"NOTICE.md", "THIRD_PARTY_NOTICES.md", "QtIFW-GPL3-Exception.txt"}.issubset(
+            {Path(name).name for name in entry.get("notices", [])}) or not all(
+                relative(prefix, name).is_file() for name in entry.get("notices", [])):
+        errors.append("missing IFW vendor disposition/license notices")
+    return errors
 
 
 def scientific_policy_errors(data, review=None):
@@ -538,12 +598,16 @@ def stage_inventory(root, stage, data, review=None, kind=None):
                 if not sources or not all(relative(prefix, item["path"]).is_file() and
                         digest(relative(prefix, item["path"])) == item["sha256"] for item in sources):
                     errors.append("missing/changed package-specific corresponding source: " + component["id"])
+    if kind == "IFW" and data.get("ifw_vendor_policy"):
+        errors.extend(ifw_review_errors(root, prefix, data, review.get("components", {}).get("package-runtimes", {})))
     report = dict(schema="qualpf.distribution_inventory.v1", build=info, files=files,
                   component_reviews=review.get("components", {}),
                   review_blockers=errors,
                   rights_blockers=[entry["id"] for entry in data["components"] if entry["status"] == "blocked"])
     if data.get("scientific_data_policy"):
         report["scientific_data_policy"] = data["scientific_data_policy"]
+    if kind == "IFW" and data.get("ifw_vendor_policy"):
+        report["ifw_vendor_policy"] = data["ifw_vendor_policy"]
     return report, materials
 
 
@@ -666,6 +730,52 @@ def self_test():
             info["compiler"] = "GNU 13.1 (Windows/AMD64)"
             self.assertEqual(release_errors(data, info, "IFW"), [])
             self.assertEqual(runtime_component("bin/libwinpthread-1.dll"), "mingw-winpthreads")
+
+        def test_official_ifw_disposition_preserves_limits_and_tool_identity(self):
+            data = read_json(ROOT / MANIFEST)
+            self.assertEqual(ifw_policy_errors(data), [])
+            for key, value in (("vendor_build_details_verified", True), ("version", "4.9.0"),
+                               ("source_ids", []), ("qualifications", [])):
+                changed = json.loads(json.dumps(data))
+                changed["ifw_vendor_policy"][key] = value
+                self.assertTrue(ifw_policy_errors(changed), key)
+            with tempfile.TemporaryDirectory() as directory:
+                tools = [Path(directory) / name for name in ("installerbase.exe", "binarycreator.exe")]
+                for path in tools:
+                    path.write_bytes(path.name.encode())
+                    data["ifw_vendor_policy"]["tools"][path.name] = digest(path)
+                self.assertEqual(ifw_tool_errors(data, tools), [])
+                self.assertTrue(ifw_tool_errors(data, tools[:1]))
+                tools[0].write_bytes(b"unreviewed replacement")
+                self.assertTrue(ifw_tool_errors(data, tools))
+
+        def test_ifw_vendor_basis_requires_collected_sources_and_notices(self):
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                data = read_json(ROOT / MANIFEST)
+                policy = data["ifw_vendor_policy"]
+                catalogue, sources = [], []
+                for source_id in sorted(IFW_SOURCE_IDS):
+                    source = root / (source_id + ".tar.xz")
+                    source.write_bytes(source_id.encode())
+                    catalogue.append(dict(id=source_id, sha256=digest(source)))
+                    sources.append(dict(path=source.name, sha256=digest(source)))
+                write_json(root / "deploy/dependency-sources.json", dict(sources=catalogue))
+                notices = ["NOTICE.md", "THIRD_PARTY_NOTICES.md", "QtIFW-GPL3-Exception.txt"]
+                for name in notices:
+                    (root / name).write_bytes(b"original notice fixture")
+                entry = dict(distribution_basis="official-prebuilt-ifw", vendor_build_details_verified=False,
+                             qualifications=policy["qualifications"], vendor_tools=policy["tools"],
+                             source_artifacts=sources, notices=notices)
+                self.assertEqual(ifw_review_errors(root, root, data, entry), [])
+                entry["vendor_build_details_verified"] = True
+                self.assertTrue(ifw_review_errors(root, root, data, entry))
+                entry["vendor_build_details_verified"] = False
+                source.write_bytes(b"changed source")
+                self.assertTrue(ifw_review_errors(root, root, data, entry))
+                source.write_bytes(source_id.encode())
+                (root / notices[0]).unlink()
+                self.assertTrue(ifw_review_errors(root, root, data, entry))
 
         def test_scientific_upstream_policy_is_scoped_and_not_a_grant(self):
             policy = dict(mode="follow-upstream", adopted_by="adnxuic", adopted_on="2026-10-23",
@@ -1038,6 +1148,8 @@ def main():
         if args.audit_only:
             errors.append("--release and --audit-only are mutually exclusive")
         errors.extend(release_errors(data, info, args.kind))
+    if (args.kind == "IFW" and args.release) or (args.ifw_metadata and not info["audit_only"]):
+        errors.extend(ifw_tool_errors(data, args.tool))
     if args.source_tree:
         errors.extend(check_source_tree(root, data))
     if args.ifw_metadata:

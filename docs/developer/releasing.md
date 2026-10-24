@@ -59,6 +59,15 @@ or publishes artifacts.
 Both modes reject stale build revision/version metadata; reconfigure and rebuild
 after committing before pairing binary and source artifacts.
 
+For the unchanged official QtIFW 4.8.1, the owner adopted a scoped vendor
+disposition on 24 October 2026. `ifw_vendor_policy` pins the official SDK/tool
+hashes and preserves two unverified static-build/CRT qualifications. Those
+findings alone no longer block this vendor-based candidate. Formal checks still
+require the selected tool bytes, collected sources and notices. This does not
+clear other runtimes or relabel historical audit inventories. See the
+[IFW disposition](distribution-rights.md#official-ifw-vendor-disposition) and
+the copyright/licensing report process in NOTICE.md.
+
 ## Local package inspection
 
 The owner's current Windows formal-distribution choice is MinGW/GNU; MSVC is
@@ -72,7 +81,10 @@ actual QtIFW installation and build before packaging:
 
 ```sh
 cmake --preset local-windows-gnu -DCPACK_IFW_ROOT=/path/to/QtIFW \
-  -DQUALPF_DISTRIBUTION_AUDIT_ONLY=ON
+  -DQUALPF_DISTRIBUTION_AUDIT_ONLY=OFF \
+  -DQUALPF_DEPENDENCY_BUNDLE_DIR=/path/to/verified-bundle \
+  -DQUALPF_DISTRIBUTION_RUNTIME_REVIEW=/path/to/runtime-review.json \
+  -DQUALPF_CORRESPONDING_SOURCE_ARCHIVE=/path/to/qualpf-1.0.0-Source.tar.gz
 cmake --build --preset windows-gnu --parallel 4
 cpack --config build/windows-gnu/CPackSourceConfig.cmake -G TGZ
 cpack --config build/windows-gnu/CPackConfig.cmake -G IFW
@@ -191,6 +203,13 @@ configure audit mode OFF and supply:
   review covering the final container/runtime. Qt/Eigen reviews also bind
   hash-verified corresponding-source artifacts. Notices must cover the selected
   kit and embedded dependencies, not just generic license texts.
+- For official IFW, the `package-runtimes` entry additionally records
+  `distribution_basis: official-prebuilt-ifw`, the exact `vendor_tools` mapping,
+  `vendor_build_details_verified: false` and unchanged policy `qualifications`.
+  Its hash-verified `source_artifacts` must include all eleven IFW-related
+  catalogue archives. CPack checks binarycreator/installerbase against the pinned
+  official bytes before packaging and after assembly. These checks preserve the
+  source findings and implement the owner's vendor disposition separately.
 - For DEB, the actual public maintainer email in `QUALPF_RELEASE_CONTACT_EMAIL`.
   Never fabricate it or borrow an upstream author's address.
 
@@ -331,7 +350,7 @@ receipts retain three GCC DLL binding gaps and the separate IFW review. The late
 [public GCC corresponding-source disposition](distribution-rights.md#current-gcc-corresponding-source-disposition)
 completes the source-material review for the pinned DLLs; it does not relabel
 these older inventories. A new Windows candidate must bind the supplied source
-materials and notices and complete the IFW static-dependency/CRT review.
+materials and notices and apply the current scoped official-IFW disposition.
 
 Original failures remain available: Ubuntu Qt 6.2 compilation, Python 3.10
 validation prerequisites, mounted-filesystem strict-check timeout, missing private
