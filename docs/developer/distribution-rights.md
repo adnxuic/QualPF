@@ -150,6 +150,18 @@ own artifact scopes; earlier findings do not silently approve different bytes.
   `zconf.h` exactly. The direct-source mismatch and earlier probe failures are
   retained. Source/template origin coverage does not by itself establish complete
   compiled DLL/configuration correspondence.
+  The compiled-object follow-up accounts for all **7,695** actual DLL exports:
+  all 124 libgcc and 715 libgomp exports match the same SDK's static symbols;
+  6,804 of 6,856 libstdc++ exports do too. Eight original GNU compatibility
+  units compiled independently against the actual SDK headers supply the other
+  52. GNU's Makefile explicitly distinguishes these shared-only ABI units.
+  The complete pinned 5,926-file runtime source tree also passes the supplier's
+  original source-cache interface with no Git/network operation. Guarded negative
+  probes for missing markers and source updates reached the blocked Git stub;
+  the original supplier helper is not claimed to reject updates itself.
+  All source bytes remain unchanged.
+  These are exported-symbol and source-fetch results; they are not a full DLL
+  byte-rebuild or proof of every unexported/configuration input.
 - QtIFW 4.8.1 `installerbase.exe` contains the build marker **Qt 6.6.0**, and
   its embedded OpenSSL marker is **3.0.14**. Its corresponding sources and
   notices must be reviewed independently of application Qt 6.8.3. Versioned IFW,
@@ -160,6 +172,12 @@ own artifact scopes; earlier findings do not silently approve different bytes.
   with no separate VC++ runtime DLL import. That does not prove absence of a
   statically linked MSVC CRT. Application MinGW selection alone cannot clear
   the installer container's own build/redistribution obligations.
+  The selected installerbase, binarycreator, devtool, archivegen and repogen
+  now also match the official Qt release component byte-for-byte. The full
+  original SDK installer independently matches Qt's published SHA-256
+  `b0a7c6816dfaff7d571c9e5350fc08952f12022be87a28f6d8d36a78428c6210`.
+  This establishes supplier identity without claiming complete static-source
+  or CRT coverage from binary identity alone.
 - The retained earlier packages also include graphics support code: `D3Dcompiler_47.dll`, and in
   MSVC, `dxcompiler.dll`, `dxil.dll` and `opengl32sw.dll`. Qt deployment is not a
   license grant for these Microsoft/Mesa components. Their exact source/terms
@@ -182,7 +200,7 @@ original conflicting installer and failed byte comparisons remain retained.
 
 ## Offline dependency materials
 
-[`deploy/dependency-sources.json`](../../deploy/dependency-sources.json) pins sixteen
+[`deploy/dependency-sources.json`](../../deploy/dependency-sources.json) pins nineteen
 acquired upstream archives, their exact commits where available, SHA-256 and
 official checksum URLs where published. Their availability does not erase the
 vendor-build qualifications above. The preparer uses an existing local cache;
@@ -194,11 +212,23 @@ matches Sourceware's published SHA-512 list. IFW's own source contains libarchiv
 **3.7.4** and LZMA SDK **9.38.beta**; the SDK generic notice's 9.20 reference is
 stale. The original archives, full notices and both versions of that evidence
 remain retained. liblzma 5.6.2 is 0BSD; other XZ files keep their own terms.
-The observed zlib 1.3.1 differs from stock Qt 6.6.0's bundled 1.2.13, so the
-stock Qt source defaults alone do not establish the actual external-library or
-patch configuration. Static configure/link coverage and CRT redistribution basis
-remain unverified. No missing CRT DLL import is treated as proof that no static
-CRT is present.
+The official Qt 6.6.0 archive actually identifies its bundled zlib as **1.3
+(Qt)**, with prefixed symbols. The earlier guide's **1.2.13** default was
+incorrect: that is the separate MinGW SDK input. The observed IFW external zlib
+1.3.1 must be considered with libarchive's explicit Windows link dependencies,
+separately from Qt's bundled code. The correction and original observations are
+retained. Actual static configuration and CRT redistribution coverage still need
+verification; missing marker/import strings alone prove neither configuration
+nor absence of a static CRT.
+
+The exact IFW source's Coin files declare Qt **6.6.0**, six Qt modules and
+`CONFIG+=libarchive`. The previously omitted QtTools, QtTranslations and
+Qt5Compat module archives are now supplied with official SHA-256 checks and
+their original notices. Their collection closes those source-inventory omissions;
+it does not attest the private product ref's complete build settings. The public
+branch probes returned 404 and the public IFW 4.8 integration query returned no
+retained tasks. The actual instructions and query results remain under
+`build/windows-source-20261024/compiled-review-01`.
 
 The local supplement `build/windows-source-20261024/offline-supplement` supplies
 all thirteen source archives, full legal texts, actual SDK header sources,

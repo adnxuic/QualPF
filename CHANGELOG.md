@@ -29,6 +29,10 @@ reports are no longer used for routine development.
   Resolved all nineteen remaining target-source origins, including original
   MinGW rules, libiconv inputs and the vendor-patched zlib generation sequence;
   supplied the extra source archives/notices and retained the initial mismatches.
+  Accounted for all 7,695 actual GCC DLL exports with vendor object symbols and
+  independently compiled GNU compatibility code. Verified pinned-source cache
+  consumption and rejection controls; added the three missing Coin-declared Qt
+  modules and corrected the Qt/MinGW bundled-zlib distinction.
 
 - Bound actual Linux runtime files to exact Ubuntu/Debian source packages,
   patches, original notices and separate SDK headers. Traced the fixed AppImage
