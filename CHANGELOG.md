@@ -16,7 +16,10 @@ reports are no longer used for routine development.
   application/dependency sources. Verified 127 normal regressions, a complete
   no-Git product build, actual installer payloads, GUI installation and installed
   startup/SQLite/settings/offline texts. Bound the generated maintenance tool to
-  the reviewed official IFW code and disclosed vendor qualifications.
+  the reviewed official IFW code and disclosed vendor qualifications. Completed
+  interactive installed legal-page inspection and actual IFW CLI removal;
+  verified maintenance-tool self-removal, three shortcuts and Windows uninstall
+  registration removal, with isolated settings preserved byte-for-byte.
 
 - Adopted the owner's scoped official-prebuilt QtIFW 4.8.1 distribution policy
   for Windows MinGW candidates. Pinned selected vendor tools, required collected

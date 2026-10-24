@@ -255,17 +255,29 @@ source/notice entry; the complete **596-file** installed inventory has zero
 review blockers. Native About/offline checks at 100%, 150% and 200% passed and
 their layouts were inspected.
 
-**Acceptance remains incomplete:** interactive installed About/legal tabs and
-actual uninstall are **NOT_VERIFIED**. Computer Use returned a physical-Escape
-stop state; renewed human authorization and a fresh JS session returned the same
-turn stop state. No further UI input was attempted. The task's isolated
-installation and window remain for the next control turn. Do not present this
-as completed uninstall acceptance. The initial sandbox-temporary-directory
-packaging failure and missing-generated-maintenance-tool review result are
-preserved alongside successful bounded retries. No fresh MSVC lifecycle,
-clean-machine Windows VM or code signing is claimed. The accepted Linux
-artifacts below remain unchanged.
+**Scoped local acceptance is complete.** After the owner resumed control and
+restored the minimized task window, all three installed legal tabs were inspected
+interactively. GPL header/end, origin/modifications, original third-party notices,
+the IFW qualifications and the copyright contact/removal process rendered locally.
+The installed About identity and project/Issues links matched the candidate.
 
+The task application exited normally. Actual official IFW CLI `purge` returned
+zero and removed the entire installation, application and maintenance tool,
+all three task shortcuts and the matching Windows uninstall registration
+(`QualPF`, 1.0.0, adnxuic). Both isolated settings files retained identical hashes.
+No manual file deletion substituted for uninstall. This is full GUI installation
+and actual CLI removal; an interactive uninstaller wizard is not claimed.
+
+The fresh interactive/lifecycle receipts are `gui-acceptance-02.json` and
+`windows-lifecycle-02.json` under the candidate build directory. The original
+Escape interruption, incomplete manifest/notes, sandbox temporary-directory
+failure and missing-maintenance-tool review remain preserved alongside successful
+bounded retries. Final acceptance metadata, notes and checksums do not retarget
+the frozen binary/source revision. Its 127-test/no-Git build results retain their
+original scope; guide-only acceptance edits did not trigger a new full-suite run.
+No fresh MSVC lifecycle, clean-machine Windows VM or code signing is claimed.
+The unverified vendor/scientific-grant qualifications and accepted Linux artifacts
+below remain unchanged. No upload, publication or third-party contact occurred.
 
 The 24 October 2026 local Linux **non-audit** candidate uses clean revision
 `983b485bc00ee5d6c10fd5eae681ee644bca4ae0`. Files are under

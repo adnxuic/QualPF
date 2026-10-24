@@ -1373,7 +1373,7 @@
       "audit_only": false,
       "source_dirty": false,
       "published": false,
-      "acceptance_complete": false,
+      "acceptance_complete": true,
       "artifact_directory": "releases/1.0.0/windows-candidate-20261024",
       "installer": {
         "file": "QualPF-1.0.0-win64.exe",
@@ -1413,12 +1413,21 @@
       ],
       "vendor_build_details_verified": false,
       "distribution_basis": "ifw_vendor_policy",
-      "actual_uninstall": "NOT_VERIFIED",
-      "installed_legal_tabs_interactive": "NOT_VERIFIED",
-      "remaining_acceptance": "Computer Use turn stop state persisted after human reauthorization and session reset. Keep the isolated installation/window for the next control turn; no full lifecycle acceptance is claimed.",
+      "actual_uninstall": "PASS",
+      "installed_legal_tabs_interactive": "PASS",
       "manifest": "releases/1.0.0/windows-candidate-20261024/candidate-manifest.json",
       "installed_runtime_review": "build/windows-candidate-20261024/installed-runtime-inventory-03.json",
-      "original_failed_review": "build/windows-candidate-20261024/installed-runtime-inventory-02.json"
+      "original_failed_review": "build/windows-candidate-20261024/installed-runtime-inventory-02.json",
+      "acceptance_completed_on": "2026-10-24",
+      "earlier_interruption": "Computer Use turn stop state persisted after human reauthorization and session reset. Keep the isolated installation/window for the next control turn; no full lifecycle acceptance is claimed.",
+      "gui_legal_evidence": "build/windows-candidate-20261024/gui-acceptance-02.json",
+      "uninstall_evidence": "build/windows-candidate-20261024/windows-lifecycle-02.json",
+      "uninstall_method": "Official IFW CLI purge after normal application GUI exit; an interactive uninstaller wizard is not claimed.",
+      "installation_and_maintenance_tool_removed": true,
+      "uninstall_shortcuts_removed": 3,
+      "os_uninstall_registration_removed": true,
+      "settings_files_preserved_unchanged": 2,
+      "qualification": "Local acceptance is complete for the actual frozen candidate. Earlier failed/interrupted receipts are retained; vendor build details and separate scientific-data grants remain unverified under the recorded owner dispositions. No upload or third-party contact."
     }
   }
 }
