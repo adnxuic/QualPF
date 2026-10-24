@@ -231,6 +231,42 @@ formal configuration and current package-specific checks.
 
 ## Current native package acceptance
 
+The local Windows MinGW **non-audit** candidate prepared on 24 October uses clean
+revision `6b343c324b30563b3c59136c625e1485ae379567`. Its installer, matching
+application/dependency sources, notices, manifest and SHA-256 list are under
+`releases/1.0.0/windows-candidate-20261024`; raw receipts are under
+`build/windows-candidate-20261024`. No upload occurred.
+
+The fresh GNU 13.1 / Qt 6.8.3 build completed 631 steps and **127/127** normal
+regressions. A fresh no-Git archive extraction checked all **2,333** inputs,
+completed all **279** product steps, reported 1.0.0 and passed four generators.
+The complete **527-file/nineteen-archive** Windows dependency collection remains
+intact. The actual EXE's five component archives contain **584** files matching
+CPack staging, including the installed inventory. GPL, publisher and independent
+icons match. The selected official IFW tool hashes and generated installer and
+maintenance-tool code sections match the reviewed vendor template; the two
+vendor-build/CRT qualifications remain explicitly unverified.
+
+The full native GUI installation completed and its wizard closed. All **584**
+installed payload files match. Native startup with system-only PATH, SQLite
+create/search, legacy settings import/preservation, offline legal text and three
+shortcut targets passed. The generated maintenance tool has its own exact-byte
+source/notice entry; the complete **596-file** installed inventory has zero
+review blockers. Native About/offline checks at 100%, 150% and 200% passed and
+their layouts were inspected.
+
+**Acceptance remains incomplete:** interactive installed About/legal tabs and
+actual uninstall are **NOT_VERIFIED**. Computer Use returned a physical-Escape
+stop state; renewed human authorization and a fresh JS session returned the same
+turn stop state. No further UI input was attempted. The task's isolated
+installation and window remain for the next control turn. Do not present this
+as completed uninstall acceptance. The initial sandbox-temporary-directory
+packaging failure and missing-generated-maintenance-tool review result are
+preserved alongside successful bounded retries. No fresh MSVC lifecycle,
+clean-machine Windows VM or code signing is claimed. The accepted Linux
+artifacts below remain unchanged.
+
+
 The 24 October 2026 local Linux **non-audit** candidate uses clean revision
 `983b485bc00ee5d6c10fd5eae681ee644bca4ae0`. Files are under
 `releases/1.0.0/linux-candidate-20261024`; receipts and original failures are

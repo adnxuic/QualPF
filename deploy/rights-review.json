@@ -1367,6 +1367,58 @@
         "source_binaries_original_references_unchanged": true,
         "published": false
       }
+    },
+    "windows_formal_candidate_20261024": {
+      "source_revision": "6b343c324b30563b3c59136c625e1485ae379567",
+      "audit_only": false,
+      "source_dirty": false,
+      "published": false,
+      "acceptance_complete": false,
+      "artifact_directory": "releases/1.0.0/windows-candidate-20261024",
+      "installer": {
+        "file": "QualPF-1.0.0-win64.exe",
+        "bytes": 384752117,
+        "sha256": "a01eb39263d1d476b4c791676e39dcf9fda3842b3281ee512aea6388d17fca27"
+      },
+      "source": {
+        "file": "qualpf-1.0.0-Source.tar.gz",
+        "sha256": "c450f2b2ec13891d4a9e3f28a1d77b0d6f8e60273ab798a38655b610721a180f"
+      },
+      "dependency_source": {
+        "file": "qualpf-1.0.0-Windows-Dependencies.tar.gz",
+        "sha256": "b559f9402d3a58f5ba29909f695e4162edcbce0fec8ab9fd04e26de827413606",
+        "archives": 19,
+        "files": 527
+      },
+      "normal_regression": {
+        "passed": 127,
+        "kind": "FRESH_VALIDATION",
+        "evidence": "build/windows-candidate-20261024/normal-01.xml"
+      },
+      "no_git_build": {
+        "steps": 279,
+        "source_inputs": 2333,
+        "generators": 4,
+        "evidence": "build/windows-candidate-20261024/source-build-acceptance-01.json"
+      },
+      "actual_payload_files": 584,
+      "installed_inventory_files": 596,
+      "gui_install": "PASS",
+      "native_startup_sqlite_settings_offline": "PASS",
+      "shortcuts": 3,
+      "about_scales": [
+        100,
+        150,
+        200
+      ],
+      "vendor_build_details_verified": false,
+      "distribution_basis": "ifw_vendor_policy",
+      "actual_uninstall": "NOT_VERIFIED",
+      "installed_legal_tabs_interactive": "NOT_VERIFIED",
+      "remaining_acceptance": "Computer Use turn stop state persisted after human reauthorization and session reset. Keep the isolated installation/window for the next control turn; no full lifecycle acceptance is claimed.",
+      "manifest": "releases/1.0.0/windows-candidate-20261024/candidate-manifest.json",
+      "installed_runtime_review": "build/windows-candidate-20261024/installed-runtime-inventory-03.json",
+      "original_failed_review": "build/windows-candidate-20261024/installed-runtime-inventory-02.json"
     }
   }
 }

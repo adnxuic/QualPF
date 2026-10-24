@@ -12,6 +12,12 @@ reports are no longer used for routine development.
 
 ### Added
 
+- Prepared a local Windows MinGW 1.0.0 candidate and matching clean-revision
+  application/dependency sources. Verified 127 normal regressions, a complete
+  no-Git product build, actual installer payloads, GUI installation and installed
+  startup/SQLite/settings/offline texts. Bound the generated maintenance tool to
+  the reviewed official IFW code and disclosed vendor qualifications.
+
 - Adopted the owner's scoped official-prebuilt QtIFW 4.8.1 distribution policy
   for Windows MinGW candidates. Pinned selected vendor tools, required collected
   IFW dependency sources/notices and retained unverified static-build/CRT findings
