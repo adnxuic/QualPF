@@ -198,6 +198,31 @@ compiler-matched deployer remains their single source. IFW staging rejects
 different bytes targeting the same installed path even in audit mode. The
 original conflicting installer and failed byte comparisons remain retained.
 
+### Current GCC corresponding-source disposition
+
+The corresponding-source review for the three recorded GCC DLL hashes is now
+complete through the independently checked public reconstruction. The original
+vendor `build-info.txt` explicitly identifies the GNU source version, all ten
+patches and configure options. The full source, complete recipe, pinned runtime
+input and preferred SDK header/template sources cover those declared inputs.
+The source-origin, compiled ABI and fixed-input fetch checks support that review;
+none is presented as proof of every unexported machine instruction.
+
+`build/windows-source-20261024/public-corresponding-source-02` binds **527** files,
+including nineteen upstream archives, full original notices and actual SDK header
+sources. Its `BUILD-INPUTS/README.md` gives the supplier command and a usable
+fixed-source-cache procedure. GNU's [runtime exception FAQ](https://www.gnu.org/licenses/gcc-exception-3.1-faq.html.en)
+distinguishes independent runtime-library distribution from the exception for
+an application; the collection supplies the runtime sources and original terms.
+It does not rely on a blanket source exception.
+
+The original factory checkout remains unattested, and no full compiler bootstrap
+or bit-identical runtime rebuild was performed. These are retained qualifications,
+not additional mandatory formats under the adopted public-source review. Earlier
+partial receipts and historical package inventories keep their original results.
+A new package still must bind the exact reviewed DLLs, sources and notices;
+different DLL bytes require another review. The separate IFW review remains open.
+
 ## Offline dependency materials
 
 [`deploy/dependency-sources.json`](../../deploy/dependency-sources.json) pins nineteen
@@ -229,6 +254,26 @@ it does not attest the private product ref's complete build settings. The public
 branch probes returned 404 and the public IFW 4.8 integration query returned no
 retained tasks. The actual instructions and query results remain under
 `build/windows-source-20261024/compiled-review-01`.
+
+Of 208 resources dumped from the official IFW binary, 205 match public Qt source
+bytes exactly and one PDF metadata resource differs only in line endings. The
+other two are generated QML module descriptors; original QtDeclarative source
+and CMake generator inputs are retained without claiming a full configure reproduction.
+The `qpdf` resource prefix is Qt's PDF writer resource, not evidence that a separate
+QPDF library was delivered.
+
+An actual embedded `Visual C++ CRT` diagnostic, the PE producer information and
+the original `-static-runtime` instructions support identifying the compiler CRT
+family. They do not identify its exact patch/build or establish redistribution
+rights. Microsoft's original runtime end-user terms grant installation/use rights;
+they are not substituted for developer/distributor permissions. The collected
+[VS 2022 Community terms](https://visualstudio.microsoft.com/wp-content/uploads/2021/11/Visual-Studio-2022-Community-License-EN.docx)
+include a conditional third-party distribution route for integrated code. The
+actual supplier entitlement and applicability to this complete container have not
+been established by those generic terms. Any applicable GPL System Library source
+exclusion and the copyright permission to redistribute that code are separate
+questions; no Microsoft CRT source publication is assumed necessary merely from
+the family identification.
 
 The local supplement `build/windows-source-20261024/offline-supplement` supplies
 all thirteen source archives, full legal texts, actual SDK header sources,
@@ -295,8 +340,10 @@ The empty default keeps ordinary builds independent of a local source cache.
 
 The reviewed local MinGW stage binds 17 Qt DLLs/plugins and winpthreads to their
 actual SDK bytes, notices and supplied source artifacts. Eigen/Boost reviews bind
-the actual header archives. This leaves three GCC DLL source/build bindings and
-the IFW container review incomplete. Scientific table qualifications remain
+the actual header archives. The later GCC source disposition above closes that
+source-material review for the pinned DLLs; it does not relabel an older stage's
+missing source/notice bindings. The IFW container review remains incomplete.
+Scientific table qualifications remain
 recorded under the owner's upstream policy. These are audit findings, not a
 declaration of formal release readiness.
 
@@ -404,10 +451,11 @@ matching clean revision and completed package review.
 
 The owner confirmed that the original MinGW build log/resolved source snapshot
 and IFW static Qt/dependency/CRT build records are unavailable. No additional copy
-of those owner-held records is available. The two remaining formal Windows
-evidence groups are the resolved recipe/source binding for the three GCC DLLs
-and the IFW container's
-complete static sources, patches, configure/link inputs and CRT redistribution
+of those owner-held records is available. The three GCC DLLs now have a reviewed
+public corresponding-source reconstruction and usable build procedure, retaining
+their factory-checkout and rebuild qualifications. They still require their own
+actual-package source/notice bindings. The remaining source-review gap is the
+IFW container's complete static sources, patches, configure/link inputs and CRT redistribution
 basis. Public archive identity and embedded version strings alone do not establish
 that all required source and redistribution terms are covered. Complete source,
 patches and a usable build recipe established by independently checked public

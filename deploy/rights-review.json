@@ -780,8 +780,8 @@
       ],
       "workflow_url": "https://github.com/niXman/mingw-builds-binaries/blob/ecaa196ea0a8c39f77a44cb9760c1cc8160f67dd/.github/workflows/build.yml",
       "workflow_git_blob": "e6ae8dc759f3988abcaa7d0d77fb5777d314a54d",
-      "source_binding": "Binary and vendor build-info match verified. All ten named patches and upstream archives are supplied; exact resolved source recipe commit remains unrecorded. Workflow checks out mutable develop; public historic run query returned no retained run.",
-      "required_information": "Coverage of the actual three GCC DLLs by complete corresponding source, patches and a usable build recipe, or an applicable supplier source package. The resolved vendor commit or original logs can establish this, but they are not mandatory evidence formats. Independently verified public materials are acceptable; a controlled rebuild is a fallback when coverage cannot otherwise be established.",
+      "source_binding": "Corresponding-source review completed for the three recorded DLL hashes using original vendor version/patch/configuration metadata and the independently checked full public source/recipe reconstruction. The original resolved factory commit remains unattested; no bit-identical rebuild is claimed. Earlier partial findings below retain their original scope.",
+      "required_information": "No further owner-held factory record is required for this GCC source review. Any new actual package must bind the reviewed DLL hashes to the supplied source/recipe/header materials and original notices; different runtime bytes need a new review.",
       "reconstruction_checks": {
         "named_patches_applied": 10,
         "direct_header_lf_matches": 668,
@@ -868,6 +868,24 @@
         "missing_marker_and_update_controls_rejected": true,
         "evidence": "build/windows-source-20261024/compiled-review-01",
         "qualification": "Full exported ABI correspondence and original source-cache behavior verified. This evidence does not by itself assert all unexported compiled input/configuration correspondence or a full compiler/DLL rebuild."
+      },
+      "current_corresponding_source_disposition": {
+        "reviewed_on": "2026-10-24",
+        "status": "reviewed-public-reconstruction",
+        "scope": "Only the three GCC DLL hashes recorded above; original vendor base source, all named patches and configure flags, full public build scripts, pinned runtime source and actual preferred header/template inputs.",
+        "basis": "Original vendor metadata explicitly identifies GNU GCC 13.1.0, the ten patches and the build options. Independently checked public materials supply those complete inputs and usable scripts. All observed header/source origins and exported ABI names are accounted for; private factory logs and machine-code identity are not prerequisites of this source review.",
+        "source_bundle": "build/windows-source-20261024/public-corresponding-source-02",
+        "bundle_manifest_sha256": "6ea913c0780f271919e9601c2218182dd93875f496cbf73e36db9477a06a64b6",
+        "upstream_source_archives_in_collection": 19,
+        "collection_files_bound": 527,
+        "recipe_in_bundle": "BUILD-INPUTS/README.md",
+        "assessment": "build/windows-source-20261024/compiled-review-01/public-runtime-source-assessment-02.json",
+        "factory_commit_attested": false,
+        "full_compiler_bootstrap_run": false,
+        "bit_identical_runtime_rebuild": false,
+        "actual_package_binding_still_required": true,
+        "historical_artifact_reviews_relabelled": false,
+        "ifw_clearance_inferred": false
       }
     },
     "ifw_container": {
@@ -1001,6 +1019,22 @@
         "actual_ifw_external_marker": "1.3.1",
         "qualification": "Qt bundled and external libarchive compression inputs must be distinguished. Neither version-marker absence nor this correction establishes all actual static flags.",
         "evidence": "build/windows-source-20261024/compiled-review-01/ifw-qt-zlib-observations-01.json"
+      },
+      "public_resource_and_crt_followup": {
+        "dumped_resources": 208,
+        "exact_public_source_byte_matches": 205,
+        "line_ending_only_source_matches": 1,
+        "generated_qmldir_resources": 2,
+        "generated_qmldir_source_inputs": "Original QtDeclarative 6.6.0 QML source and Qt6QmlMacros.cmake retained; a full configuration reproduction is not claimed.",
+        "actual_embedded_crt_diagnostic": "Visual C++ CRT: Not enough memory to complete call to strerror.",
+        "crt_family_assessment": "Embedded diagnostic, MSVC PE producer information and original -static-runtime instructions support an MSVC CRT family inference. Exact CRT patch/build identity and a complete redistribution conclusion remain unverified.",
+        "end_user_runtime_terms_are_not_a_distribution_grant": true,
+        "developer_terms_distribution_route": "Official VS 2022 Community terms section 4 includes third-party distribution of integrated Distributable Code, subject to its conditions; this does not attest the actual Qt supplier's edition/entitlement or establish that this whole container is covered.",
+        "evidence": [
+          "build/windows-source-20261024/compiled-review-01/ifw-public-source-and-terms-02.json",
+          "build/windows-source-20261024/compiled-review-01/ifw-resource-residuals-03.json"
+        ],
+        "complete_static_source_or_crt_clearance": false
       }
     },
     "upstream_comparison": {

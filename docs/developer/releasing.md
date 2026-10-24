@@ -326,8 +326,12 @@ artifact sidecars. The final DEB and AppImage/source pair is in
 `build/runtime-acceptance/linux-clean-packages`; MinGW files are in
 `build/runtime-acceptance/windows-packages`. Source and artifact SHA-256 values
 are recorded in those sidecars, together with the actual toolchain and packaging
-tool hashes. The DEB has no missing runtime/source review item. Windows retains
-three GCC DLL bindings and the separate IFW static-dependency/CRT review.
+tool hashes. The DEB has no missing runtime/source review item. Those Windows
+receipts retain three GCC DLL binding gaps and the separate IFW review. The later
+[public GCC corresponding-source disposition](distribution-rights.md#current-gcc-corresponding-source-disposition)
+completes the source-material review for the pinned DLLs; it does not relabel
+these older inventories. A new Windows candidate must bind the supplied source
+materials and notices and complete the IFW static-dependency/CRT review.
 
 Original failures remain available: Ubuntu Qt 6.2 compilation, Python 3.10
 validation prerequisites, mounted-filesystem strict-check timeout, missing private

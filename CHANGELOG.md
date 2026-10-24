@@ -33,6 +33,9 @@ reports are no longer used for routine development.
   independently compiled GNU compatibility code. Verified pinned-source cache
   consumption and rejection controls; added the three missing Coin-declared Qt
   modules and corrected the Qt/MinGW bundled-zlib distinction.
+  Completed the pinned GCC DLL public corresponding-source review with an offline
+  source/notice collection and fixed-input supplier procedure. Retained the IFW
+  static-source/CRT qualifications and the original artifact review results.
 
 - Bound actual Linux runtime files to exact Ubuntu/Debian source packages,
   patches, original notices and separate SDK headers. Traced the fixed AppImage

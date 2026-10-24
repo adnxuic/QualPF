@@ -24,7 +24,7 @@
     ],
     "status": "in_progress",
     "base_commit": "e746cb95fbccc4ce6d20eda4d3ac69ad6263a921",
-    "checkpoint_commit": "b5b5d42b31cde4ff51af944d81d16b8f29e33f05",
+    "checkpoint_commit": "fe4a09348b59878bbb8c4cd5103e305e7950f1d4",
     "completed": [
       "Retained all earlier audit artifacts, original failed comparisons, independent fixtures and their exact scopes in the current rights/releasing guides and local evidence.",
       "Verified original MinGW vendor DLL/build-info bytes and the eight pinned QualX build/install/document blobs; vendor-SDK deployment remains the procedure and private original logs/attestation are not mandatory formats.",
@@ -43,11 +43,12 @@
       "Resolved all 1635 target SDK source/template origins, including twelve CRT source copies, MinGW rules, GNU libiconv and the vendor three-patch zlib/configure reproduction; preserved earlier mismatches and qualified compiled DLL/IFW coverage.",
       "Mapped all 7695 actual GCC DLL exports to same-vendor static objects or eight independently compiled original GNU shared-compatibility units; verified fixed source-cache consumption and two rejection controls across all 5926 runtime source files.",
       "Recovered IFW actual Coin dependency/build instructions, acquired all three previously omitted Qt 6.6.0 modules with official hashes/full notices, and corrected the Qt bundled zlib assumption while retaining original evidence.",
-      "Verified Qt's original IFW 4.8.1 SDK installer against the official checksum and matched all five selected SDK tools to its component bytes without installing it."
+      "Verified Qt's original IFW 4.8.1 SDK installer against the official checksum and matched all five selected SDK tools to its component bytes without installing it.",
+      "Completed the three pinned GCC DLL corresponding-source review through independently checked public reconstruction; supplied a verified 527-file source/notice collection and usable fixed-input supplier procedure without requiring private factory logs or byte-identical rebuilding.",
+      "Compared all 208 IFW embedded resources with public Qt source/generator inputs and identified an actual Visual C++ CRT diagnostic; retained the exact static configuration/patch and redistribution qualifications."
     ],
-    "next_action": "Assess corresponding-source sufficiency using the pinned public GCC inputs/patches/build recipe, without imposing private factory attestation or a byte-identical rebuild. Finish IFW static dependency and CRT redistribution analysis against the now-verified official SDK payload. Preserve accepted Linux candidates and do not upload.",
+    "next_action": "Find an applicable public supplier source/configuration manifest for IFW's static Qt product ref and finish CRT redistribution/source-exclusion analysis. The GCC source review is complete for the pinned hashes; a future Windows candidate must bind those exact files, source materials and notices. Preserve accepted Linux candidates and do not upload.",
     "blockers": [
-      "Complete compiled source/configuration coverage for the three actual GCC DLLs remains unverified; all C++ header origins and the improved public v11 target-source candidate are supplied. A private factory log/attestation is not a mandatory evidence format.",
       "The actual vendor IFW container still needs complete static configuration/patch coverage and CRT identification/redistribution basis. Official IFW/Qt/OpenSSL and observed compression sources/notices are supplied; no automatic source exception is asserted."
     ],
     "checks": [
@@ -320,6 +321,12 @@
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": "build/windows-source-20261024/compiled-review-01/official-ifw-payload-correspondence-01.json"
+      },
+      {
+        "command": "Verify the 19-source/527-file Windows public corresponding-source collection, original vendor workflow Git blob and all selected GCC DLL hashes",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/windows-source-20261024/compiled-review-01/public-runtime-source-assessment-02.json"
       }
     ]
   }
