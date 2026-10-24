@@ -942,8 +942,8 @@
         "api-ms-win-core-winrt-string-l1-1-0.dll",
         "api-ms-win-core-winrt-l1-1-0.dll"
       ],
-      "source_binding": "PE imports and embedded markers identify dependencies but do not exclude a static MSVC CRT or attest complete source/build inputs.",
-      "required_information": "Coverage of the actual embedded Qt/static dependency sources and applicable build/link inputs, plus CRT identification and redistribution basis. Existing supplier sources/terms and independently verified recipes may establish coverage without private factory logs; assess any source exception on its actual terms rather than inferring it from imports. A controlled build is an alternative.",
+      "source_binding": "Official SDK byte identity and the public IFW source-tag correspondence are verified. Embedded OpenSSL build metadata identifies VC-WIN64A with /MT; Qt source paths identify tqtc-qtbase. Complete actual static Qt source/patch/build-input coverage and the applicable integrated CRT redistribution basis remain unverified.",
+      "required_information": "A matching public supplier manifest, complete source/patch and usable configuration/link-input binding, and applicable integrated compiler-runtime redistribution/source-exclusion terms can close the review. Private factory logs or private Visual Studio license records are not mandatory formats. The owner chose read-only public review; no third-party contact or artifact substitution is authorized by that choice.",
       "owner_original_records": "Unavailable; owner confirmed no static dependency/build/link or CRT-origin records.",
       "static_dependency_followup": {
         "reviewed_on": "2026-10-24",
@@ -1035,6 +1035,35 @@
           "build/windows-source-20261024/compiled-review-01/ifw-resource-residuals-03.json"
         ],
         "complete_static_source_or_crt_clearance": false
+      },
+      "public_record_followup": {
+        "reviewed_on": "2026-10-24",
+        "status": "partial",
+        "framework_source_commit": "12eab2bbe525fd6533b498f09f6a30c64c75d8b1",
+        "framework_archive_tag_equals_public_481_tag": true,
+        "observed_openssl_target": "VC-WIN64A",
+        "observed_openssl_runtime_flag": "/MT",
+        "observed_openssl_built_on": "Tue Jun  4 15:35:46 2024 UTC",
+        "compiler_flag_scope": "The actual embedded OpenSSL build-info object; not automatically the compiler flags of every Qt/IFW object.",
+        "public_ifw_project_tasks_returned": 41,
+        "earliest_returned_task_start": "2025-12-09T04:13:58+00:00",
+        "target_release_period": "September 2024",
+        "target_period_tasks_returned": 0,
+        "unresolved_product_refs": [
+          "qt/tqtc-qt5:tqtc/6.6.0",
+          "qt/tqtc-qtbase:tqtc/6.6.0",
+          "qtsdk/tqtc-qtsdk:production"
+        ],
+        "rejected_as_actual_build_bindings": [
+          "Public qtsdk master/refactor helpers default to Qt 5.12.7; no resolved IFW 4.8.1 production recipe was returned.",
+          "The public Qt 6.8 pre-release-date provisioning inputs name OpenSSL 3.0.7, not the actual embedded 3.0.14.",
+          "The official special Qt-for-IFW source directory supplies Qt 4.8.5/4.8.6 archives, not Qt 6.6.0.",
+          "Qt's Squish notice names IFW 4.8.1 but XZ 5.4.4, unlike this actual binary's liblzma 5.6.2; it is not substituted as the selected SDK bill of materials."
+        ],
+        "owner_review_direction": "Read-only public review; no third-party contact. The retained local inquiry draft is not authorized to send and no message was sent.",
+        "evidence": "build/windows-source-20261024/compiled-review-01/ifw-public-followup-12.json",
+        "release_clearance": false,
+        "qualification": "Observed configuration, tag correspondence and the scope of public queries are verified. Empty/404 public responses are not proof that private or deleted records never existed. No SDK, accepted Linux candidate, historical failed comparison or runtime review result was replaced."
       }
     },
     "upstream_comparison": {

@@ -250,7 +250,7 @@ The exact IFW source's Coin files declare Qt **6.6.0**, six Qt modules and
 `CONFIG+=libarchive`. The previously omitted QtTools, QtTranslations and
 Qt5Compat module archives are now supplied with official SHA-256 checks and
 their original notices. Their collection closes those source-inventory omissions;
-it does not attest the private product ref's complete build settings. The public
+it does not resolve the product ref's complete build settings. The public
 branch probes returned 404 and the public IFW 4.8 integration query returned no
 retained tasks. The actual instructions and query results remain under
 `build/windows-source-20261024/compiled-review-01`.
@@ -269,11 +269,40 @@ rights. Microsoft's original runtime end-user terms grant installation/use right
 they are not substituted for developer/distributor permissions. The collected
 [VS 2022 Community terms](https://visualstudio.microsoft.com/wp-content/uploads/2021/11/Visual-Studio-2022-Community-License-EN.docx)
 include a conditional third-party distribution route for integrated code. The
-actual supplier entitlement and applicability to this complete container have not
-been established by those generic terms. Any applicable GPL System Library source
+actual component/notice scope and applicability to this complete container have not
+been established by those generic terms. Private supplier license records are not
+a required evidence format. Any applicable GPL System Library source
 exclusion and the copyright permission to redistribute that code are separate
 questions; no Microsoft CRT source publication is assumed necessary merely from
 the family identification.
+
+The further public-only review binds the official IFW source archive's `.tag` to
+public tag **4.8.1**, commit `12eab2bbe525fd6533b498f09f6a30c64c75d8b1`.
+The actual executable's OpenSSL build information names **VC-WIN64A**, **/MT**
+and a 4 June 2024 build date; its complete compiler-option string is retained.
+That directly identifies a static MSVC runtime choice for OpenSSL, without
+assuming every Qt/IFW object used identical options. Embedded Qt source paths
+also identify the `tqtc-qtbase` repository name.
+
+The public IFW project query returned **41** tasks, earliest 9 December 2025,
+and no target September 2024 task. The examined product-ref queries returned no
+tasks or unavailable source refs. This describes the queried public record scope,
+not all private or deleted records. Neither public qtsdk helper branch supplies a
+resolved 4.8.1 production recipe: both default to Qt 5.12.7. The public Qt 6.8
+provisioning candidate names OpenSSL 3.0.7 rather than the observed 3.0.14.
+The [special Qt-for-IFW source directory](https://download.qt.io/development_releases/prebuilt/qt-src-for-ifw/)
+contains Qt 4.8.5/4.8.6 sources, not the required Qt 6.6.0 input.
+Qt's [Squish third-party notice](https://doc.qt.io/squish/third-party-software.html)
+names IFW 4.8.1 but XZ 5.4.4; this selected executable identifies liblzma 5.6.2.
+That notice is not used as a matching bill of materials for different bytes.
+
+The evidence is `build/windows-source-20261024/compiled-review-01/ifw-public-followup-12.json`.
+Complete actual static Qt source/patch/build-input coverage and the applicable
+integrated CRT redistribution/source-exclusion basis remain unverified. An
+existing matching public source/build manifest and applicable terms may resolve
+them; private original logs, private license records and a bit-identical rebuild
+are not mandatory formats. A build of different inputs would need its own source
+and package review and would not retroactively prove this vendor artifact.
 
 The local supplement `build/windows-source-20261024/offline-supplement` supplies
 all thirteen source archives, full legal texts, actual SDK header sources,
@@ -448,6 +477,14 @@ policy and the completed artwork/manual replacements. Retain their recorded
 provenance and review results; the current acceptance section identifies the
 subsequently regenerated audit pairs. A formal candidate still requires its own
 matching clean revision and completed package review.
+
+On 24 October 2026 the owner explicitly chose continued **read-only public review**
+instead of authorizing contact with Qt. No third-party message was sent. The local
+inquiry text is retained as an unsent, unauthorized draft, not a queued action.
+Do not repeat requests for the already unavailable owner-held factory records.
+The two remaining IFW findings above remain visible under this review boundary;
+the accepted Linux candidates and the completed pinned GCC source review retain
+their scopes.
 
 The owner confirmed that the original MinGW build log/resolved source snapshot
 and IFW static Qt/dependency/CRT build records are unavailable. No additional copy

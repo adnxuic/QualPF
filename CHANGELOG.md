@@ -36,6 +36,9 @@ reports are no longer used for routine development.
   Completed the pinned GCC DLL public corresponding-source review with an offline
   source/notice collection and fixed-input supplier procedure. Retained the IFW
   static-source/CRT qualifications and the original artifact review results.
+  Bound the IFW public source tag and embedded OpenSSL static-runtime parameters;
+  recorded the public CI/recipe coverage limits and retained the unresolved
+  container findings under the owner's public-only review instruction.
 
 - Bound actual Linux runtime files to exact Ubuntu/Debian source packages,
   patches, original notices and separate SDK headers. Traced the fixed AppImage

@@ -24,7 +24,7 @@
     ],
     "status": "in_progress",
     "base_commit": "e746cb95fbccc4ce6d20eda4d3ac69ad6263a921",
-    "checkpoint_commit": "fe4a09348b59878bbb8c4cd5103e305e7950f1d4",
+    "checkpoint_commit": "f6ab113fa0dc9ca46bb6609e40b207a3b8a878db",
     "completed": [
       "Retained all earlier audit artifacts, original failed comparisons, independent fixtures and their exact scopes in the current rights/releasing guides and local evidence.",
       "Verified original MinGW vendor DLL/build-info bytes and the eight pinned QualX build/install/document blobs; vendor-SDK deployment remains the procedure and private original logs/attestation are not mandatory formats.",
@@ -45,11 +45,14 @@
       "Recovered IFW actual Coin dependency/build instructions, acquired all three previously omitted Qt 6.6.0 modules with official hashes/full notices, and corrected the Qt bundled zlib assumption while retaining original evidence.",
       "Verified Qt's original IFW 4.8.1 SDK installer against the official checksum and matched all five selected SDK tools to its component bytes without installing it.",
       "Completed the three pinned GCC DLL corresponding-source review through independently checked public reconstruction; supplied a verified 527-file source/notice collection and usable fixed-input supplier procedure without requiring private factory logs or byte-identical rebuilding.",
-      "Compared all 208 IFW embedded resources with public Qt source/generator inputs and identified an actual Visual C++ CRT diagnostic; retained the exact static configuration/patch and redistribution qualifications."
+      "Compared all 208 IFW embedded resources with public Qt source/generator inputs and identified an actual Visual C++ CRT diagnostic; retained the exact static configuration/patch and redistribution qualifications.",
+      "Bound the IFW source archive tag to public 4.8.1/12eab2bb and verified embedded OpenSSL VC-WIN64A, /MT and original compiler parameters; preserved the actual Qt source-path evidence.",
+      "Checked public IFW/product history, qtsdk master/refactor and Qt provisioning/source candidates; 41 returned public IFW tasks start in December 2025 and do not cover the September 2024 artifact. Rejected mismatched-version notices/recipes as actual-source bindings.",
+      "Recorded the owner's explicit read-only public review direction. The local Qt inquiry draft is marked unauthorized/unsent; no third-party message, SDK substitution or upload occurred."
     ],
-    "next_action": "Find an applicable public supplier source/configuration manifest for IFW's static Qt product ref and finish CRT redistribution/source-exclusion analysis. The GCC source review is complete for the pinned hashes; a future Windows candidate must bind those exact files, source materials and notices. Preserve accepted Linux candidates and do not upload.",
+    "next_action": "Continue only evidence-led public checks for a matching actual IFW source/patch/build manifest and applicable integrated CRT terms. The examined public candidates do not close these bindings. Do not contact third parties, repeat requests for unavailable owner records, substitute a different tool build or relabel retained reviews. Preserve the completed GCC source review and accepted Linux candidates; no upload.",
     "blockers": [
-      "The actual vendor IFW container still needs complete static configuration/patch coverage and CRT identification/redistribution basis. Official IFW/Qt/OpenSSL and observed compression sources/notices are supplied; no automatic source exception is asserted."
+      "Matching actual vendor IFW static Qt source/patch/build-input coverage and the applicable integrated CRT redistribution/source-exclusion basis remain unverified. The framework source tag and OpenSSL static MSVC choice are identified; the inspected public product/history/recipe records do not supply the missing binding. The owner chose public-only review with no third-party contact."
     ],
     "checks": [
       {
@@ -327,6 +330,12 @@
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": "build/windows-source-20261024/compiled-review-01/public-runtime-source-assessment-02.json"
+      },
+      {
+        "command": "Verify actual IFW/OpenSSL embedded configuration, official source/public-tag correspondence, public-query scope and candidate-version exclusions",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/windows-source-20261024/compiled-review-01/ifw-public-followup-12.json"
       }
     ]
   }
