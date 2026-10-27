@@ -2327,7 +2327,7 @@ void MainWindow::onCardSelected(const QString &id)
 
     auto row = [](const QString &label, const QString &value) -> QString {
         if (value.isEmpty() || value == "0" ) return QString();
-        return QString("<tr><td><b>%1</b></td><td>%2</td></tr>").arg(label, value);
+        return QString("<tr><td><b>%1</b></td><td>%2</td></tr>").arg(label, value.toHtmlEscaped());
     };
     auto rowD = [](const QString &label, double value, int decimals = 4) -> QString {
         if (value == 0.0) return QString();
@@ -2347,19 +2347,19 @@ void MainWindow::onCardSelected(const QString &id)
 
     QString ref;
     if (!info.authors.isEmpty())
-        ref = info.authors;
+        ref = info.authors.toHtmlEscaped();
     if (!info.journal.isEmpty()) {
         if (!ref.isEmpty()) ref += "; ";
-        ref += info.journal;
-        if (!info.journalVolume.isEmpty()) ref += " <b>" + info.journalVolume + "</b>";
+        ref += info.journal.toHtmlEscaped();
+        if (!info.journalVolume.isEmpty()) ref += " <b>" + info.journalVolume.toHtmlEscaped() + "</b>";
         if (info.journalYear > 0)   ref += QString(" (%1)").arg(info.journalYear);
-        if (!info.pageStart.isEmpty()) ref += " " + info.pageStart;
-        if (!info.pageEnd.isEmpty())   ref += "-" + info.pageEnd;
+        if (!info.pageStart.isEmpty()) ref += " " + info.pageStart.toHtmlEscaped();
+        if (!info.pageEnd.isEmpty())   ref += "-" + info.pageEnd.toHtmlEscaped();
     }
 
     QString html = "<html><body style='font-family:sans-serif;font-size:9pt'>";
     const QString idColor = cardColor(info.id, this).name();
-    html += QString("<h3 style='margin:4px 0;color:%1'>%2</h3>").arg(idColor, info.id);
+    html += QString("<h3 style='margin:4px 0;color:%1'>%2</h3>").arg(idColor, info.id.toHtmlEscaped());
     html += "<table cellspacing='2' cellpadding='2'>";
     html += row("Name",             info.name);
     html += row("Mineral Name",     info.mineralName);
@@ -2383,8 +2383,9 @@ void MainWindow::onCardSelected(const QString &id)
     QString dbType;
     const auto dbInfo = context().catalog().information(); dbNcard = dbInfo.first; dbType = QString::fromStdString(dbInfo.second);
     if (dbType == "COD") {
-        const QString codUrl = QString("https://www.crystallography.net/cod/%1.html").arg(info.id);
-        html += QString("<tr><td><b>COD Entry</b></td><td><a href='%1'>%1</a></td></tr>").arg(codUrl);
+        const QString codUrl = QString("https://www.crystallography.net/cod/%1.html")
+            .arg(QString::fromLatin1(QUrl::toPercentEncoding(info.id)));
+        html += QString("<tr><td><b>COD Entry</b></td><td><a href='%1'>%1</a></td></tr>").arg(codUrl.toHtmlEscaped());
     }
     html += "</table>";
 

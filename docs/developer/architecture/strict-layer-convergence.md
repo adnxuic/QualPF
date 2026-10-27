@@ -23,6 +23,10 @@ storage preserves keys and QVariant types. Display-coordinate expressions live
 in a separate Core target with their approved floating-point compilation mode.
 Snapshot transport is test-only and cannot enter production dependency closures.
 
+Card details render repository metadata as literal text, escaping it at the HTML
+presentation boundary. The official COD link percent-encodes the card identifier
+as one URL path component; metadata cannot introduce additional links or markup.
+
 ## Enforced boundaries
 
 Application exports headers from `src/application/include/qualpf/application`.

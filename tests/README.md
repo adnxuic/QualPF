@@ -200,6 +200,10 @@ Catalogue metadata probes retain their unavailable sentinel and never create a
 missing database as a side effect.
 Closed card and metadata lookups also reject an unrelated Qt default connection.
 
+The workspace GUI control also renders card metadata containing HTML delimiters,
+entities and link-like text through the real card-selection signal. It checks
+literal text, the encoded official COD destination and unchanged canonical state.
+
 Provenance tests retain incompatible residual/scale refusal, source/task mismatch,
 non-default QXP save refusal, unknown legacy provenance and explicit original-signal
 restart. Method/source mismatch precedes database protection and workers.

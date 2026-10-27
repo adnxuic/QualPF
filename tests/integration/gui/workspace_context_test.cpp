@@ -18,6 +18,9 @@
 #include "infrastructure/settings/progkeysettings.h"
 #include <QApplication>
 #include <QTableView>
+#include <QTextBrowser>
+#include <QTextBlock>
+#include <QUrl>
 #include <QJsonDocument>
 #include <QJsonArray>
 #include "classic_fixture.h"
@@ -239,6 +242,74 @@ void presenterLifetime() {
     const auto closing = context.refreshPresentation();
     check(!closing && closing.error().reason == "closing" && calls == 1, "Closing rejects presentation");
 }
+void cardDetailsPresentation() {
+    struct Repository final : ReferenceRepository {
+        application::CardDetails card;
+        bool open(const std::string &) override { return true; }
+        void close() override {}
+        std::pair<int, std::string> information() override { return {1, "COD"}; }
+        application::CardDetails details(const std::string &) const override { return card; }
+        NamedCounts spaceGroups() const override { return {}; }
+        NamedCounts colors() const override { return {}; }
+        Result<std::vector<ProductCard>> read(const CandidateQuery &, const ExecutionContext &,
+                                              SearchProgress) override {
+            return Result<std::vector<ProductCard>>{std::vector<ProductCard>{}};
+        }
+    } repository;
+    repository.card.valid = true;
+    repository.card.id = "007'\"><&/A";
+    repository.card.name = "<b>oxide</b> & hydrate";
+    repository.card.mineralName = "<i>mineral</i>";
+    repository.card.chemicalFormula = "A<B & C";
+    repository.card.spaceGroup = "P < 1";
+    repository.card.quality = "A & B";
+    repository.card.rir = "1<2";
+    repository.card.color = "<font color='red'>blue</font>";
+    repository.card.type = "type &alpha;";
+    repository.card.authors = "A <a href='https://invalid.test/'>link</a>";
+    repository.card.journal = "<b>Journal</b>";
+    repository.card.journalVolume = "<i>3</i>";
+    repository.card.journalYear = 2026;
+    repository.card.pageStart = "<10";
+    repository.card.pageEnd = "20>";
+    infrastructure::QtPreferenceStore preferences;
+    infrastructure::settings::SearchSettings searchSettings;
+    infrastructure::QtDatabaseBuildProvider databaseBuildProvider;
+    DatabaseBuildUseCases databaseBuild(databaseBuildProvider);
+    infrastructure::QtUpdateServiceProvider updates;
+    infrastructure::QtPlatformServices platform;
+    infrastructure::ProductFileProviders files;
+    infrastructure::DatabaseCatalogSettings settings;
+    Workspace workspace;
+    DatabaseCatalog catalog(workspace.searches(), settings, repository);
+    WorkspaceContext context(workspace, catalog, files.ports, preferences, searchSettings, platform, updates,
+                             databaseBuild, std::make_shared<infrastructure::SqlCandidateReaderFactory>());
+    context.presentation().configure(PresentationMode::automatic_gui);
+    MainWindow window(context);
+    auto *results = window.findChild<DbResultsWidget *>();
+    auto *browser = window.findChild<QTextBrowser *>("cardBrowser");
+    check(results && browser, "real card details presentation");
+    const auto source = workspace.session().snapshot();
+    const auto &card = repository.card;
+    results->cardSelected(QString::fromStdString(card.id));
+    const auto text = browser->toPlainText();
+    for (const auto *value : {&card.id, &card.name, &card.mineralName, &card.chemicalFormula, &card.spaceGroup,
+                              &card.quality, &card.rir, &card.color, &card.type, &card.authors, &card.journal,
+                              &card.journalVolume, &card.pageStart, &card.pageEnd})
+        check(text.contains(QString::fromStdString(*value)), "card metadata must display as literal text");
+    const QString expectedUrl = "https://www.crystallography.net/cod/007%27%22%3E%3C%26%2FA.html";
+    bool foundLink = false;
+    for (auto block = browser->document()->begin(); block.isValid(); block = block.next())
+        for (auto it = block.begin(); !it.atEnd(); ++it) {
+            const auto format = it.fragment().charFormat();
+            if (format.isAnchor()) {
+                check(format.anchorHref() == expectedUrl, "only the encoded COD entry link may be active");
+                foundLink = true;
+            }
+        }
+    check(foundLink && QUrl(expectedUrl).host() == "www.crystallography.net", "COD link retains its destination");
+    check(workspace.session().snapshot() == source, "card details do not mutate canonical state");
+}
 void selectionAndRequest(const QString &directory) {
     QSettings preferences;
     preferences.setValue(DB_COUNT_KEY, 17);
@@ -344,6 +415,7 @@ int main(int argc, char **argv) {
     try {
         isolation();
         presenterLifetime();
+        cardDetailsPresentation();
         selectionAndRequest(directory.path());
         removalAdmission(directory.path());
         std::cout << "PASS: explicit workspace ownership, isolation, subscription and bounded selection\n";
