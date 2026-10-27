@@ -23,17 +23,24 @@ your QualPF version separately.
 
 ## Methods
 
+- Bruckner, S. (2000), estimation of the background in powder diffraction patterns
+  through a robust smoothing procedure (see [Background](data-reduction/background.md)).
+  [Journal record](https://doi.org/10.1107/S0021889800003617).
 - Savitzky and Golay (1964), smoothing and differentiation by simplified
-  least-squares procedures.
+  least-squares procedures (see [Initial Peak Search](data-reduction/initial-peak-search.md)
+  and [Smoothing](data-reduction/smoothing.md)).
   [Journal record](https://doi.org/10.1021/ac60214a047).
-- Ladell et al. (1975), the method cited for K-alpha2 stripping.
+- Ladell et al. (1975), the method cited for K-alpha2 stripping (see
+  [K-alpha2 Stripping](data-reduction/kalpha2-stripping.md)).
   [Journal record](https://doi.org/10.1107/S0021889875011132).
 - ICDD, [Quantitative Analysis: RIR](https://www.icdd.com/assets/tutorials/Quantitative-Analysis-RIR.pdf),
-  background on reference intensity ratios and their assumptions.
+  background on reference intensity ratios and their assumptions (see
+  [Quantification](search-match/search-match.md#quantification)).
 
 ## Peak-width measurement
 
-These sources explain the geometric width construction and its limitations.
+These sources explain the geometric width construction and its limitations (see
+[FWHM Estimation and Peak Search](data-reduction/peak-search.md)).
 Imaging studies provide methodological context, not independent validation of
 QualPF on powder-diffraction samples. SciPy documentation describes comparison
 definitions and numerical tools; it does not imply a SciPy runtime dependency.
@@ -92,7 +99,9 @@ background-corrected peak height.
 ## PFSM and numerical fitting
 
 The following references cover the public PFSM concept, profile shapes,
-least-squares tools and interpretation of residuals. They are methodological
+least-squares tools and interpretation of residuals (see
+[Search-Match Overview](search-match/index.md#methods) and
+[Executing Search-Match](search-match/search-match.md)). They are methodological
 references, not claims that another program uses QualPF's solver or that every
 algorithm discussed in a paper is implemented here.
 
@@ -224,9 +233,10 @@ Powder Diffraction Data. *The Journal of Physical Chemistry B*, 109(16), 7781-77
 ## Database providers
 
 - [Crystallography Open Database](https://www.crystallography.net/cod/):
-  crystallographic structures and associated source records.
+  crystallographic structures and associated source records (see
+  [Database Installation](database-installation.md)).
 - [ICDD](https://www.icdd.com/): Powder Diffraction File products and their
-  applicable access terms.
+  applicable access terms (see [Database Installation](database-installation.md)).
 
 ## Software acknowledgments
 

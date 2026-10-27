@@ -10,6 +10,10 @@ reports are no longer used for routine development.
 
 ## [Unreleased]
 
+### Documentation
+- Expanded all 17 user manual pages under `docs/user/` with comprehensive feature explanations, complete parameter reference tables (defaults, valid ranges/options, and algorithmic effects), step-by-step workflow instructions, and native QualPF UI screenshots covering database management, radiation/wavelength settings, plot styling, workflow defaults (`Setting`) and current-project provenance (`Workflow — Current Project`), data reduction (`Range`, `Background`, `Initial Peak Search`, `FWHM Estimation`, `Peak Search`, `Smoothing`, `K-alpha2 Stripping`), and search-match (`CSM`, `PFSM`, `Candidate Recall`, `Restraints`, `Compare`, `Quantification` / RIR editing, and `Report` export).
+- Rebuilt the bundled offline manual `docs/qualpf_manual.pdf` and updated `build/documentation/qualpf_manual-provenance.json`.
+
 ### Added
 
 - Added Linux/GNU and Windows/MinGW product builds and 19 public regression

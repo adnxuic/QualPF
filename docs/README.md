@@ -3,7 +3,8 @@
 Choose the guide for your work:
 
 - [User manual](user/index.md): installation, databases, analysis workflows,
-  settings, project files and interpretation of results.
+  settings, project files, parameter reference tables, UI screenshot guides and
+  interpretation of results.
 - [Developer guide](developer/README.md): building and testing, architecture,
   numerical contracts, persistence and contributing changes.
 
