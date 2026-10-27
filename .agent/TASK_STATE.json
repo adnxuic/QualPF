@@ -1,5 +1,35 @@
 {
   "schema": "qualpf.agent_task_state.v1",
   "baseline_ref": "docs/developer/project-baseline.json",
-  "active_task": null
+  "active_task": {
+    "id": "user-manual-detailed-features-and-screenshots",
+    "goal": "Expand the QualPF user manual (docs/user/**) with complete feature explanations, detailed parameter reference tables, and authentic QualPF UI screenshots, then rebuild docs/qualpf_manual.pdf and verify all documentation/distribution checks.",
+    "in_scope": [
+      "docs/**",
+      "deploy/rights-review.json",
+      "CHANGELOG.md",
+      "tools/documentation/**",
+      ".agent/TASK_STATE.json"
+    ],
+    "out_of_scope": [
+      "src/**",
+      "tests/reference/**"
+    ],
+    "status": "in_progress",
+    "base_commit": "5a0c0eb009f788ec27708ea92f1dffa206f21d62",
+    "checkpoint_commit": "5a0c0eb009f788ec27708ea92f1dffa206f21d62",
+    "completed": [
+      "Read AGENTS.md, .agent/*, documentation/distribution checkers, and all 17 docs/user pages.",
+      "Generated 44 native QualPF UI screenshots covering workspace overview, database management, wavelength/plot settings, workflow defaults, workflow step history, data reduction, and search-match/quantification.",
+      "Expanded setup, workspace, settings, and data-reduction user manual chapters with full feature explanations, parameter tables, and screenshot guides."
+    ],
+    "next_action": "Commit search-match, restraints, worked examples, references, CHANGELOG, and clear active_task.",
+    "blockers": [],
+    "checks": [
+      "python -B tools/validation/check_documentation.py --self-test",
+      "python -B tools/validation/check_distribution.py",
+      "python -B tools/validation/check_product_identity.py --self-test",
+      "python -B tools/agent/check_current_context.py --self-test"
+    ]
+  }
 }

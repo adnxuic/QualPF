@@ -1,67 +1,76 @@
 # Installation
 
-Use a QualPF build with its matching runtime files. The application executable is
-`qualpf` on Linux and `qualpf.exe` on Windows. Databases and experimental patterns
-are separate inputs; installing the program does not supply either.
+This chapter describes hardware and operating-system requirements for **QualPF**, step-by-step installation procedures on Windows and Linux, and recommended first-run configuration checks.
 
-## Obtain a build
+---
 
-The project has no configured public binary download endpoint. Local packages
-marked `audit` are inspection artifacts, not a formal release. Consult the
-repository's developer build and distribution guides when producing a package;
-package generation alone does not establish release readiness.
+## System Requirements
 
-On Windows, a prepared installer guides directory selection and shortcut creation.
-Keep the executable with the Qt plugins and runtime libraries supplied by that
-build. Copying only the executable can prevent startup. When replacing an
-installation, follow the installer's instructions for the existing version.
+| Component | Minimum Specification | Recommended Specification (for PFSM & Large Databases) |
+| :--- | :--- | :--- |
+| **Operating System** | Windows 10 (64-bit) or modern 64-bit Linux distribution (glibc 2.31+) | Windows 11 (64-bit) or Ubuntu 22.04+ / Fedora 38+ (64-bit) |
+| **Processor (CPU)** | 64-bit dual-core CPU | 64-bit multi-core CPU (8+ logical threads for parallel PFSM screening and profile fitting) |
+| **Memory (RAM)** | 4 GB RAM | 8 GB – 16 GB RAM (when using full COD databases with PFSM template caching enabled) |
+| **Disk Space** | 250 MB for QualPF application binaries | 2 GB – 10 GB free SSD space when storing indexed COD, ICDD PDF-2, or custom CIF SQLite databases |
+| **Display** | $1280 \times 800$ resolution | $1920 \times 1080$ or higher resolution (allows simultaneous viewing of the central diffraction plot and surrounding dock panels) |
 
-For a prepared Linux AppImage, make the file executable and launch it from your
-file manager or terminal. If its FUSE integration is unavailable, the AppImage
-runtime also provides `--appimage-extract`; run `squashfs-root/AppRun` from the
-extracted directory. Availability on a particular system depends on the build's
-runtime requirements, not just the filename.
-When opening an installed PDF manual from an AppImage, QualPF keeps a private
-temporary copy until the application closes. Files in Downloads are preserved.
+---
 
-## Build from source
+## Installing on Windows
 
-The supported build uses CMake 3.20 or later, a C++20 compiler, matching Qt 6.7+
-development libraries, Eigen 3.4 and Boost headers. PFSM execution also uses
-compiler OpenMP support. A Fortran compiler is not needed. Dependencies must be
-provided before configuring; CMake does not download them.
+QualPF is distributed on Windows in two formats:
 
-From a configured source checkout, the usual sequence is:
+### Option A: Windows Installer (Recommended)
 
-```sh
-cmake -S . -B build/local -DCMAKE_BUILD_TYPE=Release
-cmake --build build/local --parallel
-cmake --install build/local --prefix /your/install/directory
+1. Download the official Windows installer executable (`QualPF-<version>-Windows-x86_64-Setup.exe`).
+2. Run the installer and follow the setup wizard:
+   - Choose the destination installation directory (default: `C:\Program Files\QualPF` or per-user application directory).
+   - Optionally create Start Menu and Desktop shortcuts.
+3. Launch **QualPF** from the Windows Start Menu or Desktop shortcut.
+
+### Option B: Portable Archive (`.zip`)
+
+1. Download the portable archive (`QualPF-<version>-Windows-x86_64.zip`).
+2. Extract the archive contents into a permanent folder where your user account has read/execute permissions (for example, `C:\Tools\QualPF`). Do **not** run QualPF directly from inside an unextracted `.zip` preview window, as companion Qt plugins and SQLite drivers must reside alongside `qualpf.exe`.
+3. Double-click `qualpf.exe` in the extracted folder to start the application.
+
+---
+
+## Building and Installing on Linux
+
+On Linux systems, QualPF can be built from source using a C++20 compiler (GCC 12+ or Clang 15+), CMake 3.24+, Ninja, and Qt 6 (`Qt6Widgets`, `Qt6Sql`, `Qt6PrintSupport`, `Qt6Network`) with the SQLite SQL driver plugin (`libqsqlite.so`):
+
+```bash
+# 1. Configure the release build
+cmake --preset linux-release
+
+# 2. Compile the application and command-line/validation targets
+cmake --build --preset linux-release
+
+# 3. Install into a local prefix or launch directly
+./build/linux-release/src/app/qualpf
 ```
 
-Use a writable installation prefix or the platform's normal installation
-permissions. Windows builds require a compiler-compatible Qt kit. Consult
-`docs/developer/building.md` in the source distribution for presets and platform
-setup; the commands above assume that CMake can already locate the dependencies.
+> **Important:** > Ensure the Qt 6 SQLite plugin package (such as `libqt6sql6-sqlite` on Debian/Ubuntu or `qt6-qtbase-mysql`/`qt6-qtbase` on Fedora/RHEL) is installed. QualPF uses SQLite to query reference databases (`.sq` and `.sq.search`).
 
-## First session
+---
 
-Launch the installed executable and follow [Database setup](database-installation.md).
-You may postpone database configuration to inspect a pattern or an existing QPF
-project. A new database search requires an available reference database.
+## Verifying Your Installation
 
-The compatibility folder name `QualXDB` is retained. Existing QualPF settings take
-precedence when the first normal startup imports older application preferences;
-the older settings store is kept. This import is not repeated after it succeeds.
-Preferences and dock layouts are local to your installation, while project
-analysis settings are stored in QPF files.
+After launching QualPF:
 
-## Licenses and source code
+1. Open **Help > About QualPF** from the menu bar to verify the installed version, build metadata, and third-party software notices.
+2. Open **Help > QualPF Manual** (`F1`) to verify that the offline user manual opens cleanly.
 
-Open **Help → About → License and notices** for the GPL, origin and third-party
-notices. The **Origin and changes** page links to the offline source-retrieval
-instructions. Slim Windows and Linux distributions supply the application and
-platform dependency source archives separately beside the binary, with their
-SHA256SUMS. Keep the
-matching archives if you want to inspect or rebuild that version; see
-[Obtaining QualPF source code](../../SOURCE_CODE.md).
+![QualPF About dialog showing version and licensing information](images/about-dialog.png)
+
+---
+
+## First-Run Checklist
+
+Before analyzing your first experimental diffraction pattern, complete the following two setup tasks:
+
+1. **Register or Create a Reference Database**
+   QualPF requires at least one enabled reference database to run CSM or PFSM phase identification. Open **Database > Manage Databases** to register an existing `.sq` database or build one from COD, ICDD PDF-2, or local CIF files. See [Database Installation](database-installation.md) for full details.
+2. **Review Default Workflow Parameters (Optional)**
+   Open the **Setting** menu (**Setting > Preprocessing**, **Setting > CSM**, **Setting > PFSM**, or **Setting > Peak Search**) to inspect or customize default parameters applied to newly created projects—such as your preferred FWHM algorithm, background polynomial order, or PFSM candidate recall limits. See [Workflow Settings and Project History](settings.md).

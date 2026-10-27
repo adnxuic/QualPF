@@ -1,42 +1,104 @@
-# Formal peak search
+# FWHM Estimation and Peak Search
 
-The formal peak list contains measured positions, intensities and widths. CSM
-uses this evidence to compare reference reflections. PFSM instead uses the
-continuous signal and does not require this list.
+In **QualPF**, representative Full Width at Half Maximum (**FWHM**) estimation and formal **Peak Search** work together to characterize the reflections in your diffraction pattern:
 
-## Detect and inspect
+- **FWHM Estimation (`Preprocessing > FWHM Estimation` / `FWHM Estimation Options...`)** determines a single representative peak width (in degrees $2\theta$) for the active pattern. This width is required both by **PFSM** (to expand reference reflection sticks into continuous pseudo-Voigt/Lorentzian profile templates) and by **Peak Search** (to scale peak-picking windows and assign fallback widths).
+- **Peak Search (`Preprocessing > Peak Search` / `Peak Search Options...`)** extracts a discrete table of experimental reflections ($2\theta$, $d$, Intensity, FWHM) displayed in the **Peaks** dock and consumed by **Classical Peak-List Search-Match (CSM)**.
 
-Choose **Peak Search > Peak Search**. The operation prepares missing dependencies
-with the Peak Search profile and publishes the resulting peaks together. Inspect
-the **Peaks** dock and the corresponding plot markers before using them in an
-interpretation.
+---
 
-**Peak Search > Peak Search Options** opens the peak editor. Its Interval and
-Settings controls cover the angular bounds, append choice, intensity threshold,
-sensitivity and requested number of peaks. Inspect the preview and accept it
-only when it represents the features you intend to measure. **Setting > Peak
-Search** is the separate editor for defaults used by future projects.
+## Representative FWHM Estimation (`Preprocessing > FWHM Estimation Options...`)
 
-Peak selection from an existing candidate pool is distinct from a fresh detection.
-Reselecting peaks preserves that pool's original detection evidence. To change
-the measurement conditions, rerun detection with the intended preparation.
+Choose **Preprocessing > FWHM Estimation Options...** to configure how QualPF determines the representative peak width of the working pattern.
 
-## Handle rejected candidates
+![FWHM Estimation Options dialog with Gaussian fit (Classical) selected](../images/fwhm-gaussian.png)
 
-A candidate whose local-baseline endpoints coincide cannot be measured. The
-program can skip such candidates and still return valid peaks. **Candidate
-details...** identifies the stage, candidate, input sample, angle and rejection
-reason. These diagnostic indices start at zero, unlike the initial-candidate
-table's displayed sample numbers.
+![FWHM Estimation Options dialog with Geometric FWHM and Minimum sampling density Q = 6 selected](../images/fwhm-geometric.png)
 
-If no measurable candidate remains, the operation fails without replacing the
-previous result. Inspect the signal and preparation, adjust suitable options or
-use manual editing. A failed calculation is not an empty, successful peak set.
+![FWHM Estimation Options dialog with Use fixed Default FWHM enabled](../images/fwhm-fixed.png)
 
-## Edit or exchange peaks
+### Parameter Reference: `FWHM Estimation Options` Dialog
 
-The Peak Search menu offers **Add Peak**, **Delete Peak**, **Add inferred peak**,
-**Delete all peaks**, **Load Peaks** and **Save Peaks**. Review manually added or
-imported coordinates against the measurement; they do not substitute for a
-continuous experimental signal. Dependent analyses may need to be invalidated
-when you change their peak evidence.
+| Parameter | Default | Range / Options | Role and Effect |
+| :--- | :--- | :--- | :--- |
+| **Algorithm** | `Gaussian fit (Classical)` (Preprocessing / CSM / Peak Search)<br/>`Geometric FWHM` (PFSM) | `Gaussian fit (Classical)`, `Geometric FWHM` | Selects the automatic FWHM estimation method executed when **Use fixed Default FWHM** is unchecked. |
+| **Minimum sampling density Q** | `6` | `2` – `8` (integer) | Shown only when **Algorithm** is `Geometric FWHM`. Specifies the minimum number of data samples across a reflection required for that candidate peak to be included in the geometric width estimate. Lowering $Q$ (for example, to `3` or `4`) allows coarser step-size patterns to succeed without falling back to a fixed width. |
+| **Use fixed Default FWHM** | Unchecked | Checked / Unchecked | When checked, disables automatic `Gaussian fit` and `Geometric FWHM` estimation and directly assigns **Default FWHM (°2θ)** as the representative pattern width. Also disables the **Initial Peak Search** prerequisite when running PFSM. |
+| **Default FWHM (°2θ)** | `0.1` | `> 0.0` – `180.0` | Width in degrees $2\theta$ used either as the explicit fixed width (when **Use fixed Default FWHM** is checked) or as the fallback width when automatic estimation cannot find enough isolated peaks. |
+
+### Comparing the Three FWHM Modes
+
+1. **Gaussian fit (Classical)** (`qualpf.fwhm.gaussian`):
+   Selects isolated reflections from the **Initial Peak Search** candidate list and fits local Gaussian bell curves to determine the representative FWHM. Best suited for standard laboratory scans used with **Peak Search** and **CSM**.
+2. **Geometric FWHM** (`qualpf.fwhm.geometric`):
+   Implements the [IAEA F1 geometric half-maximum chord procedure](../references.md#f1-iaea-fwhm-procedure) on isolated initial peak candidates that satisfy the **Minimum sampling density Q** criterion (`2`–`8` samples). Because it measures the half-height width directly from background-referenced profile geometry without assuming a pure Gaussian peak shape, **Geometric FWHM** is the recommended default for **PFSM**.
+3. **Fixed Default FWHM** (`qualpf.fwhm.fixed`):
+   Directly applies the user-supplied **Default FWHM (°2θ)** value. Ideal when analyzing patterns with very few or severely overlapped reflections where automatic single-peak isolation is not possible.
+
+---
+
+## Formal Peak Search Options
+
+To extract or update the discrete experimental peak table in the **Peaks** dock, select **Preprocessing > Peak Search** (`Ctrl+K`) or open **Preprocessing > Peak Search Options...**.
+
+![Peak Search Options dialog showing Interval bounds, Append new peaks, Intensity threshold, Sensitivity, and Number of peaks](../images/actionPeak_Search_Conditions-native.png)
+
+### Parameter Reference: `Peak Search Options` Dialog
+
+| Group | Parameter | Default | Range / Options | Role and Effect |
+| :--- | :--- | :--- | :--- | :--- |
+| **Interval** | **Append new peaks** | Unchecked | Checked / Unchecked | When unchecked, running Peak Search replaces the entire experimental peak list. When checked, existing peaks outside the $[\text{Min}, \text{Max}]$ search sub-interval are preserved and newly detected peaks inside $[\text{Min}, \text{Max}]$ are merged into the table. |
+| **Interval** | **Min (°2θ)** | Pattern start angle | Within calculation range | Lower angular bound for peak extraction. Synchronized with the left vertical cursor on the central plot. |
+| **Interval** | **Max (°2θ)** | Pattern end angle | Within calculation range | Upper angular bound for peak extraction. Synchronized with the right vertical cursor on the central plot. |
+| **Settings** | **Intensity threshold (%)** | `1.00` | `0.00` – `100.00` | Minimum relative peak height (expressed as a percentage of the strongest peak's net intensity) required to keep a detected reflection. Increase to `2.0`–`5.0%` to ignore trace noise; decrease to `0.2`–`0.5%` to capture weak minor-phase reflections. |
+| **Settings** | **Sensitivity** | `50` | `0` – `100` (slider & spinbox) | Controls second/third-derivative curvature sensitivity for resolving closely spaced doublets and shoulders. Higher values split shoulders more aggressively; lower values retain only well-separated maxima. |
+| **Settings** | **Number of peaks** | Unchecked (`100`) | `1` – `10000` | Optional checkbox and spinbox. When checked, truncates the extracted peak list to the $N$ most intense reflections. |
+
+> **Tip:** > Combining **Append new peaks** with a narrow **Min / Max (°2θ)** window lets you apply high sensitivity (`Sensitivity = 85`, `Intensity threshold = 0.3%`) in a specific high-angle region without flooding the low-angle region with noise peaks.
+
+---
+
+## Inspecting and Editing the `Peaks` Dock
+
+All extracted and manually added experimental peaks are listed in the **Peaks** dock (**View > Peaks**).
+
+![Peaks dock displaying extracted experimental reflections with 2-theta, d-spacing, Intensity, and FWHM columns](../images/peaks-dock.png)
+
+### `Peaks` Dock Columns and Context Actions
+
+| Column / Action | Description |
+| :--- | :--- |
+| **2θ (°)** | Bragg angle of the experimental reflection in degrees $2\theta$. |
+| **d (Å)** | Interplanar spacing $d = \lambda_1 / (2 \sin\theta)$ in Ångströms calculated from the primary wavelength. |
+| **Intensity** | Peak intensity (net above background when a background curve is present). |
+| **FWHM (°2θ)** | Full Width at Half Maximum of the individual reflection in degrees $2\theta$. |
+| **Right-Click > Add Peak...** | Opens the **Add table peak** dialog to insert a reflection by typing its exact $2\theta$ or $d$-spacing coordinate, intensity, and width. |
+| **Right-Click > Modify Peak...** (or double-click row) | Opens the **Modify table peak** dialog to edit the selected peak's coordinates, intensity, or FWHM. |
+| **Right-Click > Delete Selected Peaks** (`Del`) | Removes the highlighted row(s) from the experimental peak list. |
+
+---
+
+## Adding and Modifying Peaks Manually
+
+Even with optimal automatic settings, weak shoulders or partially overlapped reflections may benefit from manual refinement. QualPF provides both **tabular** and **graphical** manual peak tools.
+
+### 1. Tabular Peak Addition and Modification (`Add / Modify table peak` Dialog)
+
+Double-clicking a row in the **Peaks** dock (or choosing **Add Peak...** / **Modify Peak...** from its context menu) opens the **Modify table peak** (or **Add table peak**) dialog.
+
+![Modify table peak dialog showing Coordinate representation, Position, Intensity, Infer width from neighboring peaks, and FWHM](../images/manual-peak-dialog.png)
+
+| Parameter | Default | Options / Range | Role and Effect |
+| :--- | :--- | :--- | :--- |
+| **Coordinate representation** | `2 theta` | `2 theta`, `d spacing` | Chooses whether you enter the peak position in degrees $2\theta$ (`2 theta`) or in Ångströms (`d spacing`). QualPF automatically converts the complementary coordinate using the active primary wavelength $\lambda_1$. |
+| **Position (°2θ)** / **d-spacing (Å)** | Selected peak coordinate | Valid diffraction domain | Exact peak position. Must lie within the pattern's valid angular domain $(0^\circ, 180^\circ)$ and satisfy $0 < d \le \lambda / 2$. |
+| **Intensity** | Selected peak height | `> 0` | Net peak intensity assigned to the reflection. |
+| **Infer width from neighboring peaks** | Checked (when adding) | Checked / Unchecked | When checked, QualPF automatically interpolates the peak's **FWHM** from adjacent experimental reflections (or the representative pattern FWHM), disabling the manual **FWHM** input box. Uncheck to enter a custom **FWHM (°2θ)**. |
+| **FWHM (°2θ)** | `0.20` | `> 0.0` – `180.0` | Explicit Full Width at Half Maximum in degrees $2\theta$ when **Infer width from neighboring peaks** is unchecked. |
+
+### 2. Graphical Peak Addition and Deletion on the Central Plot
+
+- **Add Peak on Graph (`Preprocessing > Add Peak`)**:
+  Activate **Add Peak** from the **Preprocessing** menu or toolbar, then left-click on a peak maximum in the central diffraction plot. QualPF snaps to the local profile or opens the inferred-peak width estimator if the clicked shoulder cannot be fitted with a standalone bell curve.
+- **Delete Peak on Graph (`Preprocessing > Delete Peak`)**:
+  Activate **Delete Peak** and left-click a peak marker (or drag a selection rectangle around multiple peak markers) on the central plot to remove them immediately.

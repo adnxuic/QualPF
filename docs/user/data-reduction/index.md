@@ -1,64 +1,59 @@
-# Data reduction
+# Data Reduction Overview and Angular Range
 
-Preparation establishes the signal and evidence used by later calculations.
-Treat it separately from plot controls: showing or hiding a curve does not change
-the values used by an algorithm.
+Data reduction (accessed from the **Preprocessing** menu) prepares an experimental powder diffraction pattern for phase identification. In **QualPF**, you can execute data-reduction steps manually in any order, or let **Search-Match > Run PFSM** / **Search-Match > Run CSM** automatically execute missing prerequisite steps according to your project's workflow settings.
 
-## Decide which operations are needed
+![Preprocessing menu in QualPF showing wavelength, range, background, initial peak search, FWHM estimation, peak search, smoothing, K-alpha2 stripping, and restart actions](../images/preprocessing-menu.png)
 
-| Operation | Role |
-| --- | --- |
-| Range | Restrict the working angular interval |
-| Background | Estimate the slowly varying contribution beneath diffraction features |
-| Smoothing | Apply a selected filter to the working signal |
-| K-alpha2 stripping | Apply the supported radiation correction when appropriate |
-| Initial Peak Search | Obtain candidate positions for the Gaussian width route |
-| FWHM Estimation | Estimate a physical peak width or use an explicitly fixed width |
-| Peak Search | Measure and select the formal peaks used by CSM |
+---
 
-Smoothing, cropping and stripping are explicit choices. Automatic matching
-prepares missing dependencies, not an arbitrary sequence of every preprocessing
-operation. Keep an unmodified measurement and inspect each applied correction.
+## Standard Data-Reduction Sequence
 
-## Width and peak preparation
+| Step | Menu Command | Purpose | Required By |
+| :--- | :--- | :--- | :--- |
+| **1. Wavelength** | **Preprocessing > Wavelength...** (`Ctrl+W`) | Defines incident radiation kind (`X-ray`, `Neutron`, `Electron`), primary wavelength $\lambda_1$, and optional $\lambda_2$ ($K\alpha_2$) doublet ratio. | All workflows (converts $2\theta \leftrightarrow d$). |
+| **2. Range** | **Preprocessing > Range...** | Crops the active calculation interval $[\text{Min } 2\theta, \text{Max } 2\theta]$ to exclude noisy low- or high-angle boundaries. | Optional (recommended when beam spill or detector cutoffs are present). |
+| **3. Background** | **Preprocessing > Background** (`Ctrl+B`) / **Background Options...** | Estimates the continuous background curve using polynomial/series bases, splines, or a Bruckner filter, with optional manual control points. | **PFSM**, **Peak Search**, and **CSM** ([Background](background.md)). |
+| **4. Initial Peak Search** | **Preprocessing > Initial Peak Search** / **Initial Peak Search Options...** | Detects initial peak candidates from the Savitzky-Golay third derivative of the spectrum to seed FWHM estimation and peak extraction. | **FWHM Estimation** and **Peak Search** ([Initial Peak Search](initial-peak-search.md)). |
+| **5. FWHM Estimation** | **Preprocessing > FWHM Estimation** / **FWHM Estimation Options...** | Determines a representative Full Width at Half Maximum (FWHM) via Gaussian fitting, Geometric estimation, or a fixed default width. | **PFSM** (profile template width) and **Peak Search** ([FWHM & Peak Search](peak-search.md)). |
+| **6. Smoothing (Optional)** | **Preprocessing > Smoothing...** | Reduces high-frequency counting noise using Savitzky-Golay or Adjacent-Averaging filters. | Optional ([Smoothing](smoothing.md)). |
+| **7. K-alpha2 Stripping (Optional)** | **Preprocessing > K-alpha2 Stripping** | Removes $K\alpha_2$ doublet peaks from bichromatic laboratory X-ray patterns. | Optional ([K-alpha2 Stripping](kalpha2-stripping.md)). |
+| **8. Formal Peak Search** | **Preprocessing > Peak Search** (`Ctrl+K`) / **Peak Search Options...** | Extracts the discrete experimental peak table ($2\theta$, $d$, $I$, FWHM) displayed in the **Peaks** dock. | **CSM** ([FWHM & Peak Search](peak-search.md#formal-peak-search-options)). |
 
-The Gaussian width route uses initial derivative candidates. A fixed width
-skips estimation; the geometric route measures widths using its own candidate
-selection. The configured physical width is in degrees two-theta. An initial
-display value is not evidence that a width has been measured.
+---
 
-**Preprocessing > FWHM Estimation Options...** selects the width policy.
-**FWHM Estimation** performs the measurement. Failed automatic estimation stops
-dependent preparation rather than silently reusing an old displayed value.
-PFSM uses an explicitly configured fixed width, a compatible manual estimate,
-or automatic geometric estimation. See [matching options](../search-match/search-match.md).
+## Selecting the Calculation Range (`Preprocessing > Range...`)
 
-## Method references
+Low-angle beam spill, air scatter near the direct beam, or high-angle detector edge drop-offs can distort background polynomials and introduce spurious boundary peaks. Use **Preprocessing > Range...** to restrict all subsequent calculations to a clean angular interval.
 
-The geometric route uses three-point peak-top interpolation and locates
-half-height crossings on the measured trace. See
-[IAEA guidance](../references.md#f1-iaea-fwhm-procedure),
-[Rainio et al.](../references.md#f2-comparison-of-width-estimators) and
-[AAPM guidance](../references.md#f3-aapm-measurement-guidance) for that measurement
-context. Their imaging applications do not validate powder-diffraction accuracy.
-[Kisch](../references.md#f4-fitted-and-trace-widths) discusses why a fitted width
-and a trace width need not coincide. The
-[diffraction guidelines](../references.md#f5-diffraction-data-and-uncertainty)
-provide sampling and background context.
+![Range dialog for cropping the active calculation interval](../images/range-dialog.png)
 
-Candidate prominence can help selection, but half prominence and half of a
-background-corrected peak height are different definitions. Compare the
-[prominence](../references.md#f6-peak-prominence) and
-[width](../references.md#f7-prominence-based-widths) definitions before using
-external tools to check a width.
+### Parameter Reference: `Range` Dialog
 
-## Revisit a decision
+| Parameter / Control | Default | Range / Behavior | Role and Effect |
+| :--- | :--- | :--- | :--- |
+| **Min (°2θ)** | Pattern start angle | Pattern minimum to current `Max` | Sets the lower angular boundary of the active calculation range. Synchronized with the left vertical double-line cursor on the central plot. |
+| **Max (°2θ)** | Pattern end angle | Current `Min` to pattern maximum | Sets the upper angular boundary of the active calculation range. Synchronized with the right vertical double-line cursor on the central plot. |
+| **Apply** | Button | Live preview | Previews the cropped angular range in the central plot without closing the dialog. |
+| **OK** | Button | Commit & close | Commits the new calculation range to the project state and records a `Range` step in **Workflow — Current Project**. |
+| **Cancel** | Button | Discard & close | Restores the previous calculation range and closes the dialog. |
 
-Inspect [Workflow history](../settings.md#inspect-and-undo) before replacing
-preparation: downstream peaks and searches may depend on it. **Preprocessing >
-Restart preprocessing...** provides an explicit restart path. Read its
-confirmation and preserve your raw file or a QPF checkpoint first.
+### Interactive Range Selection Procedure
 
-The following pages explain [background](background.md),
-[initial candidates](initial-peak-search.md), [formal peaks](peak-search.md),
-[smoothing](smoothing.md) and [K-alpha2 stripping](kalpha2-stripping.md).
+1. Choose **Preprocessing > Range...** from the menu bar. Two vertical boundary cursors appear at the left and right edges of the central diffraction plot.
+2. Adjust the lower and upper $2\theta$ limits using either method:
+   - Drag the left and right vertical boundary cursors directly on the plot canvas; or
+   - Enter exact numeric values into the **Min** and **Max** spin boxes.
+3. Click **Apply** to preview the cropped domain, then click **OK** to commit.
+
+> **Note:** > If downstream steps (such as Background, FWHM, Peak Search, or Search-Match) have already been computed on the project, changing the calculation range prompts you to confirm invalidating those dependent results before applying the new range.
+
+---
+
+## Resetting Data Reduction (`Preprocessing > Restart Preprocessing`)
+
+At any point during an analysis, selecting **Preprocessing > Restart Preprocessing**:
+- Restores the full original imported diffraction pattern and its uncropped angular range;
+- Clears the modeled background curve, manual background control points, initial peak candidates, FWHM estimate, smoothing/stripping state, and extracted peak list;
+- Resets the preprocessing history while preserving your global **Setting** defaults.
+
+For selective step-by-step rollback (for example, undoing only Smoothing or Search-Match while keeping your Background curve), use **Undo from Here** in the **Workflow — Current Project** dock ([Inspecting and Undoing Steps](../settings.md#inspect-and-undo)).
