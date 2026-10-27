@@ -34,6 +34,7 @@ add_library(qualpf_infrastructure OBJECT
     database/qt_sql/sql_connection.h
     database/qt_sql/sql_candidate_query.cpp
     database/qt_sql/sql_candidate_query.h
+    database/qt_sql/sql_text.h
     database/qt_sql/sql_reference_repository.cpp
     database/qt_sql/sql_reference_repository.h
     database/qt_sql/pdf2_record_mapper.cpp

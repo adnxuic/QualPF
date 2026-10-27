@@ -1,4 +1,5 @@
 #include "infrastructure/database/qt_sql/sql_reference_repository.h"
+#include "infrastructure/database/qt_sql/sql_text.h"
 #include "infrastructure/database/searchutil.h"
 #include "infrastructure/diagnostics/scopedtimer.h"
 
@@ -55,10 +56,7 @@ qualpf::Result<std::vector<qualpf::application::ProductCard>> SqlReferenceReposi
         int count = ids.size();
         applyRestraintsToIds(builder, ids, count);
         if (!ids.empty()) {
-            QString quoted;
-            for (const auto &id : ids) quoted += QLatin1Char('\'') + id + QLatin1String("',");
-            quoted.chop(1);
-            readRows(quoted, builder, count, cards, progress);
+            readRows(sqlTextList(ids), builder, count, cards, progress);
         }
     } else {
     switch (request.route) {
@@ -127,7 +125,8 @@ CardDetails SqlReferenceRepository::queryCard(const QString &idCard) const
 
     QSqlQuery q1(dbMain.db());
     q1.prepare("SELECT id, name, mineralname, chemical_formula, spacegroup, quality, rir, nrec, nd, "
-               "dvalue, intensita FROM id WHERE id=" + idCard);
+               "dvalue, intensita FROM id WHERE id=?");
+    q1.addBindValue(idCard);
     if (q1.exec() && q1.first()) {
         info.id              = q1.value(0).toString();
         info.name            = q1.value(1).toString().trimmed();
@@ -149,7 +148,8 @@ CardDetails SqlReferenceRepository::queryCard(const QString &idCard) const
     QSqlQuery q2(dbInfo.db());
     q2.prepare("SELECT authors, journal, journal_year, journal_volume, page_start, page_end, "
                "color, crystal_density, type, volume, density, z, a, b, c, alpha, beta, gamma, "
-               "`mu(CuKa)`, h, k, l, mul FROM info WHERE id=" + idCard);
+               "`mu(CuKa)`, h, k, l, mul FROM info WHERE id=?");
+    q2.addBindValue(idCard);
     if (q2.exec() && q2.first()) {
         info.authors        = q2.value(0).toString().trimmed();
         info.journal        = q2.value(1).toString().trimmed();
@@ -536,13 +536,8 @@ void SqlReferenceRepository::applyRestraintsToIds(const SqlCandidateQuery &build
         queryChemical = queryChemical.isEmpty() ? entryIds : entryIds + " INTERSECT " + queryChemical;
     if (!queryChemical.isEmpty()) {
         // Build quoted id list for INTERSECT clause
-        QString quotedIds;
-        for (const QString &id : std::as_const(ids))
-            quotedIds.append(QLatin1Char('\'') + id + QLatin1String("',"));
-        quotedIds.chop(1);
-
         const QString combined = queryChemical
-            + QStringLiteral(" INTERSECT SELECT id FROM id WHERE id IN (") + quotedIds + QLatin1Char(')');
+            + QStringLiteral(" INTERSECT SELECT id FROM id WHERE id IN (") + sqlTextList(ids) + QLatin1Char(')');
 
         QSqlQuery q(dbMain.db());
         q.prepare(combined);
@@ -626,12 +621,7 @@ void SqlReferenceRepository::queryStrongest(const SqlCandidateQuery &builder, st
     if (idList.isEmpty()) return;
 
     // Build quoted idsString for makeQueryInfoIdsWithFom
-    QString idsString;
-    for (const QString &id : std::as_const(idList))
-        idsString.append(QLatin1Char('\'') + id + QLatin1String("',"));
-    idsString.chop(1);
-
-    readRows(idsString, builder, count, acceptedCards, progress);
+    readRows(sqlTextList(idList), builder, count, acceptedCards, progress);
 }
 
 void SqlReferenceRepository::queryWithoutStrongest(const SqlCandidateQuery &builder,
@@ -677,12 +667,7 @@ void SqlReferenceRepository::queryWithoutStrongest(const SqlCandidateQuery &buil
 
         if (idList.isEmpty()) return;
 
-        QString idsString;
-        for (const QString &id : std::as_const(idList))
-            idsString.append(QLatin1Char('\'') + id + QLatin1String("',"));
-        idsString.chop(1);
-
-        readRows(idsString, builder, count, acceptedCards, progress);
+        readRows(sqlTextList(idList), builder, count, acceptedCards, progress);
     } else {
         // No restraints: query all cards directly (idsString empty → no IN filter)
         readRows(QString(), builder, 0, acceptedCards, progress, /*noFilter=*/true);
@@ -725,13 +710,14 @@ QList<QPair<QString,int>> SqlReferenceRepository::queryColors() const
 
 void SqlReferenceRepository::getInfo(int &ncard, QString &type)
 {
+    ncard = 0;
+    type.clear();
     auto lease = referenceLease_ ? nullptr : qualpf::infrastructure::DatabaseLease::read(basePath_);
     if ((!referenceLease_ && !lease) || !dbMain.onOwnerThread()) return;
     QSqlQuery queryInfo(dbMain.db());
     queryInfo.prepare("SELECT ncard, type FROM infodb");
 
-    if (queryInfo.exec()) {
-        queryInfo.first();
+    if (queryInfo.exec() && queryInfo.first()) {
         ncard = queryInfo.value(0).toInt();
         type = queryInfo.value(1).toString();
     }

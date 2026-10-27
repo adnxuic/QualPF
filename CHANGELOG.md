@@ -416,6 +416,14 @@ reports are no longer used for routine development.
 
 ### Fixed
 
+- Treated reference-card IDs and textual search restraints as SQL data, preserving
+  apostrophes, leading-zero and SQL-looking identifiers without widening predicates.
+  Retained LIKE wildcards, restraint intersections, database ordering and numerical
+  decoding. Failed or closed database-information reads now return defined empty
+  values, and catalogue metadata probes open read-only so missing paths do not
+  create empty database files. Added real SQLite regressions for all query routes,
+  literal lookups and failed metadata reads.
+
 - Corrected release setup and user workflow instructions against the current
   implementation: real menu routes and shortcuts, QPF-only admission, verified
   package/toolchain scope, single-database selection, fixed Cu stripping,

@@ -27,16 +27,19 @@
     ],
     "status": "in_progress",
     "base_commit": "901ffaae1d266784fd53675ee6d6c79f99cf707f",
-    "checkpoint_commit": null,
+    "checkpoint_commit": "c39affbd1cfdf085bd05c4e25b8d90264404e02c",
     "completed": [
       "Read repository policy, workflow, architecture, numerical, build, test and distribution authorities; confirmed a clean task-entry worktree.",
       "Corrected release installation, real menu routes, QPF admission, database selection, preprocessing and PFSM/RIR documentation against implementation; retained screenshots and numerical references.",
-      "Built the MinGW product and Qt-free Application from empty build directories; full native normal suite is running.",
+      "Built the MinGW product and Qt-free Application from empty directories; all 127 normal tests passed before the SQL repair.",
       "Verified all 169 independent references, current consistency/architecture gates and four native Linux packaging controls.",
       "Built the strict manual website and regenerated the 124-page PDF with matching provenance; inspected all page contact sheets and affected pages, with no text outside page bounds.",
-      "Reproduced SQL apostrophe query failure and entry-ID predicate injection in an isolated SQLite probe; preserved the original failures."
+      "Reproduced SQL apostrophe query failure and entry-ID predicate injection in an isolated SQLite probe; preserved the original failures.",
+      "Repaired literal SQL values and card lookups, defined failed metadata outputs and read-only catalogue probes; independently reproduced both original failures and verified their repairs.",
+      "Added real SQLite regressions across all query routes, literal/NUL identifiers and metadata failures; reran 124 normal and 11 Qt-free tests successfully after the repair.",
+      "Verified unchanged binaries, compile commands and scientific source/input/runner scopes before reusing the three expensive pure Core property results; retained the exact qualification."
     ],
-    "next_action": "Commit the verified documentation batch, repair literal SQL input handling and failed information outputs with causal regressions, then finish supported native validation.",
+    "next_action": "Commit the verified SQL batch, then complete native Linux and MSVC builds and release-readiness verification without publication.",
     "blockers": [],
     "checks": [
       {
@@ -62,6 +65,36 @@
         "result": "FAIL",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": "build/pre-release-review-20261027/sql-literal-before.log"
+      },
+      {
+        "command": "ctest --test-dir build/pre-release-review-20261027/windows-gnu -L normal --output-on-failure",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/pre-release-review-20261027/native/windows-gnu-tests-01.xml"
+      },
+      {
+        "command": "ctest --test-dir build/pre-release-review-20261027/windows-gnu -L normal -E ^qualpf.(card|powder|scattering).properties$",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/pre-release-review-20261027/native/windows-gnu-tests-02.xml"
+      },
+      {
+        "command": "ctest --test-dir build/pre-release-review-20261027/windows-gnu-application",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/pre-release-review-20261027/native/windows-gnu-qtfree-01.xml"
+      },
+      {
+        "command": "Unchanged pure Core card, powder and scattering property tests",
+        "result": "PASS",
+        "kind": "REUSED_UNCHANGED_DEPENDENCIES",
+        "evidence_ref": "build/pre-release-review-20261027/native/windows-gnu-reused-core.json"
+      },
+      {
+        "command": "sql-literal-after.exe and database-info-after.exe",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/pre-release-review-20261027/sql-literal-after.log"
       }
     ]
   }

@@ -191,6 +191,14 @@ Widget display sorting with unchanged canonical snapshot, stable later ties,
 identity-based mutation/acceptance and QXP candidate order. Widget and QXP share
 fixed RIR with analytic 25/75, all-or-empty and ordered binary64 rounding checks.
 
+The candidate-reader control also checks apostrophes in every textual restraint,
+leading-zero and SQL-looking card IDs, embedded NUL identifiers, preserved LIKE
+wildcards and literal single-card lookups. Matching, strongest-index, constrained
+browse and preselected-ID routes must return the prescribed rows without widening
+their predicates. Missing/closed metadata reads return defined empty information.
+Catalogue metadata probes retain their unavailable sentinel and never create a
+missing database as a side effect.
+
 Provenance tests retain incompatible residual/scale refusal, source/task mismatch,
 non-default QXP save refusal, unknown legacy provenance and explicit original-signal
 restart. Method/source mismatch precedes database protection and workers.

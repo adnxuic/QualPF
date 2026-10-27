@@ -45,6 +45,7 @@ QString ReferenceDatabaseInfo::queryContentType(const QString &basePath) {
     {
         QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", connName);
         db.setDatabaseName(basePath + ".sq");
+        db.setConnectOptions("QSQLITE_OPEN_READONLY");
         if (db.open()) {
             QSqlQuery q(db);
             if (q.exec("SELECT type FROM infodb") && q.first())
@@ -63,6 +64,7 @@ int ReferenceDatabaseInfo::queryEntries(const QString &basePath) {
     {
         QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", connName);
         db.setDatabaseName(basePath + ".sq");
+        db.setConnectOptions("QSQLITE_OPEN_READONLY");
         if (db.open()) {
             QSqlQuery q(db);
             if (q.exec("SELECT ncard FROM infodb") && q.first())

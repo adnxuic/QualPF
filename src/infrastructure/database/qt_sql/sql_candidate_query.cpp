@@ -1,4 +1,5 @@
 #include "infrastructure/database/qt_sql/sql_candidate_query.h"
+#include "infrastructure/database/qt_sql/sql_text.h"
 #include <QDebug>
 
 namespace qualpf::infrastructure {
@@ -267,12 +268,12 @@ QString SqlCandidateQuery::buildQueryNameString()
         queryName = "Select id from id where ( (";
 
         for (int i = 0; i < nameList.size(); i++) {
-            queryName += "name like '%" + nameList.at(i) + "%'";
+            queryName += "name like " + sqlTextLiteral("%" + nameList.at(i) + "%");
             if (i != nameList.size()-1) queryName += " and ";
         }
         queryName += ") or (";
         for (int i = 0; i < nameList.size(); i++) {
-            queryName += "mineralname like '%" + nameList.at(i) + "%'";
+            queryName += "mineralname like " + sqlTextLiteral("%" + nameList.at(i) + "%");
             if (i != nameList.size()-1) queryName += " and ";
         }
         queryName += ")";
@@ -286,9 +287,9 @@ QString SqlCandidateQuery::buildQuerySubfilesString()
 {
     QString queryString;
     if (subfiles.size() > 0) {
-        queryString = QString("Select id from subfiles where subfile = '%1'").arg(subfiles.at(0));
+        queryString = QString("Select id from subfiles where subfile = %1").arg(sqlTextLiteral(subfiles.at(0)));
         for (int i = 1; i < subfiles.size(); i++) {
-            queryString += QString("and id in (Select id from subfiles where subfile = '%1')").arg(subfiles.at(i));
+            queryString += QString("and id in (Select id from subfiles where subfile = %1)").arg(sqlTextLiteral(subfiles.at(i)));
         }
     }
 
@@ -321,7 +322,7 @@ QString SqlCandidateQuery::buildQueryElementString()
             }
 
             if (elements.size() == 1) {
-                queryElement = "Select distinct(c0.id) from chemical as c0 where c0.chemical_element='"+elements.at(0)+"'";
+                queryElement = "Select distinct(c0.id) from chemical as c0 where c0.chemical_element=" + sqlTextLiteral(elements.at(0));
             } else {
                 bool allAnd = true;
                 foreach(const QString& item, logicOper) {
@@ -338,26 +339,26 @@ QString SqlCandidateQuery::buildQueryElementString()
                     }
                     queryElement += " where ";
                     for (int i = 0; i < elements.size(); i++) {
-                        queryElement += QString("c%1.chemical_element='%2'").arg(i).arg(elements.at(i));
+                        queryElement += QString("c%1.chemical_element=%2").arg(QString::number(i), sqlTextLiteral(elements.at(i)));
                         if (i != elements.size()-1) {
                             queryElement+= QString(" and c%1.id=c%2.id and ").arg(i).arg(i+1);
                         }
                     }
                 } else {
                     //Start query with first element
-                    queryElement = QString("Select distinct(id) from chemical where chemical_element='%1'").arg(elements.at(0));
+                    queryElement = QString("Select distinct(id) from chemical where chemical_element=%1").arg(sqlTextLiteral(elements.at(0)));
 
                     //Add elements with 'and' operator to query
                     for (int i = 0; i < logicOper.size(); i++) {
                         if (logicOper.at(i) == "and") {
-                            queryElement += QString(" and id in (select distinct(id) from chemical where chemical_element='%1')").arg(elements.at(i+1));
+                            queryElement += QString(" and id in (select distinct(id) from chemical where chemical_element=%1)").arg(sqlTextLiteral(elements.at(i+1)));
                         }
                     }
 
                     //Add elements with 'or' operator to query
                     for (int i = 0; i < logicOper.size(); i++) {
                         if (logicOper.at(i) == "or") {
-                            queryElement += QString(" union select distinct(id) from chemical where chemical_element='%1'").arg(elements.at(i+1));
+                            queryElement += QString(" union select distinct(id) from chemical where chemical_element=%1").arg(sqlTextLiteral(elements.at(i+1)));
                         }
                     }
                 }
@@ -390,12 +391,13 @@ QString SqlCandidateQuery::buildQueryElementString()
             queryElement += " where ";
             int lastEl = elements.size() - 1;
             for (int i = 0; i < lastEl; i++) {
-                queryElement += QString("c%1.chemical_element='%2' and c%1.id=c%3.id and ").arg(i).arg(elements.at(i)).arg(i+1);
+                queryElement += QString("c%1.chemical_element=%2 and c%1.id=c%3.id and ")
+                    .arg(QString::number(i), sqlTextLiteral(elements.at(i)), QString::number(i+1));
             }
-            queryElement += QString("c%1.chemical_element='%2'").arg(lastEl).arg(elements.at(lastEl));
+            queryElement += QString("c%1.chemical_element=%2").arg(QString::number(lastEl), sqlTextLiteral(elements.at(lastEl)));
             queryElement += QString(" and not exists (select * from chemical as c%1 where c%1.id=c0.id and (").arg(elements.size());
             for (int i = 0; i < elements.size(); i++) {
-                queryElement += QString(" c%1.chemical_element!='%2'").arg(elements.size()).arg(elements.at(i));
+                queryElement += QString(" c%1.chemical_element!=%2").arg(QString::number(elements.size()), sqlTextLiteral(elements.at(i)));
                 if (i < lastEl) queryElement += " and ";
             }            
             queryElement += "))";
@@ -420,14 +422,14 @@ QString SqlCandidateQuery::buildQueryElementString()
             queryElement = "Select distinct(C.id) from chemical as C where (";
             int lastEl = elements.size() - 1;
             for (int i = 0; i < lastEl; i++) {
-                queryElement += QString("C.chemical_element='%1' or ").arg(elements.at(i));
+                queryElement += QString("C.chemical_element=%1 or ").arg(sqlTextLiteral(elements.at(i)));
             }
-            queryElement += QString("C.chemical_element='%1')").arg(elements.at(lastEl));
+            queryElement += QString("C.chemical_element=%1)").arg(sqlTextLiteral(elements.at(lastEl)));
             queryElement += "and C.id not in ( select id from chemical where ";
             for (int i = 0; i < lastEl; i++) {
-                queryElement += QString("chemical_element!='%1' and ").arg(elements.at(i));
+                queryElement += QString("chemical_element!=%1 and ").arg(sqlTextLiteral(elements.at(i)));
             }
-            queryElement += QString("chemical_element!='%1')").arg(elements.at(lastEl));
+            queryElement += QString("chemical_element!=%1)").arg(sqlTextLiteral(elements.at(lastEl)));
             break;
         }
 
@@ -443,12 +445,12 @@ QString SqlCandidateQuery::buildQuerySymmetry()
     if (spgString.size() != 0) {
         querySymm = "select ids,n from spgrstat where (";
         for (int i = 0; i < spgString.size(); i++) {
-            querySymm += QString("trim(spacegroup) = '%1'").arg(spgString.at(i));
+            querySymm += QString("trim(spacegroup) = %1").arg(sqlTextLiteral(spgString.at(i)));
             if (i != spgString.size()-1) querySymm += " or ";
         }
 
         for (int i = 0; i < csysString.size(); i++) {
-            querySymm += QString(" or type='%1'").arg(csysString.at(i));
+            querySymm += QString(" or type=%1").arg(sqlTextLiteral(csysString.at(i)));
         }
 
         querySymm += ")";
@@ -459,7 +461,7 @@ QString SqlCandidateQuery::buildQuerySymmetry()
     if (csysString.size() != 0) {
         querySymm = "select ids,n from stat_type where (";
         for (int i = 0; i < csysString.size(); i++) {
-            querySymm += QString("trim(val) like '%1'").arg(csysString.at(i));
+            querySymm += QString("trim(val) like %1").arg(sqlTextLiteral(csysString.at(i)));
             if (i != csysString.size()-1) querySymm += " or ";
         }
         querySymm += ")";
@@ -491,7 +493,7 @@ QString SqlCandidateQuery::buildQueryColor()
         return {};
     QString q = QStringLiteral("select ids,n from stat_color where (");
     for (int i = 0; i < colorList.size(); ++i) {
-        q += QString("trim(val) like '%1'").arg(colorList.at(i));
+        q += QString("trim(val) like %1").arg(sqlTextLiteral(colorList.at(i)));
         if (i != colorList.size() - 1) q += QStringLiteral(" or ");
     }
     q += QLatin1Char(')');
@@ -517,7 +519,7 @@ QString SqlCandidateQuery::buildQueryIdEntry()
     if (idEntry.size() > 0) {
         queryId = "select id from id where id in (";
         for (int i = 0; i < idEntry.size(); i++) {
-            queryId += idEntry.at(i);
+            queryId += sqlTextLiteral(idEntry.at(i));
             if (i != idEntry.size()-1) queryId += ", ";
         }
         queryId += ")";

@@ -260,6 +260,17 @@ including zero hits. SQL NULL/deletion predicates and database row order remain
 unchanged. Only initial/scored-browse operations read candidates; phase continuation
 and rescore reuse the existing collection.
 
+SQL treats card identifiers and textual restraints as data. Single-card lookups
+bind their identifier, and composed name/element/subfile/symmetry/color/ID
+predicates quote literal values, including apostrophes and embedded NUL bytes.
+Existing LIKE wildcards and restraint intersections remain unchanged; leading-zero
+or SQL-looking text identifiers are not numeric expressions. Failed, empty or
+closed database-information reads return a defined zero count and empty type.
+The catalogue metadata helper retains its unavailable-count sentinel of -1 and
+opens read-only; probing a missing database never creates a new SQLite file.
+The candidate-reader regression exercises all four query routes with independently
+prescribed SQLite rows, literal identifiers and failed metadata reads.
+
 The matcher returns association evidence, not FOM. Fixed `calculate_classic_fom`
 validates its declared contract, column shapes, indexes, association counts,
 finite/order requirements and nonnegative evidence before calculation. Scientific
