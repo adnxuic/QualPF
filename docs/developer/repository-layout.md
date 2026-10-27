@@ -13,7 +13,8 @@
 | `cmake/modules`, `cmake/templates`, `cmake/packaging` | Build policy/dependencies/options, generated headers and Windows/Linux deployment |
 | `tools/architecture`, `tools/validation`, `tools/agent`, `tools/crystallography` | Current boundary/build capture, product/baseline validation, Agent context and numerical-table reproduction |
 | `tools/gui`, `src/gui/resources/icons` | Offline icon export helper, editable SVG masters and committed PNG action resources |
-| `share/qualx`, `src/gui/resources`, `deploy`, `third_party` | Consumed runtime/GUI/deployment data and third-party sources; original resource naming/attribution remains |
+| `share/qualx`, `src/gui/resources`, `third_party` | Consumed runtime/GUI data and third-party sources; original scientific resource naming/attribution remains |
+| `deploy` | Current QualPF installer scripts, desktop templates, icons and release/source/rights catalogues; see the [deployment-input index](../../deploy/README.md) |
 | `scripts`, `install.sh` | Existing platform build/install/package helpers |
 | `docs/user` | User manual: installation, operation, parameters and result interpretation |
 | `docs/developer` | Developer guides: architecture, scientific contracts, formats, build and test |
@@ -28,8 +29,9 @@ Public headers remain module-local. `.inc` tables are required C++ source data.
 Same-name test helpers with different behavior remain beside their consuming probes;
 they are not removed as duplicates without proving their consumer contracts.
 No empty template directories are required. Existing consumed resource paths and
-runtime installation inputs remain unchanged. Source packages exclude local Git
-metadata and generated Python caches. See [architecture](architecture/overview.md),
+scientific runtime installation inputs remain unchanged. Deployment templates use
+the current QualPF identity. Source packages exclude local Git metadata and
+generated Python caches. See [architecture](architecture/overview.md),
 [building](building.md), [testing](../../tests/README.md) and
 [changelog](../../CHANGELOG.md). Retained refactoring and maintenance records are
 indexed in [migration history](../../history/README.md).

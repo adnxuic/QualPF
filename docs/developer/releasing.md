@@ -6,6 +6,16 @@ versions remain historical records. `deploy/distribution.json` owns publisher,
 license, description and project/support/manual URLs. Internal settings identities
 and `QualXDB` remain compatibility keys, not publisher declarations.
 
+The [deployment-input index](../../deploy/README.md) lists the maintained installer
+scripts, QualPF desktop templates, independent icons and source/rights catalogues.
+Legacy deployment artwork and the old Windows agreement have been removed from
+the active tree with hash-bound Git recovery identities; their original paths
+remain excluded from both binary and corresponding-source deliveries. Linux
+desktop templates use the QualPF name, omit the optional file-format version and
+quote the installed executable path, including when an install prefix has spaces.
+Changing these inputs requires fresh configuration/staging for the affected kit;
+the earlier frozen 1.0.0 candidates and their checksums remain historical artifacts.
+
 Read the [origin notice](../../NOTICE.md),
 [third-party notices](../../THIRD_PARTY_NOTICES.md) and component inventory.
 For material-specific public evidence, byte identities and the remaining grant
@@ -19,8 +29,8 @@ inspiration, separately from source provenance, licensing and the
 The upstream author's GPLv3 update is
 `f98a51da8435fef0f730b513e76c820fb879865d`; the upstream README still says LGPL.
 The old Windows agreement refers to EXPO2013/GTK and restricted redistribution.
-It remains in Git at its original path/blob but is excluded from runtime/source
-delivery and never displayed as the QualPF installer license. Removing it from
+It remains in the recorded Git revision at its original path/blob but is excluded
+from runtime/source delivery and never displayed as the QualPF installer license. Removing it from
 packaging does not establish grants for all inherited material.
 
 The inventory distinguishes reviewed grants/dispositions, blocked material,

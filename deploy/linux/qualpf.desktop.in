@@ -1,8 +1,8 @@
 [Desktop Entry]
-Name=QualPF
+Name=@PROJECT_NAME@
 Comment=@QUALPF_DESCRIPTION@
-Exec=qualpf %f
+Exec="@CMAKE_INSTALL_PREFIX@/bin/@EXECUTABLE_NAME@" %f
 Terminal=false
-Icon=qualpf
+Icon=@EXECUTABLE_NAME@
 Type=Application
 Categories=Education;Science;

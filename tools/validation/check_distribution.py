@@ -7,6 +7,7 @@ runtime review. An explicit upstream scientific-data policy is not a verified gr
 No command publishes, fetches references, changes scientific inputs or edits Git.
 """
 import argparse
+import configparser
 import hashlib
 import json
 from pathlib import Path
@@ -30,6 +31,10 @@ UPSTREAM_SCIENTIFIC_MATERIALS = {"atom-properties", "ffast-srd66", "electron-sca
 IFW_SOURCE_IDS = {"qtifw-4.8.1", "qtbase-6.6.0", "qtsvg-6.6.0", "qtdeclarative-6.6.0",
                   "qttools-6.6.0", "qttranslations-6.6.0", "qt5compat-6.6.0",
                   "openssl-3.0.14", "zlib-1.3.1", "bzip2-1.0.8", "xz-5.6.2"}
+DEPLOYMENT_DESKTOPS = {
+    "deploy/linux/qualpf.desktop.in": '"@CMAKE_INSTALL_PREFIX@/bin/@EXECUTABLE_NAME@" %f',
+    "deploy/linux/qualpf.appimage.desktop.in": "@EXECUTABLE_NAME@ %f",
+}
 
 
 def read_json(path):
@@ -156,7 +161,75 @@ def check_inputs(root):
         errors.append("required preferred modification inputs cannot be excluded to bypass their grants")
     errors.extend(rights_review_errors(root, data))
     errors.extend(ifw_policy_errors(data))
+    errors.extend(deployment_errors(root, data))
     return errors, data
+
+
+def deployment_errors(root, data):
+    """Check active deployment inputs independently of Qt or a particular build kit."""
+    errors = []
+    required = dict(Name="@PROJECT_NAME@", Comment="@QUALPF_DESCRIPTION@",
+                    Icon="@EXECUTABLE_NAME@", Type="Application", Terminal="false",
+                    Categories="Education;Science;")
+    for name, executable in DEPLOYMENT_DESKTOPS.items():
+        path = root / name
+        if not path.is_file():
+            errors.append("missing current QualPF desktop template: " + name)
+            continue
+        entry = configparser.ConfigParser(interpolation=None)
+        entry.optionxform = str
+        try:
+            entry.read_string(path.read_text(encoding="utf-8"))
+            section = entry["Desktop Entry"]
+            for key, value in dict(required, Exec=executable).items():
+                if section.get(key) != value:
+                    errors.append("desktop template identity/path mismatch: " + name + ": " + key)
+            if "Version" in section and not re.fullmatch(r"[0-9]+\.[0-9]+", section["Version"]):
+                errors.append("desktop Version must identify the file-format specification, not the application: " + name)
+        except (configparser.Error, KeyError) as error:
+            errors.append("invalid desktop template: " + name + ": " + str(error))
+    cmake = root / "cmake/packaging/Linux.cmake"
+    content = cmake.read_text(encoding="utf-8") if cmake.is_file() else ""
+    for name in DEPLOYMENT_DESKTOPS:
+        if name not in content:
+            errors.append("Linux packaging does not consume the current desktop template: " + name)
+    retired = [name for name in data.get("excluded_legacy_assets", []) if name.startswith("deploy/")]
+    retired += ["deploy/linux/qualx.desktop.in", "deploy/linux/qualx.appimage.desktop"]
+    for name in retired:
+        if relative(root, name).exists():
+            errors.append("retired deployment input reintroduced: " + name)
+        if name in content:
+            errors.append("Linux packaging still references a retired deployment input: " + name)
+    return errors
+
+
+def retired_deployment_errors(root, data, review):
+    """Retain original identities without requiring historical Git objects in a build."""
+    errors = []
+    expected = {name for name in data.get("excluded_legacy_assets", []) if name.startswith("deploy/")}
+    records = review.get("retired_deployment_assets", [])
+    names = [entry.get("path") for entry in records]
+    if set(names) != expected or len(names) != len(set(names)):
+        errors.append("retired deployment inventory differs from the legacy exclusions")
+    agreement = data.get("upstream", {}).get("historical_installer_license", {})
+    for entry in records:
+        name = entry.get("path", "")
+        if (entry.get("delivery") != "excluded" or entry.get("removed_from_source") is not True or
+                not re.fullmatch(r"\d{4}-\d{2}-\d{2}", entry.get("removed_on", "")) or
+                not entry.get("finding") or
+                any(not re.fullmatch(r"[0-9a-f]{40}", entry.get(key, ""))
+                    for key in ("retained_revision", "retained_git_blob")) or
+                any(not re.fullmatch(r"[0-9a-f]{64}", entry.get(key, ""))
+                    for key in ("sha256_git_bytes", "sha256_checkout"))):
+            errors.append("retired deployment input lacks exclusion/history byte identity: " + name)
+        if relative(root, name).exists():
+            errors.append("retired deployment input reintroduced: " + name)
+        if name == agreement.get("path") and any(entry.get(key) != agreement.get(other)
+                for key, other in (("retained_revision", "retained_revision"),
+                                   ("retained_git_blob", "git_blob"),
+                                   ("sha256_checkout", "sha256_checkout"))):
+            errors.append("retired installer agreement differs from its recorded upstream identity")
+    return errors
 
 
 def ifw_policy_errors(data):
@@ -268,6 +341,7 @@ def rights_review_errors(root, data):
     errors = scientific_policy_errors(data, review)
     if review.get("schema") != "qualpf.distribution_rights_review.v1":
         return ["unsupported material rights review"]
+    errors.extend(retired_deployment_errors(root, data, review))
     images = review.get("inherited_images", [])
     science = review.get("scientific_inputs", [])
     qrc = ET.parse(root / "src/gui/resources/resource.qrc").getroot()
@@ -714,6 +788,69 @@ def ifw_metadata_errors(root, stage, info, data):
 
 def self_test():
     class Controls(unittest.TestCase):
+        def test_current_desktop_inputs_and_retired_rejection(self):
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                data = dict(excluded_legacy_assets=["deploy/Windows/licence.txt",
+                                                   "deploy/linux/icons/16x16/qualx.png"])
+                for name in (*DEPLOYMENT_DESKTOPS, "cmake/packaging/Linux.cmake"):
+                    path = root / name
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copyfile(ROOT / name, path)
+                self.assertEqual(deployment_errors(root, data), [])
+                desktop = root / "deploy/linux/qualpf.desktop.in"
+                original = desktop.read_bytes()
+                for old, new in (("@PROJECT_NAME@", "QualX"),
+                                 ('Exec="@CMAKE_INSTALL_PREFIX@/bin/@EXECUTABLE_NAME@" %f',
+                                  "Exec=@CMAKE_INSTALL_PREFIX@/bin/@EXECUTABLE_NAME@ %f")):
+                    with self.subTest(value=new):
+                        desktop.write_text(original.decode().replace(old, new), encoding="utf-8")
+                        self.assertTrue(any("identity/path mismatch" in error for error in deployment_errors(root, data)))
+                desktop.write_bytes(original + b"Version=@PROJECT_VERSION@\n")
+                self.assertTrue(any("file-format specification" in error for error in deployment_errors(root, data)))
+                desktop.write_bytes(original)
+                cmake = root / "cmake/packaging/Linux.cmake"
+                original_cmake = cmake.read_bytes()
+                cmake.write_text(original_cmake.decode().replace("qualpf.desktop.in", "qualx.desktop.in"), encoding="utf-8")
+                errors = deployment_errors(root, data)
+                self.assertTrue(any("does not consume" in error for error in errors))
+                self.assertTrue(any("references a retired" in error for error in errors))
+                cmake.write_bytes(original_cmake)
+                for name in (*data["excluded_legacy_assets"], "deploy/linux/qualx.desktop.in"):
+                    path = root / name
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_bytes(b"legacy input")
+                    self.assertTrue(any("reintroduced: " + name in error for error in deployment_errors(root, data)))
+                    path.unlink()
+                desktop.unlink()
+                self.assertTrue(any("missing current QualPF desktop" in error for error in deployment_errors(root, data)))
+
+        def test_retired_deployment_recovery_identity(self):
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                name = "deploy/Windows/licence.txt"
+                entry = dict(path=name, delivery="excluded", removed_from_source=True,
+                             removed_on="2026-10-27", retained_revision="a" * 40,
+                             retained_git_blob="b" * 40, sha256_git_bytes="c" * 64,
+                             sha256_checkout="d" * 64, finding="Old restrictive agreement")
+                data = dict(excluded_legacy_assets=[name], upstream=dict(historical_installer_license=dict(
+                    path=name, retained_revision="a" * 40, git_blob="b" * 40, sha256_checkout="d" * 64)))
+                review = dict(retired_deployment_assets=[entry])
+                self.assertEqual(retired_deployment_errors(root, data, review), [])
+                entry["retained_git_blob"] = "e" * 40
+                self.assertTrue(any("recorded upstream identity" in error for error in retired_deployment_errors(root, data, review)))
+                entry["retained_git_blob"] = "b" * 40
+                entry["sha256_git_bytes"] = ""
+                self.assertTrue(any("byte identity" in error for error in retired_deployment_errors(root, data, review)))
+                entry["sha256_git_bytes"] = "c" * 64
+                review["retired_deployment_assets"] = []
+                self.assertTrue(any("inventory differs" in error for error in retired_deployment_errors(root, data, review)))
+                review["retired_deployment_assets"] = [entry]
+                path = root / name
+                path.parent.mkdir(parents=True)
+                path.write_bytes(b"original agreement")
+                self.assertTrue(any("reintroduced" in error for error in retired_deployment_errors(root, data, review)))
+
         def test_email_and_paths(self):
             self.assertIsNotNone(email_error(""))
             self.assertIsNotNone(email_error("https://github.com/adnxuic/QualPF/issues"))

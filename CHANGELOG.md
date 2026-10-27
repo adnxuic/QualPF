@@ -115,6 +115,14 @@ reports are no longer used for routine development.
 
 ### Changed
 
+- Made `deploy/` contain current QualPF release inputs: renamed the Linux desktop
+  templates, quoted installed launcher paths and removed the application version
+  from the desktop-entry format field. Retired the old Windows agreement and four
+  QualX launcher icons with hash-bound Git recovery identities and unchanged
+  delivery exclusions. Added a deployment-input index and regression controls for
+  stale consumers, old-file reintroduction and incomplete recovery metadata;
+  retained existing scientific/vendor qualifications and frozen candidate bytes.
+
 - Documented QualX3 v1.0.8's vendor-SDK/runtime deployment and IFW packaging as
   the reference procedure. Kept MinGW formal distribution and clarified that
   complete independently verified source/build materials can resolve a runtime

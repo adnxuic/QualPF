@@ -1590,5 +1590,62 @@
       "final_verification": "build/linux-slim-20261027/candidate-final-verification-01.json",
       "qualification": "Exact original source/notices and actual Linux runtime bindings are retained. Scientific-data and vendor findings are not converted into verified grants. Native WSL/isolated Debian/Xvfb scopes; full desktop integration, package-manager GUI and FUSE mounting not exercised. The full 127-test run is Debian-specific; AppImage has separate build/About/container/runtime/startup receipts. Earlier candidates and the experimental branch remain preserved. No upload, push or third-party contact."
     }
-  }
+  },
+  "retired_deployment_assets": [
+    {
+      "path": "deploy/Windows/licence.txt",
+      "delivery": "excluded",
+      "removed_from_source": true,
+      "removed_on": "2026-10-27",
+      "retained_revision": "c97b0a072117f09cddf64867fcba89f14f67b99b",
+      "retained_git_blob": "d93ec10dbab2e518980f2d280335462d917da8d1",
+      "sha256_git_bytes": "df3431fa1e5edee509274c7cd344bb267910eff974d569b928caa1f74cd0a09d",
+      "sha256_checkout": "df3431fa1e5edee509274c7cd344bb267910eff974d569b928caa1f74cd0a09d",
+      "finding": "Restrictive inherited EXPO2013/GTK agreement; not the QualPF application license."
+    },
+    {
+      "path": "deploy/linux/icons/16x16/qualx.png",
+      "delivery": "excluded",
+      "removed_from_source": true,
+      "removed_on": "2026-10-27",
+      "retained_revision": "c97b0a072117f09cddf64867fcba89f14f67b99b",
+      "retained_git_blob": "51c0a542698ee465f7d3dd82f1dc000f3870e0a9",
+      "sha256_git_bytes": "bb86ca0eb95d785b763e39762437324d5cf15bba0ba5de9144d8ba21cac886f4",
+      "sha256_checkout": "bb86ca0eb95d785b763e39762437324d5cf15bba0ba5de9144d8ba21cac886f4",
+      "finding": "Inherited QualX launcher artwork; replaced by the independent QualPF icon, without asserting a grant for the original."
+    },
+    {
+      "path": "deploy/linux/icons/32x32/qualx.png",
+      "delivery": "excluded",
+      "removed_from_source": true,
+      "removed_on": "2026-10-27",
+      "retained_revision": "c97b0a072117f09cddf64867fcba89f14f67b99b",
+      "retained_git_blob": "5795bd0e63dd9305d2419d24f1351154d8359d9e",
+      "sha256_git_bytes": "3b2e24d0536cbb7c782e5d7a58f26898876d5dc4b47e6b965170c5d852e69de9",
+      "sha256_checkout": "3b2e24d0536cbb7c782e5d7a58f26898876d5dc4b47e6b965170c5d852e69de9",
+      "finding": "Inherited QualX launcher artwork; replaced by the independent QualPF icon, without asserting a grant for the original."
+    },
+    {
+      "path": "deploy/linux/icons/48x48/qualx.png",
+      "delivery": "excluded",
+      "removed_from_source": true,
+      "removed_on": "2026-10-27",
+      "retained_revision": "c97b0a072117f09cddf64867fcba89f14f67b99b",
+      "retained_git_blob": "ee7f3473381a0c22a5510d5e915bc3cf78cc5ad7",
+      "sha256_git_bytes": "b5db5f1f201068cde6ac626b72e00c243be678b8a2f38f951b55add538b9f943",
+      "sha256_checkout": "b5db5f1f201068cde6ac626b72e00c243be678b8a2f38f951b55add538b9f943",
+      "finding": "Inherited QualX launcher artwork; replaced by the independent QualPF icon, without asserting a grant for the original."
+    },
+    {
+      "path": "deploy/linux/icons/256x256/qualx.png",
+      "delivery": "excluded",
+      "removed_from_source": true,
+      "removed_on": "2026-10-27",
+      "retained_revision": "c97b0a072117f09cddf64867fcba89f14f67b99b",
+      "retained_git_blob": "5e16bc6cc7c25b122a2d217f0e942ecc6dc551fe",
+      "sha256_git_bytes": "7a5ec9c2d558f466a04665e1694ac93c1b0d86d27f447438c4ed520a174e8b00",
+      "sha256_checkout": "7a5ec9c2d558f466a04665e1694ac93c1b0d86d27f447438c4ed520a174e8b00",
+      "finding": "Inherited QualX launcher artwork; replaced by the independent QualPF icon, without asserting a grant for the original."
+    }
+  ]
 }

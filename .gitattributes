@@ -11,6 +11,8 @@
 /deploy/rights-review.json text eol=lf
 /deploy/dependency-sources.json text eol=lf
 /deploy/linux-dependency-sources.json text eol=lf
+/deploy/README.md text eol=lf
+/deploy/Windows/*.qs text eol=lf
 /third_party/qcustomplot/README.md text eol=lf
 /src/gui/dialogs/aboutdialog.* text eol=lf
 /tests/integration/gui/aboutdialog_test.cpp text eol=lf

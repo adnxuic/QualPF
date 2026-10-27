@@ -16,9 +16,10 @@
     "evidence": "Original author commit explicitly updates LICENSE to GPLv3; upstream README still says LGPLv3.",
     "historical_installer_license": {
       "path": "deploy/Windows/licence.txt",
+      "retained_revision": "c97b0a072117f09cddf64867fcba89f14f67b99b",
       "git_blob": "d93ec10dbab2e518980f2d280335462d917da8d1",
       "sha256_checkout": "df3431fa1e5edee509274c7cd344bb267910eff974d569b928caa1f74cd0a09d",
-      "disposition": "Retained for provenance; excluded from installers and source deliveries. Its references to EXPO2013 and GTK do not establish a license for QualPF. Remaining upstream resource rights require review."
+      "disposition": "Retained in the recorded Git revision and removed from current deployment inputs; excluded from installers and source deliveries. Its references to EXPO2013 and GTK do not establish a license for QualPF. Recovery byte identities are in rights-review.json; remaining upstream resource rights require review."
     }
   },
   "components": [

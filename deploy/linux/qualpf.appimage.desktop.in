@@ -1,9 +1,8 @@
 [Desktop Entry]
 Name=@PROJECT_NAME@
 Comment=@QUALPF_DESCRIPTION@
-Exec=@CMAKE_INSTALL_PREFIX@/bin/@EXECUTABLE_NAME@ %f
+Exec=@EXECUTABLE_NAME@ %f
 Terminal=false
 Icon=@EXECUTABLE_NAME@
 Type=Application
 Categories=Education;Science;
-Version=@PROJECT_VERSION@

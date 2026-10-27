@@ -9,6 +9,8 @@ import tempfile
 import unittest
 import xml.etree.ElementTree as ET
 
+from check_distribution import DEPLOYMENT_DESKTOPS, deployment_errors
+
 ROOT = Path(__file__).resolve().parents[2]
 OLD_NAME = re.compile(r"qualx" + "pf", re.IGNORECASE)
 AREAS = (".agent", ".github", "apps", "src", "cmake", "deploy", "scripts",
@@ -53,7 +55,9 @@ def check(root=ROOT, build=None):
     gui = (root / "src/gui/mainwindow.cpp").read_text(encoding="utf-8")
     if re.search(r'setUrl\([^;]*qualx3/updates', gui):
         errors.append("current product update entry points to an upstream product feed")
-    identity = json.loads((root / "deploy/distribution.json").read_bytes())["product"]
+    distribution = json.loads((root / "deploy/distribution.json").read_bytes())
+    identity = distribution["product"]
+    errors.extend(deployment_errors(root, distribution))
     if identity["publisher"] != "adnxuic" or identity["license"] != "GPL-3.0-only":
         errors.append("unexpected independent publisher or application license")
     readme = (root / "README.md").read_text(encoding="utf-8-sig")
@@ -106,6 +110,8 @@ def self_test():
                          "tools/validation/product-identity.json", "deploy/distribution.json",
                          "cmake/packaging/CPack.cmake", "src/gui/resources/resource.qrc",
                          "scripts/package/build_appimage.sh"}
+                names.update(DEPLOYMENT_DESKTOPS)
+                names.add("cmake/packaging/Linux.cmake")
                 inventory = json.loads((ROOT / "tools/validation/product-identity.json").read_bytes())
                 names.update(inventory["allowed_old_name_lines"])
                 for name in names:

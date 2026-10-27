@@ -24,7 +24,8 @@ RETIRED = re.compile(r"(?<![\w.-])docs/(?:architecture|numerical|development|ref
 
 
 def current_markdown(root):
-    names = {root / name for name in ("README.md", "AGENTS.md", "docs/README.md", "history/README.md", "tests/data-guide.md")}
+    names = {root / name for name in ("README.md", "AGENTS.md", "docs/README.md", "history/README.md",
+                                    "tests/data-guide.md", "deploy/README.md")}
     for area in (".agent", "docs/user", "docs/developer"):
         names.update((root / area).rglob("*.md"))
     for area in ("apps", "src"):

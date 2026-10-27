@@ -161,7 +161,7 @@ cmake --build build/linux-gnu -j$(nproc)
 sudo cmake --install build/linux-gnu
 ```
 
-Adjust `CMAKE_PREFIX_PATH` to point to your Qt6 installation. A Fortran compiler is no longer a build requirement. Platform-specific packaging resources (icons, installer scripts) are available under `deploy/linux` and `deploy/Windows`.
+Adjust `CMAKE_PREFIX_PATH` to point to your Qt6 installation. A Fortran compiler is no longer a build requirement. The [deployment-input index](deploy/README.md) explains the current Windows/Linux installer scripts, desktop templates, icons and release catalogues.
 
 ## Usage
 
