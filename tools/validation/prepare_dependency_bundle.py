@@ -21,6 +21,7 @@ import unittest
 from check_distribution import ROOT, digest, read_json, relative, write_json
 
 CATALOGUE = "deploy/dependency-sources.json"
+LINUX_CATALOGUE = "deploy/linux-dependency-sources.json"
 INDEX = "dependency-bundle.json"
 DELIVERY = "dependency-delivery.json"
 SOURCE_INDEX = "dependency-source-index.json"
@@ -241,7 +242,11 @@ def prepare(root, cache, output, sdks, mingw, inventories, eigen=None, boost=Non
 def check_index(root, info, actual):
     if info.get("schema") != "qualpf.dependency_bundle.v1" or info.get("release_clearance") is not False:
         raise ValueError("dependency evidence cannot declare release clearance")
-    if info.get("source_catalogue_sha256") != digest(root / CATALOGUE):
+    catalogue_name = info.get("source_catalogue", CATALOGUE)
+    if catalogue_name not in {CATALOGUE, LINUX_CATALOGUE}:
+        raise ValueError("unsupported dependency source catalogue path")
+    catalogue = read_json(root / catalogue_name)
+    if info.get("source_catalogue_sha256") != digest(root / catalogue_name):
         raise ValueError("dependency source catalogue changed after bundle preparation")
     if set(actual) != set(info["files"]):
         raise ValueError("dependency bundle file list differs")
@@ -250,9 +255,26 @@ def check_index(root, info, actual):
         if actual[name] != expected:
             raise ValueError("dependency source/notice changed: " + name)
     # Bind archives independently to the committed catalogue, not merely to an editable index.
-    for entry in read_json(root / CATALOGUE)["sources"]:
+    for entry in catalogue["sources"]:
         if actual.get("SOURCES/" + entry["file"]) != entry["sha256"]:
             raise ValueError("bundled archive differs from source catalogue: " + entry["file"])
+    # Linux retains the independently hashed original distro/runtime collection,
+    # including its patches, build recipes and full notices. An editable bundle
+    # index alone cannot replace those scientific/source-provenance records.
+    if catalogue_name == LINUX_CATALOGUE:
+        retained = catalogue.get("retained_files", {})
+        if catalogue.get("schema") != "qualpf.dependency_sources.v1" or not retained:
+            raise ValueError("Linux dependency catalogue lacks retained evidence")
+        for name, expected in retained.items():
+            archive_name(name)
+            if actual.get(name) != expected:
+                raise ValueError("retained Linux source/notice changed: " + name)
+
+
+def source_member(name):
+    """Archive directories only; similarly named original legal paths stay intact."""
+    parts = PurePosixPath(name).parts
+    return parts[0] == "SOURCES" or (parts[0] == "SDK-SOURCE" and "SOURCES" in parts[1:-1])
 
 
 def verify(root, bundle):
@@ -309,7 +331,7 @@ def verify_notices(root, notices, source):
     info, index_sha = verify_archive(root, source)
     if index_sha != delivery["index_sha256"] or digest(notices / SOURCE_INDEX) != index_sha:
         raise ValueError("separate dependency source index differs")
-    retained = {name: sha for name, sha in info["files"].items() if not name.startswith("SOURCES/")}
+    retained = {name: sha for name, sha in info["files"].items() if not source_member(name)}
     names = {path.relative_to(notices).as_posix() for path in notices.rglob("*") if path.is_file()}
     if names != set(retained) | {DELIVERY, SOURCE_INDEX} or (notices / "SOURCES").exists():
         raise ValueError("installed dependency notice file list differs")
@@ -319,20 +341,21 @@ def verify_notices(root, notices, source):
     return info, delivery
 
 
-def prepare_notices(root, bundle, source, output):
+def prepare_notices(root, bundle, source, output, build=None):
     """Retain all original notices/configuration; sources travel as a separate TGZ."""
     info = verify(root, bundle)
     archived, index_sha = verify_archive(root, source)
     if archived != info or index_sha != digest(bundle / INDEX):
         raise ValueError("separate archive differs from the selected dependency bundle")
-    if not output.is_relative_to((root / "build").resolve()) or output == (root / "build").resolve():
-        raise ValueError("generated dependency notices must stay inside this project's build directory")
+    boundary = (build or root / "build").resolve()
+    if not output.is_relative_to(boundary) or output == boundary:
+        raise ValueError("generated dependency notices must stay inside the selected build directory")
     if output.exists():
         verify_notices(root, output, source)  # Idempotent; never overwrite modified/user files.
         return
     output.mkdir(parents=True)
     for name in info["files"]:
-        if not name.startswith("SOURCES/"):
+        if not source_member(name):
             target = relative(output, name)
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(relative(bundle, name), target)
@@ -386,6 +409,8 @@ def self_test():
                 root = Path(directory)
                 bundle, output = root / "build/bundle", root / "build/installed-notices"
                 files = {"SOURCES/component.tar.gz": b"original preferred source",
+                         "SDK-SOURCE/Debian/SOURCES/headers.tar.gz": b"actual distro header sources",
+                         "NOTICES/component/SOURCES/COPYING": b"original nested permission",
                          "NOTICES/component/LICENSE": b"original copyright and permission"}
                 for name, raw in files.items():
                     target = relative(bundle, name)
@@ -405,6 +430,14 @@ def self_test():
                 prepare_notices(root, bundle, archive, output)
                 prepare_notices(root, bundle, archive, output)  # Safe repeat configuration.
                 self.assertFalse((output / "SOURCES").exists())
+                self.assertFalse((output / "SDK-SOURCE/Debian/SOURCES").exists())
+                self.assertEqual((output / "NOTICES/component/SOURCES/COPYING").read_bytes(),
+                                 files["NOTICES/component/SOURCES/COPYING"])
+                outside = root / "out-of-source-cmake"
+                with self.assertRaisesRegex(ValueError, "selected build directory"):
+                    prepare_notices(root, bundle, archive, outside / "notices")
+                prepare_notices(root, bundle, archive, outside / "notices", outside)
+                self.assertEqual(verify_notices(root, outside / "notices", archive)[0], info)
                 verified, delivery = verify_notices(root, output, archive)
                 self.assertEqual(verified, info)
                 self.assertFalse(delivery["collection_release_clearance"])
@@ -456,6 +489,28 @@ def self_test():
                     with self.assertRaises(ValueError):
                         verify_archive(root, archive)
                 self.assertFalse((root.parent / "outside").exists())
+
+        def test_linux_catalogue_pins_retained_evidence_independently(self):
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                original = {"SOURCES/distro.tar.xz": b"distro source and patches",
+                            "NOTICES/distro/copyright": b"original full terms"}
+                expected = {name: hashlib.sha256(raw).hexdigest() for name, raw in original.items()}
+                write_json(root / LINUX_CATALOGUE, dict(schema="qualpf.dependency_sources.v1",
+                    sources=[dict(file="distro.tar.xz", sha256=expected["SOURCES/distro.tar.xz"])],
+                    retained_files=expected))
+                info = dict(schema="qualpf.dependency_bundle.v1", release_clearance=False,
+                    source_catalogue=LINUX_CATALOGUE, source_catalogue_sha256=digest(root / LINUX_CATALOGUE),
+                    files=dict(expected))
+                check_index(root, info, expected)
+                forged = dict(expected)
+                forged["NOTICES/distro/copyright"] = hashlib.sha256(b"altered terms").hexdigest()
+                info["files"] = forged
+                with self.assertRaisesRegex(ValueError, "retained Linux"):
+                    check_index(root, info, forged)
+                info["source_catalogue"] = "build/forged-catalogue.json"
+                with self.assertRaisesRegex(ValueError, "catalogue path"):
+                    check_index(root, info, forged)
 
         def test_archive_escape(self):
             for name in ("../secret", "/secret", "C:/secret", "root/../../secret", "root\\secret"):
@@ -561,6 +616,7 @@ def main():
     parser.add_argument("--inventory", action="append", type=Path, default=[])
     parser.add_argument("--verify-bundle", type=Path)
     parser.add_argument("--prepare-notices", type=Path, help="Generate installed notices for a separately supplied source archive")
+    parser.add_argument("--build-dir", type=Path, help="Explicit CMake build directory for generated notices; defaults to ROOT/build")
     parser.add_argument("--verify-notices", type=Path)
     parser.add_argument("--source-sbom", type=Path, help="Compare a vendor Qt source SBOM without erasing any differences")
     parser.add_argument("--source-archive", type=Path)
@@ -581,7 +637,8 @@ def main():
     elif args.prepare_notices:
         if not args.verify_bundle or not args.source_archive:
             raise ValueError("separate notices require --verify-bundle and --source-archive")
-        prepare_notices(args.root.resolve(), args.verify_bundle.resolve(), args.source_archive.resolve(), args.prepare_notices.resolve())
+        prepare_notices(args.root.resolve(), args.verify_bundle.resolve(), args.source_archive.resolve(),
+                        args.prepare_notices.resolve(), args.build_dir.resolve() if args.build_dir else None)
         print("PASS: separate dependency sources and installed notices match")
     elif args.verify_notices:
         verify_notices(args.root.resolve(), args.verify_notices.resolve(), args.source_archive)

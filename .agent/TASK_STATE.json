@@ -1,5 +1,75 @@
 {
   "schema": "qualpf.agent_task_state.v1",
   "baseline_ref": "docs/developer/project-baseline.json",
-  "active_task": null
+  "active_task": {
+    "id": "linux-slim-source-delivery",
+    "goal": "Prepare QualPF 1.0.0 slim Linux DEB/AppImage candidates with independent exact source archives, retained notices/qualifications and actual local acceptance, without upload.",
+    "in_scope": [
+      "cmake/packaging/",
+      "cmake/templates/",
+      "scripts/package/",
+      "tools/validation/",
+      "tests/integration/gui/aboutdialog_test.cpp",
+      "deploy/linux-dependency-sources.json",
+      "deploy/rights-review.json",
+      ".gitattributes",
+      "SOURCE_CODE.md",
+      "NOTICE.md",
+      "THIRD_PARTY_NOTICES.md",
+      "README.md",
+      "docs/",
+      "CHANGELOG.md",
+      ".agent/TASK_STATE.json",
+      "releases/"
+    ],
+    "out_of_scope": [
+      "PFSM experiment, scientific algorithms/values, precision, CLI/QPF contracts and public Core/Application APIs",
+      "Existing Windows/Linux candidate bytes or original source evidence",
+      "Upload, push, third-party contact, user data deletion or relocation"
+    ],
+    "status": "in_progress",
+    "base_commit": "4da7b19fa4c4b968be5a4450503359977899525a",
+    "checkpoint_commit": "4da7b19fa4c4b968be5a4450503359977899525a",
+    "completed": [
+      "Returned to clean main at the owner request; preserved the experimental branch and its handoff at 2f905984.",
+      "Confirmed WSL Ubuntu and the retained Linux SDK/source/runtime evidence are available; original candidate and source materials will remain preserved.",
+      "Generalized verified separate-source delivery for DEB/AppImage, nested SDK source archives and out-of-source CMake builds; retained original full notices.",
+      "Pinned all 890 original Linux source/notice files independently; preserved the original collection and recorded qualifications.",
+      "Passed 8 dependency controls, 18 distribution controls and native Debian configure/About scaling/offline-source tests at 100/150/200."
+    ],
+    "next_action": "Commit the verified implementation, freeze exact clean application/source materials, build native DEB/AppImage candidates and complete actual package acceptance.",
+    "blockers": [],
+    "checks": [
+      {
+        "command": "prepare_dependency_bundle.py --self-test (8)",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/linux-slim-20261027/dependency-self-test-01.log"
+      },
+      {
+        "command": "check_distribution.py --self-test (18)",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/linux-slim-20261027/distribution-self-test-01.log"
+      },
+      {
+        "command": "Native Debian no-Git configure, About build and scale100/150/200",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/linux-slim-20261027/precommit-about-03.xml"
+      },
+      {
+        "command": "Initial Debian configure from Git checkout without git installed",
+        "result": "FAIL",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/linux-slim-20261027/precommit-configure-01.log"
+      },
+      {
+        "command": "Initial cross-invocation mount probe",
+        "result": "FAIL",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/linux-slim-20261027/precommit-configure-02.log"
+      }
+    ]
+  }
 }

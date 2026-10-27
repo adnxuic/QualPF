@@ -4,12 +4,12 @@ set(_qualpf_args --root "@PROJECT_SOURCE_DIR@" --build "@CMAKE_BINARY_DIR@"
 foreach(_qualpf_artifact IN LISTS CPACK_PACKAGE_FILES)
     list(APPEND _qualpf_args --artifact "${_qualpf_artifact}")
 endforeach()
+if(NOT "@QUALPF_DEPENDENCY_SOURCE_ARCHIVE@" STREQUAL "")
+    list(APPEND _qualpf_args --dependency-archive "@QUALPF_DEPENDENCY_SOURCE_ARCHIVE@"
+        --artifact "@QUALPF_DEPENDENCY_SOURCE_ARCHIVE@")
+endif()
 if(CPACK_GENERATOR STREQUAL "IFW")
     list(APPEND _qualpf_args --ifw-metadata "${CPACK_TEMPORARY_DIRECTORY}")
-    if(NOT "@QUALPF_DEPENDENCY_SOURCE_ARCHIVE@" STREQUAL "")
-        list(APPEND _qualpf_args --dependency-archive "@QUALPF_DEPENDENCY_SOURCE_ARCHIVE@"
-            --artifact "@QUALPF_DEPENDENCY_SOURCE_ARCHIVE@")
-    endif()
     foreach(_qualpf_tool CPACK_IFW_BINARYCREATOR_EXECUTABLE CPACK_IFW_INSTALLERBASE_EXECUTABLE)
         if(DEFINED ${_qualpf_tool} AND EXISTS "${${_qualpf_tool}}")
             list(APPEND _qualpf_args --tool "${${_qualpf_tool}}")

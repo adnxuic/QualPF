@@ -233,19 +233,20 @@ formal configuration and current package-specific checks.
 
 ## Current native package acceptance
 
-### Slim Windows dependency source delivery
+### Separate dependency source delivery
 
 Set `QUALPF_DEPENDENCY_SOURCE_ARCHIVE` to the exact dependency TGZ accompanying
-the installer, together with `QUALPF_DEPENDENCY_BUNDLE_DIR`. This opt-in Windows
+the binary package, together with `QUALPF_DEPENDENCY_BUNDLE_DIR`. This opt-in
 layout installs all original notices, attribution files, SDK metadata and supplier
 instructions, plus the exact source index and `dependency-delivery.json` under
-`share/qualpf/DEPENDENCIES`. The large `SOURCES` archive directory stays in the
-independent dependency TGZ. Bundled delivery remains the default for other builds;
+`share/qualpf/DEPENDENCIES`. The large `SOURCES` archive directory and nested
+`SDK-SOURCE/*/SOURCES` archives stay in the independent dependency TGZ.
+Bundled delivery remains the default when the archive option is unset;
 existing Linux and earlier Windows candidate bytes retain their original scopes.
 
 Configuration and CPack staging read every separate archive member without
-extracting or executing it, compare its index and all nineteen source pins with
-the committed catalogue, and verify the installed notices. Runtime/header/IFW
+extracting or executing it, compare its index and source pins with the selected
+committed catalogue, and verify the installed notices. Runtime/header/IFW
 reviews resolve `bundle_path` against that verified index; missing or altered
 sources, notices, runtime bytes or the delivery descriptor still fail. Supply
 `--dependency-archive /path/to/exact-dependency.tar.gz` when manually checking a
@@ -259,6 +260,24 @@ clear retrieval instructions. The offline source-code link in Origin and changes
 opens [SOURCE_CODE.md](../../SOURCE_CODE.md). Separate delivery changes no
 third-party terms or unverified vendor/scientific-data findings, and the collection
 still records `release_clearance:false`.
+
+Linux DEB and AppImage use the same options and exact-source checks. Their
+`deploy/linux-dependency-sources.json` pins every original file of the previously
+accepted Linux collection independently of the editable bundle index. It retains
+the original ten base archives and the full distro, static-runtime, SDK and notice
+evidence. A new application source archive is added after freezing the clean
+revision; earlier application archives remain historical evidence. Each current
+runtime review identifies the matching current source. The collection's false
+clearance flag and recorded scientific/vendor qualifications remain unchanged.
+
+Both Linux binary helpers forward `QUALPF_DEPENDENCY_BUNDLE_DIR` and
+`QUALPF_DEPENDENCY_SOURCE_ARCHIVE` from the environment through CMake, staged
+inventory and artifact recording. Use the exact `qualpf-1.0.0-Linux-Dependencies.tar.gz`
+next to the matching application source and binary artifacts. DEB still requires
+the supplied real maintainer email and uses system Qt/runtime dependencies;
+AppImage retains its pinned runtime, reviewed bundled libraries and SQLite-only
+SQL plugin layout. No platform, algorithm, precision or database contract changes
+are implied by this packaging layout.
 
 ### Slim Windows candidate, 24 October 2026
 

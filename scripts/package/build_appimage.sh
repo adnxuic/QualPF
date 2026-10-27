@@ -36,6 +36,12 @@ if [ "${1:-}" = --audit-only ]; then AUDIT_ONLY=ON; fi
 DIST_ARGS=(--release)
 SUFFIX=""
 if [ "$AUDIT_ONLY" = ON ]; then DIST_ARGS=(--audit-only); SUFFIX=-audit; fi
+DEPENDENCY_ARGS=()
+DEPENDENCY_ARTIFACT_ARGS=()
+if [ -n "${QUALPF_DEPENDENCY_SOURCE_ARCHIVE:-}" ]; then
+    DEPENDENCY_ARGS=(--dependency-archive "$QUALPF_DEPENDENCY_SOURCE_ARCHIVE")
+    DEPENDENCY_ARTIFACT_ARGS=(--artifact "$QUALPF_DEPENDENCY_SOURCE_ARCHIVE")
+fi
 
 # A formal container must use the exact runtime covered by its source review.
 # Audit probes may still let appimagetool select a runtime for inspection.
@@ -120,9 +126,11 @@ cmake -B "$BUILD_DIR/cmake" -S "$SRC_DIR" \
     -DQUALPF_DISTRIBUTION_AUDIT_ONLY="$AUDIT_ONLY" \
     -DQUALPF_DISTRIBUTION_RUNTIME_REVIEW="${QUALPF_DISTRIBUTION_RUNTIME_REVIEW:-}" \
     -DQUALPF_CORRESPONDING_SOURCE_ARCHIVE="${QUALPF_CORRESPONDING_SOURCE_ARCHIVE:-}" \
+    -DQUALPF_DEPENDENCY_BUNDLE_DIR="${QUALPF_DEPENDENCY_BUNDLE_DIR:-}" \
+    -DQUALPF_DEPENDENCY_SOURCE_ARCHIVE="${QUALPF_DEPENDENCY_SOURCE_ARCHIVE:-}" \
     -DCMAKE_INSTALL_PREFIX="$APPDIR/usr"
 python3 -B "$SRC_DIR/tools/validation/check_distribution.py" --root "$SRC_DIR" \
-    --build "$BUILD_DIR/cmake" --kind AppImage "${DIST_ARGS[@]}"
+    --build "$BUILD_DIR/cmake" --kind AppImage "${DIST_ARGS[@]}" "${DEPENDENCY_ARGS[@]}"
 echo -e "${GREEN}✓ Configuration completed${NC}"
 echo ""
 
@@ -217,7 +225,7 @@ if [ -n "${QUALPF_CORRESPONDING_SOURCE_ARCHIVE:-}" ]; then
 fi
 python3 -B "$SRC_DIR/tools/validation/check_distribution.py" --root "$SRC_DIR" \
     --build "$BUILD_DIR/cmake" --stage "$APPDIR" --kind AppImage \
-    "${DIST_ARGS[@]}" "${DIST_REVIEW_ARGS[@]}" \
+    "${DIST_ARGS[@]}" "${DIST_REVIEW_ARGS[@]}" "${DEPENDENCY_ARGS[@]}" \
     --output "$APPDIR/usr/share/qualpf/distribution-inventory.json"
 
 VERSION="$(grep -m1 'project\s*(' "$SRC_DIR/CMakeLists.txt" | sed 's/.*VERSION[[:space:]]\+\([0-9][0-9.]*\).*/\1/')"
@@ -230,7 +238,7 @@ cp "$OUTPUT" "$RELEASE_DIR/"
 python3 -B "$SRC_DIR/tools/validation/check_distribution.py" --root "$SRC_DIR" \
     --build "$BUILD_DIR/cmake" --record-artifacts "$RELEASE_DIR/artifacts.json" \
     --artifact "$RELEASE_DIR/$(basename "$OUTPUT")" --tool "$LINUXDEPLOY" --tool "$APPIMAGETOOL" \
-    "${RUNTIME_TOOL_ARGS[@]}"
+    "${RUNTIME_TOOL_ARGS[@]}" "${DEPENDENCY_ARGS[@]}" "${DEPENDENCY_ARTIFACT_ARGS[@]}"
 echo -e "${GREEN}=========================================="
 echo "✓ AppImage created successfully!"
 echo -e "==========================================${NC}"

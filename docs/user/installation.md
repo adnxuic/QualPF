@@ -58,7 +58,8 @@ analysis settings are stored in QPF files.
 
 Open **Help → About → License and notices** for the GPL, origin and third-party
 notices. The **Origin and changes** page links to the offline source-retrieval
-instructions. A slim Windows distribution supplies the application and dependency
-source archives separately beside the installer, with their SHA256SUMS. Keep the
+instructions. Slim Windows and Linux distributions supply the application and
+platform dependency source archives separately beside the binary, with their
+SHA256SUMS. Keep the
 matching archives if you want to inspect or rebuild that version; see
 [Obtaining QualPF source code](../../SOURCE_CODE.md).

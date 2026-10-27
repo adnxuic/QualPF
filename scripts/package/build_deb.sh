@@ -57,11 +57,20 @@ cmake -B "$BUILD_DIR" -S "$REPO_DIR" \
     -DQUALPF_DISTRIBUTION_AUDIT_ONLY="$AUDIT_ONLY" \
     -DQUALPF_RELEASE_CONTACT_EMAIL="${QUALPF_RELEASE_CONTACT_EMAIL:-}" \
     -DQUALPF_DISTRIBUTION_RUNTIME_REVIEW="${QUALPF_DISTRIBUTION_RUNTIME_REVIEW:-}" \
-    -DQUALPF_CORRESPONDING_SOURCE_ARCHIVE="${QUALPF_CORRESPONDING_SOURCE_ARCHIVE:-}"
+    -DQUALPF_CORRESPONDING_SOURCE_ARCHIVE="${QUALPF_CORRESPONDING_SOURCE_ARCHIVE:-}" \
+    -DQUALPF_DEPENDENCY_BUNDLE_DIR="${QUALPF_DEPENDENCY_BUNDLE_DIR:-}" \
+    -DQUALPF_DEPENDENCY_SOURCE_ARCHIVE="${QUALPF_DEPENDENCY_SOURCE_ARCHIVE:-}"
 DIST_ARGS=(--release)
 if [ "$AUDIT_ONLY" = ON ]; then DIST_ARGS=(--audit-only); fi
+DEPENDENCY_ARGS=()
+DEPENDENCY_ARTIFACT_ARGS=()
+if [ -n "${QUALPF_DEPENDENCY_SOURCE_ARCHIVE:-}" ]; then
+    DEPENDENCY_ARGS=(--dependency-archive "$QUALPF_DEPENDENCY_SOURCE_ARCHIVE")
+    DEPENDENCY_ARTIFACT_ARGS=(--artifact "$QUALPF_DEPENDENCY_SOURCE_ARCHIVE")
+fi
 python3 -B "$REPO_DIR/tools/validation/check_distribution.py" --root "$REPO_DIR" \
-    --build "$BUILD_DIR" --kind DEB --contact-email="${QUALPF_RELEASE_CONTACT_EMAIL:-}" "${DIST_ARGS[@]}"
+    --build "$BUILD_DIR" --kind DEB --contact-email="${QUALPF_RELEASE_CONTACT_EMAIL:-}" \
+    "${DIST_ARGS[@]}" "${DEPENDENCY_ARGS[@]}"
 
 echo -e "${GREEN}✓ Configuration completed${NC}"
 echo ""
@@ -93,7 +102,7 @@ if [ -f "$DEB_FILE" ]; then
     cp "$DEB_FILE" "$RELEASE_DIR/"
     python3 -B "$REPO_DIR/tools/validation/check_distribution.py" --root "$REPO_DIR" \
         --build "$BUILD_DIR" --record-artifacts "$RELEASE_DIR/artifacts.json" \
-        --artifact "$RELEASE_DIR/$DEB_FILE"
+        --artifact "$RELEASE_DIR/$DEB_FILE" "${DEPENDENCY_ARGS[@]}" "${DEPENDENCY_ARTIFACT_ARGS[@]}"
     echo -e "${GREEN}=========================================="
     echo "✓ Debian package created successfully!"
     echo -e "==========================================${NC}"

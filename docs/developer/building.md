@@ -30,7 +30,7 @@ The native Qt About view embeds the canonical GPL text, origin/third-party notic
 and supplemental licenses and does not require network access. Its three scaled
 checks render hidden native Windows windows (or Linux offscreen windows).
 The origin page also opens the embedded source-retrieval instructions, including
-the separate dependency archive used by the slim Windows installer.
+the separate dependency archives used by slim Windows and Linux packages.
 Methodological acknowledgment of Match!'s public PFSM documentation is separate
 from code provenance and the numerical acceptance contracts.
 

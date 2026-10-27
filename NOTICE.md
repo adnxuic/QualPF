@@ -105,7 +105,7 @@ or grant permission for third-party material.
 
 Each distributed binary must identify its exact committed source revision and
 provide the matching corresponding source, notices and build instructions.
-For filenames, checksums and the slim Windows installer's independent dependency
+For filenames, checksums and the slim Windows/Linux packages' independent dependency
 source archive, see [Obtaining QualPF source code](SOURCE_CODE.md). Keep those
 source downloads available alongside the binary at no additional charge.
 A link to a moving branch alone is not a corresponding-source delivery record.

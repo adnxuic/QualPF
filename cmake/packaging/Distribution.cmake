@@ -4,15 +4,16 @@ find_package(Python3 COMPONENTS Interpreter REQUIRED)
 set(QUALPF_DISTRIBUTION_RUNTIME_REVIEW "" CACHE FILEPATH "Package-specific runtime/source review JSON")
 set(QUALPF_CORRESPONDING_SOURCE_ARCHIVE "" CACHE FILEPATH "Exact corresponding-source TGZ for a release binary")
 set(QUALPF_DEPENDENCY_BUNDLE_DIR "" CACHE PATH "Verified offline dependency source/notice bundle; never fetched during configuration")
-set(QUALPF_DEPENDENCY_SOURCE_ARCHIVE "" CACHE FILEPATH "Separate Windows dependency source TGZ; install original notices without source archives")
-if(QUALPF_DEPENDENCY_SOURCE_ARCHIVE AND (NOT WIN32 OR NOT QUALPF_DEPENDENCY_BUNDLE_DIR))
-    message(FATAL_ERROR "Separate dependency delivery requires Windows and QUALPF_DEPENDENCY_BUNDLE_DIR")
+set(QUALPF_DEPENDENCY_SOURCE_ARCHIVE "" CACHE FILEPATH "Separate dependency source TGZ; install original notices without source archives")
+if(QUALPF_DEPENDENCY_SOURCE_ARCHIVE AND NOT QUALPF_DEPENDENCY_BUNDLE_DIR)
+    message(FATAL_ERROR "Separate dependency delivery requires QUALPF_DEPENDENCY_BUNDLE_DIR")
 endif()
 set(QUALPF_DISTRIBUTION_CHECKER "${PROJECT_SOURCE_DIR}/tools/validation/check_distribution.py")
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${QUALPF_DISTRIBUTION_CHECKER}")
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
     "${PROJECT_SOURCE_DIR}/tools/validation/prepare_dependency_bundle.py"
-    "${PROJECT_SOURCE_DIR}/deploy/dependency-sources.json")
+    "${PROJECT_SOURCE_DIR}/deploy/dependency-sources.json"
+    "${PROJECT_SOURCE_DIR}/deploy/linux-dependency-sources.json")
 
 # A new commit must refresh the generated provenance even when source bytes did
 # not otherwise trigger configuration. Source archives use their portable stamp.
@@ -115,6 +116,7 @@ if(QUALPF_DEPENDENCY_BUNDLE_DIR)
             "${PROJECT_SOURCE_DIR}/tools/validation/prepare_dependency_bundle.py"
             --root "${PROJECT_SOURCE_DIR}" --verify-bundle "${QUALPF_DEPENDENCY_BUNDLE_DIR}"
             --source-archive "${QUALPF_DEPENDENCY_SOURCE_ARCHIVE}" --prepare-notices "${dependency_notices}"
+            --build-dir "${CMAKE_BINARY_DIR}"
             RESULT_VARIABLE dependency_status OUTPUT_VARIABLE dependency_output ERROR_VARIABLE dependency_error)
         if(NOT dependency_status EQUAL 0)
             message(FATAL_ERROR "Separate dependency delivery is invalid: ${dependency_output}${dependency_error}")
@@ -142,6 +144,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     install(FILES "${PROJECT_SOURCE_DIR}/NOTICE.md" DESTINATION "share/doc/${EXECUTABLE_NAME}"
         RENAME copyright COMPONENT "${PROJECT_NAME}")
     install(FILES "${PROJECT_SOURCE_DIR}/LICENSE" "${PROJECT_SOURCE_DIR}/THIRD_PARTY_NOTICES.md"
+        "${PROJECT_SOURCE_DIR}/SOURCE_CODE.md"
         DESTINATION "share/doc/${EXECUTABLE_NAME}" COMPONENT "${PROJECT_NAME}")
 endif()
 

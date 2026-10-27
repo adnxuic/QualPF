@@ -302,8 +302,9 @@ qualifications and the publisher's distribution decision are disclosed in
 **uncercalculate@163.com**; confirmed infringing material will be removed from
 official distribution after review.
 
-The slim Windows installer retains runtime libraries and legal notices; complete
-dependency sources are provided as a separate archive alongside the installer.
+Slim Windows and Linux packages retain their legal notices and selected runtime
+layout; collected dependency sources are provided as a separate archive alongside
+the binary package.
 See [Obtaining QualPF source code](SOURCE_CODE.md) for exact filenames, checksums
 and build instructions.
 

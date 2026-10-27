@@ -1,19 +1,23 @@
 # Obtaining QualPF source code
 
 Obtain the corresponding source from the same distribution directory or download
-page as the installer, at no additional charge. For QualPF 1.0.0 Windows candidates
+page as the binary package, at no additional charge. For QualPF 1.0.0 candidates
 the files are:
 
 - **qualpf-1.0.0-Source.tar.gz**: the matching application source, build scripts,
   scientific-table modification inputs, generators and notices.
 - **qualpf-1.0.0-Windows-Dependencies.tar.gz**: all collected Windows dependency
   source archives, original licenses, actual SDK header sources and build inputs.
+- **qualpf-1.0.0-Linux-Dependencies.tar.gz**: the collected Linux dependency
+  sources, distro patches/build rules, AppImage runtime inputs, original notices
+  and exact SDK headers. Use the dependency archive matching the binary platform.
 - **SHA256SUMS** and **candidate-manifest.json**: the exact archive checksums,
   application revision and scope of the local package acceptance.
 
-The slim Windows installer keeps the program, runtime libraries and original
-legal notices installed. The complete dependency sources are supplied as a
-separate archive beside the installer. Retain or download that archive separately
+Slim Windows, Linux DEB and AppImage packages keep the program and original legal
+notices installed. AppImage and Windows also carry their reviewed runtime payloads;
+DEB uses its declared system dependencies. Collected dependency sources are supplied
+as a separate archive beside the binary. Retain or download that archive separately
 when you want to examine, modify or rebuild those components.
 
 The installed `share/qualpf/distribution-build.json` identifies this application's
@@ -24,14 +28,18 @@ records and SHA256SUMS; a moving source branch alone does not identify them.
 
 Extract the application archive into a new directory and follow its
 `docs/developer/building.md`. It builds without Git metadata when matching SDKs
-are provided. The dependency archive contains its own file index and the supplier
-procedure in `BUILD-INPUTS/README.md`. Original third-party file terms remain in
+are provided. Each dependency archive contains its own file index. Windows supplier
+procedures are in `BUILD-INPUTS/README.md`; Linux evidence and SDK configurations
+are in `RUNTIME-EVIDENCE` and `SDK-CONFIG`, with source-package patches/build rules
+under `SOURCES`. Earlier application sources retained in the Linux evidence bundle
+are historical; use the separate application archive identified by the current
+binary's revision and candidate manifest. Original third-party file terms remain in
 force. Separate delivery changes the packaging layout, not the recorded IFW
 vendor-build/CRT or scientific-data qualifications in NOTICE.md and the inventory.
 
 Before any public binary distribution, both source archives and their checksums
-must be available from the binary's download location with clear, free access.
-Local candidate directories already carry these files; this notice does not
+for that platform must be available from the binary's download location with clear,
+free access. Local candidate directories already carry these files; this notice does not
 announce a public upload. If a source archive is missing where you obtained the
 binary, report it through [QualPF Issues](https://github.com/adnxuic/QualPF/issues)
 or **uncercalculate@163.com**.

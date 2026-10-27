@@ -86,10 +86,11 @@ confirmed infringing material will be removed from official distribution after
 review, as described in NOTICE.md.
 
 Bundled packages carry source archives, actual SDK header sources, notices and
-build metadata under `share/qualpf/DEPENDENCIES`. The slim Windows installer
-retains the full original legal/attribution and SDK metadata there, with an exact
+build metadata under `share/qualpf/DEPENDENCIES`. Slim Windows and Linux packages
+retain the full original legal/attribution and SDK metadata there, with an exact
 dependency source index and `dependency-delivery.json`; the complete source
-archives travel in the separate dependency TGZ beside the installer. See
+archives, including nested Debian SDK header archives, travel in the separate
+dependency TGZ beside the binary package. See
 [Obtaining QualPF source code](SOURCE_CODE.md) for retrieval instructions.
 Both layouts retain the collection's `release_clearance:false`; the package
 review binds the exact delivered runtime bytes to those source materials.

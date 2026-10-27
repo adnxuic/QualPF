@@ -101,6 +101,7 @@ int main(int argc, char **argv)
         auto *origin = child<QTextBrowser>(*legal, "NOTICE.md");
         origin->setSource(QUrl(QStringLiteral("qrc:/legal/SOURCE_CODE.md")));
         check(origin->toPlainText().contains("qualpf-1.0.0-Windows-Dependencies.tar.gz") &&
+              origin->toPlainText().contains("qualpf-1.0.0-Linux-Dependencies.tar.gz") &&
               origin->toPlainText().contains("SHA256SUMS"), "source retrieval instructions open offline");
         check(read(":/legal/SOURCE_CODE.md") == read(sourceRoot + "/SOURCE_CODE.md"),
               "embedded source retrieval instructions match the delivered text");

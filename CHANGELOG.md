@@ -12,6 +12,11 @@ reports are no longer used for routine development.
 
 ### Added
 
+- Added the slim dependency-source layout to Linux DEB and AppImage packaging.
+  Original legal materials and source-retrieval instructions remain available
+  offline; separate archives retain distro patches, exact SDK headers and runtime
+  build inputs, with independent checks against the retained Linux collection.
+
 - Added a slim Windows installer layout with separately verified dependency
   source archives. Original notices and SDK metadata remain installed; runtime
   reviews bind external source members by hash. Offline source-retrieval
