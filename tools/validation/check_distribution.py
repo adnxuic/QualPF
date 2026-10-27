@@ -10,6 +10,7 @@ import argparse
 import configparser
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import shutil
@@ -99,6 +100,7 @@ def source_identity(root):
         dirty = bool(stamp["source_dirty"]) or bool(extra_product_sources(root, stamp["files"])) or any(
             not relative(root, name).is_file() or digest(relative(root, name)) != expected
             for name, expected in stamp["files"].items())
+        dirty = dirty or bool(source_permission_errors(root, stamp))
         return stamp["source_revision"], dirty
     return "unknown", True
 
@@ -512,6 +514,25 @@ def source_names(root, data):
     return names, archives
 
 
+def source_executables(root, names):
+    if (root / ".git").exists():
+        entries = git(root, "ls-files", "--stage", "-z").split(b"\0")
+        return sorted(entry.split(b"\t", 1)[1].decode("utf-8") for entry in entries
+                      if entry.startswith(b"100755 ") and entry.split(b"\t", 1)[1].decode("utf-8") in names)
+    return sorted(set(read_json(root / STAMP).get("executable_files", [])) & set(names))
+
+
+def source_permission_errors(root, stamp):
+    errors = []
+    for name in stamp.get("executable_files", []):
+        file = relative(root, name)
+        if name not in stamp["files"]:
+            errors.append("executable source omitted from file manifest: " + name)
+        elif not file.is_file() or (os.name != "nt" and file.stat().st_mode & 0o111 != 0o111):
+            errors.append("delivered source executable permission missing: " + name)
+    return errors
+
+
 def prepare_source(root, destination, info, data):
     destination = destination.resolve()
     if not destination.is_relative_to((root / "build").resolve()) or destination == (root / "build").resolve():
@@ -529,19 +550,25 @@ def prepare_source(root, destination, info, data):
             raise ValueError("tracked source input is missing: " + name)
     destination.mkdir(parents=True)
     hashes = {}
+    executables = source_executables(root, names)
     for name in sorted(names):
         target = relative(destination, name)
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(relative(root, name), target)
+        shutil.copy2(relative(root, name), target)
+        if name in executables:
+            # The Git mode is authoritative even in a Windows checkout.
+            target.chmod(0o755)
         hashes[name] = digest(target)
     write_json(destination / STAMP, dict(schema="qualpf.distribution_source.v1",
                version=info["version"], source_revision=info["source_revision"],
-               source_dirty=info["source_dirty"], audit_only=info["audit_only"], files=hashes))
+               source_dirty=info["source_dirty"], audit_only=info["audit_only"], files=hashes,
+               executable_files=executables))
 
 
 def check_source_tree(root, data):
     errors = []
     stamp = read_json(root / STAMP)
+    errors.extend(source_permission_errors(root, stamp))
     for name, expected in stamp["files"].items():
         file = relative(root, name)
         if not file.is_file() or digest(file) != expected:
@@ -722,6 +749,9 @@ def source_archive_errors(path, info, root, data):
         required, _ = source_names(root, data)
         if set(expected) != required:
             errors.append("corresponding-source manifest does not cover the selected source tree")
+        executables = source_executables(root, required)
+        if source.get("executable_files", []) != executables:
+            errors.append("corresponding-source executable manifest differs from the build input")
         actual = set()
         for member in archive.getmembers():
             if member.isdir():
@@ -737,6 +767,8 @@ def source_archive_errors(path, info, root, data):
                 errors.append("unexpected/duplicate corresponding-source input: " + name)
                 continue
             actual.add(name)
+            if name in executables and member.mode & 0o111 != 0o111:
+                errors.append("corresponding-source executable permission missing: " + name)
             with archive.extractfile(member) as stream:
                 value = hashlib.sha256()
                 for block in iter(lambda: stream.read(1024 * 1024), b""):
@@ -1163,6 +1195,40 @@ def self_test():
                 self.assertTrue(excluded_source("restricted.cif", data))
                 self.assertTrue(excluded_source("tests/real_example_data/03_reference_structures/CoO.cif", data))
                 self.assertTrue(any("uncleared material" in error for error in check_source_tree(root, data)))
+
+        def test_source_export_and_archive_executable_permissions(self):
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                script = root / "install.sh"
+                script.write_bytes(b"#!/bin/sh\nexit 0\n")
+                script.chmod(0o755)
+                info = dict(source_revision="a" * 40, version="1.0.0", source_dirty=False, audit_only=False)
+                write_json(root / STAMP, dict(**info, files={"install.sh": digest(script)},
+                                             executable_files=["install.sh"]))
+                write_json(root / "archives.json", dict(files=[]))
+                data = dict(source_inputs=dict(generator_archives=[], tracked_generator_inputs=[],
+                                               archive_manifest="archives.json"), excluded_legacy_assets=[])
+                exported = root / "build/export"
+                prepare_source(root, exported, info, data)
+                self.assertEqual(read_json(exported / STAMP)["executable_files"], ["install.sh"])
+                self.assertEqual(check_source_tree(exported, data), [])
+                if os.name != "nt":
+                    self.assertEqual((exported / "install.sh").stat().st_mode & 0o777, 0o755)
+                    (exported / "install.sh").chmod(0o644)
+                    self.assertTrue(any("permission missing" in error for error in check_source_tree(exported, data)))
+                    self.assertTrue(source_identity(exported)[1])
+                archive = root / "source.tar.gz"
+                for mode in (0o755, 0o644):
+                    with tarfile.open(archive, "w:gz") as stream:
+                        stream.add(exported / STAMP, arcname="source/" + STAMP)
+                        member = stream.gettarinfo(str(script), arcname="source/install.sh")
+                        member.mode = mode
+                        with script.open("rb") as content:
+                            stream.addfile(member, content)
+                    errors = source_archive_errors(archive, info, root, data)
+                    self.assertEqual(bool(errors), mode == 0o644, errors)
+                    if errors:
+                        self.assertTrue(any("permission missing" in error for error in errors))
 
         def test_sdk_source_and_version_binding(self):
             with tempfile.TemporaryDirectory() as directory:

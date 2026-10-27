@@ -29,10 +29,13 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     endforeach()
     # Registering the app in a user's desktop/icon cache only makes sense
     # for a "make install" done directly on that user's machine — skip it
-    # for AppImage builds, where installation happens into a throwaway
-    # AppDir (often inside a container with no meaningful $HOME).
-    if(NOT BUILD_APPIMAGE)
+    # for AppImage/DEB builds or DESTDIR staging. DESTDIR is an install-time
+    # environment value, so guard the generated script as well.
+    if(NOT BUILD_APPIMAGE AND NOT BUILD_DEB_PACKAGE)
         file(WRITE ${CMAKE_BINARY_DIR}/install_desktop_linux.cmake "
+            if(NOT \"\$ENV{DESTDIR}\" STREQUAL \"\" OR CMAKE_INSTALL_PREFIX MATCHES \"/_CPack_Packages/\")
+                return()
+            endif()
             set(HOME \"\$ENV{HOME}\")
             set(APPS_DIR \"\${HOME}/.local/share/applications\")
             set(ICON_BASE \"\${HOME}/.local/share/icons/hicolor\")

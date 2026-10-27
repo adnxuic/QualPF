@@ -21,6 +21,8 @@ file manager or terminal. If its FUSE integration is unavailable, the AppImage
 runtime also provides `--appimage-extract`; run `squashfs-root/AppRun` from the
 extracted directory. Availability on a particular system depends on the build's
 runtime requirements, not just the filename.
+When opening an installed PDF manual from an AppImage, QualPF keeps a private
+temporary copy until the application closes. Files in Downloads are preserved.
 
 ## Build from source
 

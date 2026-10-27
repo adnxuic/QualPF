@@ -1,7 +1,10 @@
 #pragma once
 #include "qualpf/application/platform_services.h"
+#include <QTemporaryDir>
 namespace qualpf::infrastructure {
 class QtPlatformServices final : public application::PlatformServices {
+    // Keep external viewers' copies available for this provider's lifetime.
+    std::unique_ptr<QTemporaryDir> documentationDirectory_;
 public:
     std::string environmentValue(const std::string &) const override;
     std::unique_ptr<application::ProcessSession> makeProcess() override;

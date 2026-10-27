@@ -407,6 +407,11 @@ reports are no longer used for routine development.
 
 ### Fixed
 
+- AppImage PDF help now uses a private temporary directory and preserves existing
+  Downloads files. DEB, AppImage and staged installs skip user desktop registration.
+  Corresponding-source exports preserve and verify executable permissions, and
+  the source-to-DEB wrapper retains checksums and build metadata with the package.
+
 - Include AppImage `.DirIcon` before payload inventorying, and support an explicit
   reviewed type-2 runtime with its hash in artifact provenance. Formal assembly
   rejects absent or mismatched runtime/review inputs before configuration.

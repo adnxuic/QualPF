@@ -108,9 +108,13 @@ std::string QtPlatformServices::documentationPath() {
     for(const auto &path:candidates) if(QFile::exists(path)) {
         auto openPath=QFileInfo(path).absoluteFilePath();
         if(qEnvironmentVariableIsSet("APPIMAGE")) {
-            const auto directory=QStandardPaths::writableLocation(QStandardPaths::DownloadLocation); QDir().mkpath(directory);
-            const auto copy=directory+"/qualpf_manual.pdf"; QFile::remove(copy);
-            if(QFile::copy(openPath,copy)) openPath=copy;
+            if (!documentationDirectory_)
+                documentationDirectory_ = std::make_unique<QTemporaryDir>(
+                    QDir::tempPath() + "/qualpf-help-XXXXXX");
+            if (!documentationDirectory_->isValid()) return {};
+            const auto copy = documentationDirectory_->filePath("qualpf_manual.pdf");
+            if (!QFile::exists(copy) && !QFile::copy(openPath, copy)) return {};
+            openPath = copy;
         }
         return openPath.toStdString();
     }

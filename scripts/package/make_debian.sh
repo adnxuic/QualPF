@@ -21,5 +21,15 @@ bash "$SRC_DIR/scripts/package/build_deb.sh"
 VERSION="$(grep -m1 'project\s*(' "$SRC_DIR/CMakeLists.txt" | sed 's/.*VERSION[[:space:]]\+\([0-9][0-9.]*\).*/\1/')"
 RELEASE_DIR="$REPO_DIR/releases/${VERSION:-unknown}/linux-deb"
 mkdir -p "$RELEASE_DIR"
-cp "$SRC_DIR/build/linux-deb/packages/"*.deb "$RELEASE_DIR/"
-echo "Packages written to $RELEASE_DIR"
+# build_deb.sh collects the package, its checksum and the revision/toolchain
+# record here. Copy the complete release set before the temporary source exits.
+SOURCE_RELEASE_DIR="$SRC_DIR/releases/${VERSION:-unknown}/linux-deb"
+test -f "$SOURCE_RELEASE_DIR/artifacts.json"
+cp -a "$SOURCE_RELEASE_DIR/." "$RELEASE_DIR/"
+shopt -s nullglob
+for metadata in "$SRC_DIR/build/linux-deb/packages/"*.sha256 \
+                "$SRC_DIR/build/linux-deb/packages/"*-artifacts.json \
+                "$SRC_DIR/build/linux-deb/packages/distribution-inventory.json"; do
+    if [ -f "$metadata" ]; then cp -a "$metadata" "$RELEASE_DIR/"; fi
+done
+echo "Packages and release metadata written to $RELEASE_DIR"

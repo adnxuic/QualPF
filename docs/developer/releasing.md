@@ -116,6 +116,11 @@ product's database backend; optional SDK drivers and their unsupplied clients
 are excluded before linuxdeploy walks plugin dependencies.
 Each AppImage run retains the previous AppDir below the build directory and
 assembles a fresh payload; cached tools and compiled objects are reused.
+DEB, AppImage, CPack staging and installations with a nonempty `DESTDIR` install
+desktop entries/icons only inside the package prefix. Direct non-staged installs
+retain user desktop registration. The source-to-DEB wrapper preserves the full
+release directory, including package checksums and `artifacts.json`, before
+removing its temporary build tree.
 
 CPack checks component staging; AppImage inventory runs after linuxdeploy and
 includes AppRun and transitive libraries. Inspect the final container/runtime as
@@ -182,7 +187,10 @@ scattering/chemistry/CIF catalogue inputs and generators are included as well.
 A successful compile of generated `.inc` files alone is insufficient.
 
 `distribution-source.json` records the source revision and every delivered
-input's SHA-256. In an extracted archive without `.git`, run:
+input's SHA-256 and executable paths. Exports preserve file modes and apply Git's
+executable bits even when exported from a Windows checkout. Source-tree checks
+on POSIX and archive checks reject lost executable permissions. In an extracted
+archive without `.git`, run:
 
 ```sh
 python -B tools/validation/check_distribution.py --source-tree
