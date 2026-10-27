@@ -422,7 +422,8 @@ reports are no longer used for routine development.
   decoding. Failed or closed database-information reads now return defined empty
   values, and catalogue metadata probes open read-only so missing paths do not
   create empty database files. Added real SQLite regressions for all query routes,
-  literal lookups and failed metadata reads.
+  literal lookups and failed metadata reads. Closed card/metadata providers also
+  refuse Qt's implicit fallback to an unrelated default database connection.
 
 - Corrected release setup and user workflow instructions against the current
   implementation: real menu routes and shortcuts, QPF-only admission, verified

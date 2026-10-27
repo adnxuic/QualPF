@@ -198,6 +198,7 @@ browse and preselected-ID routes must return the prescribed rows without widenin
 their predicates. Missing/closed metadata reads return defined empty information.
 Catalogue metadata probes retain their unavailable sentinel and never create a
 missing database as a side effect.
+Closed card and metadata lookups also reject an unrelated Qt default connection.
 
 Provenance tests retain incompatible residual/scale refusal, source/task mismatch,
 non-default QXP save refusal, unknown legacy provenance and explicit original-signal

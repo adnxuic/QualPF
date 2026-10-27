@@ -266,6 +266,8 @@ predicates quote literal values, including apostrophes and embedded NUL bytes.
 Existing LIKE wildcards and restraint intersections remain unchanged; leading-zero
 or SQL-looking text identifiers are not numeric expressions. Failed, empty or
 closed database-information reads return a defined zero count and empty type.
+Closed card and metadata lookups refuse Qt's implicit default-connection fallback,
+including when another database remains open in the same process.
 The catalogue metadata helper retains its unavailable-count sentinel of -1 and
 opens read-only; probing a missing database never creates a new SQLite file.
 The candidate-reader regression exercises all four query routes with independently

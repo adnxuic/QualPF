@@ -254,6 +254,29 @@ static void literalInputs(const QString &directory) {
     count = 5678; type = "stale";
     reader.getInfo(count, type); check(count == 0 && type.isEmpty());
     check(reader.information() == std::pair<int,std::string>{0,{}});
+    // Qt falls back to its default connection when given an invalid database.
+    // A closed provider must never borrow an unrelated, still-open connection.
+    check(!QSqlDatabase::contains());
+    QString defaultName;
+    bool refusedDefault = false;
+    {
+        auto unrelated = QSqlDatabase::addDatabase("QSQLITE");
+        defaultName = unrelated.connectionName();
+        unrelated.setDatabaseName(base + ".sq");
+        unrelated.setConnectOptions("QSQLITE_OPEN_READONLY");
+        check(unrelated.open());
+        const auto closedInfo = reader.information();
+        const auto closedCard = reader.queryCard("q'7");
+        const auto closedLookup = reader.findById("q'7", 1.54, context);
+        refusedDefault = closedInfo == std::pair<int,std::string>{0,{}}
+                      && !closedCard.valid && !closedLookup;
+        if (!refusedDefault)
+            std::cerr << "Closed provider borrowed default connection: count=" << closedInfo.first
+                      << ", card=" << closedCard.valid << ", lookup=" << bool(closedLookup) << '\n';
+        unrelated.close();
+    }
+    QSqlDatabase::removeDatabase(defaultName);
+    check(refusedDefault);
 }
 static void numericRir(const QString &directory) {
     const auto base=directory+"/numeric-rir";

@@ -119,7 +119,7 @@ void SqlReferenceRepository::closeDatabeses()
 CardDetails SqlReferenceRepository::queryCard(const QString &idCard) const
 {
     CardDetails info;
-    if (!dbMain.onOwnerThread()) return info;
+    if (!dbMain.isOpen()) return info;
     auto lease = referenceLease_ ? nullptr : qualpf::infrastructure::DatabaseLease::read(basePath_);
     if ((!referenceLease_ && !lease) || !dbMain.onOwnerThread()) return info;
 
@@ -712,6 +712,7 @@ void SqlReferenceRepository::getInfo(int &ncard, QString &type)
 {
     ncard = 0;
     type.clear();
+    if (!dbMain.isOpen()) return;
     auto lease = referenceLease_ ? nullptr : qualpf::infrastructure::DatabaseLease::read(basePath_);
     if ((!referenceLease_ && !lease) || !dbMain.onOwnerThread()) return;
     QSqlQuery queryInfo(dbMain.db());
