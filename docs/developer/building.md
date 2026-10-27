@@ -181,6 +181,31 @@ for compatibility aliases and preserved historical evidence names. The standalon
 Qt-free build exposes `pfsm_probe` and `pfsm_candidate_recall_probe` for the
 independent formal and recall reference checks.
 
+## Public build CI
+
+The quality workflow also configures and builds the actual Qt product on
+Ubuntu 24.04/GNU and Windows 2022/MinGW with Qt 6.8.3. Windows uses Qt's matching
+MinGW 13.1 tool and hash-checked Eigen 3.4/Boost 1.82 headers. The existing
+`public_ci` label selects 19 controls with committed or sealed public inputs:
+QPF and its independent protocol, settings, About at three scales, platform
+providers, coordinates, Application/Core contracts, table generators, distribution
+rejection controls and strict boundaries. It requires no private powder examples.
+The normal suite and all original assertions remain unchanged.
+
+With a development preset configured and independent references restored:
+
+```sh
+cmake --build --preset linux-gnu --target qualpf_public_ci --parallel 2
+ctest --test-dir build/linux-gnu -L '^public_ci$' --no-tests=error --output-on-failure
+python -B tools/validation/prepare_appimage_tools.py --self-test
+python -B tests/unit/tools/linux_packaging_test.py -v
+```
+
+Use `windows-gnu` for the Windows build/test commands. Hosted jobs retain JUnit,
+CTest/CMake diagnostics and About captures even on failure and run the product's
+`--version` path. A local run does not establish hosted-CI success or full normal
+suite acceptance; those remain separate evidence scopes.
+
 ## Optional Qt-free tests
 
 `tests` can be configured independently using CXX only, building Core, Session,

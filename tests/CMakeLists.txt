@@ -657,3 +657,29 @@ if(QUALPF_BUILD_PRODUCT_TESTS)
     add_test(NAME qualpf.plot.coordinates COMMAND qualpf_plot_coordinates_tests)
     set_tests_properties(qualpf.plot.coordinates PROPERTIES LABELS normal TIMEOUT 120)
 endif()
+
+# Public CI builds the real product and runs existing controls whose inputs are
+# committed or restored from the sealed public reference commit. Private powder
+# examples and development-only fixtures remain prerequisites of the full suite.
+if(QUALPF_BUILD_PRODUCT_TESTS)
+    set(qualpf_public_ci_tests
+        qualpf.distribution.consistency qualpf.distribution.dependency_bundle
+        qualpf.project.qpf qualpf.project.qpf_protocol qualpf.settings.workflows
+        qualpf.gui.about.scale100 qualpf.gui.about.scale150 qualpf.gui.about.scale200
+        qualpf.math.rounded_transcendentals qualpf.algorithms.core_modules
+        qualpf.algorithms.classic_contracts qualpf.application.workflows
+        qualpf.card.chemistry_registry qualpf.scattering.table_reproducible
+        qualpf.symmetry.table_reproducible qualpf.platform.process
+        qualpf.platform.update qualpf.plot.coordinates)
+    foreach(test IN LISTS qualpf_public_ci_tests)
+        if(NOT TEST ${test})
+            message(FATAL_ERROR "Public CI regression is not registered: ${test}")
+        endif()
+        set_property(TEST ${test} APPEND PROPERTY LABELS public_ci)
+    endforeach()
+    add_custom_target(qualpf_public_ci DEPENDS ${EXECUTABLE_NAME}
+        qualpf_qpf_project_tests qualpf_workflow_settings_tests qualpf_about_dialog_tests
+        qualpf_rounded_transcendentals_properties qualpf_core_algorithm_modules
+        qualpf_classic_algorithm_contracts qualpf_workflow_tests
+        qualpf_platform_process_tests qualpf_platform_update_tests qualpf_plot_coordinates_tests)
+endif()

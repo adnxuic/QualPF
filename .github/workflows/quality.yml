@@ -28,9 +28,107 @@ jobs:
         run: python -B tools/validation/check_distribution.py --self-test
       - name: Check offline dependency source and notice binding
         run: python -B tools/validation/prepare_dependency_bundle.py --self-test
+      - name: Check pinned AppImage tools and corruption rejection
+        run: python -B tools/validation/prepare_appimage_tools.py --self-test
+      - name: Exercise isolated Linux install and packaging controls
+        run: python -B tests/unit/tools/linux_packaging_test.py -v
       - name: Verify independent regression resources
         run: |
           python -B tools/validation/restore_reference_archives.py --self-test
           git fetch --no-tags --depth=1 origin b5933bba78dc3f02d8d68f0dc11d2eed4385de51
           python -B tools/validation/restore_reference_archives.py
           python -B tools/validation/check_references.py
+
+  public-build:
+    name: Public C++ regressions (${{ matrix.preset }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            preset: linux-gnu
+            qt-arch: linux_gcc_64
+            qt-tools: ''
+          - os: windows-2022
+            preset: windows-gnu
+            qt-arch: win64_mingw
+            qt-tools: tools_mingw1310
+    env:
+      QT_QPA_PLATFORM: offscreen
+      CMAKE_BUILD_PARALLEL_LEVEL: '2'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Linux build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build g++ libeigen3-dev libboost-dev
+      - name: Install Qt and its matching MinGW toolchain
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.3'
+          arch: ${{ matrix.qt-arch }}
+          tools: ${{ matrix.qt-tools }}
+          cache: true
+      - name: Provision fixed Windows header dependencies
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $sdk = Join-Path $env:GITHUB_WORKSPACE 'build/ci-sdk'
+          New-Item -ItemType Directory -Path $sdk -Force | Out-Null
+          function Get-CheckedArchive($url, $name, $sha256) {
+            $file = Join-Path $sdk $name
+            Invoke-WebRequest -Uri $url -OutFile $file
+            if ((Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant() -ne $sha256) {
+              throw "Dependency SHA-256 mismatch: $name"
+            }
+            return $file
+          }
+          $eigen = Get-CheckedArchive 'https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz' 'eigen-3.4.0.tar.gz' '8586084f71f9bde545ee7fa6d00288b264a2b7ac3607b974e54d13e7162c1c72'
+          $boost = Get-CheckedArchive 'https://archives.boost.io/release/1.82.0/source/boost_1_82_0.tar.bz2' 'boost_1_82_0.tar.bz2' 'a6e1ab9b0860e6a2881dd7b21fe9f737a095e5f33a3a874afc6a345228597ee6'
+          tar -xf $eigen -C $sdk
+          if ($LASTEXITCODE -ne 0) { throw 'Eigen extraction failed' }
+          tar -xf $boost -C $sdk boost_1_82_0/boost boost_1_82_0/LICENSE_1_0.txt
+          if ($LASTEXITCODE -ne 0) { throw 'Boost extraction failed' }
+          cmake -S "$sdk/eigen-3.4.0" -B "$sdk/eigen-build" -G Ninja -DBUILD_TESTING=OFF -DEIGEN_BUILD_DOC=OFF "-DCMAKE_INSTALL_PREFIX=$sdk/eigen-install"
+          if ($LASTEXITCODE -ne 0) { throw 'Eigen configuration failed' }
+          cmake --install "$sdk/eigen-build"
+          if ($LASTEXITCODE -ne 0) { throw 'Eigen header installation failed' }
+      - name: Restore and verify public independent references
+        run: |
+          git fetch --no-tags --depth=1 origin b5933bba78dc3f02d8d68f0dc11d2eed4385de51
+          python -B tools/validation/restore_reference_archives.py
+          python -B tools/validation/check_references.py
+      - name: Configure Linux product and tests
+        if: runner.os == 'Linux'
+        run: cmake --preset linux-gnu
+      - name: Configure MinGW product and tests
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $sdk = Join-Path $env:GITHUB_WORKSPACE 'build/ci-sdk'
+          cmake --preset windows-gnu "-DEigen3_DIR=$sdk/eigen-install/share/eigen3/cmake" "-DQUALPF_CORE_BOOST_INCLUDE_DIR=$sdk/boost_1_82_0" "-DQUALPF_POWDER_BOOST_INCLUDE_DIR=$sdk/boost_1_82_0"
+      - name: Build product and public regression executables
+        run: cmake --build --preset ${{ matrix.preset }} --target qualpf_public_ci --parallel 2
+      - name: Run public regressions
+        run: ctest --test-dir build/${{ matrix.preset }} -L '^public_ci$' --no-tests=error --output-on-failure --output-junit public-ci.xml
+      - name: Run product version smoke check
+        run: python -c "import pathlib,subprocess,sys; exe=pathlib.Path('build/${{ matrix.preset }}/src') / ('qualpf.exe' if sys.platform == 'win32' else 'qualpf'); subprocess.run([str(exe), '--version'], check=True)"
+      - name: Preserve build and regression diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-ci-${{ matrix.preset }}
+          if-no-files-found: warn
+          path: |
+            build/${{ matrix.preset }}/public-ci.xml
+            build/${{ matrix.preset }}/CMakeCache.txt
+            build/${{ matrix.preset }}/CMakeFiles/CMakeConfigureLog.yaml
+            build/${{ matrix.preset }}/Testing/Temporary/*.log
+            build/${{ matrix.preset }}/tests/distribution/about-*.png

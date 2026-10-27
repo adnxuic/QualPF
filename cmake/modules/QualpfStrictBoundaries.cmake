@@ -55,6 +55,6 @@ function(qualpf_enable_strict_boundaries)
         add_test(NAME qualpf.architecture.strict COMMAND "${Python3_EXECUTABLE}"
             "${PROJECT_SOURCE_DIR}/tools/architecture/check_strict_boundaries.py"
             --graph "${graph}" --self-test)
-        set_tests_properties(qualpf.architecture.strict PROPERTIES LABELS normal TIMEOUT 120)
+        set_tests_properties(qualpf.architecture.strict PROPERTIES LABELS "normal;public_ci" TIMEOUT 120)
     endif()
 endfunction()

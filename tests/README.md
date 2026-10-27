@@ -58,6 +58,13 @@ run complete Windows suites serially to avoid their shared system-scope fixture.
 
 ## Independent references
 
+The [public build CI](../docs/developer/building.md#public-build-ci) builds the Qt
+product plus existing regression executables through `qualpf_public_ci` and runs
+19 registrations labeled `public_ci`. This subset uses public committed/sealed
+inputs on MinGW and Linux, preserving the full normal suite and its private-input
+prerequisites. Linux packaging/install controls and pinned-tool corruption tests
+also run in the quality job. Hosted results are distinct from local verification.
+
 [Manifest](reference/manifest.json) pins 169 frozen inputs. `data` contains current
 wires/transcripts, tolerance policies and CIF fixtures.
 `regression/references` holds small algorithm-organized accepted/proved resources

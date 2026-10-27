@@ -12,6 +12,11 @@ reports are no longer used for routine development.
 
 ### Added
 
+- Added Linux/GNU and Windows/MinGW product builds and 19 public regression
+  controls to quality CI, with Qt 6.8.3, checked Windows headers, product startup
+  smoke checks and retained failure diagnostics. The full normal suite and
+  private-input requirements remain unchanged.
+
 - Added the slim dependency-source layout to Linux DEB and AppImage packaging.
   Original legal materials and source-retrieval instructions remain available
   offline; separate archives retain distro patches, exact SDK headers and runtime

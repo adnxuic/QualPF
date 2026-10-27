@@ -1,28 +1,5 @@
 {
   "schema": "qualpf.agent_task_state.v1",
   "baseline_ref": "docs/developer/project-baseline.json",
-  "active_task": {
-    "id": "distribution-installation-hardening",
-    "goal": "Fix the nine authorized distribution, installation, dependency and CI findings.",
-    "in_scope": ["src/infrastructure/platform/*", "cmake/*", "scripts/*", "tools/validation/*", "tests/*", ".github/workflows/quality.yml", ".gitattributes", "README.md", "docs/*", "deploy/*", "CHANGELOG.md", ".agent/TASK_STATE.json"],
-    "out_of_scope": ["Numerical and PFSM changes", "Publishing artifacts or pushing Git", "Changing frozen package acceptance evidence"],
-    "status": "in_progress",
-    "base_commit": "22dcb11543fde52a89d541ef4f53f3134c5ab759",
-    "checkpoint_commit": "e5afd5befd714cb20a4a780364f8f813c9ea7f1b",
-    "completed": ["Committed the PDF/staging/source-mode/DEB-metadata safety batch.", "Required Qt 6.7+, made installer prefixes deterministic, corrected the release matrix and pinned the accepted AppImage tools; restored source TGZ modes after Windows CPack copying."],
-    "next_action": "Commit the dependency/tooling batch, verify actual CPack source output, then add and run public MinGW/Linux build/regression CI.",
-    "blockers": [],
-    "checks": [
-      {"command": "Native Linux configure/build and qualpf.platform.process", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": "build/distribution-hardening/linux-process-01.xml"},
-      {"command": "MinGW configure/build and qualpf.platform.process with workspace TEMP/TMP", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": "build/distribution-hardening/windows-process-02.xml"},
-      {"command": "Initial Windows platform test with sandbox system TEMP", "result": "FAIL", "kind": "FRESH_VALIDATION", "evidence_ref": "build/distribution-hardening/windows-process-01.log"},
-      {"command": "Native Linux distribution self-test (21 controls)", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": "build/distribution-hardening/linux-native-distribution-01.log"},
-      {"command": "Native Linux desktop-staging and source-DEB metadata controls", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": "build/distribution-hardening/linux-packaging-final-01.log"},
-      {"command": "Agent context/documentation self-tests and git diff --check", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": null},
-      {"command": "MinGW configuration with Qt 6.7 minimum and installed Qt 6.8.3", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": "build/distribution-hardening/windows-configure-03.log"},
-      {"command": "Native Linux configure, Qt minimum rejection, cached installer-prefix and packaging controls", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": "build/distribution-hardening/linux-packaging-native-03.log"},
-      {"command": "Pinned tool downloads, hash verification, cache reuse and corruption rejection", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": "build/distribution-hardening/pinned-tool-validation-03.log"},
-      {"command": "Native Linux tool and distribution self-tests", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": "build/distribution-hardening/linux-distribution-03.log"}
-    ]
-  }
+  "active_task": null
 }

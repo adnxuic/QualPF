@@ -607,7 +607,7 @@ def restore_source_archive_permissions(path):
         actual = [member.name for member in members if member.name in executables and member.isfile()]
         if len(actual) != len(executables) or set(actual) != executables:
             raise ValueError("source archive executable is missing/ambiguous")
-        if all(member.mode & 0o111 == 0o111 for member in members if member.name in executables):
+        if all(member.mode & 0o777 == 0o755 for member in members if member.name in executables):
             return
         temporary = None
         try:
@@ -616,7 +616,7 @@ def restore_source_archive_permissions(path):
             with tarfile.open(temporary, "w:gz") as output:
                 for member in members:
                     if member.name in executables:
-                        member.mode |= 0o111
+                        member.mode = 0o755
                     if member.isfile():
                         with archive.extractfile(member) as stream:
                             output.addfile(member, stream)
@@ -1261,7 +1261,7 @@ def self_test():
                     self.assertTrue(any("permission missing" in error for error in check_source_tree(exported, data)))
                     self.assertTrue(source_identity(exported)[1])
                 archive = root / "source.tar.gz"
-                for mode in (0o755, 0o644):
+                for mode in (0o755, 0o644, 0o777):
                     with tarfile.open(archive, "w:gz") as stream:
                         stream.add(exported / STAMP, arcname="source/" + STAMP)
                         member = stream.gettarinfo(str(script), arcname="source/install.sh")
@@ -1272,8 +1272,10 @@ def self_test():
                     self.assertEqual(bool(errors), mode == 0o644, errors)
                     if errors:
                         self.assertTrue(any("permission missing" in error for error in errors))
-                        restore_source_archive_permissions(archive)
-                        self.assertEqual(source_archive_errors(archive, info, root, data), [])
+                    restore_source_archive_permissions(archive)
+                    self.assertEqual(source_archive_errors(archive, info, root, data), [])
+                    with tarfile.open(archive) as stream:
+                        self.assertEqual(stream.getmember("source/install.sh").mode, 0o755)
 
         def test_sdk_source_and_version_binding(self):
             with tempfile.TemporaryDirectory() as directory:
