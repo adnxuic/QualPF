@@ -2,18 +2,25 @@
 
 Standard laboratory X-ray diffractometers equipped with a $\beta$-filter or secondary graphite monochromator (rather than a primary incident-beam Johansson monochromator) illuminate the specimen with both components of the characteristic **$K\alpha_1 / K\alpha_2$ doublet**. At medium and high $2\theta$ angles, every Bragg reflection splits into a primary $K\alpha_1$ peak and a secondary $K\alpha_2$ peak shifted to a slightly higher angle with approximately half the intensity ($I(K\alpha_2)/I(K\alpha_1) \approx 0.5$).
 
-The **Preprocessing > K-alpha2 Stripping** command removes the $K\alpha_2$ component from the working diffraction pattern using a Rachinger-type deconvolution correction, leaving a monochromatic $K\alpha_1$ profile.
+The **Preprocessing > K-α2 Stripping** command applies the accepted fixed Cu
+compatibility correction to the working diffraction pattern. It has no adjustable
+deconvolution parameters and does not support arbitrary anodes or doublet ratios.
 
 ---
 
 ## Prerequisites for Running `K-alpha2 Stripping`
 
-Before **Preprocessing > K-alpha2 Stripping** can be executed, the active project's radiation configuration must define a second wavelength ($\lambda_2$):
+The operation requires known, not-yet-stripped Cu X-ray radiation and a valid
+increasing sample grid. A second declared wavelength is not mandatory:
 
-1. Open **Preprocessing > Wavelength...** (`Ctrl+W`).
-2. Confirm that **Radiation** is set to `X-ray` and **Wavelength** is set to your tube anode (for example, `Cu-Ka1` at `1.54056` Å).
-3. Check **Add second wavelength**. QualPF automatically populates the corresponding $K\alpha_2$ wavelength (`1.54439` Å for Cu) and sets **I(lambda2)/I(lambda1)** to `0.5` (you can adjust this ratio between `0.0` and `1.0` if your optics partially attenuate $K\alpha_2$).
-4. Click **OK** to save the dual-wavelength configuration.
+1. Import the original measurement. If wavelength metadata is absent, the radiation dialog appears during import; otherwise verify the source metadata before importing.
+2. Confirm `X-ray` and the actual Cu wavelength. A single Cu-compatible declaration
+   or a Cu Kalpha1/Kalpha2 doublet with secondary/primary ratio `0.5` is accepted.
+3. If **Use second wavelength** is enabled, verify both wavelengths and **Ratio**.
+   Other ratios are refused by stripping, even though the general radiation editor
+   accepts a broader range.
+4. Confirm import. Unknown stripping history remains unknown; reimport the
+   original measurement rather than inferring its history from appearance.
 
 ![Set Wavelength Radiation dialog configured with Cu-Ka1 primary wavelength, Cu-Ka2 second wavelength, and 0.5 intensity ratio](../images/wavelength-dialog.png)
 
@@ -21,9 +28,9 @@ Before **Preprocessing > K-alpha2 Stripping** can be executed, the active projec
 
 ## Executing `K-alpha2 Stripping`
 
-Once a second wavelength is configured:
+Once the radiation and processing history are valid:
 
-1. Select **Preprocessing > K-alpha2 Stripping** from the menu bar (or configure the **Kα2** tab in **Setting > Preprocessing...** / **Setting > CSM...** / **Setting > Peak Search...**).
+1. Select **Preprocessing > K-alpha2 Stripping** from the menu bar. The **Setting > Preprocessing > Kα2** page is informational; stripping is always explicit.
 2. QualPF strips the $K\alpha_2$ contribution across the active calculation range, updates the central diffraction plot, and records a `Kα2` step in the **Workflow — Current Project** dock.
 
 ### Relationship to Bragg's Law Split
@@ -32,13 +39,22 @@ For any interplanar spacing $d$, the angular separation between the $K\alpha_1$ 
 
 $$\sin\theta_2 = \frac{\lambda_2}{\lambda_1} \sin\theta_1$$
 
-Because $\Delta(2\theta) = 2\theta_2 - 2\theta_1 \approx 2 \frac{\lambda_2 - \lambda_1}{\lambda_1} \tan\theta_1$ grows with $\tan\theta$, $K\alpha_2$ doublets are strongly overlapped below $30^\circ\ 2\theta$ and clearly split above $50^\circ\ 2\theta$.
+The first-order separation
+$\Delta(2\theta) \approx 2(\lambda_2-\lambda_1)\tan\theta_1/\lambda_1$
+(in radians) increases with angle. Whether the doublet is resolved also depends
+on the measured peak width; there is no universal angle at which it splits.
 
 ---
 
 ## When to Use (and When to Skip) `K-alpha2 Stripping`
 
 - **Recommended before Peak Search and CSM**:
-  Classical peak picking (**Preprocessing > Peak Search**) can mistake resolved high-angle $K\alpha_2$ peaks for independent reflections of a second crystalline phase. Running **K-alpha2 Stripping** before **Peak Search** prevents false-positive $K\alpha_2$ entries in the **Peaks** dock and improves CSM Figure of Merit scores.
-- **Keep `I(lambda2)/I(lambda1)` Accurate**:
-  Setting **I(lambda2)/I(lambda1)** too high (`> 0.55`) can cause over-subtraction oscillations on the high-angle side of strong reflections. If over-subtraction ripples appear at high angles, undo the `Kα2` step in the **Workflow — Current Project** dock, reduce **I(lambda2)/I(lambda1)** slightly (e.g., to `0.48`), and re-run **K-alpha2 Stripping**.
+  Classical peak picking can treat resolved secondary reflections as independent
+  peaks. Consider stripping only for measurements within this fixed Cu model's
+  scope, then inspect the result; improved identification is not guaranteed.
+- **Inspect correction artifacts**:
+  If the fixed correction is unsuitable, undo it while a session snapshot is
+  available or reimport the original source. Changing the doublet ratio is not a
+  tuning control for this operation.
+
+PFSM can retain a declared unstripped doublet in its profile model. Do not strip an already stripped or monochromatic input. Unknown source/stripping history is refused; reimport the original source rather than declaring it known from appearance.

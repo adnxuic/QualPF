@@ -2,13 +2,13 @@
 
 QualPF performs phase identification by matching experimental diffraction data against local SQLite-based reference databases. You can register pre-built databases or compile new databases directly from **Crystallography Open Database (COD)** distributions, **ICDD PDF-2** ASCII files, or **User CIF** collections.
 
-All database operations are accessed from the **Database > Manage Databases** menu command.
+All database operations are accessed from the **S&M > Manage Databases** menu command.
 
 ---
 
 ## The Manage Databases Dialog
 
-Choose **Database > Manage Databases** from the menu bar to open the **Manage Databases** dialog.
+Choose **S&M > Manage Databases** from the menu bar to open the **Manage Databases** dialog.
 
 ![Manage Databases dialog showing registered COD, ICDD PDF-2, and User CIF databases](images/manage-databases.png)
 
@@ -16,8 +16,8 @@ Choose **Database > Manage Databases** from the menu bar to open the **Manage Da
 
 | Column | Description |
 | :--- | :--- |
-| **Use** | Checkbox controlling whether the database is active during search-match and restraint card browsing. You can enable a single database or multiple databases simultaneously. |
-| **Database** | User-editable display name of the database in QualPF (for example, `COD`, `PDF2_Inorganic`, or `USR_Synthetics`). Double-click the cell or click **Rename** to change the display name. |
+| **Use** | Checkbox controlling whether the database is active during search-match and restraint card browsing. Exactly one database is selected at a time; selecting another switches the active database. |
+| **Database** | User-editable display name of the database in QualPF (for example, `COD`, `PDF2_Inorganic`, or `USR_Synthetics`). Click **Rename** to change the display name; the table cell is read-only. |
 | **Entries** | Total number of crystallographic phase cards indexed in the database. |
 | **Content** | Source format / category description reported by the database metadata (for example, `COD / CIF`, `ICDD PDF-2`, or `User CIF`). |
 | **Path** | Filesystem directory containing the database files (`.sq`, `.sq.info`, `.sq.infostat`, `.sq.search`). |
@@ -29,7 +29,7 @@ Choose **Database > Manage Databases** from the menu bar to open the **Manage Da
 | **Rename** | Edits the display name (**Database** column) of the currently highlighted row without renaming files on disk. |
 | **Add** | Opens a file browser to register an existing QualPF/QualX database file (`*.sq`) already present on disk. QualPF automatically validates the required companion files in the same folder. |
 | **Create** | Opens the **Create Database** dialog to compile a new searchable database from COD, ICDD PDF-2, or user CIF sources. |
-| **Delete** | Removes the selected database(s) from QualPF's catalog. The confirmation prompt includes an optional checkbox: **Also delete database files from disk (.sq, .sq.info, .sq.infostat, .sq.search)**. Leave this unchecked if you only want to unregister the database while keeping the files on disk. |
+| **Delete** | Removes the selected database(s) from QualPF's catalog. The confirmation prompt includes an optional checkbox: **Also delete database files from disk (.sq, .sq.info, .sq.infostat, .sq.search)**. This checkbox starts checked. Uncheck it to unregister the database while keeping its files on disk. |
 | **Quit** | Saves changes to the active database catalog and closes the dialog. |
 
 ---
@@ -41,9 +41,9 @@ Every searchable QualPF database consists of a primary `.sq` file accompanied by
 | File Extension | Required | Purpose |
 | :--- | :---: | :--- |
 | `<name>.sq` | Yes | Primary SQLite database storing phase cards, reflections ($d$, $I$), chemical formulas, symmetry, cell parameters, and RIR values. |
-| `<name>.sq.info` | Yes | Database descriptor file recording entry counts, format version, and content type. |
+| `<name>.sq.info` | Yes | SQLite bibliographic and crystallographic details, including unit-cell/property records. |
 | `<name>.sq.search` | Yes | Pre-indexed search acceleration tables used by CSM and PFSM candidate screening. |
-| `<name>.sq.infostat` | Optional | Statistical summary metadata generated during database creation. |
+| `<name>.sq.infostat` | Yes | Statistical summary metadata generated during database creation. |
 
 > **Warning:** > Always keep `<name>.sq`, `<name>.sq.info`, `<name>.sq.search`, and `<name>.sq.infostat` together in the same directory. Moving `<name>.sq` without its `.sq.info` and `.sq.search` companion files will prevent **Add** from registering the database.
 
@@ -76,7 +76,7 @@ The **Create Database** dialog is organized into two sections:
 | **Database name** | `COD` | Text string | Base filename and initial display name for the generated database. |
 | **Automatic name** | Checked | Checked / Unchecked | Automatically sets **Database name** to `COD` (for COD sources), `PDF` (for ICDD PDF sources), or `USR` (for User CIF/database sources). Uncheck to enter a custom name (e.g., `MyLab_Ceramics`). |
 | **Database folder** | System default | Directory path | Output directory where `<name>.sq` and its companion `.sq.info`, `.sq.search`, and `.sq.infostat` files will be written. |
-| **Automatic folder** | Checked | Checked / Unchecked | Uses the standard QualPF application data directory for storing generated database files. Uncheck to choose a custom storage drive or folder. |
+| **Automatic folder** | Checked | Checked / Unchecked | Uses the standard QualPF compatible home-directory `QualXDB` location for storing generated database files. Uncheck to choose a custom storage drive or folder. |
 
 ---
 
@@ -84,16 +84,16 @@ The **Create Database** dialog is organized into two sections:
 
 ### 1. Registering an Existing `.sq` Database (`Add`)
 
-Use this workflow if you already have a compiled database directory containing `<name>.sq`, `<name>.sq.info`, and `<name>.sq.search`:
+Use this workflow if you already have a compiled database directory containing all four files listed above:
 
-1. Open **Database > Manage Databases**.
+1. Open **S&M > Manage Databases**.
 2. Click **Add**.
 3. Browse to the folder containing the database, select `<name>.sq`, and click **Open**.
 4. Verify that the **Use** checkbox in the new row is checked, then click **Quit**.
 
 ### 2. Installing the Crystallography Open Database (COD)
 
-1. Open **Database > Manage Databases** and click **Create**.
+1. Open **S&M > Manage Databases** and click **Create**.
 2. Keep **COD database** checked.
 3. Click **...** next to **COD file** and select the downloaded COD `.sq` file.
 4. Keep **Automatic name** (`COD`) and **Automatic folder** checked (or uncheck them to specify a custom name and output path).
@@ -105,7 +105,7 @@ Use this workflow if you already have a compiled database directory containing `
 When working with proprietary synthetic phases, newly refined crystal structures, or project-specific mineral subsets:
 
 1. Place your `.cif` files into a folder on disk.
-2. Open **Database > Manage Databases** and click **Create**.
+2. Open **S&M > Manage Databases** and click **Create**.
 3. Check **User database** and select the **CIF files** radio button.
 4. Click **...** next to **CIF folder** and select your CIF directory.
 5. Check **Scan subfolders recursively** if your `.cif` files are organized into nested subdirectories.

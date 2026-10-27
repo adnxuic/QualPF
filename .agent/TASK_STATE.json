@@ -1,5 +1,68 @@
 {
   "schema": "qualpf.agent_task_state.v1",
   "baseline_ref": "docs/developer/project-baseline.json",
-  "active_task": null
+  "active_task": {
+    "id": "pre-release-repository-review",
+    "goal": "Review the complete current repository before publication, repair routine release-readiness issues, and report verified remaining blockers.",
+    "in_scope": [
+      "src/**",
+      "apps/**",
+      "cmake/**",
+      "tools/**",
+      "scripts/**",
+      "tests/**",
+      "deploy/**",
+      "docs/**",
+      ".github/**",
+      "CMakeLists.txt",
+      "CMakePresets.json",
+      "README.md",
+      "CHANGELOG.md",
+      ".agent/TASK_STATE.json"
+    ],
+    "out_of_scope": [
+      "Push, publication, remote changes or history rewriting",
+      "PFSM, numerical algorithm or threading behavior changes",
+      "Modification of frozen references, original failures or historical acceptance evidence"
+    ],
+    "status": "in_progress",
+    "base_commit": "901ffaae1d266784fd53675ee6d6c79f99cf707f",
+    "checkpoint_commit": null,
+    "completed": [
+      "Read repository policy, workflow, architecture, numerical, build, test and distribution authorities; confirmed a clean task-entry worktree.",
+      "Corrected release installation, real menu routes, QPF admission, database selection, preprocessing and PFSM/RIR documentation against implementation; retained screenshots and numerical references.",
+      "Built the MinGW product and Qt-free Application from empty build directories; full native normal suite is running.",
+      "Verified all 169 independent references, current consistency/architecture gates and four native Linux packaging controls.",
+      "Built the strict manual website and regenerated the 124-page PDF with matching provenance; inspected all page contact sheets and affected pages, with no text outside page bounds.",
+      "Reproduced SQL apostrophe query failure and entry-ID predicate injection in an isolated SQLite probe; preserved the original failures."
+    ],
+    "next_action": "Commit the verified documentation batch, repair literal SQL input handling and failed information outputs with causal regressions, then finish supported native validation.",
+    "blockers": [],
+    "checks": [
+      {
+        "command": "python -B tools/validation/check_documentation.py --self-test",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/pre-release-review-20261027/documentation-04.log"
+      },
+      {
+        "command": "python -m mkdocs build --strict -f docs/mkdocs.yml",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/pre-release-review-20261027/mkdocs-03.log"
+      },
+      {
+        "command": "python -B tools/documentation/build_manual.py",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/pre-release-review-20261027/manual-build-02.log"
+      },
+      {
+        "command": "sql-literal-before.exe",
+        "result": "FAIL",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/pre-release-review-20261027/sql-literal-before.log"
+      }
+    ]
+  }
 }

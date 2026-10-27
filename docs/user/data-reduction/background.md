@@ -1,8 +1,8 @@
 # Background Estimation and Editing
 
-An accurate background model is essential both for **Classical Peak-List Search-Match (CSM)**—where background curvature affects peak-base placement and integrated/net peak intensities—and for **Profile-Fitting Search-Match (PFSM)**, which fits crystalline phase templates on top of the estimated background curve.
+An accurate background model is essential both for **Classical Peak-List Search-Match (CSM)**—where background curvature affects peak-base placement and integrated/net peak intensities—and for **Profile-Fitting Search-Match (PFSM)**, which fits phase templates against the net observations relative to a fixed background curve.
 
-In **QualPF**, background estimation is controlled via **Preprocessing > Background** (`Ctrl+B`), **Preprocessing > Background Options...**, and interactive background control-point tools.
+In **QualPF**, background estimation is controlled via **Preprocessing > Generate Background**, **Preprocessing > Background Options...**, and interactive background control-point tools.
 
 ---
 
@@ -44,7 +44,7 @@ When **Function Type** is switched to **Filter**, the dialog displays the iterat
 
 | Parameter | Default | Range / Options | Role and Effect |
 | :--- | :--- | :--- | :--- |
-| **No. of iterations** | `5` | `0` – `1000` | Number of Bruckner filter passes applied to erode Bragg peaks down to the underlying baseline. Increase if broad peaks remain partially inside the background curve. |
+| **No. of iterations** | `5` | `1` – `1000` | Number of Bruckner filter passes applied to erode Bragg peaks down to the underlying baseline. Increase if broad peaks remain partially inside the background curve. |
 | **Window size** | `50` | `1` – `1000` (samples) | Half-window width (in pattern data points) of the moving average in each filter iteration. Should be wider than the broadest Bragg reflection you want to preserve. |
 | **Min (°2θ)** / **Max (°2θ)** | Active calculation range | Within pattern bounds | Restricts the Bruckner filter pass to a specific angular sub-interval. |
 | **Apply** | Button | Live preview | Executes the filter with the current parameters and updates the background curve on the central plot immediately. |
@@ -56,21 +56,22 @@ When **Function Type** is switched to **Filter**, the dialog displays the iterat
 
 For `Chebyshev`, `Polynomial`, `Cosine Fourier Series`, `Cubic Spline`, and `Bezier Spline` models, the background curve is fitted through a set of **background base points** shown as markers along the base of the diffraction pattern. You can refine these points interactively on the central plot:
 
-1. **Add Background Points (`Preprocessing > Add Background Points`)**:
+1. **Add Background Points (`Preprocessing > Add Background Point`)**:
    Activate this mode and left-click anywhere along the baseline of the diffraction pattern (for example, between overlapping peak clusters or across an amorphous halo) to insert a new anchor point. The background curve updates immediately.
-2. **Delete Background Points (`Preprocessing > Delete Background Points`)**:
+2. **Delete Background Points (`Preprocessing > Delete Background Point`)**:
    Activate this mode and left-click an existing background anchor point (or drag a box around multiple anchor points) to remove points that were accidentally placed on a peak tail.
-3. **Clear Background Points (`Preprocessing > Clear Background Points`)**:
-   Removes all custom background control points and re-initializes the automatic base-point set.
+Manual point edits retain their supported model-specific behavior. Spline, Bezier
+and Bruckner paths reselect their own points; a manually placed point is not
+guaranteed to constrain every model. There is no Clear Background Points menu command.
 
 ---
 
 ## Inspecting the Background-Subtracted Pattern (`View > Subtract Background`)
 
-Once a background curve has been calculated, you can toggle between the raw/working view and the net background-subtracted view at any time using **View > Subtract Background** (`Ctrl+Shift+B`) or the corresponding toolbar icon.
+Once a background curve has been calculated, you can toggle between the raw/working view and the net background-subtracted view at any time using **View > Subtract Background** or the corresponding toolbar icon.
 
 | Raw Pattern with Overlaid Background (`Subtract Background` Off) | Net Background-Subtracted Pattern (`Subtract Background` On) |
 | :---: | :---: |
 | ![Diffraction pattern with modeled background curve overlaid](../images/background-default.png) | ![Net diffraction pattern after subtracting the modeled background](../images/background-net.png) |
 
-> **Tip:** > Toggling **View > Subtract Background** changes how the pattern is displayed and how classical peak overlays are inspected, while preserving the underlying raw counts and background vector for PFSM Poisson weighting.
+> **Tip:** > Toggling **View > Subtract Background** changes how the pattern is displayed and how classical peak overlays are inspected, while preserving the scientific observations and background vector. This display toggle does not establish Poisson counting provenance.

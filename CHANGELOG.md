@@ -416,6 +416,15 @@ reports are no longer used for routine development.
 
 ### Fixed
 
+- Corrected release setup and user workflow instructions against the current
+  implementation: real menu routes and shortcuts, QPF-only admission, verified
+  package/toolchain scope, single-database selection, fixed Cu stripping,
+  FWHM prerequisites/failures, smoothing half-windows, session-only undo,
+  candidate-recall fallback thresholds and PFSM/RIR normalization and availability.
+  Retained the manual's screenshots and parameter references, and updated current
+  numerical test identities without changing algorithms
+  or scientific references.
+
 - Require Qt 6.7+ during configuration, keep installer configuration and installation
   prefixes consistent across cache reuse, and include Eigen/Boost in dependency
   hints. Document the actual Windows/Linux candidates separately from development

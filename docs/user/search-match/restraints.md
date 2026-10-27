@@ -1,12 +1,12 @@
 # Restraints and Database Card Browsing
 
-In phase identification of minerals, ceramics, alloys, and synthetic materials, you often possess prior chemical or crystallographic knowledge about the specimen—such as EDS/XRF elemental composition, material class, density, or unit-cell symmetry. The **Restraints** dialog (**Search-Match > Restraints...**, `Ctrl+R`) lets you translate that prior knowledge into fast SQL database filters applied during **CSM** or **PFSM**, or browse matching reference cards directly without running a search.
+In phase identification of minerals, ceramics, alloys, and synthetic materials, you often possess prior chemical or crystallographic knowledge about the specimen—such as EDS/XRF elemental composition, material class, density, or unit-cell symmetry. The **Restraints** dialog (**S&M > Restraints...**) lets you translate that prior knowledge into fast SQL database filters applied during **CSM** or **PFSM**, or browse matching reference cards directly without running a search.
 
 ---
 
 ## Overview of the `Restraints` Dialog
 
-Open **Search-Match > Restraints...** (`Ctrl+R`) to access the five-tab **Restraints** window:
+Open **S&M > Restraints...** to access the five-tab **Restraints** window:
 1. **Composition** — Periodic Table elemental logic and chemical species count bounds.
 2. **Subfiles** — Database subfile category filters (Inorganic, Mineral, Metal & Alloy, Ceramic, etc.).
 3. **Properties** — Chemical/mineral name substring, color, and crystal density filters.
@@ -34,7 +34,7 @@ You can specify elemental restraints either by clicking element buttons on the i
 | **Or** (Possible) | Mode button | Element group | Allows any of the selected elements in the group to be present. |
 | **Not** (Excluded) | Mode button | Element group | Excludes any database phase containing one or more of the selected elements. |
 | **Exact elements** | Mode button | Element set | Restricts results to phases composed **exclusively** of the exact set of selected elements (no additional elements permitted). |
-| **Contains any** | Mode button | Element set | Matches phases that contain at least one element from the selected set (and excludes elements not compatible with the filter). |
+| **Contains any** | Mode button | Element set | Allows any nonempty subset of the selected elements and excludes elements outside that set. In contrast, the **Or** mode can also admit unselected elements. |
 | **Wildcard Category Buttons** | Unselected | Group toggles | Quickly selects or excludes entire chemical families on the Periodic Table (such as Alkali Metals, Alkaline Earths, Transition Metals, Lanthanides, Actinides, Halogens, or Noble Gases). |
 | **Cancel** (Formula bar button) | Button | Action | Clears only the current composition formula expression on the **Composition** tab. |
 | **SM (`CSM` / `PFSM`)** | `CSM` (or active workflow) | `CSM`, `PFSM` | Selects which search-match engine will be launched if you click **Search with Restraints** at the bottom of the dialog. This selection stays synchronized across all five tabs. |
@@ -53,7 +53,7 @@ Switch to the **Subfiles** tab to filter candidate cards by their curated databa
 
 | Group | Available Checkboxes | Role and Effect |
 | :--- | :--- | :--- |
-| **Main Subfiles** | `Inorganic`, `Organic`, `Metal & Alloy` | Filters phases by primary material domain. When multiple subfile checkboxes are checked, cards belonging to **any** of the checked subfiles are retained. |
+| **Main Subfiles** | `Inorganic`, `Organic`, `Metal & Alloy` | Filters phases by primary material domain. Multiple checked subfiles combine by intersection: a card must belong to **all** selected subfiles. |
 | **Additional Subfiles** | `Mineral`, `NBS`, `Forensic`, `Corrosion`, `Common Phases`, `Educational`, `High Pressure`, `Superconductor`, `Zeolite`, `Ceramic`, `Cement`, `Explosive`, `Pharmaceutical`, `Polymer`, `Detergent`, `Pigment & Dye`, `calculated from ICSD` | Filters phases by specialized application or provenance subfile categories indexed in ICDD PDF-2 or COD/User databases. |
 
 ---
@@ -68,7 +68,7 @@ Switch to the **Properties** tab to filter phases by name, physical color, or cr
 
 | Parameter / Control | Default | Format / Range | Role and Effect |
 | :--- | :--- | :--- | :--- |
-| **Chemical name** | Empty | Semicolon-separated substrings (e.g., `silicon ; oxide`) | Retains cards whose chemical name or mineral name contains the specified substring(s) (case-insensitive). Multiple terms separated by `;` are matched flexibly. |
+| **Chemical name** | Empty | Space-separated words (e.g., `silicon oxide`) | Requires every word to match within the chemical name, or every word within the mineral name, using SQLite LIKE. |
 | **Color** | Empty | Semicolon-separated color tokens (e.g., `gray ; colorless`) | Filters cards by recorded mineral/compound color description. |
 | **Available colors...** | Button | Interactive picker dialog | Opens a list of standardized color descriptors present in the database; selected colors are inserted into the **Color** field separated by `;`. |
 | **Density — Calculated** | Empty | Positive number ($\text{g/cm}^3$) | Target X-ray/crystallographic calculated density $D_x$. Matches cards within $[\text{Calculated} - \text{Tolerance}, \text{Calculated} + \text{Tolerance}]$. |
@@ -117,8 +117,8 @@ The bottom toolbar of the **Restraints** dialog provides five workflow actions:
 
 | Button | When Enabled | Role and Behavior |
 | :--- | :--- | :--- |
-| **Load Cards** | When at least one restraint is active | Queries the active databases using the current restraints **without running CSM or PFSM scoring** and replaces the **Results List** dock with all matching reference cards. Ideal for browsing reference patterns or manually accepting a known phase. |
-| **Load and Merge Cards** | When at least one restraint is active and the **Results List** already contains cards | Queries the active databases using the current restraints and **appends/merges** the matching reference cards into the existing **Results List** dock without discarding previous search-match results. |
+| **Load Cards** | When at least one restraint is active | Queries the selected database using the current restraints **without running CSM or PFSM scoring** and replaces the **Results List** dock with all matching reference cards. Ideal for browsing reference patterns or manually accepting a known phase. |
+| **Load and Merge Cards** | When at least one restraint is active and the **Results List** already contains cards | Queries the selected database using the current restraints and **appends/merges** matching cards into the existing list under the current operation's provenance rules. Browsed cards do not acquire fitted scores or PFSM evidence. |
 | **Search with Restraints** | When an experimental pattern (and peak list for CSM) is ready and restraints are configured | Closes the dialog and immediately executes **Run CSM** or **Run PFSM** (according to the **SM: CSM / PFSM** toggle on the **Composition** tab) with the configured restraints applied. |
-| **Cancel All Restraints** | Always | Clears every field and checkbox across all five tabs (`Composition`, `Subfiles`, `Properties`, `Entries`, and `Symmetry`). Also accessible directly from **Search-Match > Cancel All Restraints**. |
+| **Cancel All Restraints** | Always | Clears every field and checkbox across all five tabs (`Composition`, `Subfiles`, `Properties`, `Entries`, and `Symmetry`). Use this dialog action; there is no separate S&M menu command with this label. |
 | **Close** | Always | Closes the **Restraints** dialog while keeping the configured restraints active in the session for subsequent **Run CSM** or **Run PFSM** commands. |

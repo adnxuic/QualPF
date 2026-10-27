@@ -1,76 +1,77 @@
 # Installation
 
-This chapter describes hardware and operating-system requirements for **QualPF**, step-by-step installation procedures on Windows and Linux, and recommended first-run configuration checks.
+QualPF runs on Windows and Linux. Public QualPF downloads are not yet configured.
+The locally verified 1.0.0 candidates are a Windows MinGW installer, a Debian 13
+DEB and an Ubuntu 22.04 AppImage. Exact versions and acceptance scopes are in the
+[distribution guide](https://github.com/adnxuic/QualPF/blob/main/docs/developer/releasing.md#current-native-package-acceptance).
+There is currently no published Windows portable ZIP.
 
----
+## Platform and resource requirements
 
-## System Requirements
+| Item | Current scope |
+| :--- | :--- |
+| **Windows** | The installer was checked on Windows 11 x64 with the matching MinGW/Qt runtime. Windows 10 has not been separately verified for this release. |
+| **Linux DEB** | The Debian 13 x64 candidate requires its recorded system dependencies, including glibc 2.38+ and libstdc++6 14+. It is not an Ubuntu 22.04 package. |
+| **Linux AppImage** | The x64 candidate was built and checked on Ubuntu 22.04 with Qt 6.8.3. Extract-and-run was checked; FUSE mounting and full desktop integration were not exercised. |
+| **CPU and memory** | Current candidates are 64-bit. PFSM can use multiple workers; memory and runtime depend on the observation grid, candidate pool, accepted phases and template cache. No universal minimum RAM or timing guarantee has been established. |
+| **Storage** | Allow room for the application, separately supplied databases and saved projects. Keep matching application and dependency source archives with a distributed binary. |
 
-| Component | Minimum Specification | Recommended Specification (for PFSM & Large Databases) |
-| :--- | :--- | :--- |
-| **Operating System** | Windows 10 (64-bit) or modern 64-bit Linux distribution (glibc 2.31+) | Windows 11 (64-bit) or Ubuntu 22.04+ / Fedora 38+ (64-bit) |
-| **Processor (CPU)** | 64-bit dual-core CPU | 64-bit multi-core CPU (8+ logical threads for parallel PFSM screening and profile fitting) |
-| **Memory (RAM)** | 4 GB RAM | 8 GB – 16 GB RAM (when using full COD databases with PFSM template caching enabled) |
-| **Disk Space** | 250 MB for QualPF application binaries | 2 GB – 10 GB free SSD space when storing indexed COD, ICDD PDF-2, or custom CIF SQLite databases |
-| **Display** | $1280 \times 800$ resolution | $1920 \times 1080$ or higher resolution (allows simultaneous viewing of the central diffraction plot and surrounding dock panels) |
-
----
+The frozen candidates predate later maintenance fixes. Build and package the
+intended release revision before publishing it.
 
 ## Installing on Windows
 
-QualPF is distributed on Windows in two formats:
+When a verified installer is supplied:
 
-### Option A: Windows Installer (Recommended)
+1. Keep its checksum and matching application/dependency source archives.
+2. Run the supplied `QualPF-1.0.0-win64.exe` installer and choose a new QualPF
+   installation directory.
+3. Follow the destination and Start Menu pages, then launch the installed program.
 
-1. Download the official Windows installer executable (`QualPF-<version>-Windows-x86_64-Setup.exe`).
-2. Run the installer and follow the setup wizard:
-   - Choose the destination installation directory (default: `C:\Program Files\QualPF` or per-user application directory).
-   - Optionally create Start Menu and Desktop shortcuts.
-3. Launch **QualPF** from the Windows Start Menu or Desktop shortcut.
+Do not combine DLLs or plugins from different Qt/compiler kits. Building from source
+requires the [supported tools](https://github.com/adnxuic/QualPF/blob/main/docs/developer/building.md).
 
-### Option B: Portable Archive (`.zip`)
+## Building and installing on Linux
 
-1. Download the portable archive (`QualPF-<version>-Windows-x86_64.zip`).
-2. Extract the archive contents into a permanent folder where your user account has read/execute permissions (for example, `C:\Tools\QualPF`). Do **not** run QualPF directly from inside an unextracted `.zip` preview window, as companion Qt plugins and SQLite drivers must reside alongside `qualpf.exe`.
-3. Double-click `qualpf.exe` in the extracted folder to start the application.
+Supply CMake 3.20+, Ninja, a C++20 GNU compiler, matching Qt 6.7+ development files,
+Eigen 3.4 and Boost headers. Python 3 is required by build checks; use Python 3.11+
+for the complete validation suite. The Qt kit must include its SQLite SQL driver.
+Ubuntu 22.04's original Qt 6.2 package is too old.
 
----
+For a product build without optional development regressions:
 
-## Building and Installing on Linux
+~~~bash
+cmake -S . -B build/linux-product -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build/linux-product --parallel 2
+./build/linux-product/src/qualpf
+cmake --install build/linux-product --prefix "$HOME/.local/qualpf"
+~~~
 
-On Linux systems, QualPF can be built from source using a C++20 compiler (GCC 12+ or Clang 15+), CMake 3.24+, Ninja, and Qt 6 (`Qt6Widgets`, `Qt6Sql`, `Qt6PrintSupport`, `Qt6Network`) with the SQLite SQL driver plugin (`libqsqlite.so`):
+Set `CMAKE_PREFIX_PATH` or `Qt6_DIR` when Qt is outside the system search path.
+Use the `linux-gnu` development preset after provisioning the independent references
+and original fixtures in the [build guide](https://github.com/adnxuic/QualPF/blob/main/docs/developer/building.md).
+Clang is not a verified release toolchain.
 
-```bash
-# 1. Configure the release build
-cmake --preset linux-release
+The root `./install.sh [qt_prefix]` is an alternative source-installation entry.
+It checks dependencies and installs under `/opt/qualpf-1.0.0` by default, requesting
+elevated privileges for installation.
 
-# 2. Compile the application and command-line/validation targets
-cmake --build --preset linux-release
+## Verifying your installation
 
-# 3. Install into a local prefix or launch directly
-./build/linux-release/src/app/qualpf
-```
-
-> **Important:** > Ensure the Qt 6 SQLite plugin package (such as `libqt6sql6-sqlite` on Debian/Ubuntu or `qt6-qtbase-mysql`/`qt6-qtbase` on Fedora/RHEL) is installed. QualPF uses SQLite to query reference databases (`.sq` and `.sq.search`).
-
----
-
-## Verifying Your Installation
-
-After launching QualPF:
-
-1. Open **Help > About QualPF** from the menu bar to verify the installed version, build metadata, and third-party software notices.
-2. Open **Help > QualPF Manual** (`F1`) to verify that the offline user manual opens cleanly.
+1. Open **Help > About** to check version, build identity and offline notices.
+2. **Help > User Manual (HTML)** opens the current online guide. **Documentation
+   (PDF)** opens an installed manual only when one was generated with matching
+   source provenance; an installation need not contain a PDF.
+3. Open **S&M > Manage Databases** and select a reference database before searching.
 
 ![QualPF About dialog showing version and licensing information](images/about-dialog.png)
 
----
+## First run
 
-## First-Run Checklist
+Missing preferences are imported from the previous application settings on first
+normal startup. Existing QualPF values and the old settings store are preserved.
+Databases remain separate, including the compatible `QualXDB` directory.
 
-Before analyzing your first experimental diffraction pattern, complete the following two setup tasks:
-
-1. **Register or Create a Reference Database**
-   QualPF requires at least one enabled reference database to run CSM or PFSM phase identification. Open **Database > Manage Databases** to register an existing `.sq` database or build one from COD, ICDD PDF-2, or local CIF files. See [Database Installation](database-installation.md) for full details.
-2. **Review Default Workflow Parameters (Optional)**
-   Open the **Setting** menu (**Setting > Preprocessing**, **Setting > CSM**, **Setting > PFSM**, or **Setting > Peak Search**) to inspect or customize default parameters applied to newly created projects—such as your preferred FWHM algorithm, background polynomial order, or PFSM candidate recall limits. See [Workflow Settings and Project History](settings.md).
+See [Database Installation](database-installation.md) to register or create a database.
+Optional defaults for future projects are under **Setting > Preprocessing**, **CSM**,
+**PFSM** and **Peak Search**; see [Workflow Settings and Project History](settings.md).

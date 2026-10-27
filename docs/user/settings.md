@@ -9,8 +9,8 @@ QualPF separates **persistent default parameters for new projects** from **per-p
 | Surface | Where to Open | Scope | Purpose |
 | :--- | :--- | :--- | :--- |
 | **1. `Setting` Menu (`Setting — Defaults for New Projects`)** | **Setting > Preprocessing...**<br/>**Setting > CSM...**<br/>**Setting > PFSM...**<br/>**Setting > Peak Search...** | Persistent user preferences (applies to **future projects** created via **Import Pattern**) | Defines the baseline parameter profile that every newly imported pattern inherits. Does **not** overwrite or invalidate an already open project. |
-| **2. Project `Options` Dialogs** | **Preprocessing > ... Options...**<br/>**Search-Match > CSM Options...**<br/>**Search-Match > PFSM Options...** | Active project only (saved inside `.qpf`) | Configures and executes steps on the **currently open pattern**. Changes take effect immediately for the current project without altering global defaults. |
-| **3. `Workflow — Current Project` Dock** | **View > Workflow — Current Project** (dock panel) | Active project execution log (saved inside `.qpf`) | Records every manual and automatic workflow step executed on the current project, allows you to inspect exact runtime parameters, and supports non-destructive rollback (**Undo from Here**). |
+| **2. Project `Options` Dialogs** | **Preprocessing > ... Options...**<br/>**S&M > CSM Options...**<br/>**S&M > PFSM Options...** | Active project only (saved inside `.qpf`) | Edits the current project. Data-reduction dialogs preview/execute their step; search options configure later runs. Affected dependent results require confirmation before removal. Global defaults are unchanged. |
+| **3. `Workflow — Current Project` Dock** | **View > Workflow — Current Project** (dock panel) | Active project execution log (saved inside `.qpf`) | Records every manual and automatic workflow step executed on the current project, allows you to inspect exact runtime parameters, and supports non-destructive rollback (**Undo Selected**). |
 
 ---
 
@@ -39,63 +39,60 @@ The left sidebar contains four workflow profiles:
 
 ## Complete Parameter Reference: `Setting — Defaults for New Projects`
 
-### 1. Shared Data-Reduction Module Tabs (`Range`, `Background`, `Initial Peaks`, `FWHM`, `Smoothing`, `Kα2`)
+### 1. Shared Data-Reduction Module Tabs
 
-These tabs appear in **Preprocessing** and (where applicable as automatic prerequisites) in **CSM**, **PFSM**, and **Peak Search**:
+The labels and ranges below describe **Setting — Defaults for New Projects**.
+Individual project dialogs can expose a narrower range or a different presentation.
+Defaults listed here are factory values; saved user defaults can differ.
 
-| Module Tab | Parameter | Default | Range / Options | Role and Effect |
-| :--- | :--- | :--- | :--- | :--- |
-| **Range** | **Full pattern range** | Checked | Checked / Unchecked | When checked, new projects use the entire imported $2\theta$ domain. Uncheck to enforce fixed default **Minimum 2θ** and **Maximum 2θ** bounds. |
-| **Range** | **Minimum 2θ (°)** / **Maximum 2θ (°)** | `0.000` / `180.000` | `0.000` – `180.000` | Default lower and upper angular limits applied when **Full pattern range** is unchecked. |
-| **Background** | **Function type** | `Chebyshev` | `Chebyshev`, `Polynomial`, `Cosine Fourier Series`, `Cubic Spline`, `Bezier Spline`, `Filter`, `None` | Selects the default background modeling algorithm for the workflow. |
-| **Background** | **Automatic** | Checked | Checked / Unchecked | Automatically selects the optimal number of basis coefficients (`Chebyshev`, `Polynomial`, `Cosine Fourier`). Uncheck to fix **Coefficients**. |
-| **Background** | **Coefficients** | `6` | `1` – `36` (`Chebyshev`) or `1` – `12` (`Polynomial` / `Fourier`) | Number of polynomial or series terms used when **Automatic** is unchecked. |
-| **Background** | **Filter iterations** / **Filter window size** | `5` / `50` | `0` – `1000` / `1` – `1000` | Default Bruckner smoothing-minimum filter iterations and window half-width when **Function type** is `Filter`. |
-| **Background** | **Use full pattern range for filter** | Checked | Checked / Unchecked | Applies the Bruckner filter across the entire pattern range unless custom **Filter min 2θ** / **Filter max 2θ** bounds are specified. |
-| **Initial Peaks** | **Derivative threshold** | `0.1` | `0.0` – `200.0` | Minimum normalized Savitzky-Golay third-derivative excursion required to register an initial peak candidate. Lower values detect weaker peaks; higher values reject noise. |
-| **Initial Peaks** | **Automatic window** | Checked | Checked / Unchecked | Automatically determines the Savitzky-Golay half-window from the pattern step size. Uncheck to specify **Manual half-window (samples)**. |
-| **Initial Peaks** | **Manual half-window (samples)** | `11` | `2` – `100` | Savitzky-Golay half-window $m$ (total window $2m + 1$ samples) used when **Automatic window** is unchecked. |
-| **Initial Peaks** | **SG polynomial degree** | `9` | `3` – `20` | Polynomial degree of the Savitzky-Golay third-derivative filter. |
-| **FWHM** | **Algorithm** | `Gaussian fit (Classical)` (in Preprocessing / CSM / Peak Search)<br/>`Geometric FWHM` (in PFSM) | `Gaussian fit (Classical)`, `Geometric FWHM` | Selects how the representative pattern FWHM is estimated from initial peak candidates. |
-| **FWHM** | **Minimum sampling density Q** | `6` | `2` – `8` | Minimum number of data points across a peak required by the **Geometric FWHM** estimator. |
-| **FWHM** | **Use fixed Default FWHM** | Unchecked | Checked / Unchecked | Bypasses automatic FWHM estimation and uses **Default FWHM (°2θ)** directly. |
-| **FWHM** | **Default FWHM (°2θ)** | `0.1` | `> 0.0` – `180.0` | Fallback or fixed representative peak width in degrees $2\theta$. |
-| **Smoothing** | **Method** | `Savitzky-Golay` | `Savitzky-Golay`, `Adjacent-Averaging` | Default smoothing filter method (available in the **Preprocessing** profile). |
-| **Smoothing** | **Points of window** / **Polynomial order** | `5` / `3` | `2` – `50` / `1` – `10` | Window width and polynomial order for Savitzky-Golay smoothing. |
-| **Kα2** | **Enable Kα2 stripping** | Unchecked | Checked / Unchecked | Controls whether $K\alpha_2$ stripping is enabled by default when a dual-wavelength source is present. |
+| Tab / parameter | Factory value | Editor range / behavior |
+| :--- | :--- | :--- |
+| **Range — Use saved range for explicit Range command** | Off | Preprocessing only. Bounds default to `0`–`180`°; cropping is always explicit, never an automatic search prerequisite. |
+| **Background — Method** | `Chebyshev` | `Chebyshev`, `Polynomial`, `Cosine`, `Spline`, `Bezier`, `Bruckner`, `None`. |
+| **Automatic coefficients / Coefficients** | On / `6` | Manual coefficient field `0`–`36`; the selected method also validates usable counts. |
+| **Bruckner iterations / half-window (samples)** | `5` / `50` | `0`–`100000` in defaults. Automatic preparation uses the full current pattern; compatible manual background takes precedence. |
+| **Initial Peaks — Derivative threshold** | `0.1` | `0`–`200`. Used by Gaussian SG preparation; geometric FWHM detects its own candidates. |
+| **Automatic window / Half-window (samples)** | On / `11` | Manual half-window `2`–`100`; full window is `2m+1` samples. |
+| **SG polynomial degree** | `9` | `3`–`20`; effective degree is capped by the window. |
+| **FWHM — Automatic method** | Gaussian, except PFSM | Gaussian or Geometric outside PFSM. Automatic PFSM width is geometric, with internal candidate detection. |
+| **Use fixed width / Fixed FWHM** | Off / `0.1`° | A checked fixed width bypasses estimation. Positive width up to `180`°; automatic failure does not silently substitute it. |
+| **Minimum samples per FWHM (Q)** | `6` | `2`–`8` for geometric estimation. |
+| **Smoothing — Method** | `Savitzky–Golay` | Savitzky–Golay or Averaging; Preprocessing only, executed explicitly. |
+| **Half-window / Polynomial degree** | `4` / `5` | Half-window `1`–`100000`; degree `0`–`20`, subject to method validation. Individual Smoothing dialog controls differ. |
+| **Kα2** | Informational page | Explicit stripping operation; no enable-default checkbox or adjustable algorithm parameters. Source radiation and stripping history must be known. |
 
-### 2. Peak Search & CSM Module Tabs (`Peak Extraction`, `Peak Selection`, `Candidate Screening`, `Matching`, `FOM`, `Residual`, `Results`)
+### 2. Peak Search and CSM Module Tabs
 
-| Workflow & Tab | Parameter | Default | Range / Options | Role and Effect |
-| :--- | :--- | :--- | :--- | :--- |
-| **Peak Search / CSM — Peak Extraction** | **Append new peaks** | Unchecked | Checked / Unchecked | When checked, newly extracted peaks are merged with existing peaks outside the search sub-interval instead of replacing the table. |
-| **Peak Search / CSM — Peak Extraction** | **Use full pattern range** | Checked | Checked / Unchecked | Searches the full calculation range unless custom **Minimum 2θ** / **Maximum 2θ** bounds are set. |
-| **Peak Search / CSM — Peak Extraction** | **Intensity threshold (%)** | `1.00` | `0.00` – `100.00` | Minimum relative peak intensity (as a percentage of the strongest peak) retained by formal peak search. |
-| **Peak Search / CSM — Peak Extraction** | **Sensitivity** | `50` | `0` – `100` | Peak-picking curvature sensitivity (`0` = strict/major peaks only; `100` = maximum sensitivity to weak shoulders). |
-| **Peak Search / CSM — Peak Selection** | **Limit peak count** / **Maximum peaks** | Unchecked / `100` | `1` – `10000` | Caps the maximum number of strongest peaks retained in the experimental peak table. |
-| **CSM — Candidate Screening** | **Check strongest peaks** | Checked | Checked / Unchecked | Requires the strongest reflections of a database card to match experimental peaks during pre-screening. |
-| **CSM — Candidate Screening** | **Check deleted cards** | Unchecked | Checked / Unchecked | Includes historical cards marked as deleted/superseded in ICDD PDF databases. |
-| **CSM — Matching** | **Automatic Δ2θ** / **Δ2θ (°)** | Checked / `0.08` | `0.00` – `1.00` | Angular window for matching reference reflections to experimental peaks. |
-| **CSM — FOM** | **Minimum FOM** | `0.35` | `0.00` – `1.00` | Minimum Figure of Merit required for a candidate card to appear in the results list. |
-| **CSM — FOM** | **2θ/d weight** / **Intensity weight** / **Phases bias** | `0.50` / `0.50` / `0.50` | `0.00` – `1.00` | Relative weights for peak position accuracy, intensity agreement, and single-vs-multiphase scoring. |
-| **CSM — Residual** | **Residual searching** | Checked | Checked / Unchecked | Subtracts matched experimental peak intensities iteratively to highlight minor phases. |
-| **CSM — Results** | **Max. number of resulting entries** | `3000` | `50` – `10000` | Maximum number of candidate cards retained in the **Results List** dock. |
+| Workflow / parameter | Factory value | Meaning / editor range |
+| :--- | :--- | :--- |
+| **Peak Extraction — Derivative threshold** | `0.1` | `0`–`1000000`; formal detection's own threshold. |
+| **Automatic window / Half-window / SG degree** | On / `11` / `9` | Manual window `1`–`100`; degree `3`–`20`. Physical FWHM calibrates the fitting/search width. |
+| **Minimum / Maximum angle** | `0` / `180`° | Applied to peak selection; the pattern's actual domain still bounds usable data. |
+| **Minimum relative height (%)** | `1.5` | `0`–`100`. |
+| **Maximum peaks (−1: all)** | `-1` | Editor `-1`–`100000`; use `-1` for no count cap. |
+| **Retain peaks outside this range** | Off | Preserves outside-range peaks when combining a new selection. These selection controls are in CSM's Peak Extraction tab and standalone Peak Search's Peak Selection tab. |
+| **CSM — Use strongest-reflection screening** | On | Applies the stored strongest-reflection screening rules. |
+| **Exclude deleted entries** | On | Filters deleted cards. The current-project **Check deleted cards** checkbox represents this exclusion check. |
+| **Maximum entries** | `3000` | Positive integer; Candidate Screening tab. |
+| **Automatic tolerance / Tolerance** | On / `0.08`° | Defaults editor `0`–`180`°; current-project CSM dialog permits `0.01`–`0.50`°. |
+| **Position / Intensity / Phase weight** | `0.5` each | `0`–`1` in FOM tab. |
+| **Minimum FOM** | `0.35` | `0`–`1`. A ranking score, not a probability of correct identification. |
+| **Subtract accepted phase residual** | On | Residual tab. Removing a Classical phase does not restore previously subtracted residual intensities. |
 
-### 3. PFSM Module Tabs (`Candidate Recall`, `Profile Expansion`, `Profile Fitting`, `Joint Baseline`, `Results`)
+### 3. PFSM Module Tabs
 
-| Module Tab | Parameter | Default | Range / Options | Role and Effect |
-| :--- | :--- | :--- | :--- | :--- |
-| **Candidate Recall** | **Enable candidate recall** | Checked | Checked / Unchecked | Enables multi-channel candidate recall before full-profile nonlinear fitting so large databases can be screened rapidly without missing weak or shifted phases. |
-| **Candidate Recall** | **On resource limit** | `Bounded integral recall` | `Bounded integral recall`, `Full-pool formal fitting` | Controls fallback behavior if the database pool exceeds memory/resource bounds (`Bounded integral recall` keeps memory bounded; `Full-pool formal fitting` forces full evaluation). |
-| **Candidate Recall** | **Recall candidates** | `500` | `1` – `100000` | Size of the initial recalled candidate pool passed from fast integral screening to local scoring. |
-| **Candidate Recall** | **Local shortlist** | `20` | `1` – `100000` | Number of top candidates per local angular window prioritized during multi-channel recall. |
-| **Candidate Recall** | **Protected candidates per channel** | `5` | `0` – `100000` | Minimum number of top candidates guaranteed from each independent recall channel. |
-| **Candidate Recall** | **Review set size** / **Formal candidate set size** | `80` / `80` | `1` – `100000` | Number of candidates entering refinement review and final formal profile-fitting ranking. |
-| **Profile Expansion** | **Template cache** | Checked | Checked / Unchecked | Caches expanded reference profile templates in memory across PFSM runs and phase acceptance steps, dramatically accelerating repeated searches on the same pattern. |
-| **Profile Fitting** | **Shift lower bound (°2θ)** / **Shift upper bound (°2θ)** | `-0.500` / `+0.500` | `-5.000` – `+5.000` | Allowed specimen-displacement / zero-shift interval $[\Delta 2\theta_{\min}, \Delta 2\theta_{\max}]$ searched for each candidate phase. |
-| **Profile Fitting** | **Workers (0 = Auto)** | `0` | `0` – `256` | Number of CPU worker threads used for parallel PFSM evaluation (`0` automatically uses all available hardware threads). |
-| **Joint Baseline** | **Weighting** | `Auto from input` | `Auto from input`, `Equal weights` | Selects Poisson counting-statistics weights (`Auto from input`, $w_i = 1/\max(y_i, 1)$ when unclipped raw counts are attested) or uniform weights (`Equal weights`, $w_i = 1$). |
-| **Results** | **Min. relative FOM** | `0.000` | `0.000` – `1.000` | Filters out PFSM candidates whose relative Figure of Merit falls below the specified threshold. |
+| Tab / parameter | Factory value | Meaning / validation |
+| :--- | :--- | :--- |
+| **Candidate Recall — Enable candidate recall** | On | Approximate prescreening before formal fitting. It can omit phases; inspect scientific evidence and compare with recall disabled when needed. |
+| **On resource limit** | Bounded integral recall | Selects bounded integral recall or full-pool formal fitting when the standard v2 resource route cannot be used. |
+| **Recall candidates / Local shortlist / Protected per channel** | `500` / `20` / `5` | Positive integers; protection ≤ local shortlist ≤ recall target. Standard v2 alternates original/residual channels and retains cutoff ties and protection. Local shortlist is not a count per angular window. |
+| **Review limit / Formal limit** | `80` / `80` | Each must be at least the local shortlist. Exceeding either threshold selects full-pool fitting; these are not fit-count caps. Bounded integral recall instead uses fixed channel budgets. |
+| **Profile Expansion — Cache profile templates** | On | Interpolation during fitting can save repeated calculations but costs preparation time/memory. Final fits are checked by direct evaluation. The model is fixed Intermediate Lorentzian. |
+| **Profile Fitting — Lower / Upper shift** | `-0.5` / `0.5`° | Ordered finite bounds; defaults editor `-180`–`180`°. The project dialog accepts finite ordered values rather than a ±5° restriction. |
+| **Weights** | Automatic from attested noise | Uses compatible declared noise when available; otherwise equal weights. Current text/CIF importers do not attest Poisson statistics. |
+| **Workers (0: automatic)** | `0` | Nonnegative integer; actual execution respects available resources. |
+| **FOM / Joint Baseline** | Informational | Fixed scoring and nonnegative joint-fit rules; no extra solver controls. |
+| **Results — Minimum relative FOM (display)** | `0` | `0`–`1`; changes the displayed candidate subset, not the frozen fit evidence. |
 
 ### Dialog Action Buttons (`Setting — Defaults for New Projects`)
 
@@ -107,23 +104,23 @@ These tabs appear in **Preprocessing** and (where applicable as automatic prereq
 
 ## Inspect and Undo
 
-While you work on an open diffraction pattern, the **Workflow — Current Project** dock records an ordered provenance trail of every executed step—whether triggered manually by you (e.g., **Preprocessing > Background**) or executed automatically as a prerequisite of **Run PFSM** or **Run CSM**.
+While you work on an open diffraction pattern, the **Workflow — Current Project** dock records an ordered provenance trail of every executed step—whether triggered manually by you (e.g., **Preprocessing > Generate Background**) or executed automatically as a prerequisite of **Run PFSM** or **Run CSM**.
 
-![Workflow — Current Project dock showing completed Background, FWHM, and Search steps with View Details and Undo from Here buttons](images/workflow-dock.png)
+![Workflow — Current Project dock showing completed Background, FWHM, and Search steps with Details and Undo Selected buttons](images/workflow-dock.png)
 
 ### Columns in the `Workflow — Current Project` Table
 
 | Column | Meaning |
 | :--- | :--- |
-| **Step** | Name of the workflow stage (`Range`, `Background`, `Initial Peaks`, `FWHM`, `Smoothing`, `Kα2`, `Peak Search`, `Search`). |
-| **Workflow** | The workflow context under which the step ran (`Preprocessing`, `CSM`, `PFSM`, or `Peak Search`). |
-| **Origin** | `Manual` (invoked directly by the user from a menu/dialog) or `Auto` (invoked automatically as a missing prerequisite of a higher-level command such as **Run PFSM**). |
-| **Status** | Execution state (`Completed`, `Running`, `Failed`, or `Invalidated`). |
-| **Detail** | Concise summary of the algorithm outcome (for example, `Geometric FWHM estimated on working observations: 0.20 deg 2theta (Q = 6)`). |
+| **Step** | Name of the recorded stage. |
+| **Source** | Manual preprocessing or Automatic plus the owning workflow (CSM, PFSM or Peak Search). |
+| **Status** | Not started, Running, Completed, Fixed configuration, Failed, Cancelled or Invalidated, as applicable. |
 
-### Viewing Step Details (`View Details`)
+The status text below the table reports the current or most recent attempt.
 
-Select any row in the **Workflow — Current Project** table and click **View Details** (or double-click the row) to open the **Workflow step details** dialog.
+### Viewing Step Details (`Details`)
+
+Select any row in the **Workflow — Current Project** table and click **Details** (or double-click the row) to open the **Workflow step details** dialog.
 
 ![Workflow step details dialog showing exact runtime parameters, dependencies, and status for a completed step](images/workflow-step-details.png)
 
@@ -132,10 +129,12 @@ This read-only inspector displays:
 - Upstream step IDs (`Dependencies`) whose outputs fed into this step;
 - The exact **Actual Parameters** dictionary (`method`, `q`, `fwhm_deg`, `shift_lower_deg`, `template_cache`, etc.) recorded at execution time.
 
-### Rolling Back Project Steps (`Undo from Here`)
+### Rolling Back Project Steps (`Undo Selected`)
 
 If you want to revert a step (for example, to try a different background model or undo a search-match run together with its prerequisite steps):
 
 1. Highlight the step you wish to roll back in the **Workflow — Current Project** table.
-2. Click **Undo from Here**.
-3. QualPF atomically restores the project state to the snapshot immediately preceding that step and removes the selected step and all downstream steps that depended on it.
+2. Click **Undo Selected**.
+3. Review any dependency confirmation. QualPF atomically restores the retained pre-step snapshot and removes the affected results.
+
+Undo requires a completed step with a snapshot retained in this session. QPF saves workflow records and parameters, but does not save undo snapshots. After reopening, records remain inspectable; use explicit recomputation or reimport when rollback is unavailable.

@@ -155,8 +155,8 @@ Malformed diagnostic payloads fail at the Application boundary. Current product
 checks use the measurable-candidate contract; their historical support sources,
 frozen numerical comparisons and tolerances remain unchanged.
 
-Initial v4 accepts explicit detection options and outputs only ordered derivative-trigger
-candidates; FWHM v2 receives
+Initial v5 accepts explicit detection options and outputs only ordered derivative-trigger
+candidates; FWHM v3 receives
 the analysis spectrum and owns Gaussian fitting, fixed refinement and reduction.
 Core module tests prove spectrum consumption with analytic widths, detection/fit
 failure separation, radius retries, adjacency suppression, broad-width fallback
@@ -164,7 +164,7 @@ and usable-empty fallback. Strongest-three/tie/zero/invalid-width assertions use
 the internal fixed reduction rather than prefilled initial widths. Product workflow
 tests verify the actual postprocessing signal, single-module replacement, stage
 counts, malformed candidate/FWHM results, zero-width mapping and cache invalidation.
-Older initial/FWHM identities are refused; formal extraction remains version 2.
+Older initial/FWHM identities are refused; formal extraction uses version 3.
 
 `qualpf.application.initial_peak_search` checks owned standalone evaluation, private
 background preparation, frozen options, valid empty results and source-bound
