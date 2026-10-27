@@ -1484,6 +1484,111 @@
       "manifest": "releases/1.0.0/windows-slim-candidate-20261024/candidate-manifest.json",
       "checksums": "releases/1.0.0/windows-slim-candidate-20261024/SHA256SUMS",
       "final_verification": "build/windows-slim-20261024/candidate-final-verification-01.json"
+    },
+    "linux_slim_candidates_20261027": {
+      "source_revision": "9bbbbcee1dc4e0e9fd69be38b5efc7f58545ff0e",
+      "source_dirty": false,
+      "audit_only": false,
+      "published": false,
+      "acceptance_complete": true,
+      "artifact_directory": "releases/1.0.0/linux-slim-candidate-20261027",
+      "build_matrix": {
+        "debian": {
+          "schema": "qualpf.distribution_build.v1",
+          "product": "QualPF",
+          "version": "1.0.0",
+          "license": "GPL-3.0-only",
+          "publisher": "adnxuic",
+          "source_revision": "9bbbbcee1dc4e0e9fd69be38b5efc7f58545ff0e",
+          "source_dirty": false,
+          "compiler": "GNU 14.2.0 (Linux/x86_64)",
+          "qt": "6.8.2",
+          "eigen": "3.4.0",
+          "boost": "1.83.0",
+          "cmake": "3.31.6",
+          "generator": "Ninja",
+          "build_tool": "ninja 1.12.1",
+          "audit_only": false,
+          "source_artifact": "qualpf-1.0.0-Source.tar.gz"
+        },
+        "appimage": {
+          "schema": "qualpf.distribution_build.v1",
+          "product": "QualPF",
+          "version": "1.0.0",
+          "license": "GPL-3.0-only",
+          "publisher": "adnxuic",
+          "source_revision": "9bbbbcee1dc4e0e9fd69be38b5efc7f58545ff0e",
+          "source_dirty": false,
+          "compiler": "GNU 11.4.0 (Linux/x86_64)",
+          "qt": "6.8.3",
+          "eigen": "3.4.0",
+          "boost": "1.74.0",
+          "cmake": "3.22.1",
+          "generator": "Ninja",
+          "build_tool": "ninja 1.10.1",
+          "audit_only": false,
+          "source_artifact": "qualpf-1.0.0-Source.tar.gz"
+        }
+      },
+      "artifacts": [
+        {
+          "file": "qualpf-1.0.0-debian_amd64.deb",
+          "bytes": 12382246,
+          "sha256": "4c4c5538f3afed2ed6a0f2c48b146192655da5cdcc10567e9021e22ee5dbb4ba"
+        },
+        {
+          "file": "qualpf-1.0.0-x86_64.AppImage",
+          "bytes": 51952120,
+          "sha256": "9463a54cdd39583ce24763e91ab3ffb10fcf30251533a2093a4d46345a6fe478"
+        },
+        {
+          "file": "qualpf-1.0.0-Source.tar.gz",
+          "bytes": 11338681,
+          "sha256": "f6bb7e4516eeaf2028dd8bacf6cc6dddadfcc9200739be9b72708d162f54ec3b"
+        },
+        {
+          "file": "qualpf-1.0.0-Linux-Dependencies.tar.gz",
+          "bytes": 805869206,
+          "sha256": "521cdd29ae2ac4a6e3fd882269e39739430d36a02201980e9b9ee123c34c8f64"
+        }
+      ],
+      "source_inputs": 2335,
+      "original_dependency_files_retained": 890,
+      "indexed_dependency_files": 891,
+      "external_source_members": 258,
+      "collection_release_clearance": false,
+      "normal_regression": {
+        "configuration": "Debian 13 / GNU 14.2 / Qt 6.8.2",
+        "kind": "FRESH_VALIDATION",
+        "passed": 127,
+        "elapsed_seconds": 675.2,
+        "evidence": "build/linux-slim-20261027/debian-normal-01.xml"
+      },
+      "about_scales": [
+        100,
+        150,
+        200
+      ],
+      "about_kits": [
+        "Qt 6.8.2",
+        "Qt 6.8.3"
+      ],
+      "debian_payload_files": 670,
+      "appimage_inventory_files": 930,
+      "package_review_blockers": [],
+      "actual_debian_install_remove": "PASS",
+      "actual_appimage_extract_run_and_portable_removal": "PASS",
+      "native_startup_sqlite_legacy_settings_offline_texts": "PASS",
+      "settings_files_preserved_per_configuration": 2,
+      "settings_hashes_unchanged": true,
+      "separate_scientific_data_grants_verified": false,
+      "manifest": "releases/1.0.0/linux-slim-candidate-20261027/candidate-manifest.json",
+      "checksums": "releases/1.0.0/linux-slim-candidate-20261027/SHA256SUMS",
+      "debian_evidence": "build/linux-slim-20261027/debian-acceptance-01.json",
+      "appimage_evidence": "build/linux-slim-20261027/appimage-acceptance-01.json",
+      "source_evidence": "build/linux-slim-20261027/native-source-inputs-01.json",
+      "final_verification": "build/linux-slim-20261027/candidate-final-verification-01.json",
+      "qualification": "Exact original source/notices and actual Linux runtime bindings are retained. Scientific-data and vendor findings are not converted into verified grants. Native WSL/isolated Debian/Xvfb scopes; full desktop integration, package-manager GUI and FUSE mounting not exercised. The full 127-test run is Debian-specific; AppImage has separate build/About/container/runtime/startup receipts. Earlier candidates and the experimental branch remain preserved. No upload, push or third-party contact."
     }
   }
 }

@@ -16,6 +16,12 @@ reports are no longer used for routine development.
   Original legal materials and source-retrieval instructions remain available
   offline; separate archives retain distro patches, exact SDK headers and runtime
   build inputs, with independent checks against the retained Linux collection.
+  Prepared local 1.0.0 DEB (11.8 MiB) and AppImage (49.5 MiB) candidates with
+  matching clean-revision application/dependency archives. Native Debian passed
+  127/127 normal tests and actual install/remove; both packages passed native
+  startup, SQLite, settings, offline texts and source/runtime inspection. AppImage
+  portable-copy removal and both kits' About scales passed, retaining original
+  scientific/vendor qualifications and earlier candidate bytes.
 
 - Added a slim Windows installer layout with separately verified dependency
   source archives. Original notices and SDK metadata remain installed; runtime

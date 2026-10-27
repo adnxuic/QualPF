@@ -279,6 +279,57 @@ AppImage retains its pinned runtime, reviewed bundled libraries and SQLite-only
 SQL plugin layout. No platform, algorithm, precision or database contract changes
 are implied by this packaging layout.
 
+### Slim Linux candidates, 27 October 2026
+
+The local DEB/AppImage pair and both independent source archives freeze clean
+main revision `9bbbbcee1dc4e0e9fd69be38b5efc7f58545ff0e`, under
+`releases/1.0.0/linux-slim-candidate-20261027`. The DEB is **12,382,246 bytes
+(11.8 MiB)** and the AppImage **51,952,120 bytes (49.5 MiB)**. The common
+2,335-input application source has SHA-256
+`f6bb7e4516eeaf2028dd8bacf6cc6dddadfcc9200739be9b72708d162f54ec3b`;
+the independent 805,869,206-byte Linux dependency archive has SHA-256
+`521cdd29ae2ac4a6e3fd882269e39739430d36a02201980e9b9ee123c34c8f64`.
+All original 890 source/notice files remain byte-identical; the new matching
+application archive brings its current index to 891 files. The 258 source
+members stay outside the binary packages, including nested Debian SDK archives.
+The collection retains `release_clearance:false` and its original qualifications.
+
+Both configurations built from the delivered source without Git metadata and
+passed all four maintained table-generator checks. Debian 13 used GNU 14.2.0,
+Qt 6.8.2 and Boost 1.83.0; **127/127 fresh normal tests** passed in 675.20 seconds.
+Zero-Fortran checks covered 435 C++ commands and 107 binaries. Ubuntu 22.04 used
+GNU 11.4.0, Qt 6.8.3 and Boost 1.74.0 for AppImage; all 181 runtime paths matched
+the independent review, with only the owned AppRun product link rebound. About,
+offline legal/source resources and 100%/150%/200% scaling passed on both Qt kits.
+
+The actual DEB's **670 payload files** matched extraction and installation.
+Its real maintainer, desktop entry, independent icon, Debian copyright materials,
+offline legal texts and exact source delivery passed. Actual `dpkg --install`,
+Xvfb/xcb startup, SQLite creation/search and old settings inheritance passed;
+`dpkg --remove` removed every package file and desktop entry. Both isolated
+settings hashes stayed unchanged. The package retains its actual Debian ABI
+dependencies, including libc6 >= 2.38 and libstdc++6 >= 14.
+
+The actual AppImage's **930 inventory files** matched extraction. Its pinned
+runtime differs only in the expected 16-byte digest field; AppRun/.DirIcon, icon,
+SQLite-only SQL plugin, RPATH and full notices/source bindings passed. Running
+the actual image in extract-and-run mode passed Xvfb/xcb startup, SQLite, settings
+and offline-text checks with SDK overrides cleared. An identical disposable
+portable copy was run and removed; both isolated settings hashes stayed unchanged.
+Neither package has an outstanding package-review blocker under the recorded
+owner dispositions. Full GNOME/KDE integration, package-manager UI and FUSE
+mounting were not exercised. AppImage does not claim the Debian full-suite run
+as its own; its build, three About tests and actual image checks have separate
+receipts. Scientific-data grants and retained vendor findings are not newly verified.
+
+The final manifest, fifty-file SHA256SUMS, per-artifact hashes and release notes
+identify the exact acceptance scopes. Raw evidence is under
+`build/linux-slim-20261027`; key receipts are `debian-acceptance-01.json`,
+`appimage-acceptance-01.json`, `debian-normal-01.xml`,
+`native-source-inputs-01.json` and `candidate-final-verification-01.json`.
+Earlier Windows/Linux candidates and the separate PFSM experimental branch remain
+preserved. No package upload, push or third-party contact is included.
+
 ### Slim Windows candidate, 24 October 2026
 
 The separately sourced MinGW candidate freezes clean revision
