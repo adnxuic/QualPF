@@ -116,6 +116,11 @@ product's database backend; optional SDK drivers and their unsupplied clients
 are excluded before linuxdeploy walks plugin dependencies.
 Each AppImage run retains the previous AppDir below the build directory and
 assembles a fresh payload; cached tools and compiled objects are reused.
+`deploy/appimage-tools.json` pins linuxdeploy revision `07333c6` (build 369) and
+appimagetool revision `854e19e` (build 313), matching the retained 27 October
+candidate tool hashes. Downloads use fixed GitHub asset IDs. The helper verifies
+size/SHA-256 on every download and cache reuse, and rejects altered files before
+execution. Changing the pins requires acceptance of the replacement tool bytes.
 DEB, AppImage, CPack staging and installations with a nonempty `DESTDIR` install
 desktop entries/icons only inside the package prefix. Direct non-staged installs
 retain user desktop registration. The source-to-DEB wrapper preserves the full
@@ -188,7 +193,8 @@ A successful compile of generated `.inc` files alone is insufficient.
 
 `distribution-source.json` records the source revision and every delivered
 input's SHA-256 and executable paths. Exports preserve file modes and apply Git's
-executable bits even when exported from a Windows checkout. Source-tree checks
+executable paths even when exported from a Windows checkout. CPack restores those
+bits in Windows-generated TGZ members before recording artifact hashes. Source-tree checks
 on POSIX and archive checks reject lost executable permissions. In an extracted
 archive without `.git`, run:
 

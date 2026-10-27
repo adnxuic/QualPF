@@ -1,4 +1,5 @@
-find_package(Qt6 REQUIRED COMPONENTS Widgets Sql PrintSupport Network)
+# QPF decoding uses QCborStreamReader::readAndAppendToString (Qt 6.7).
+find_package(Qt6 6.7 REQUIRED COMPONENTS Widgets Sql PrintSupport Network)
 
 # Add Qt library path to RPATH for Linux
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -9,10 +10,4 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         list(APPEND CMAKE_BUILD_RPATH "${_qt6_lib_dir}")
     endif()
 endif()
-if(Qt6_VERSION VERSION_GREATER_EQUAL 6.3)
-   qt_standard_project_setup()
-else()
-   set(CMAKE_AUTOUIC ON)
-   set(CMAKE_AUTOMOC ON)
-   set(CMAKE_AUTORCC ON)
-endif()
+qt_standard_project_setup()

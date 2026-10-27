@@ -589,6 +589,49 @@ def check_source_tree(root, data):
     return errors
 
 
+def restore_source_archive_permissions(path):
+    """Restore recorded executable bits after CPack's Windows filesystem copy."""
+    with tarfile.open(path, "r:gz") as archive:
+        members = archive.getmembers()
+        stamps = [member for member in members if member.name.endswith("/" + STAMP) and member.isfile()]
+        if len(stamps) != 1 or stamps[0].size > 8 * 1024 * 1024:
+            raise ValueError("source archive identity is missing/ambiguous")
+        stamp = json.load(archive.extractfile(stamps[0]))
+        prefix = stamps[0].name[:-len(STAMP)]
+        executables = set()
+        for name in stamp["executable_files"]:
+            relative(path.parent, name)
+            if name not in stamp["files"]:
+                raise ValueError("executable source omitted from file manifest: " + name)
+            executables.add(prefix + name)
+        actual = [member.name for member in members if member.name in executables and member.isfile()]
+        if len(actual) != len(executables) or set(actual) != executables:
+            raise ValueError("source archive executable is missing/ambiguous")
+        if all(member.mode & 0o111 == 0o111 for member in members if member.name in executables):
+            return
+        temporary = None
+        try:
+            with tempfile.NamedTemporaryFile(dir=path.parent, suffix=".tar.gz", delete=False) as stream:
+                temporary = Path(stream.name)
+            with tarfile.open(temporary, "w:gz") as output:
+                for member in members:
+                    if member.name in executables:
+                        member.mode |= 0o111
+                    if member.isfile():
+                        with archive.extractfile(member) as stream:
+                            output.addfile(member, stream)
+                    else:
+                        output.addfile(member)
+        except Exception:
+            if temporary is not None:
+                temporary.unlink(missing_ok=True)
+            raise
+    try:
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
 def runtime_component(name):
     lower = name.lower()
     base = Path(lower).name
@@ -1229,6 +1272,8 @@ def self_test():
                     self.assertEqual(bool(errors), mode == 0o644, errors)
                     if errors:
                         self.assertTrue(any("permission missing" in error for error in errors))
+                        restore_source_archive_permissions(archive)
+                        self.assertEqual(source_archive_errors(archive, info, root, data), [])
 
         def test_sdk_source_and_version_binding(self):
             with tempfile.TemporaryDirectory() as directory:
@@ -1381,6 +1426,7 @@ def main():
     parser.add_argument("--source-artifact", type=Path)
     parser.add_argument("--dependency-archive", type=Path, help="Exact separate dependency TGZ supplied alongside the binary")
     parser.add_argument("--source-tree", action="store_true")
+    parser.add_argument("--restore-source-permissions", type=Path, action="append", default=[])
     parser.add_argument("--ifw-metadata", type=Path)
     parser.add_argument("--prepare-source", type=Path)
     parser.add_argument("--write-build-info", type=Path)
@@ -1466,6 +1512,8 @@ def main():
         prepare_source(root, args.prepare_source, info, data)
         print("Source export:", args.prepare_source)
     if args.record_artifacts:
+        for path in args.restore_source_permissions:
+            restore_source_archive_permissions(path)
         write_json(args.record_artifacts, dict(schema="qualpf.distribution_artifacts.v1", build=info,
             artifacts=[dict(file=path.name, bytes=path.stat().st_size, sha256=digest(path)) for path in args.artifact],
             build_tools=[dict(file=path.name, bytes=path.stat().st_size, sha256=digest(path)) for path in args.tool]))

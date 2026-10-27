@@ -26,7 +26,7 @@ temporary copy until the application closes. Files in Downloads are preserved.
 
 ## Build from source
 
-The supported build uses CMake 3.20 or later, a C++20 compiler, matching Qt 6
+The supported build uses CMake 3.20 or later, a C++20 compiler, matching Qt 6.7+
 development libraries, Eigen 3.4 and Boost headers. PFSM execution also uses
 compiler OpenMP support. A Fortran compiler is not needed. Dependencies must be
 provided before configuring; CMake does not download them.

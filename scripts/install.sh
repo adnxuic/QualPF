@@ -33,7 +33,11 @@ NUM_THREADS=$(nproc)
 # Read program info from CMakeLists.txt
 PROG_NAME=$(grep -m1 'EXECUTABLE_NAME' CMakeLists.txt | sed 's/.*set(EXECUTABLE_NAME[[:space:]]*"\([^"]*\)").*/\1/')
 PROG_VERSION=$(grep -m1 'project\s*(' CMakeLists.txt | sed 's/.*VERSION[[:space:]]\+\([0-9][0-9.]*\).*/\1/')
-INSTALL_PREFIX="/opt/${PROG_NAME}-${PROG_VERSION}"
+INSTALL_PREFIX="${QUALPF_INSTALL_PREFIX:-/opt/${PROG_NAME}-${PROG_VERSION}}"
+case "$INSTALL_PREFIX" in
+    /*) ;;
+    *) echo "ERROR: QUALPF_INSTALL_PREFIX must be an absolute path" >&2; exit 1 ;;
+esac
 
 # Detect Linux distribution family
 detect_distro() {
@@ -60,7 +64,7 @@ case "$DISTRO_FAMILY" in
     debian)
         PKG_MANAGER="apt-get"
         PKG_UPDATE="sudo apt-get update"
-        PKG_INSTALL="sudo apt-get install cmake build-essential pkg-config qt6-base-dev libqt6sql6 libqt6printsupport6"
+        PKG_INSTALL="sudo apt-get install cmake build-essential pkg-config qt6-base-dev libqt6sql6 libqt6printsupport6 libeigen3-dev libboost-dev"
         ;;
     redhat)
         if command -v dnf &> /dev/null; then
@@ -69,7 +73,7 @@ case "$DISTRO_FAMILY" in
             PKG_MANAGER="yum"
         fi
         PKG_UPDATE="sudo ${PKG_MANAGER} check-update || true"
-        PKG_INSTALL="sudo ${PKG_MANAGER} install cmake gcc gcc-c++ make pkgconfig qt6-qtbase-devel"
+        PKG_INSTALL="sudo ${PKG_MANAGER} install cmake gcc gcc-c++ make pkgconfig qt6-qtbase-devel eigen3-devel boost-devel"
         ;;
     *)
         PKG_MANAGER="unknown"
@@ -96,8 +100,9 @@ print_install_hint() {
         [ -n "$PKG_UPDATE" ] && echo "  ${PKG_UPDATE}"
         echo "  ${PKG_INSTALL}"
     else
-        echo "Please install the following manually: cmake, make, a C++20 compiler, pkg-config, Qt6 (Widgets, Sql, PrintSupport, Network)"
+        echo "Please install manually: CMake 3.20+, make, a C++20 compiler, pkg-config, Qt 6.7+ (Widgets, Sql, PrintSupport, Network), Eigen 3.4+, Boost headers"
     fi
+    echo "Qt must be 6.7 or newer; supply a matching Qt SDK prefix if the distro package is older."
 }
 
 # Check mandatory build tools
@@ -115,13 +120,14 @@ if [ ${#MISSING_DEPS[@]} -ne 0 ]; then
     exit 1
 fi
 
-echo -e "${GREEN}✓ All dependencies are present${NC}"
+echo -e "${GREEN}✓ Build tools are present; CMake will check Qt 6.7+, Eigen 3.4 and Boost${NC}"
 echo ""
 
 # ── Step 1: Configuration ──────────────────────────────────────────────────────
 echo -e "${YELLOW}Step 1/3: Configuration with CMake...${NC}"
 
-CMAKE_ARGS=(-B "$QUALPF_BUILD_DIR" -S "$QUALPF_REPO_DIR" -DCMAKE_BUILD_TYPE=Release)
+CMAKE_ARGS=(-B "$QUALPF_BUILD_DIR" -S "$QUALPF_REPO_DIR" -DCMAKE_BUILD_TYPE=Release
+            "-DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}")
 if [ -n "${QT_PREFIX}" ]; then
     CMAKE_ARGS+=("-DCMAKE_PREFIX_PATH=${QT_PREFIX}")
 fi
@@ -143,8 +149,8 @@ echo ""
 
 # ── Step 3: Installation ───────────────────────────────────────────────────────
 echo -e "${YELLOW}Step 3/3: Installing the program...${NC}"
-echo "Password required for 'sudo cmake --install $QUALPF_BUILD_DIR'"
-sudo cmake --install "$QUALPF_BUILD_DIR"
+echo "Password required for 'sudo cmake --install $QUALPF_BUILD_DIR --prefix $INSTALL_PREFIX'"
+sudo cmake --install "$QUALPF_BUILD_DIR" --prefix "$INSTALL_PREFIX"
 
 echo -e "${GREEN}✓ Installation completed${NC}"
 echo ""

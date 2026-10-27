@@ -7,7 +7,7 @@
 #
 # Produces build/linux-appimage output and releases/<version>/linux-appimage/.
 #
-# Requires: cmake, a Qt6 dev install, patchelf, curl (to fetch linuxdeploy
+# Requires: cmake, a Qt6 dev install, patchelf, Python 3 (to fetch linuxdeploy
 # and appimagetool on first run — cached under build/linux-appimage/tools/).
 # For a native GTK/GNOME look (instead of Qt's generic Fusion style), also
 # install qt6-gtk-platformtheme before building: its plugin is bundled only
@@ -96,13 +96,10 @@ echo "Compilation threads: ${NUM_THREADS}"
 echo ""
 
 
-if ! command -v curl &> /dev/null; then
-    echo -e "${RED}ERROR: curl not found (required to fetch linuxdeploy/appimagetool)${NC}"
-    exit 1
-fi
-
 # Reuse this configuration and cached packaging tools.
 mkdir -p "$TOOLS_DIR"
+# Verify cached and freshly downloaded tools before build/staging or execution.
+python3 -B "$SRC_DIR/tools/validation/prepare_appimage_tools.py" --tools-dir "$TOOLS_DIR"
 # Retain prior staging as evidence, and assemble a fresh payload so libraries
 # copied by an earlier partial deployment cannot survive into the new image.
 if [ -e "$APPDIR" ]; then
@@ -164,21 +161,12 @@ install -Dm644 "$SRC_DIR/deploy/linux/icons/256x256/qualpf.png" \
 echo -e "${GREEN}✓ Metadata assembled${NC}"
 echo ""
 
-# Step 3: fetch linuxdeploy + appimagetool (cached across runs)
-echo -e "${YELLOW}Step 4/5: Fetching linuxdeploy and appimagetool...${NC}"
+# Step 3: use the exact tools verified above (cached across runs).
+echo -e "${YELLOW}Step 4/5: Using verified linuxdeploy and appimagetool...${NC}"
+python3 -B "$SRC_DIR/tools/validation/prepare_appimage_tools.py" --tools-dir "$TOOLS_DIR"
 LINUXDEPLOY="$TOOLS_DIR/linuxdeploy-x86_64.AppImage"
 APPIMAGETOOL="$TOOLS_DIR/appimagetool-x86_64.AppImage"
 
-if [ ! -x "$LINUXDEPLOY" ]; then
-    curl -fsSL -o "$LINUXDEPLOY" \
-        https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
-    chmod +x "$LINUXDEPLOY"
-fi
-if [ ! -x "$APPIMAGETOOL" ]; then
-    curl -fsSL -o "$APPIMAGETOOL" \
-        https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
-    chmod +x "$APPIMAGETOOL"
-fi
 echo -e "${GREEN}✓ Tools ready${NC}"
 echo ""
 

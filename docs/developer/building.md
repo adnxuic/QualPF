@@ -284,8 +284,11 @@ bash scripts/package/build_appimage.sh
 Package intermediates belong to `build/linux-deb` and `build/linux-appimage`;
 release copies belong to `releases/<version>/<type>`. Direct CPack output belongs
 to the selected configuration's `packages` directory. Portable Linux Qt deployment
-requires patchelf. The AppImage script also needs curl and caches linuxdeploy/
-appimagetool under its configuration's build directory after first retrieval.
+requires patchelf. The AppImage script uses Python to cache linuxdeploy/
+appimagetool under its configuration's build directory. The committed
+`deploy/appimage-tools.json` pins the accepted source revisions, immutable GitHub
+asset IDs, sizes and SHA-256 values. Both downloads and cached tools must match
+before execution; a changed cache fails without overwriting it.
 For a formal AppImage, set `QUALPF_APPIMAGE_RUNTIME_FILE` to the exact reviewed
 type-2 runtime. Its SHA-256 must equal `components.package-runtimes.runtime_sha256`
 in `QUALPF_DISTRIBUTION_RUNTIME_REVIEW`. The runtime is passed to appimagetool
@@ -298,6 +301,10 @@ Root `install.sh` remains the installation entry; its implementation is in
 `scripts/install.sh`. Historical qmake/Fortran build fragments are recoverable
 from the protected archive. Current product resources, databases and installation
 prefixes retain their accepted locations.
+The installer explicitly configures and installs its `/opt/qualpf-<version>` prefix
+on every run, overriding an older cached prefix. `QUALPF_INSTALL_PREFIX` selects
+an alternative; the printed path and final executable check use that same value.
+Dependency hints include Eigen 3.4 and Boost; distro Qt packages must be 6.7+.
 
 ```sh
 python -m pip install -r docs/requirements.txt

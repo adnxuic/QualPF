@@ -3,6 +3,11 @@ set(_qualpf_args --root "@PROJECT_SOURCE_DIR@" --build "@CMAKE_BINARY_DIR@"
     --record-artifacts "${CPACK_PACKAGE_DIRECTORY}/${CPACK_PACKAGE_FILE_NAME}-artifacts.json")
 foreach(_qualpf_artifact IN LISTS CPACK_PACKAGE_FILES)
     list(APPEND _qualpf_args --artifact "${_qualpf_artifact}")
+    if(NOT CPACK_INSTALL_CMAKE_PROJECTS AND CPACK_GENERATOR STREQUAL "TGZ")
+        # Windows filesystems do not carry POSIX executable bits. Restore the
+        # exported manifest's modes before CPack computes checksums/copies output.
+        list(APPEND _qualpf_args --restore-source-permissions "${_qualpf_artifact}")
+    endif()
 endforeach()
 if(NOT "@QUALPF_DEPENDENCY_SOURCE_ARCHIVE@" STREQUAL "")
     list(APPEND _qualpf_args --dependency-archive "@QUALPF_DEPENDENCY_SOURCE_ARCHIVE@"

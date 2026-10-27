@@ -108,21 +108,25 @@ You can also add a database stored elsewhere via **S&M → Manage Databases → 
 
 - CMake ≥ 3.20
 - A C++20 compiler (GCC, Clang, or MSVC)
-- Qt6 (components: `Widgets`, `Sql`, `PrintSupport`, `Network`)
+- Qt ≥ 6.7 (components: `Widgets`, `Sql`, `PrintSupport`, `Network`)
 - Eigen 3.4 and Boost headers
 - SQLite (used via Qt SQL driver)
 
-Supported operating systems are Windows and Linux. The current release acceptance
-matrix is:
+Supported operating systems are Windows and Linux. The current local distribution
+candidates use these configurations:
 
-| Release configuration | C++ toolchain | Qt |
-| --- | --- | --- |
-| Windows 11 x64, MinGW | GCC 13.1 | 6.8.3 |
-| Windows 11 x64, MSVC | MSVC 19.40.33811 | 6.8.3 |
-| Ubuntu 26.04 x64 | GCC 15.2 | 6.10.2 |
+| Candidate configuration | C++ toolchain | Qt | Package |
+| --- | --- | --- | --- |
+| Windows 11 x64, MinGW | GCC 13.1 | 6.8.3 | QtIFW installer, 24 October 2026 |
+| Debian 13 x64 | GCC 14.2 | 6.8.2 | DEB, 27 October 2026 |
+| Ubuntu 22.04 x64 | GCC 11.4 | 6.8.3 | AppImage, 27 October 2026 |
 
-The compiler examples above describe the C++20 requirement. Clang has not been
-validated for the current release. macOS is outside the supported platform scope.
+Windows MSVC (19.40.33811 with Qt 6.8.3) and Ubuntu 26.04 (GCC 15.2 with
+Qt 6.10.2) are development validation configurations. Windows formal distribution
+uses MinGW; MSVC is development only. These frozen candidates predate subsequent
+maintenance fixes; see [package acceptance and its scope](docs/developer/releasing.md#current-native-package-acceptance).
+Clang has not been validated for the current release. macOS is outside the
+supported platform scope.
 
 ## Installation
 
@@ -145,15 +149,19 @@ Examples:
 
 ```bash
 ./install.sh                  # auto-detects Qt
-./install.sh /home/user/Qt/6.5.0/gcc_64
+./install.sh /home/user/Qt/6.8.3/gcc_64
 ```
 
-The script checks dependencies, configures the project with CMake, builds it, and installs it to `/opt/qualpf-<version>` (requires `sudo` for the install step).
+The script checks build tools, configures dependencies through CMake, builds, and
+installs to `/opt/qualpf-<version>` (requires `sudo` for the install step). Set
+`QUALPF_INSTALL_PREFIX` to choose another prefix. Every run sets that prefix during
+configuration and installation, including when reusing a build cache. Distribution
+Qt packages older than 6.7 require a newer matching SDK.
 
 ### Manual build
 
 ```bash
-cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/6.x.y/gcc_64 \
+cmake -DCMAKE_PREFIX_PATH=/path/to/Qt/6.8.3/gcc_64 \
       -DCMAKE_BUILD_TYPE=Release \
       -S . -B build/linux-gnu
 

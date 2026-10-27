@@ -407,6 +407,12 @@ reports are no longer used for routine development.
 
 ### Fixed
 
+- Require Qt 6.7+ during configuration, keep installer configuration and installation
+  prefixes consistent across cache reuse, and include Eigen/Boost in dependency
+  hints. Document the actual Windows/Linux candidates separately from development
+  configurations. AppImage tooling now uses pinned assets with size/SHA-256 checks
+  for downloads and cached executables.
+
 - AppImage PDF help now uses a private temporary directory and preserves existing
   Downloads files. DEB, AppImage and staged installs skip user desktop registration.
   Corresponding-source exports preserve and verify executable permissions, and

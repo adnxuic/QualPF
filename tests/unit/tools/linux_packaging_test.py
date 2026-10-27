@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Exercise Linux staging and source-package wrappers with isolated inputs."""
 import os
+import json
 from pathlib import Path
 import shutil
 import subprocess
@@ -14,6 +15,75 @@ ROOT = Path(__file__).resolve().parents[3]
 
 @unittest.skipUnless(sys.platform == "linux", "native Linux install semantics")
 class LinuxPackagingTests(unittest.TestCase):
+    def test_qt_minimum_is_enforced_at_configuration(self):
+        for version in ("6.6.3", "6.7.0"):
+            with self.subTest(version=version), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                qt = root / "qt"
+                qt.mkdir()
+                (qt / "Qt6ConfigVersion.cmake").write_text(
+                    f'set(PACKAGE_VERSION "{version}")\n'
+                    'if(PACKAGE_FIND_VERSION VERSION_GREATER PACKAGE_VERSION)\n'
+                    'set(PACKAGE_VERSION_COMPATIBLE FALSE)\nelse()\nset(PACKAGE_VERSION_COMPATIBLE TRUE)\nendif()\n')
+                (qt / "Qt6Config.cmake").write_text(
+                    f'set(Qt6_FOUND TRUE)\nset(Qt6_VERSION "{version}")\n'
+                    'function(qt_standard_project_setup)\nendfunction()\n')
+                (root / "CMakeLists.txt").write_text(
+                    'cmake_minimum_required(VERSION 3.20)\nset(CMAKE_SYSTEM_NAME Generic)\n'
+                    'project(QtMinimumFixture LANGUAGES NONE)\n'
+                    f'include("{(ROOT / "cmake/modules/QualpfQtDependencies.cmake").as_posix()}")\n')
+                result = subprocess.run(["cmake", "-S", str(root), "-B", str(root / "build"), f"-DQt6_DIR={qt}"],
+                                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+                self.assertEqual(result.returncode == 0, version == "6.7.0", result.stdout)
+                if result.returncode:
+                    self.assertIn("6.7", result.stdout)
+
+    def test_installer_overrides_stale_prefix_consistently(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            repo, tools = root / "repo", root / "tools"
+            (repo / "scripts").mkdir(parents=True)
+            tools.mkdir()
+            shutil.copy2(ROOT / "scripts/install.sh", repo / "scripts/install.sh")
+            (repo / "CMakeLists.txt").write_text('set(EXECUTABLE_NAME "qualpf")\nproject(QualPF VERSION 1.0.0)\n')
+            build = repo / "build/linux-gnu"
+            build.mkdir(parents=True)
+            (build / "CMakeCache.txt").write_text("CMAKE_INSTALL_PREFIX:PATH=/stale/prefix\n")
+            cmake = tools / "cmake"
+            cmake.write_text('''#!/usr/bin/python3
+import json, os, pathlib, sys
+args = sys.argv[1:]
+with open(os.environ["QUALPF_TEST_COMMAND_LOG"], "a") as log:
+    log.write(json.dumps(args) + "\\n")
+if "--install" in args:
+    prefix = pathlib.Path(args[args.index("--prefix") + 1])
+    assert str(prefix) == os.environ["QUALPF_INSTALL_PREFIX"]
+    target = prefix / "bin/qualpf"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"installed fixture")
+elif "--build" not in args:
+    prefix = next(arg.split("=", 1)[1] for arg in args if arg.startswith("-DCMAKE_INSTALL_PREFIX="))
+    assert prefix == os.environ["QUALPF_INSTALL_PREFIX"]
+    build = pathlib.Path(args[args.index("-B") + 1])
+    (build / "CMakeCache.txt").write_text("CMAKE_INSTALL_PREFIX:PATH=" + prefix + "\\n")
+''', encoding="utf-8")
+            cmake.chmod(0o755)
+            sudo = tools / "sudo"
+            sudo.write_text('#!/bin/bash\nexec "$@"\n')
+            sudo.chmod(0o755)
+            prefix = root / "chosen prefix"
+            log = root / "commands.jsonl"
+            env = dict(os.environ, PATH=str(tools) + os.pathsep + os.environ["PATH"],
+                       QUALPF_INSTALL_PREFIX=str(prefix), QUALPF_TEST_COMMAND_LOG=str(log))
+            result = subprocess.run(["bash", str(repo / "scripts/install.sh")], env=env,
+                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout)
+            calls = [json.loads(line) for line in log.read_text().splitlines()]
+            self.assertIn("-DCMAKE_INSTALL_PREFIX=" + str(prefix), calls[0])
+            self.assertEqual(calls[2], ["--install", str(build), "--prefix", str(prefix)])
+            self.assertEqual((prefix / "bin/qualpf").read_bytes(), b"installed fixture")
+            self.assertIn("Program installed in : " + str(prefix), result.stdout)
+
     def test_desktop_registration_only_for_direct_install(self):
         for mode in ("direct", "deb", "appimage", "destdir", "cpack"):
             with self.subTest(mode=mode), tempfile.TemporaryDirectory() as directory:

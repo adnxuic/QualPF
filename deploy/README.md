@@ -14,6 +14,7 @@ ignored local build directories.
 | `linux/qualpf.appimage.desktop.in` | Relocatable AppImage desktop entry, configured by CMake |
 | `linux/icons/*/qualpf.png` | Independent QualPF launcher icons in four maintained sizes |
 | `dependency-sources.json`, `linux-dependency-sources.json` | Pinned source/notice inputs and their hashes; these catalogues contain no source archives |
+| `appimage-tools.json` | Accepted linuxdeploy/appimagetool revisions, immutable asset URLs, sizes and hashes, checked before downloading or executing cached tools |
 | `rights-review.json` | Scientific-material findings, retained original identities, actual runtime/source evidence and recorded qualifications |
 
 The application remains version **1.0.0**, published by **adnxuic** under

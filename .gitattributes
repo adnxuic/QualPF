@@ -11,6 +11,7 @@
 /deploy/rights-review.json text eol=lf
 /deploy/dependency-sources.json text eol=lf
 /deploy/linux-dependency-sources.json text eol=lf
+/deploy/appimage-tools.json text eol=lf
 /deploy/README.md text eol=lf
 /deploy/Windows/*.qs text eol=lf
 /third_party/qcustomplot/README.md text eol=lf
@@ -20,6 +21,8 @@
 /cmake/templates/legal.qrc.in text eol=lf
 /src/gui/resources/resource.qrc text eol=lf
 /tools/validation/check_distribution.py text eol=lf
+/tools/validation/prepare_appimage_tools.py text eol=lf
+/tests/unit/tools/linux_packaging_test.py text eol=lf
 /cmake/packaging/Distribution.cmake text eol=lf
 /cmake/templates/Distribution*.cmake.in text eol=lf
 /deploy/linux/*.desktop* text eol=lf
