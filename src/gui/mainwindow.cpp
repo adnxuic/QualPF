@@ -2063,6 +2063,11 @@ void MainWindow::setAction(const MouseAction &action, bool writeConfig)
 void MainWindow::plotStyleClosed(QDialogButtonBox::StandardButton button)
 {
     if (closingRequested_) return;
+    if (!plotStyleDialog->hasCompatibleSeries(xpdViewer())) {
+        plotStyleDialog->setOptions(xpdViewer());
+        setStatusMessage(tr("Plot data changed; previous style edits were discarded."));
+        return;
+    }
     if (button == QDialogButtonBox::Apply) {
         plotStyleDialog->apply(xpdViewer());
         if(plotStyleDialog->anyChangeApplied()) { captureProjectView(); markProjectModified(); }

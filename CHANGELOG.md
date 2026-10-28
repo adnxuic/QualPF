@@ -423,6 +423,10 @@ reports are no longer used for routine development.
 - Isolate the Linux minimum-Qt packaging fixture from installed SDK search paths,
   preserving its intended version rejection when a developer supplies a Qt prefix.
 
+- Reset Plot Style drafts on every opening, restore controls when series become
+  available, and discard incompatible drafts after plot-series changes. Empty or
+  reopened plots no longer expose stale visibility arrays or invalid indices.
+
 - Treated reference-card IDs and textual search restraints as SQL data, preserving
   apostrophes, leading-zero and SQL-looking identifiers without widening predicates.
   Retained LIKE wildcards, restraint intersections, database ordering and numerical

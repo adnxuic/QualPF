@@ -28,7 +28,7 @@
     ],
     "status": "in_progress",
     "base_commit": "338a371fda0a47e8043cb93b4e50fe25fd90ff2a",
-    "checkpoint_commit": "11a08e00e7a370a308ea6ae8bf04831c784dfa6d",
+    "checkpoint_commit": "f0f17833846bba43f47412db9dc21a46eea2bda2",
     "completed": [
       "Read current task, architecture, numerical, build, test and distribution authorities; confirmed clean entry worktree.",
       "Passed all twelve repository quality checks with 169 independent references and 15 sealed archives verified.",
@@ -36,9 +36,13 @@
       "Built the complete GNU product/tests from a fresh directory and rebuilt affected MSVC/Linux targets; strict configured boundaries pass.",
       "Passed MkDocs strict HTML construction, exact offline manual provenance and actionlint.",
       "Reproduced Linux minimum-Qt fixture contamination by the real SDK; isolated package discovery and passed all four controls under the same prefix and Qt6_ROOT.",
-      "Confirmed existing Windows and Linux release candidates bind older source revisions and require regeneration before publication."
+      "Confirmed existing Windows and Linux release candidates bind older source revisions and require regeneration before publication.",
+      "Reproduced unsafe empty Plot Style controls and added real GUI coverage for reopening, visibility snapshots, invalid indices and plot-series changes.",
+      "Cleared presentation drafts on every opening, restored available controls and rejected incompatible series before apply/cancel/default restoration; the causal GUI control passes.",
+      "Verified all three Qt-free Application clients (11 tests each), current manual provenance, workflow lint and all four generators from a corresponding-source export.",
+      "Repaired only the obsolete local GNU cache include after backing up its cache; shared preset configuration works again."
     ],
-    "next_action": "Finish running Windows/GNU and Linux normal regressions, run affected MSVC regressions, verify release/source differences and close the task.",
+    "next_action": "Finish full normal suites on their fixed build snapshots, then rebuild and rerun affected GUI/product controls for the last presentation repair on all three kits.",
     "blockers": [],
     "checks": [
       {
@@ -76,6 +80,18 @@
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": "build/pre-release-audit-20261028/mkdocs-03.log"
+      },
+      {
+        "command": "ctest --test-dir build/pre-release-review-20261027/windows-gnu -R ^qualpf.gui.workspace_context$ before Plot Style repair",
+        "result": "FAIL",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/pre-release-audit-20261028/style-before-01.xml"
+      },
+      {
+        "command": "ctest --test-dir build/pre-release-review-20261027/windows-gnu -R ^qualpf.gui.workspace_context$ after Plot Style repair",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/pre-release-audit-20261028/style-after-01.xml"
       }
     ]
   }

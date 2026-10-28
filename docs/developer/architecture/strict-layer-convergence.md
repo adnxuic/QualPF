@@ -27,6 +27,10 @@ Card details render repository metadata as literal text, escaping it at the HTML
 presentation boundary. The official COD link percent-encodes the card identifier
 as one URL path component; metadata cannot introduce additional links or markup.
 
+Plot Style owns fresh presentation drafts for the current observed/reflection
+series on every opening. Empty series disable their controls; changed series
+counts discard incompatible drafts before apply, cancel or default restoration.
+
 ## Enforced boundaries
 
 Application exports headers from `src/application/include/qualpf/application`.

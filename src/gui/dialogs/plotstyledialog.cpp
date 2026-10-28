@@ -166,6 +166,7 @@ void PlotStyleDialog::setOptions(const XpdViewWidget *plot)
     //Observed
     obsPen.clear();
     obsScatter.clear();
+    obsVisible.clear();
     obsPen.reserve(plot->obs.count());
     obsScatter.reserve(plot->obs.count());
     obsVisible.reserve(plot->obs.count());
@@ -177,6 +178,8 @@ void PlotStyleDialog::setOptions(const XpdViewWidget *plot)
     obsVisible0 = obsVisible;
     obsPen0 = obsPen;
     obsScatter0 = obsScatter;
+
+    ui->tabObserved->setEnabled(!obsPen.isEmpty());
 
     ui->observedComboBox->clear();
     for (int i = 0; i < plot->obs.count(); i++) {
@@ -209,24 +212,24 @@ void PlotStyleDialog::setOptions(const XpdViewWidget *plot)
 
     //Reflections
     reflPen.clear();
-    if (plot->refSet.count() == 0)  {
-        ui->reflComboBox->setDisabled(true);
-        ui->reflCheckBox->setDisabled(true);
-        ui->reflectionsLineWidget->setDisabled(true);
-    } else {
+    reflVisible.clear();
+    ui->reflComboBox->clear();
+    const bool hasReflections = !plot->refSet.isEmpty();
+    ui->reflComboBox->setEnabled(hasReflections);
+    ui->reflCheckBox->setEnabled(hasReflections);
+    ui->reflectionsLineWidget->setEnabled(hasReflections);
+    if (hasReflections) {
         reflPen.reserve(plot->refSet.count());
         reflVisible.resize(plot->refSet.count());
         for (int i = 0; i< plot->refSet.count(); i++) {
             reflPen.push_back(plot->refSet[i].pen);
             reflVisible[i] = plot->refSet[i].visible;
         }
-        reflVisible0 = reflVisible;
-
-        ui->reflComboBox->clear();
         for (int i = 0; i < plot->refSet.count(); i++) {
             ui->reflComboBox->addItem(plot->refSet[i].name);
         }
     }
+    reflVisible0 = reflVisible;
     reflPen0 = reflPen;
 
     settings0 = plot->pSettings();
@@ -313,8 +316,16 @@ void PlotStyleDialog::setWidgets(bool init, const QPen &backPen, const QCPScatte
     }
 }
 
+bool PlotStyleDialog::hasCompatibleSeries(const XpdViewWidget *plot) const
+{
+    return plot && obsPen.size() == plot->obs.size() && obsScatter.size() == plot->obs.size() &&
+        obsVisible.size() == plot->obs.size() && reflPen.size() == plot->refSet.size() &&
+        reflVisible.size() == plot->refSet.size();
+}
+
 void PlotStyleDialog::apply(XpdViewWidget *plot, bool update)
 {
+    if (!hasCompatibleSeries(plot)) return;
     //update = true:  1) widget to psettings, obs, ... 2) replot according to psettings
     //update = false: only replot according to psettings, obs, ... (for Cancel)
 
@@ -708,6 +719,7 @@ void PlotStyleDialog::cancel(XpdViewWidget *plot)
                              // graphItem &diff, graphItem &cdiff, graphItem &peaks, QVector<graphItem> &refl,
                              // const QVector<double> waves)
 {
+    if (!hasCompatibleSeries(plot)) return;
     if (anyChangeApplied()) {
         for (int i = 0; i < plot->obs.count(); i++) {
             plot->obs[i].setPen(obsPen0[i]);
@@ -798,6 +810,7 @@ void PlotStyleDialog::connectLineWidget(LineStyleWidget *lsWidget)
 
 void PlotStyleDialog::setObserved(int index)
 {
+    if (index < 0 || index >= obsPen.size()) return;
     ui->observedLineWidget->setLineStyle(obsPen.at(index));
     ui->observedMarkerWidget->setMarkerStyle(obsScatter.at(index));
     ui->obsCheckBox->setChecked(obsVisible.at(index));
@@ -805,6 +818,7 @@ void PlotStyleDialog::setObserved(int index)
 
 void PlotStyleDialog::setReflections(int index)
 {
+    if (index < 0 || index >= reflPen.size()) return;
     ui->reflCheckBox->setChecked(reflVisible.at(index));
     ui->reflectionsLineWidget->setLineStyle(reflPen.at(index));
 }

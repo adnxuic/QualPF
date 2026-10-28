@@ -19,6 +19,7 @@ public:
     ~PlotStyleDialog();
 
     void setOptions(const XpdViewWidget *plot);
+    bool hasCompatibleSeries(const XpdViewWidget *plot) const;
     void apply(XpdViewWidget *plot, bool update = true);
     // void apply(XpdViewWidget *plot, QVector<graphItem> &obs, graphItem &back, graphItem &bpoints, graphItem &calc,
     //            graphItem &diff, graphItem &cdiff, graphItem &peaks, QVector<graphItem> &refl,

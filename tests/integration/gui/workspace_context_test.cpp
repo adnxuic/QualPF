@@ -11,6 +11,7 @@
 #include "gui/mainwindow.h"
 #include "gui/widgets/quantwidget.h"
 #include "gui/widgets/dbresultswidget.h"
+#include "gui/dialogs/plotstyledialog.h"
 #include "gui/presentation/product_plot_refresh.h"
 #include "gui/search/search_request.h"
 #include "infrastructure/database/qt_sql/candidate_reader_factory.h"
@@ -18,6 +19,8 @@
 #include "infrastructure/settings/progkeysettings.h"
 #include <QApplication>
 #include <QTableView>
+#include <QCheckBox>
+#include <QComboBox>
 #include <QTextBrowser>
 #include <QTextBlock>
 #include <QUrl>
@@ -242,6 +245,50 @@ void presenterLifetime() {
     const auto closing = context.refreshPresentation();
     check(!closing && closing.error().reason == "closing" && calls == 1, "Closing rejects presentation");
 }
+void plotStylePresentation(MainWindow &window, WorkspaceContext &context) {
+    auto *styles = window.findChild<PlotStyleDialog *>();
+    auto *plot = window.xpdViewer();
+    check(styles && plot, "real plot style dialog");
+    auto *observed = styles->findChild<QCheckBox *>("obsCheckBox");
+    auto *reflections = styles->findChild<QCheckBox *>("reflCheckBox");
+    auto *reflectionList = styles->findChild<QComboBox *>("reflComboBox");
+    check(observed && reflections && reflectionList, "real series controls");
+    plot->obs.clear();
+    plot->refSet.clear();
+    styles->setOptions(plot);
+    check(!observed->isEnabled() && !reflections->isEnabled(), "empty series controls must be disabled");
+    auto source = context.workspace().session().snapshot();
+    auto next = *source;
+    next.pattern = testing::ClassicFixture{}.pattern;
+    next.pattern.radiation.lines = {{WavelengthAngstrom{1.54}, 1}};
+    check(bool(context.workspace().session().commit(source, std::move(next))) &&
+          bool(context.refreshPresentation()) && plot->obs.size() == 1, "one observed series fixture");
+    ReflectionBar reference;
+    reference.name = "reference";
+    reference.visible = true;
+    plot->refSet = {reference};
+    styles->setOptions(plot);
+    check(observed->isEnabled() && reflections->isEnabled() && reflectionList->count() == 1,
+          "reopened series controls must recover from an empty plot");
+    plot->obs.front().visible = false;
+    plot->refSet.front().visible = false;
+    source = context.workspace().session().snapshot();
+    styles->setOptions(plot);
+    check(styles->obsVisible == QVector<bool>{false} && styles->reflVisible == QVector<bool>{false} &&
+          !observed->isChecked() && !reflections->isChecked(), "every opening owns the current visibility draft");
+    plot->obs.clear();
+    plot->refSet.clear();
+    styles->dialogClosed(QDialogButtonBox::RestoreDefaults);
+    check(styles->obsPen.empty() && styles->obsScatter.empty() && styles->obsVisible.empty() &&
+          styles->reflPen.empty() && styles->reflVisible.empty() && reflectionList->count() == 0 &&
+          !observed->isEnabled() && !reflections->isEnabled(), "changed series discard stale style drafts safely");
+    check(QMetaObject::invokeMethod(styles, "on_observedComboBox_currentIndexChanged", Q_ARG(int, 1)) &&
+          QMetaObject::invokeMethod(styles, "on_reflComboBox_currentIndexChanged", Q_ARG(int, 1)),
+          "obsolete series indices are ignored");
+    observed->click();
+    reflections->click();
+    check(context.workspace().session().snapshot() == source, "style drafts cannot mutate scientific state");
+}
 void cardDetailsPresentation() {
     struct Repository final : ReferenceRepository {
         application::CardDetails card;
@@ -309,6 +356,7 @@ void cardDetailsPresentation() {
         }
     check(foundLink && QUrl(expectedUrl).host() == "www.crystallography.net", "COD link retains its destination");
     check(workspace.session().snapshot() == source, "card details do not mutate canonical state");
+    plotStylePresentation(window, context);
 }
 void selectionAndRequest(const QString &directory) {
     QSettings preferences;

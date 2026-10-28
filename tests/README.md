@@ -203,6 +203,8 @@ Closed card and metadata lookups also reject an unrelated Qt default connection.
 The workspace GUI control also renders card metadata containing HTML delimiters,
 entities and link-like text through the real card-selection signal. It checks
 literal text, the encoded official COD destination and unchanged canonical state.
+The same control checks empty/reopened Plot Style controls, current visibility
+drafts, invalid indices and series changes before default restoration.
 
 Provenance tests retain incompatible residual/scale refusal, source/task mismatch,
 non-default QXP save refusal, unknown legacy provenance and explicit original-signal
