@@ -192,6 +192,17 @@ providers, coordinates, Application/Core contracts, table generators, distributi
 rejection controls and strict boundaries. It requires no private powder examples.
 The normal suite and all original assertions remain unchanged.
 
+The quality job restores and hash-checks the sealed reference ZIPs before running
+its validation gates. In particular, distribution preflight needs
+`symmetry-reference.zip`, the preferred generator input excluded from a fresh
+checkout. Keeping provisioning first lets the same checks run on a clean hosted
+runner and a prepared local checkout.
+
+Windows dependency preparation logs each download and extraction stage. Downloads
+use bounded connection/transfer timeouts and retries, retain the original upstream
+URLs and SHA-256 pins, and fail on HTTP errors or changed bytes. The preparation
+step has a 20-minute limit within the existing 45-minute public build job.
+
 With a development preset configured and independent references restored:
 
 ```sh

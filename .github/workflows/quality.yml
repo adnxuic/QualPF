@@ -26,6 +26,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Verify independent regression resources
+        run: |
+          python -B tools/validation/restore_reference_archives.py --self-test
+          git fetch --no-tags --depth=1 origin b5933bba78dc3f02d8d68f0dc11d2eed4385de51
+          python -B tools/validation/restore_reference_archives.py
+          python -B tools/validation/check_references.py
       - name: Check current development context
         run: python -B tools/agent/check_current_context.py --self-test
       - name: Check documentation ownership and preserved history
@@ -46,12 +52,6 @@ jobs:
         run: python -B tools/validation/prepare_appimage_tools.py --self-test
       - name: Exercise isolated Linux install and packaging controls
         run: python -B tests/unit/tools/linux_packaging_test.py -v
-      - name: Verify independent regression resources
-        run: |
-          python -B tools/validation/restore_reference_archives.py --self-test
-          git fetch --no-tags --depth=1 origin b5933bba78dc3f02d8d68f0dc11d2eed4385de51
-          python -B tools/validation/restore_reference_archives.py
-          python -B tools/validation/check_references.py
 
   public-build:
     name: Public C++ regressions (${{ matrix.preset }})
@@ -92,24 +92,31 @@ jobs:
       - name: Provision fixed Windows header dependencies
         if: runner.os == 'Windows'
         shell: pwsh
+        timeout-minutes: 20
         run: |
           $ErrorActionPreference = 'Stop'
           $sdk = Join-Path $env:GITHUB_WORKSPACE 'build/ci-sdk'
           New-Item -ItemType Directory -Path $sdk -Force | Out-Null
           function Get-CheckedArchive($url, $name, $sha256) {
             $file = Join-Path $sdk $name
-            Invoke-WebRequest -Uri $url -OutFile $file
+            Write-Host "Downloading $name from $url"
+            curl.exe --fail --location --silent --show-error --connect-timeout 20 --max-time 180 --retry 2 --retry-delay 5 --retry-max-time 370 --output $file $url
+            if ($LASTEXITCODE -ne 0) { throw "Dependency download failed: $name (curl exit $LASTEXITCODE)" }
             if ((Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant() -ne $sha256) {
               throw "Dependency SHA-256 mismatch: $name"
             }
+            Write-Host "Verified $name ($((Get-Item -LiteralPath $file).Length) bytes)"
             return $file
           }
           $eigen = Get-CheckedArchive 'https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz' 'eigen-3.4.0.tar.gz' '8586084f71f9bde545ee7fa6d00288b264a2b7ac3607b974e54d13e7162c1c72'
           $boost = Get-CheckedArchive 'https://archives.boost.io/release/1.82.0/source/boost_1_82_0.tar.bz2' 'boost_1_82_0.tar.bz2' 'a6e1ab9b0860e6a2881dd7b21fe9f737a095e5f33a3a874afc6a345228597ee6'
+          Write-Host 'Extracting Eigen headers'
           tar -xf $eigen -C $sdk
           if ($LASTEXITCODE -ne 0) { throw 'Eigen extraction failed' }
+          Write-Host 'Extracting Boost headers and license'
           tar -xf $boost -C $sdk boost_1_82_0/boost boost_1_82_0/LICENSE_1_0.txt
           if ($LASTEXITCODE -ne 0) { throw 'Boost extraction failed' }
+          Write-Host 'Configuring and installing Eigen headers'
           cmake -S "$sdk/eigen-3.4.0" -B "$sdk/eigen-build" -G Ninja -DBUILD_TESTING=OFF -DEIGEN_BUILD_DOC=OFF "-DCMAKE_INSTALL_PREFIX=$sdk/eigen-install"
           if ($LASTEXITCODE -ne 0) { throw 'Eigen configuration failed' }
           cmake --install "$sdk/eigen-build"
