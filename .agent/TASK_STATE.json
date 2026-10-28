@@ -28,13 +28,17 @@
     ],
     "status": "in_progress",
     "base_commit": "338a371fda0a47e8043cb93b4e50fe25fd90ff2a",
-    "checkpoint_commit": null,
+    "checkpoint_commit": "11a08e00e7a370a308ea6ae8bf04831c784dfa6d",
     "completed": [
       "Read current task, architecture, numerical, build, test and distribution authorities; confirmed clean entry worktree.",
       "Passed all twelve repository quality checks with 169 independent references and 15 sealed archives verified.",
-      "Reproduced card-details HTML interpretation with a real GUI regression, then escaped metadata and encoded the COD identifier; updated the owning guide, test documentation and changelog."
+      "Reproduced card-details HTML interpretation with a real GUI regression, then escaped metadata and encoded the COD identifier; updated the owning guide, test documentation and changelog.",
+      "Built the complete GNU product/tests from a fresh directory and rebuilt affected MSVC/Linux targets; strict configured boundaries pass.",
+      "Passed MkDocs strict HTML construction, exact offline manual provenance and actionlint.",
+      "Reproduced Linux minimum-Qt fixture contamination by the real SDK; isolated package discovery and passed all four controls under the same prefix and Qt6_ROOT.",
+      "Confirmed existing Windows and Linux release candidates bind older source revisions and require regeneration before publication."
     ],
-    "next_action": "Commit the verified presentation repair, then complete GNU/MSVC/Linux regressions and compare frozen release artifacts with the final revision.",
+    "next_action": "Finish running Windows/GNU and Linux normal regressions, run affected MSVC regressions, verify release/source differences and close the task.",
     "blockers": [],
     "checks": [
       {
@@ -54,6 +58,24 @@
         "result": "PASS",
         "kind": "FRESH_VALIDATION",
         "evidence_ref": "build/pre-release-audit-20261028/card-after-01.xml"
+      },
+      {
+        "command": "python -B tests/unit/tools/linux_packaging_test.py -v with the real Qt SDK prefix before isolation",
+        "result": "FAIL",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/pre-release-audit-20261028/linux-packaging-01.log"
+      },
+      {
+        "command": "python -B tests/unit/tools/linux_packaging_test.py -v with CMAKE_PREFIX_PATH and Qt6_ROOT after isolation",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/pre-release-audit-20261028/linux-packaging-02.log"
+      },
+      {
+        "command": "python -m mkdocs build --strict -f docs/mkdocs.yml with isolated repository-pinned dependencies",
+        "result": "PASS",
+        "kind": "FRESH_VALIDATION",
+        "evidence_ref": "build/pre-release-audit-20261028/mkdocs-03.log"
       }
     ]
   }

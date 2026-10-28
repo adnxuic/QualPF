@@ -206,6 +206,10 @@ CTest/CMake diagnostics and About captures even on failure and run the product's
 `--version` path. A local run does not establish hosted-CI success or full normal
 suite acceptance; those remain separate evidence scopes.
 
+The minimum-Qt packaging fixture restricts package discovery to its supplied fake
+SDK, so an installed Qt prefix or package registry cannot satisfy its deliberately
+incompatible version. It still checks both rejection below 6.7 and acceptance at 6.7.
+
 ## Optional Qt-free tests
 
 `tests` can be configured independently using CXX only, building Core, Session,

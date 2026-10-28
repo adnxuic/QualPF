@@ -420,6 +420,9 @@ reports are no longer used for routine development.
   brackets, ampersands and tag-like names/authors instead of interpreting them as
   HTML. Encode card identifiers in the official COD link.
 
+- Isolate the Linux minimum-Qt packaging fixture from installed SDK search paths,
+  preserving its intended version rejection when a developer supplies a Qt prefix.
+
 - Treated reference-card IDs and textual search restraints as SQL data, preserving
   apostrophes, leading-zero and SQL-looking identifiers without widening predicates.
   Retained LIKE wildcards, restraint intersections, database ordering and numerical

@@ -31,6 +31,14 @@ class LinuxPackagingTests(unittest.TestCase):
                 (root / "CMakeLists.txt").write_text(
                     'cmake_minimum_required(VERSION 3.20)\nset(CMAKE_SYSTEM_NAME Generic)\n'
                     'project(QtMinimumFixture LANGUAGES NONE)\n'
+                    # An installed SDK must not satisfy the deliberately old
+                    # fixture after CMake rejects its Qt6_DIR version.
+                    'set(CMAKE_FIND_USE_PACKAGE_ROOT_PATH FALSE)\n'
+                    'set(CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH FALSE)\n'
+                    'set(CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH FALSE)\n'
+                    'set(CMAKE_FIND_USE_CMAKE_SYSTEM_PATH FALSE)\n'
+                    'set(CMAKE_FIND_USE_PACKAGE_REGISTRY FALSE)\n'
+                    'set(CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY FALSE)\n'
                     f'include("{(ROOT / "cmake/modules/QualpfQtDependencies.cmake").as_posix()}")\n')
                 result = subprocess.run(["cmake", "-S", str(root), "-B", str(root / "build"), f"-DQt6_DIR={qt}"],
                                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
