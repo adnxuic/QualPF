@@ -348,6 +348,7 @@ def prepare_notices(root, bundle, source, output, build=None):
     if archived != info or index_sha != digest(bundle / INDEX):
         raise ValueError("separate archive differs from the selected dependency bundle")
     boundary = (build or root / "build").resolve()
+    output = output.resolve()
     if not output.is_relative_to(boundary) or output == boundary:
         raise ValueError("generated dependency notices must stay inside the selected build directory")
     if output.exists():
@@ -438,6 +439,16 @@ def self_test():
                     prepare_notices(root, bundle, archive, outside / "notices")
                 prepare_notices(root, bundle, archive, outside / "notices", outside)
                 self.assertEqual(verify_notices(root, outside / "notices", archive)[0], info)
+                aliased = root / "uncreated-parent/../build/aliased-notices"
+                prepare_notices(root, bundle, archive, aliased)
+                self.assertEqual(verify_notices(root, root / "build/aliased-notices", archive)[0], info)
+                prepare_notices(root, bundle, archive, aliased)  # Canonical repeat is idempotent.
+                escaped = root / "build/../escaped-notices"
+                with self.assertRaisesRegex(ValueError, "selected build directory"):
+                    prepare_notices(root, bundle, archive, escaped)
+                self.assertFalse((root / "escaped-notices").exists())
+                with self.assertRaisesRegex(ValueError, "selected build directory"):
+                    prepare_notices(root, bundle, archive, root / "build/uncreated/..")
                 verified, delivery = verify_notices(root, output, archive)
                 self.assertEqual(verified, info)
                 self.assertFalse(delivery["collection_release_clearance"])

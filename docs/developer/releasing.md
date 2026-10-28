@@ -285,6 +285,11 @@ opens [SOURCE_CODE.md](../../SOURCE_CODE.md). Separate delivery changes no
 third-party terms or unverified vendor/scientific-data findings, and the collection
 still records `release_clearance:false`.
 
+Notice output and the selected build boundary are resolved before containment
+checks, so Windows path aliases and lexical parent segments use the same basis.
+The build directory itself and paths escaping its resolved boundary remain
+rejected, including when an explicit external build directory is selected.
+
 Linux DEB and AppImage use the same options and exact-source checks. Their
 `deploy/linux-dependency-sources.json` pins every original file of the previously
 accepted Linux collection independently of the editable bundle index. It retains

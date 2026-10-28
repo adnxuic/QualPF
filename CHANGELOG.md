@@ -12,6 +12,8 @@ reports are no longer used for routine development.
 
 ### Fixed
 
+- Resolve dependency-notice outputs consistently with their build boundary,
+  accepting Windows path aliases while retaining escape and build-root rejection.
 - Restore sealed reference inputs before hosted quality gates, so distribution
   preflight can check its preferred symmetry-generator input on a clean checkout.
 - Bound Windows CI dependency downloads and preparation, with stage diagnostics
