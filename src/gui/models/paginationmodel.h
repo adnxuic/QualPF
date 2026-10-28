@@ -40,7 +40,7 @@ private:
     void _emitCanChange(bool oldBack, bool oldFwd);
     void _beginSourceChange();
     void _endSourceChange();
-    void _setCurrentPage(int page, bool force = false);
+    void _setCurrentPage(int page);
 
     int _maxRows;
     int _currentPage;

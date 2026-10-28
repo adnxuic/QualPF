@@ -11,7 +11,10 @@
 #include "gui/mainwindow.h"
 #include "gui/widgets/quantwidget.h"
 #include "gui/widgets/dbresultswidget.h"
+#include "gui/widgets/reportwidget.h"
 #include "gui/dialogs/plotstyledialog.h"
+#include "gui/models/paginationmodel.h"
+#include "gui/models/textfilterproxymodel.h"
 #include "gui/presentation/product_plot_refresh.h"
 #include "gui/search/search_request.h"
 #include "infrastructure/database/qt_sql/candidate_reader_factory.h"
@@ -31,6 +34,8 @@
 #include "infrastructure/serialization/quantification.h"
 #include <QFileInfo>
 #include <QSettings>
+#include <QStandardItemModel>
+#include <QPrinter>
 #include <QTemporaryDir>
 #include <iostream>
 #include <limits>
@@ -43,6 +48,51 @@ namespace {
 void check(bool condition, const char *message) {
     if (!condition)
         throw std::runtime_error(message);
+}
+void paginationTransitions() {
+    QStandardItemModel source;
+    for (const auto *text : {"keep first", "keep second", "drop third", "drop fourth", "drop fifth", "drop sixth"})
+        source.appendRow(new QStandardItem(text));
+    TextFilterProxyModel filter;
+    filter.setSourceModel(&source);
+    PaginationModel pages(2);
+    pages.setSourceModel(&filter);
+    pages.lastPage();
+    check(pages.currentPage() == 2 && pages.pageCount() == 3 && pages.rowCount() == 2,
+          "pagination starts on the requested final page");
+    int currentSignals = 0, countSignals = 0, backSignals = 0, forwardSignals = 0;
+    QObject::connect(&pages, &PaginationModel::currentPageChanged, &pages, [&](int) { ++currentSignals; });
+    QObject::connect(&pages, &PaginationModel::pageCountChanged, &pages, [&](int) { ++countSignals; });
+    QObject::connect(&pages, &PaginationModel::canGoBackChanged, &pages, [&](bool) { ++backSignals; });
+    QObject::connect(&pages, &PaginationModel::canGoForwardChanged, &pages, [&](bool) { ++forwardSignals; });
+    filter.setFilterFixedString("keep");
+    check(pages.currentPage() == 0 && pages.pageCount() == 1 && pages.rowCount() == 2 &&
+              !pages.canGoBack() && !pages.canGoForward() &&
+              pages.index(0, 0).data().toString() == "keep first" &&
+              currentSignals == 1 && countSignals == 1 && backSignals == 1,
+          "filtering to exactly one full page clamps the page and navigation state");
+    filter.setFilterFixedString("absent");
+    check(pages.currentPage() == -1 && pages.pageCount() == 0 && pages.rowCount() == 0,
+          "an empty filter has no current page");
+    pages.firstPage(); pages.lastPage(); pages.nextPage(); pages.setMaxRows(3);
+    check(pages.currentPage() == -1 && !pages.canGoBack() && !pages.canGoForward(),
+          "navigation and page-size changes keep an empty result without a current page");
+    filter.setFilterFixedString("");
+    pages.lastPage();
+    check(pages.currentPage() == 1 && pages.pageCount() == 2, "restored results remain navigable");
+    currentSignals = countSignals = backSignals = forwardSignals = 0;
+    pages.setSourceModel(nullptr);
+    check(pages.currentPage() == -1 && pages.pageCount() == 0 && pages.rowCount() == 0 &&
+              currentSignals == 1 && countSignals == 1 && backSignals == 1 && forwardSignals == 0,
+          "detaching the source notifies page and navigation controls");
+    pages.setSourceModel(&filter);
+    pages.lastPage();
+    source.removeRows(3, 3);
+    check(pages.currentPage() == 0 && pages.pageCount() == 1 && pages.rowCount() == 3 && !pages.canGoBack(),
+          "removing a full trailing page clamps the page even at an exact boundary");
+    pages.setMaxRows(std::numeric_limits<int>::max());
+    check(pages.pageCount() == 1 && pages.currentPage() == 0 && pages.rowCount() == 3,
+          "large page sizes preserve valid page counts without integer overflow");
 }
 void isolation() {
     infrastructure::QtPreferenceStore preferencesStore;
@@ -357,6 +407,41 @@ void cardDetailsPresentation() {
     check(foundLink && QUrl(expectedUrl).host() == "www.crystallography.net", "COD link retains its destination");
     check(workspace.session().snapshot() == source, "card details do not mutate canonical state");
     plotStylePresentation(window, context);
+
+    const QString reportPath = "folder <path> &alpha;/measurement <file> &amp;.xy";
+    auto reportState = *workspace.session().snapshot();
+    reportState.pattern.source_id = reportPath.toStdString();
+    check(bool(workspace.session().commit(workspace.session().snapshot(), std::move(reportState))),
+          "literal report source fixture");
+    const auto reportSource = workspace.session().snapshot();
+    ProductCard reportCard;
+    reportCard.id = "<b>card</b> &alpha; %7";
+    reportCard.chemicalName = "<i>name</i> %6";
+    reportCard.mineralName = "mineral &amp; %7";
+    reportCard.chemicalFormula = "A<B & C %7";
+    const QString restraint = "<a href='https://invalid.test/'>Si</a> & O";
+    auto *report = window.findChild<ReportWidget *>();
+    auto *reportBrowser = report ? report->findChild<QTextBrowser *>() : nullptr;
+    check(reportBrowser, "real report presentation");
+    report->setRestraintsInfo(true, {restraint});
+    report->updateReport({}, {CardType(reportCard)});
+    const auto reportText = reportBrowser->toPlainText();
+    for (const auto &value : {QFileInfo(reportPath).fileName(), QFileInfo(reportPath).absolutePath(),
+                              QString::fromStdString(reportCard.id), QString::fromStdString(reportCard.chemicalName),
+                              QString::fromStdString(reportCard.mineralName),
+                              QString::fromStdString(reportCard.chemicalFormula), restraint})
+        check(reportText.contains(value), "report paths, identifiers and restraints must display as literal text");
+    for (auto block = reportBrowser->document()->begin(); block.isValid(); block = block.next())
+        for (auto it = block.begin(); !it.atEnd(); ++it)
+            check(!it.fragment().charFormat().isAnchor(), "report inputs cannot introduce active links");
+    QTemporaryDir reportDirectory;
+    check(reportDirectory.isValid(), "report output directory");
+    QPrinter printer;
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(reportDirectory.path() + "/literal-report.pdf");
+    report->print(&printer);
+    check(QFileInfo(printer.outputFileName()).size() > 1000 && workspace.session().snapshot() == reportSource,
+          "the literal report prints without changing canonical state");
 }
 void selectionAndRequest(const QString &directory) {
     QSettings preferences;
@@ -461,6 +546,7 @@ int main(int argc, char **argv) {
     QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, directory.path());
     QSettings::setPath(QSettings::IniFormat, QSettings::SystemScope, directory.path());
     try {
+        paginationTransitions();
         isolation();
         presenterLifetime();
         cardDetailsPresentation();

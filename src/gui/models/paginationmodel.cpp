@@ -39,31 +39,10 @@ void PaginationModel::_endSourceChange()
     bool oldBack = _preCanGoBack;
     bool oldFwd = _preCanGoForward;
 
-    int newPageCount, firstRow, rangeEnd;
-    if (!newRowCount) {
-        newPageCount = firstRow = rangeEnd = 0;
-        _currentPage = -1;
-    } else {
-        newPageCount = (newRowCount + _maxRows - 1) / _maxRows;
-        if (oldPage < 0) {
-            _currentPage = 0;
-            firstRow = 0;
-        } else {
-            firstRow = oldPage * _maxRows;
-        }
-
-        if (firstRow >= newRowCount)
-            firstRow = ((newRowCount - 1) / _maxRows) * _maxRows;
-
-        rangeEnd = firstRow + _maxRows;
-        if (rangeEnd > newRowCount) {
-            rangeEnd = newRowCount;
-            _currentPage = (newRowCount - 1) / _maxRows;
-        }
-    }
-
-    _firstRow = firstRow;
-    _rangeEnd = rangeEnd;
+    const int newPageCount = pageCount();
+    _currentPage = newPageCount ? std::clamp(_currentPage, 0, newPageCount - 1) : -1;
+    _firstRow = newPageCount ? _currentPage * _maxRows : 0;
+    _rangeEnd = _firstRow + std::min(_maxRows, newRowCount - _firstRow);
     invalidateFilter();
 
     if (oldPageCount != newPageCount)
@@ -75,36 +54,12 @@ void PaginationModel::_endSourceChange()
     _emitCanChange(oldBack, oldFwd);
 }
 
-void PaginationModel::_setCurrentPage(int page, bool force)
+void PaginationModel::_setCurrentPage(int page)
 {
     if (!sourceModel()) return;
-
-    int rowCount = sourceModel()->rowCount();
-    int firstRow, rangeEnd;
-
-    if (rowCount <= 0) {
-        firstRow = rangeEnd = 0;
-    } else {
-        firstRow = page * _maxRows;
-        if (firstRow >= rowCount)
-            firstRow = ((rowCount - 1) / _maxRows) * _maxRows;
-        rangeEnd = firstRow + _maxRows;
-        if (rangeEnd > rowCount)
-            rangeEnd = rowCount;
-    }
-
-    _firstRow = firstRow;
-    _rangeEnd = rangeEnd;
-
-    int newPage = (firstRow / _maxRows);
-    if (_currentPage != newPage || force) {
-        bool oldBack = canGoBack();
-        bool oldFwd = canGoForward();
-        _currentPage = newPage;
-        invalidateFilter();
-        emit currentPageChanged(newPage);
-        _emitCanChange(oldBack, oldFwd);
-    }
+    _beginSourceChange();
+    _currentPage = page;
+    _endSourceChange();
 }
 
 int PaginationModel::maxRows() const
@@ -120,20 +75,9 @@ void PaginationModel::setMaxRows(int maxRows)
         return;
     }
 
-    int oldPageCount = pageCount();
-    bool oldBack = canGoBack();
-    bool oldFwd = canGoForward();
-
+    _beginSourceChange();
     _maxRows = maxRows;
-
-    invalidateFilter();
-    _setCurrentPage(std::max(0, _currentPage), true);
-
-    int newPageCount = pageCount();
-    if (oldPageCount != newPageCount) {
-        emit pageCountChanged(newPageCount);
-        _emitCanChange(oldBack, oldFwd);
-    }
+    _endSourceChange();
 }
 
 bool PaginationModel::canGoBack() const
@@ -171,7 +115,7 @@ int PaginationModel::pageCount() const
 {
     if (sourceModel()) {
         int rows = sourceModel()->rowCount();
-        return (rows + _maxRows - 1) / _maxRows;
+        return rows ? 1 + (rows - 1) / _maxRows : 0;
     }
     return 0;
 }
@@ -197,16 +141,14 @@ void PaginationModel::setSourceModel(QAbstractItemModel* model)
     QAbstractItemModel* old = sourceModel();
     if (old == model) return;
 
+    _beginSourceChange();
     if (old) {
         disconnect(old, nullptr, this, nullptr);
-        _currentPage = -1;
     }
 
     QSortFilterProxyModel::setSourceModel(model);
 
-    if (!model) {
-        _firstRow = _rangeEnd = 0;
-    } else {
+    if (model) {
         connect(model, &QAbstractItemModel::rowsAboutToBeRemoved, this, &PaginationModel::_beginSourceChange);
         connect(model, &QAbstractItemModel::rowsAboutToBeInserted, this, &PaginationModel::_beginSourceChange);
         connect(model, &QAbstractItemModel::layoutAboutToBeChanged, this, &PaginationModel::_beginSourceChange);
@@ -216,7 +158,7 @@ void PaginationModel::setSourceModel(QAbstractItemModel* model)
         connect(model, &QAbstractItemModel::rowsInserted, this, &PaginationModel::_endSourceChange);
         connect(model, &QAbstractItemModel::layoutChanged, this, &PaginationModel::_endSourceChange);
         connect(model, &QAbstractItemModel::modelReset, this, &PaginationModel::_endSourceChange);
-
-        _setCurrentPage(std::max(0, _currentPage));
     }
+    _currentPage = -1;
+    _endSourceChange();
 }

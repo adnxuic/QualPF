@@ -148,8 +148,8 @@ void ReportWidget::generateHtml()
         };
 
         html += "<h3>Experimental Data</h3><table border='0' cellspacing='2'>";
-        html += infoRow("Filename",   fi.fileName().isEmpty() ? tr("-") : fi.fileName());
-        html += infoRow("File path",  fi.absolutePath().isEmpty() ? tr("-") : fi.absolutePath());
+        html += infoRow("Filename",   fi.fileName().isEmpty() ? tr("-") : fi.fileName().toHtmlEscaped());
+        html += infoRow("File path",  fi.absolutePath().isEmpty() ? tr("-") : fi.absolutePath().toHtmlEscaped());
 
         const auto file = qualpf::gui::workspaceContext(this).platform().fileInformation(pattern.source_id);
         if (file.exists)
@@ -245,7 +245,7 @@ void ReportWidget::generateHtml()
     html += optRow("Residual Search",  SearchOptionsDialog::savedResidualSearching(qualpf::gui::workspaceContext(this).workspace().session().snapshot(), qualpf::gui::workspaceContext(this).settings()) ? "Yes" : "No");
     html += optRow("Max Entries",      QString::number(SearchOptionsDialog::savedMaxEntries(qualpf::gui::workspaceContext(this).workspace().session().snapshot(), qualpf::gui::workspaceContext(this).settings())));
     if (m_hasRestraints)
-        html += optRow("Restraints", m_activeRestraints.join(", "));
+        html += optRow("Restraints", m_activeRestraints.join(", ").toHtmlEscaped());
     else
         html += optRow("Restraints", "None");
     html += "</table>";
@@ -274,12 +274,10 @@ void ReportWidget::generateHtml()
                             "<td align='right'>%6</td>"
                             "<td align='right'>%7</td>"
                             "</tr>")
-                        .arg(i + 1)
-                        .arg(bg, card.getId())
-                        .arg(name.toHtmlEscaped())
-                        .arg(card.getChemicalFormula().toHtmlEscaped())
-                        .arg(card.isFomCalculated() ? QString::number(card.getFom(),   'f', 4) : "-")
-                        .arg(card.isFomCalculated() ? QString::number(card.getScale(), 'f', 4) : "-");
+                        .arg(QString::number(i + 1), bg, card.getId().toHtmlEscaped(),
+                             name.toHtmlEscaped(), card.getChemicalFormula().toHtmlEscaped(),
+                             card.isFomCalculated() ? QString::number(card.getFom(),   'f', 4) : "-",
+                             card.isFomCalculated() ? QString::number(card.getScale(), 'f', 4) : "-");
         }
         html += "</table>";
     }

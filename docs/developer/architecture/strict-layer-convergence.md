@@ -26,6 +26,14 @@ Snapshot transport is test-only and cannot enter production dependency closures.
 Card details render repository metadata as literal text, escaping it at the HTML
 presentation boundary. The official COD link percent-encodes the card identifier
 as one URL path component; metadata cannot introduce additional links or markup.
+Reports likewise escape paths, identifiers and restraint summaries at their HTML
+boundary. Card metadata is substituted together so literal percent-number
+sequences cannot become later formatting placeholders, including when printed.
+
+Result pagination clamps its current page after filtering, row removal and page
+size changes, including exact full-page boundaries. Empty or detached sources
+have no current page. Source replacement notifies the page and navigation controls;
+these presentation changes never alter canonical candidate order.
 
 Plot Style owns fresh presentation drafts for the current observed/reflection
 series on every opening. Empty series disable their controls; changed series

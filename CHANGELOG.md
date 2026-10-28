@@ -416,6 +416,14 @@ reports are no longer used for routine development.
 
 ### Fixed
 
+- Keep result pagination and navigation consistent after filtering, removing a
+  complete trailing page, clearing results or replacing the source model. Empty
+  results have no current page, and large page sizes avoid integer overflow.
+
+- Render report file paths, card identifiers and restraints as literal text.
+  Preserve angle brackets, entities and percent-number sequences in card metadata
+  through report display and PDF printing without introducing markup or links.
+
 - Display database card metadata literally in the card browser, preserving angle
   brackets, ampersands and tag-like names/authors instead of interpreting them as
   HTML. Encode card identifiers in the official COD link.

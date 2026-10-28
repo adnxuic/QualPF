@@ -1,5 +1,22 @@
 {
   "schema": "qualpf.agent_task_state.v1",
   "baseline_ref": "docs/developer/project-baseline.json",
-  "active_task": null
+  "active_task": {
+    "id": "final-repository-pre-push-review",
+    "goal": "Review the complete current repository before publication, fix proven maintenance defects, and verify the resulting revision without pushing or publishing.",
+    "in_scope": ["src/**", "apps/**", "tests/**", "tools/**", "cmake/**", "scripts/**", "deploy/**", "docs/**", ".github/**", "CHANGELOG.md", ".agent/TASK_STATE.json", "CMakeLists.txt", "CMakePresets.json"],
+    "out_of_scope": ["PFSM implementation changes", "Numerical algorithm or precision changes", "Threading model changes", "Frozen evidence or independent expectation changes", "Push, publication, remote changes or history rewriting"],
+    "status": "in_progress",
+    "base_commit": "b7cf816e6ba0fa444c94b23d98a8025d86f8bbcf",
+    "checkpoint_commit": null,
+    "completed": ["Reviewed current code layers, persistence/import/export boundaries, build/CI/release inputs and documentation; all twelve initial integrity controls passed.", "Reproduced and repaired result pagination at exact/empty/detached-source boundaries and report literal-text/format-placeholder handling; native GUI regression and PDF printing pass.", "Updated the owning GUI contract, test guide and Unreleased changelog; existing release candidates predate recent fixes."],
+    "next_action": "Commit the verified GUI batch, rebuild its committed revision, and execute final native regression and release-source checks.",
+    "blockers": [],
+    "checks": [
+      {"command": "python -B build/final-repository-review-20261028/run_quality.py 01", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": "build/final-repository-review-20261028/quality-results-01.json"},
+      {"command": "ctest --test-dir build/pre-release-audit-20261028/windows-gnu -R ^qualpf.gui.workspace_context$ (pagination negative control)", "result": "FAIL", "kind": "FRESH_VALIDATION", "evidence_ref": "build/final-repository-review-20261028/pagination-before-02.xml"},
+      {"command": "ctest --test-dir build/pre-release-audit-20261028/windows-gnu -R ^qualpf.gui.workspace_context$ (report negative control)", "result": "FAIL", "kind": "FRESH_VALIDATION", "evidence_ref": "build/final-repository-review-20261028/report-before-01.xml"},
+      {"command": "ctest --test-dir build/pre-release-audit-20261028/windows-gnu -R ^qualpf.gui.workspace_context$", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": "build/final-repository-review-20261028/report-after-01.xml"}
+    ]
+  }
 }
