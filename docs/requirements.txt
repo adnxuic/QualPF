@@ -1,2 +1,4 @@
 mkdocs==1.6.1
 mkdocs-material==9.7.6
+pymdown-extensions==12.3
+latex2mathml==3.78.1

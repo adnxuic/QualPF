@@ -5,6 +5,9 @@ docs_dir: user
 site_dir: site
 use_directory_urls: false
 
+hooks:
+  - ../tools/documentation/render_mathml.py
+
 theme:
   name: material
   logo: images/qualpf.png
@@ -49,6 +52,8 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.highlight
   - tables
+  - pymdownx.arithmatex:
+      preview: false
   - toc:
       permalink: true
 

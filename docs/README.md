@@ -31,6 +31,7 @@ From the repository root:
 
 ```sh
 python -m pip install -r docs/requirements.txt
+python -B tests/unit/tools/documentation_math_test.py -v
 python -m mkdocs build --strict -f docs/mkdocs.yml
 python -B tools/documentation/build_manual.py
 ```
@@ -43,6 +44,15 @@ Both preserve navigation order, resolve page/section links to internal PDF
 destinations and produce `build/documentation/qualpf_manual-provenance.json`.
 That proof binds all user sources, the builder, publication configuration and
 distribution metadata. A change to any bound input requires regeneration.
+
+Inline and display TeX are parsed by Arithmatex and converted at build time to
+native MathML by [the local hook](../tools/documentation/render_mathml.py), using
+the pinned [latex2mathml](https://github.com/roniemartinez/latex2mathml) build
+dependency. Browsers render the resulting formulas without a mathematics script
+or network request. Code examples and escaped dollar signs remain literal;
+unconvertible formulas fail the site build. The PDF keeps the same original TeX
+sources and its existing Pandoc/XeLaTeX path. Both documentation workflows test
+formula rendering before building the site.
 
 ## Manual source and artwork
 
