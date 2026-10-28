@@ -93,6 +93,32 @@ void paginationTransitions() {
     pages.setMaxRows(std::numeric_limits<int>::max());
     check(pages.pageCount() == 1 && pages.currentPage() == 0 && pages.rowCount() == 3,
           "large page sizes preserve valid page counts without integer overflow");
+
+    pages.setMaxRows(2);
+    for (bool last : {false, true}) {
+        {
+            QStandardItemModel temporary(6, 1);
+            pages.setSourceModel(&temporary);
+            if (last) pages.lastPage();
+            currentSignals = countSignals = backSignals = forwardSignals = 0;
+        }
+        check(!pages.sourceModel() && pages.currentPage() == -1 && pages.pageCount() == 0 &&
+                  pages.rowCount() == 0 && !pages.canGoBack() && !pages.canGoForward() &&
+                  currentSignals == 1 && countSignals == 1 &&
+                  backSignals == int(last) && forwardSignals == int(!last),
+              "source destruction clears the page and notifies both navigation directions");
+    }
+    {
+        QStandardItemModel oldSource(6, 1);
+        pages.setSourceModel(&oldSource);
+        pages.setSourceModel(&filter);
+        pages.lastPage();
+        currentSignals = countSignals = backSignals = forwardSignals = 0;
+    }
+    check(pages.sourceModel() == &filter && pages.currentPage() == 1 && pages.pageCount() == 2 &&
+              pages.rowCount() == 1 && currentSignals == 0 && countSignals == 0 &&
+              backSignals == 0 && forwardSignals == 0,
+          "destroying a detached source does not change its replacement");
 }
 void isolation() {
     infrastructure::QtPreferenceStore preferencesStore;

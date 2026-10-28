@@ -416,6 +416,9 @@ reports are no longer used for routine development.
 
 ### Fixed
 
+- Clear the result page and notify navigation controls when its source model is
+  destroyed; destroying a detached source leaves its replacement unchanged.
+
 - Propagate PDF-2 SQL preparation, insert and transaction failures to database
   construction callers, preventing incomplete builds from being reported as
   successful. Preserve successful database bytes and partial commits on cancel.

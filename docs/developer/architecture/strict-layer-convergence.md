@@ -32,8 +32,8 @@ sequences cannot become later formatting placeholders, including when printed.
 
 Result pagination clamps its current page after filtering, row removal and page
 size changes, including exact full-page boundaries. Empty or detached sources
-have no current page. Source replacement notifies the page and navigation controls;
-these presentation changes never alter canonical candidate order.
+have no current page. Source replacement and destruction notify the page and
+navigation controls; these presentation changes never alter canonical candidate order.
 
 Plot Style owns fresh presentation drafts for the current observed/reflection
 series on every opening. Empty series disable their controls; changed series

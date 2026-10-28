@@ -1,5 +1,38 @@
 {
   "schema": "qualpf.agent_task_state.v1",
   "baseline_ref": "docs/developer/project-baseline.json",
-  "active_task": null
+  "active_task": {
+    "id": "final-release-repository-audit-20261028",
+    "goal": "Review the complete current repository before release, repair proven maintenance defects, and verify the resulting local revision without pushing.",
+    "in_scope": [
+      "apps/**", "src/**", "tests/**", "tools/**", "scripts/**", "cmake/**",
+      "deploy/**", ".github/**", "docs/**", ".agent/TASK_STATE.json",
+      "CMakeLists.txt", "CMakePresets.json", "CHANGELOG.md", "README.md",
+      ".gitignore", "install.sh"
+    ],
+    "out_of_scope": [
+      "PFSM, numerical algorithm, threading, persistence-format or approved scientific behavior changes",
+      "Frozen evidence, original failures, third-party source modifications and dependency upgrades",
+      "Remote changes, pushing, publication, history rewriting and storage cleanup"
+    ],
+    "status": "in_progress",
+    "base_commit": "f48517e68e54f2f3155ffd356364fb95101a2524",
+    "checkpoint_commit": null,
+    "completed": [
+      "Read repository policies and current architecture, numerical and build authorities; confirmed a clean starting worktree.",
+      "Fresh repository controls and 169 independent reference checks pass; original sandbox permission failures remain in the audit logs with successful unchanged reruns.",
+      "Reproduced stale pagination after source destruction, corrected navigation publication and added first/last-page and detached-source controls.",
+      "Windows GNU product and all normal test targets built; the affected workspace GUI regression passes."
+    ],
+    "next_action": "Commit the verified pagination batch, then run the complete Windows GNU normal suite and cross-platform GUI/release checks.",
+    "blockers": [],
+    "checks": [
+      {"command": "pagination destruction probe before repair", "result": "FAIL", "kind": "FRESH_VALIDATION", "evidence_ref": "build/release-final-pass-20261028/pagination-probe-before.log"},
+      {"command": "pagination destruction probe after repair", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": "build/release-final-pass-20261028/pagination-probe-after.log"},
+      {"command": "cmake --build --preset windows-gnu --parallel 4", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": "build/release-final-pass-20261028/gnu-build-01.log"},
+      {"command": "ctest --test-dir build/windows-gnu -R '^qualpf.gui.workspace_context$' --no-tests=error --output-on-failure", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": "build/release-final-pass-20261028/gnu-pagination-01.xml"},
+      {"command": "python -m mkdocs build --strict -f docs/mkdocs.yml", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": "build/release-final-pass-20261028/mkdocs-01.log"},
+      {"command": "python -B tests/unit/tools/linux_packaging_test.py -v (native Linux)", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": "build/release-final-pass-20261028/linux-packaging-01.log"}
+    ]
+  }
 }

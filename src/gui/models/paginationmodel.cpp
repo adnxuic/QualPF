@@ -52,6 +52,10 @@ void PaginationModel::_endSourceChange()
         emit currentPageChanged(_currentPage);
 
     _emitCanChange(oldBack, oldFwd);
+
+    // Qt clears sourceModel before our destroyed connection runs. Retain the
+    // latest observable state so that destruction can notify the empty state.
+    _beginSourceChange();
 }
 
 void PaginationModel::_setCurrentPage(int page)
@@ -158,6 +162,7 @@ void PaginationModel::setSourceModel(QAbstractItemModel* model)
         connect(model, &QAbstractItemModel::rowsInserted, this, &PaginationModel::_endSourceChange);
         connect(model, &QAbstractItemModel::layoutChanged, this, &PaginationModel::_endSourceChange);
         connect(model, &QAbstractItemModel::modelReset, this, &PaginationModel::_endSourceChange);
+        connect(model, &QObject::destroyed, this, &PaginationModel::_endSourceChange);
     }
     _currentPage = -1;
     _endSourceChange();

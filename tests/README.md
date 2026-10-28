@@ -210,8 +210,8 @@ entities and link-like text through the real card-selection signal. It checks
 literal text, the encoded official COD destination and unchanged canonical state.
 The same control checks empty/reopened Plot Style controls, current visibility
 drafts, invalid indices and series changes before default restoration.
-It also checks exact-boundary pagination after filtering/removal, empty and
-detached sources, navigation notifications and large page sizes. Report checks
+It also checks exact-boundary pagination after filtering/removal, source destruction,
+empty and detached sources, navigation notifications and large page sizes. Report checks
 preserve literal paths, card metadata (including percent-number sequences) and
 restraints without active links, print the real document to PDF and verify that
 the canonical snapshot is unchanged.
