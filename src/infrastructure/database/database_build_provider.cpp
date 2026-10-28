@@ -27,7 +27,7 @@ public:
             });
         const bool result = reader_.parse(path_);
         QObject::disconnect(connection);
-        return result;
+        return result && writer_.succeeded();
     }
     void cancel() override { reader_.cancel(); }
 };

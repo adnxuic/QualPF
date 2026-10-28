@@ -86,6 +86,12 @@ Progress is coalesced and queued; obsolete messages are ignored. SQLite connecti
 are created, used, closed and removed in their executing thread, with unique names.
 A nonblocking reference-read guard excludes managed writes through publication.
 
+The PDF-2 writer latches every SQL preparation, insert and transaction result;
+its provider reports success only when both parsing and writing succeed. GUI
+registration and CLI success therefore refuse a failed build. Existing write
+order, successful records and partial-commit cancellation semantics remain;
+this error propagation does not make the four-file writer an atomic transaction.
+
 PFSM consumes a source-bound, explicitly declared continuous observation problem
 and uses an explicit fixed width, compatible manual measurement or automatic
 geometric FWHM without formal peak extraction. SQL finishes before the

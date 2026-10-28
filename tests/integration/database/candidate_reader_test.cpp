@@ -1,4 +1,6 @@
 #include "infrastructure/database/qt_sql/sql_reference_repository.h"
+#include "infrastructure/database/database_build_provider.h"
+#include "infrastructure/database/qt_sql/pdf2_database_writer.h"
 #include "classic_fixture.h"
 #include <QCoreApplication>
 #include <QSqlDatabase>
@@ -6,6 +8,7 @@
 #include <QSqlQuery>
 #include <QTemporaryDir>
 #include <QFileInfo>
+#include <QFile>
 #include "infrastructure/settings/database_settings.h"
 #include <bit>
 #include <cmath>
@@ -32,6 +35,74 @@ static void file(const QString &path, const QStringList &statements) {
         db.close();
     }
     QSqlDatabase::removeDatabase(name);
+}
+static void pdfWriteFailures(const QString &directory) {
+    const auto record = [](char kind, std::initializer_list<std::pair<int, QByteArray>> fields) {
+        QByteArray bytes(80, ' ');
+        bytes.replace(72, 6, "990001");
+        bytes[79] = kind;
+        for (const auto &[offset, value] : fields) bytes.replace(offset, value.size(), value);
+        return bytes;
+    };
+    const auto bytes = record('1', {{0,"  4.00000"},{9,"  4.00000"},{18,"  4.00000"},{78,"C"}}) +
+                       record('3', {{0,"P 1"}}) + record('5', {{0,"I"}}) +
+                       record('6', {{0,"Independent SQL failure fixture"}}) + record('7', {{0,"Co O"}}) +
+                       record('I', {{0,"4.00000"},{7,"100"}}) + record('K', {});
+    const auto source = directory + "/pdf-sql-failure.dat";
+    {
+        QFile input(source);
+        check(input.open(QIODevice::WriteOnly) && input.write(bytes) == bytes.size());
+    }
+    infrastructure::QtDatabaseBuildProvider provider;
+    const auto good = directory + "/pdf-good";
+    auto successful = provider.preparePdf(good.toStdString(), source.toStdString());
+    check(successful && successful->parse({}));
+    successful.reset();
+    check(infrastructure::ReferenceDatabaseInfo::queryEntries(good) == 1);
+    int index = 0;
+    for (const auto &[suffix, table] : std::vector<std::pair<QString, QString>>{
+             {".sq", "chemical"}, {".sq", "id"}, {".sq", "subfiles"}, {".sq", "infodb"},
+             {".sq.info", "info"}, {".sq.info", "spgrstat"}, {".sq.search", "top"},
+             {".sq.infostat", "stat_a"}, {".sq.infostat", "stat_spgr"}}) {
+        const auto base = directory + QString("/pdf-failure-%1").arg(index++);
+        auto build = provider.preparePdf(base.toStdString(), source.toStdString());
+        check(bool(build));
+        file(base + suffix, {QString("CREATE TRIGGER reject_insert BEFORE INSERT ON \"%1\" "
+                                    "BEGIN SELECT RAISE(ABORT, 'independent injected write failure'); END").arg(table)});
+        if (build->parse({}))
+            throw std::runtime_error("PDF2 reported success after a failed SQL write to " + (suffix + ":" + table).toStdString());
+    }
+    for (const bool failCommit : {false, true}) {
+        const auto base = directory + (failCommit ? "/pdf-commit-failure" : "/pdf-begin-failure");
+        auto build = provider.preparePdf(base.toStdString(), source.toStdString());
+        check(bool(build));
+        bool injected = false;
+        for (const auto &name : QSqlDatabase::connectionNames()) {
+            auto db = QSqlDatabase::database(name, false);
+            if (db.databaseName() != base + ".sq") continue;
+            if (failCommit) {
+                QSqlQuery query(db);
+                check(query.exec("PRAGMA foreign_keys=ON"));
+                check(query.exec("CREATE TABLE commit_parent(id INTEGER PRIMARY KEY)"));
+                check(query.exec("CREATE TABLE commit_child(id INTEGER REFERENCES commit_parent(id) "
+                                 "DEFERRABLE INITIALLY DEFERRED)"));
+                check(query.exec("CREATE TRIGGER defer_failure AFTER INSERT ON id "
+                                 "BEGIN INSERT INTO commit_child VALUES(99); END"));
+            } else {
+                check(db.transaction());
+            }
+            injected = true;
+        }
+        check(injected && !build->parse({}));
+    }
+    infrastructure::SqlSchemaBuilder schema;
+    check(schema.create(directory + "/pdf-prepare-failure", infrastructure::SqlSchemaBuilder::DbType::Pdf2));
+    {
+        QSqlQuery query(schema.mainDb());
+        check(query.exec("DROP TABLE chemical"));
+    }
+    infrastructure::Pdf2DatabaseWriter writer(&schema);
+    check(!writer.succeeded());
 }
 static void scoredStages(const QString &directory) {
     const auto base = directory + "/scored";
@@ -432,6 +503,7 @@ int main(int argc, char **argv) try {
     auto failed = reader.read(query, context, {});
     check(!failed);
     reader.closeDatabeses();
+    pdfWriteFailures(dir.path());
     scoredStages(dir.path());
     pfsmPairs(dir.path());
     std::cout << "PASS: owned unscored rows, saved strongest index, metadata browse, cancellation and SQL "

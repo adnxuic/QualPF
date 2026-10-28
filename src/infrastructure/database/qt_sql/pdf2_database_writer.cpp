@@ -20,33 +20,33 @@ Pdf2DatabaseWriter::Pdf2DatabaseWriter(SqlSchemaBuilder *db, QObject *parent)
     , m_db(db)
 {
     m_chemQuery = QSqlQuery(m_db->mainDb());
-    m_chemQuery.prepare(
-        "INSERT OR IGNORE INTO chemical (id, chemical_element) VALUES (?, ?)");
+    checked(m_chemQuery.prepare(
+        "INSERT OR IGNORE INTO chemical (id, chemical_element) VALUES (?, ?)"));
 
     m_idQuery = QSqlQuery(m_db->mainDb());
-    m_idQuery.prepare(
+    checked(m_idQuery.prepare(
         "INSERT INTO id "
         "(id, name, mineralname, chemical_formula, spacegroup, quality, rir, "
         " nrec, dvalue, intensita, nd, bestdval, n) "
-        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"));
 
     m_subQuery = QSqlQuery(m_db->mainDb());
-    m_subQuery.prepare(
-        "INSERT OR IGNORE INTO subfiles (id, subfile) VALUES (?, ?)");
+    checked(m_subQuery.prepare(
+        "INSERT OR IGNORE INTO subfiles (id, subfile) VALUES (?, ?)"));
 
     // info table is in .sq.info (shared schema with CifFiles)
     m_infoQuery = QSqlQuery(m_db->infoDb());
-    m_infoQuery.prepare(
+    checked(m_infoQuery.prepare(
         "INSERT OR IGNORE INTO info "
         "(id, authors, journal, journal_year, journal_volume, journal_issue, "
         " page_start, page_end, color, crystal_density, z, spacegroup, type, "
         " volume, density, \"mu(CuKa)\", natoms, nreflections, "
         " a, b, c, alpha, beta, gamma, rir, h, k, l, mul) "
-        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"));
 
     m_topQuery = QSqlQuery(m_db->searchDb());
-    m_topQuery.prepare(
-        "INSERT OR IGNORE INTO top (id, n, dval) VALUES (?, ?, ?)");
+    checked(m_topQuery.prepare(
+        "INSERT OR IGNORE INTO top (id, n, dval) VALUES (?, ?, ?)"));
 }
 
 // -----------------------------------------------------------------------
@@ -101,13 +101,13 @@ void Pdf2DatabaseWriter::onFinished(int totalCards)
 
     // Populate infodb: one row with creation date, card count, type, source
     QSqlQuery q(m_db->mainDb());
-    q.prepare("INSERT INTO infodb (id, date, ncard, type, source) VALUES (?, ?, ?, ?, ?)");
+    checked(q.prepare("INSERT INTO infodb (id, date, ncard, type, source) VALUES (?, ?, ?, ?, ?)"));
     q.addBindValue(0);
     q.addBindValue(QDate::currentDate().toString(Qt::ISODate));
     q.addBindValue(totalCards);
     q.addBindValue(QStringLiteral("PDF2"));
     q.addBindValue(QStringLiteral("you"));
-    if (!q.exec())
+    if (!checked(q.exec()))
         qWarning() << "infodb INSERT error:" << q.lastError().text();
 
     populateSpgrStat();
@@ -131,7 +131,7 @@ void Pdf2DatabaseWriter::insertChemical(const Pdf2Card &card)
     for (const QString &el : elements) {
         m_chemQuery.addBindValue(numericId);
         m_chemQuery.addBindValue(el);
-        if (!m_chemQuery.exec())
+        if (!checked(m_chemQuery.exec()))
             qWarning() << "chemical INSERT error:" << m_chemQuery.lastError().text()
                        << "id=" << card.id << "element=" << el;
     }
@@ -171,7 +171,7 @@ void Pdf2DatabaseWriter::insertId(const Pdf2Card &card, const QVector<Pdf2Peak> 
     m_idQuery.addBindValue(strOrNull(bestd));
     m_idQuery.addBindValue(m_rowCounter);
 
-    if (!m_idQuery.exec())
+    if (!checked(m_idQuery.exec()))
         qWarning() << "id INSERT error:" << m_idQuery.lastError().text() << "id=" << card.id;
 }
 
@@ -229,7 +229,7 @@ void Pdf2DatabaseWriter::insertInfo(const Pdf2Card &card)
     m_infoQuery.addBindValue(emptyBlob);  // l   BLOB NOT NULL
     m_infoQuery.addBindValue(emptyBlob);  // mul BLOB NOT NULL
 
-    if (!m_infoQuery.exec())
+    if (!checked(m_infoQuery.exec()))
         qWarning() << "info INSERT error:" << m_infoQuery.lastError().text() << "id=" << card.id;
 }
 
@@ -246,7 +246,7 @@ void Pdf2DatabaseWriter::insertSubfiles(const Pdf2Card &card)
     for (const QString &code : card.subfiles) {
         m_subQuery.addBindValue(numericId);
         m_subQuery.addBindValue(code);
-        if (!m_subQuery.exec())
+        if (!checked(m_subQuery.exec()))
             qWarning() << "subfiles INSERT error:" << m_subQuery.lastError().text()
                        << "id=" << card.id << "code=" << code;
     }
@@ -302,7 +302,7 @@ void Pdf2DatabaseWriter::insertTop(const Pdf2Card &card, const QVector<Pdf2Peak>
     m_topQuery.addBindValue(card.id.toInt());
     m_topQuery.addBindValue(n);
     m_topQuery.addBindValue(dval);
-    if (!m_topQuery.exec())
+    if (!checked(m_topQuery.exec()))
         qWarning() << "top INSERT error:" << m_topQuery.lastError().text() << "id=" << card.id;
 }
 
@@ -324,17 +324,17 @@ void Pdf2DatabaseWriter::insertTop(const Pdf2Card &card, const QVector<Pdf2Peak>
 
 void Pdf2DatabaseWriter::beginTransaction()
 {
-    m_db->mainDb().transaction();
-    m_db->infoDb().transaction();
-    m_db->searchDb().transaction();
+    checked(m_db->mainDb().transaction());
+    checked(m_db->infoDb().transaction());
+    checked(m_db->searchDb().transaction());
     m_inTransaction = true;
 }
 
 void Pdf2DatabaseWriter::commitTransaction()
 {
-    m_db->mainDb().commit();
-    m_db->infoDb().commit();
-    m_db->searchDb().commit();
+    checked(m_db->mainDb().commit());
+    checked(m_db->infoDb().commit());
+    checked(m_db->searchDb().commit());
     m_inTransaction = false;
 }
 
@@ -350,9 +350,9 @@ void Pdf2DatabaseWriter::populateSpgrStat()
 {
     QSqlDatabase db = m_db->infoDb();
     QSqlQuery q(db);
-    q.prepare("INSERT INTO spgrstat (spacegroup, type, ids, n) VALUES (?, ?, ?, ?)");
+    checked(q.prepare("INSERT INTO spgrstat (spacegroup, type, ids, n) VALUES (?, ?, ?, ?)"));
 
-    db.transaction();
+    checked(db.transaction());
     for (auto it = m_spgrStat.cbegin(); it != m_spgrStat.cend(); ++it) {
         const QString     &sg  = it.key().first;
         const QString     &sys = it.key().second;
@@ -363,10 +363,10 @@ void Pdf2DatabaseWriter::populateSpgrStat()
         q.addBindValue(ids.join(QLatin1Char(',')));
         q.addBindValue(ids.size());
 
-        if (!q.exec())
+        if (!checked(q.exec()))
             qWarning() << "spgrstat INSERT error:" << q.lastError().text() << sg;
     }
-    db.commit();
+    checked(db.commit());
 
     qDebug() << "populateSpgrStat: inserted" << m_spgrStat.size() << "rows.";
 }
@@ -526,34 +526,34 @@ void Pdf2DatabaseWriter::insertNumTable(QSqlDatabase &db, const QString &table,
                                        const QMap<double, QStringList> &data)
 {
     QSqlQuery q(db);
-    q.prepare(QStringLiteral("INSERT INTO \"%1\" (val, ids, n) VALUES (?, ?, ?)").arg(table));
+    checked(q.prepare(QStringLiteral("INSERT INTO \"%1\" (val, ids, n) VALUES (?, ?, ?)").arg(table)));
 
-    db.transaction();
+    checked(db.transaction());
     for (auto it = data.cbegin(); it != data.cend(); ++it) {
         q.addBindValue(it.key());
         q.addBindValue(it.value().join(QLatin1Char(',')));
         q.addBindValue(it.value().size());
-        if (!q.exec())
+        if (!checked(q.exec()))
             qWarning() << table << "INSERT error:" << q.lastError().text();
     }
-    db.commit();
+    checked(db.commit());
 }
 
 void Pdf2DatabaseWriter::insertTxtTable(QSqlDatabase &db, const QString &table,
                                        const QMap<QString, QStringList> &data)
 {
     QSqlQuery q(db);
-    q.prepare(QStringLiteral("INSERT INTO \"%1\" (val, ids, n) VALUES (?, ?, ?)").arg(table));
+    checked(q.prepare(QStringLiteral("INSERT INTO \"%1\" (val, ids, n) VALUES (?, ?, ?)").arg(table)));
 
-    db.transaction();
+    checked(db.transaction());
     for (auto it = data.cbegin(); it != data.cend(); ++it) {
         q.addBindValue(it.key());
         q.addBindValue(it.value().join(QLatin1Char(',')));
         q.addBindValue(it.value().size());
-        if (!q.exec())
+        if (!checked(q.exec()))
             qWarning() << table << "INSERT error:" << q.lastError().text();
     }
-    db.commit();
+    checked(db.commit());
 }
 
 } // namespace qualpf::infrastructure

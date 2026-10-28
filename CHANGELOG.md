@@ -416,6 +416,12 @@ reports are no longer used for routine development.
 
 ### Fixed
 
+- Propagate PDF-2 SQL preparation, insert and transaction failures to database
+  construction callers, preventing incomplete builds from being reported as
+  successful. Preserve successful database bytes and partial commits on cancel.
+  Correct existing-database registration and report-content instructions and
+  regenerate the bundled offline manual with current source provenance.
+
 - Keep result pagination and navigation consistent after filtering, removing a
   complete trailing page, clearing results or replacing the source model. Empty
   results have no current page, and large page sizes avoid integer overflow.

@@ -28,8 +28,8 @@ Choose **S&M > Manage Databases** from the menu bar to open the **Manage Databas
 | :--- | :--- |
 | **Rename** | Edits the display name (**Database** column) of the currently highlighted row without renaming files on disk. |
 | **Add** | Opens a file browser to register an existing QualPF/QualX database file (`*.sq`) already present on disk. QualPF automatically validates the required companion files in the same folder. |
-| **Create** | Opens the **Create Database** dialog to compile a new searchable database from COD, ICDD PDF-2, or user CIF sources. |
-| **Delete** | Removes the selected database(s) from QualPF's catalog. The confirmation prompt includes an optional checkbox: **Also delete database files from disk (.sq, .sq.info, .sq.infostat, .sq.search)**. This checkbox starts checked. Uncheck it to unregister the database while keeping its files on disk. |
+| **Create** | Opens the **Create Database** dialog to register an existing COD/QualX `.sq` database or build a new database from ICDD PDF-2 or user CIF inputs. |
+| **Delete** | Removes the selected database from QualPF's catalog. The confirmation prompt includes an optional checkbox: **Also delete database files from disk (.sq, .sq.info, .sq.infostat, .sq.search)**. This checkbox starts checked. Uncheck it to unregister the database while keeping its files on disk. |
 | **Quit** | Saves changes to the active database catalog and closes the dialog. |
 
 ---
@@ -56,6 +56,7 @@ Click **Create** inside **Manage Databases** to open the **Create Database** dia
 ![Create Database dialog showing COD, ICDD PDF, and User CIF/QualX source options](images/create-database.png)
 
 The **Create Database** dialog is organized into two sections:
+
 1. **Input source selection** (top three mutually exclusive group boxes: **COD database**, **ICDD PDF**, and **User database**). Checking one source group automatically unchecks the other two.
 2. **Output destination settings** (**Database name** and **Database folder** at the bottom).
 
@@ -63,15 +64,15 @@ The **Create Database** dialog is organized into two sections:
 
 | Section / Parameter | Default | Options / Format | Role and Effect |
 | :--- | :--- | :--- | :--- |
-| **COD database** (group checkbox) | Checked | Enabled / Disabled | Selects a pre-packaged Crystallography Open Database (`*.sq`) archive or source file for import and search-index generation. |
+| **COD database** (group checkbox) | Checked | Enabled / Disabled | Registers an existing COD `.sq` database with its three companion files at their current location. Unpack downloaded archives first; registration does not copy files or rebuild indexes. |
 | **COD file** | Empty | Path to `*.sq` | Path to the input COD `.sq` file. Click **...** to browse. |
 | **ICDD PDF** (group checkbox) | Unchecked | Enabled / Disabled | Selects an official ICDD Powder Diffraction File (PDF-2) distribution in NBS*AIDS83 ASCII format for conversion into a QualPF SQLite database. |
 | **PDF file** | Empty | Path to `*.dat` | Path to the licensed ICDD PDF-2 `.dat` file in NBS*AIDS83 format. |
-| **User database** (group checkbox) | Unchecked | Enabled / Disabled | Builds a custom user database either from a folder of Crystallographic Information Files (`.cif`) or from an existing `.sq` database file. |
+| **User database** (group checkbox) | Unchecked | Enabled / Disabled | Builds a database from a folder of Crystallographic Information Files (`.cif`) or registers an existing `.sq` database. |
 | **CIF files** (radio button) | Selected | Radio option | Compiles diffraction patterns and phase cards directly from `.cif` structure or powder files inside the chosen **CIF folder**. |
 | **CIF folder** | Empty | Directory path | Root folder containing `.cif` files to import. |
 | **Scan subfolders recursively** | Unchecked | Checked / Unchecked | When checked, QualPF traverses all nested subdirectories under **CIF folder** and imports every valid `.cif` file found. When unchecked, only `.cif` files in the top-level folder are imported. |
-| **QualX database (.sq)** (radio button) | Unselected | Radio option | Imports and re-indexes an existing custom `.sq` database file specified in **Database file**. |
+| **QualX database (.sq)** (radio button) | Unselected | Radio option | Registers the existing database specified in **Database file**, using its current files and indexes. |
 | **Database file** | Empty | Path to `*.sq` | Path to the custom `.sq` file when **QualX database (.sq)** is selected. |
 | **Database name** | `COD` | Text string | Base filename and initial display name for the generated database. |
 | **Automatic name** | Checked | Checked / Unchecked | Automatically sets **Database name** to `COD` (for COD sources), `PDF` (for ICDD PDF sources), or `USR` (for User CIF/database sources). Uncheck to enter a custom name (e.g., `MyLab_Ceramics`). |
@@ -89,16 +90,17 @@ Use this workflow if you already have a compiled database directory containing a
 1. Open **S&M > Manage Databases**.
 2. Click **Add**.
 3. Browse to the folder containing the database, select `<name>.sq`, and click **Open**.
-4. Verify that the **Use** checkbox in the new row is checked, then click **Quit**.
+4. Enter its display name when prompted.
+5. Check **Use** for the new row if you want to switch to it, then click **Quit**. The first registered database is selected automatically.
 
 ### 2. Installing the Crystallography Open Database (COD)
 
 1. Open **S&M > Manage Databases** and click **Create**.
 2. Keep **COD database** checked.
 3. Click **...** next to **COD file** and select the downloaded COD `.sq` file.
-4. Keep **Automatic name** (`COD`) and **Automatic folder** checked (or uncheck them to specify a custom name and output path).
-5. Click **OK** and wait for the progress dialog to finish building the search indexes.
-6. Ensure **Use** is checked next to `COD` in **Manage Databases**, then click **Quit**.
+4. Keep **Automatic name** (`COD`) checked or enter a custom display name. The existing database stays at the selected path; **Database folder** is not used for registration.
+5. Click **OK**. All three companion files must be present; QualPF registers their existing indexes.
+6. Check **Use** next to `COD` to select it in **Manage Databases**, then click **Quit**.
 
 ### 3. Building a Custom Database from Local CIF Files
 
@@ -111,3 +113,15 @@ When working with proprietary synthetic phases, newly refined crystal structures
 5. Check **Scan subfolders recursively** if your `.cif` files are organized into nested subdirectories.
 6. Uncheck **Automatic name** and enter a descriptive name (such as `USR_BatteryCathodes`).
 7. Click **OK**. QualPF parses each CIF entry, calculates reflection $d$-spacings, intensities, and reference RIR values where atomic structure data are present, and registers the resulting database in **Manage Databases**.
+
+### 4. Building an ICDD PDF-2 Database
+
+1. Open **S&M > Manage Databases > Create** and select **ICDD PDF**.
+2. Choose your PDF-2 `.dat` input in **PDF file**.
+3. Set **Database name** and **Database folder**, then click **OK**.
+4. After a successful build, select its **Use** checkbox and click **Quit**.
+
+A parsing or database write failure reports a failed build and does not register
+it as successful. Cancellation can leave already committed records in the output
+files; those partial files are not automatically registered. Keep the original
+input and rebuild into a suitable output location before using the database.

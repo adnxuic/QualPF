@@ -199,6 +199,11 @@ their predicates. Missing/closed metadata reads return defined empty information
 Catalogue metadata probes retain their unavailable sentinel and never create a
 missing database as a side effect.
 Closed card and metadata lookups also reject an unrelated Qt default connection.
+The same database control uses an independent synthetic PDF-2 record and real
+SQLite triggers to reject failed writes across nine card/metadata/index tables.
+It also rejects statement-preparation, transaction-start and deferred-constraint
+commit failures. The existing PDF-2 lifecycle control retains exact four-store
+success, repeat and partial-commit cancellation assertions.
 
 The workspace GUI control also renders card metadata containing HTML delimiters,
 entities and link-like text through the real card-selection signal. It checks

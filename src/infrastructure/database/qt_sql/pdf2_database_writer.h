@@ -35,12 +35,14 @@ class Pdf2DatabaseWriter : public QObject
 
 public:
     explicit Pdf2DatabaseWriter(SqlSchemaBuilder *db, QObject *parent = nullptr);
+    bool succeeded() const noexcept { return !m_failed; }
 
 public slots:
     void onCardReady(const Pdf2Card &card);
     void onFinished(int totalCards);
 
 private:
+    bool checked(bool success) { m_failed = m_failed || !success; return success; }
     void insertChemical(const Pdf2Card &card);
     void insertId(const Pdf2Card &card, const QVector<Pdf2Peak> &top6);
     void insertSubfiles(const Pdf2Card &card);
@@ -50,9 +52,9 @@ private:
     void populateSpgrStat();
     void accumulateInfoStat(const Pdf2Card &card);
     void populateInfoStat();
-    static void insertNumTable(QSqlDatabase &db, const QString &table,
+    void insertNumTable(QSqlDatabase &db, const QString &table,
                                const QMap<double,  QStringList> &data);
-    static void insertTxtTable(QSqlDatabase &db, const QString &table,
+    void insertTxtTable(QSqlDatabase &db, const QString &table,
                                const QMap<QString, QStringList> &data);
 
     // Transaction helpers
@@ -68,6 +70,7 @@ private:
     QSqlQuery m_topQuery;     // prepared INSERT for top table (.sq.search)
 
 
+    bool  m_failed        = false;
     bool  m_inTransaction = false;
     int   m_cardCount     = 0;
     int   m_rowCounter    = 0;  // sequential 'n' primary key for id table

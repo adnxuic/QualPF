@@ -163,9 +163,13 @@ Switch to the **Report** dock (**Window > Report**) to view a comprehensive, pub
 ![Report dock displaying pattern summary, preprocessing settings, active restraints, accepted phases, RIR quantification table, and experimental peak table](../images/report-dock.png)
 
 The **Report** document updates automatically as you accept phases or refine RIR values and includes:
+
 1. **Pattern & Radiation Summary** — Source filename, angular calculation range, radiation kind, and $\lambda_1 / \lambda_2$ wavelengths.
 2. **Data-Reduction & Peak Search Parameters** — Active angular interval, intensity threshold, sensitivity, and restraints summary.
-3. **Accepted Phases & Quantitative Breakdown** — Card IDs, chemical/mineral names, formulas, FOM scores, active RIR values, RIR provenance, and normalized `Wt.%`.
-4. **Experimental Peak List & Reflection Assignments** — Complete tabular listing of experimental reflections ($2\theta$, $d$, relative intensity, FWHM) and matched phase reflections.
+3. **Search Results & Quantitative Breakdown** — Up to 100 current result cards with IDs, chemical/mineral names, formulas, FOM and scale, followed by the accepted-phase quantification table, active RIR values, provenance and normalized `Wt.%` when available.
+4. **Experimental Peak List** — Extracted experimental $2\theta$ positions and intensities. Use the **Peaks** table or peak export for $d$-spacing and FWHM details, and **Compare** for reflection comparisons.
+
+Source paths, card metadata and restraint text retain their literal characters
+in the report and printed PDF, including angle brackets and ampersands.
 
 To print the report or save it as a PDF file, select **File > Print...** (`Ctrl+P`), choose **Report** in the content dialog, then choose the printer/PDF destination.
