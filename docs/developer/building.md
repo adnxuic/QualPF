@@ -202,6 +202,9 @@ Windows dependency preparation logs each download and extraction stage. Download
 use bounded connection/transfer timeouts and retries, retain the original upstream
 URLs and SHA-256 pins, and fail on HTTP errors or changed bytes. The preparation
 step has a 20-minute limit within the existing 45-minute public build job.
+Boost headers and their license are extracted in one sequential Python tar pass,
+avoiding the native Windows tar selection stall observed on hosted runners. Paths
+must stay inside the SDK directory and selected entries must be files/directories.
 
 With a development preset configured and independent references restored:
 

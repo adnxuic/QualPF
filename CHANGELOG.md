@@ -16,6 +16,8 @@ reports are no longer used for routine development.
   preflight can check its preferred symmetry-generator input on a clean checkout.
 - Bound Windows CI dependency downloads and preparation, with stage diagnostics
   and unchanged upstream archive hashes.
+- Extract Windows CI Boost headers in one sequential archive pass, avoiding a
+  hosted native-tar stall while retaining the original header and license bytes.
 - Align the README and developer repository layout with Git-tracked content,
   distinguishing committed test fixtures from separately provisioned references
   and ignored local build/package outputs.

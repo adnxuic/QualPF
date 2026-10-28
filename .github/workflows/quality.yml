@@ -114,7 +114,36 @@ jobs:
           tar -xf $eigen -C $sdk
           if ($LASTEXITCODE -ne 0) { throw 'Eigen extraction failed' }
           Write-Host 'Extracting Boost headers and license'
-          tar -xf $boost -C $sdk boost_1_82_0/boost boost_1_82_0/LICENSE_1_0.txt
+          @'
+          import pathlib
+          import shutil
+          import sys
+          import tarfile
+
+          root = pathlib.Path(sys.argv[2]).resolve()
+          count = 0
+          with tarfile.open(sys.argv[1], mode='r|bz2') as archive:
+              for member in archive:
+                  if not (member.name.startswith('boost_1_82_0/boost/') or
+                          member.name == 'boost_1_82_0/LICENSE_1_0.txt'):
+                      continue
+                  target = root / member.name
+                  if not target.resolve().is_relative_to(root):
+                      raise ValueError('Boost archive path escapes SDK directory')
+                  if member.isdir():
+                      target.mkdir(parents=True, exist_ok=True)
+                  elif member.isfile():
+                      target.parent.mkdir(parents=True, exist_ok=True)
+                      with archive.extractfile(member) as source, target.open('wb') as output:
+                          shutil.copyfileobj(source, output)
+                      count += 1
+                  else:
+                      raise ValueError('Unexpected Boost archive entry type')
+          if (count < 2 or not (root / 'boost_1_82_0/boost/version.hpp').is_file() or
+                  not (root / 'boost_1_82_0/LICENSE_1_0.txt').is_file()):
+              raise ValueError('Boost headers or license missing')
+          print(f'Extracted {count} Boost header/license files in one archive pass', flush=True)
+          '@ | python - $boost $sdk
           if ($LASTEXITCODE -ne 0) { throw 'Boost extraction failed' }
           Write-Host 'Configuring and installing Eigen headers'
           cmake -S "$sdk/eigen-3.4.0" -B "$sdk/eigen-build" -G Ninja -DBUILD_TESTING=OFF -DEIGEN_BUILD_DOC=OFF "-DCMAKE_INSTALL_PREFIX=$sdk/eigen-install"
