@@ -227,30 +227,37 @@ where each topic belongs. [History](history/README.md) indexes original evidence
 
 ## Repository structure
 
+The main directories containing Git-tracked files are:
+
 ```text
-apps/qualpf/            GUI/CLI entry points and executable assembly
-src/core/               Qt-free numerical/domain kernels and memory parsers
-src/application/        Qt-free canonical state, engine, transactions and ports
-src/infrastructure/     SQL, file/codecs/settings and resource providers
-src/gui/                Qt Widgets, views, intents and background scheduling
-cmake/                  build policy, templates and Windows/Linux packaging
-scripts/                platform build/install/package helpers
-tests/                  unit, integration, product and numerical regression
-tests/data/             unchanged independent numerical/CIF datasets
+apps/qualpf/                  GUI/CLI entry points and executable assembly
+src/core/                     Qt-free numerical/domain kernels and memory parsers
+src/application/              Qt-free canonical state, engine, transactions and ports
+src/infrastructure/           SQL, file/codecs/settings and resource providers
+src/gui/                      Qt Widgets, views, intents and background scheduling
+cmake/                        build policy, templates and Windows/Linux packaging
+scripts/                      platform build/install/package helpers
+tests/                        unit, integration, product and numerical regression
+tests/data/                   tracked numerical/CIF fixtures and reference manifests
 tests/regression/references/  algorithm-organized frozen resources/provenance
-tests/reference/        current reference identity manifest
-tests/support/snapshot/ test-only binary32 transport consumers
-tools/                  current context, architecture, validation and table tools
-third_party/            required third-party source
-share/qualx/            consumed runtime data with original names/attribution
-deploy/                 current Windows/Linux packaging resources
-docs/user/              user manual with unchanged page URLs
-docs/developer/         architecture, numerical contracts and developer guides
-history/                necessary acceptance records and independent archive index
-.agent/                 AI working rules, documentation navigation and task handoff
-build/<configuration>/  ignored local caches, binaries and test logs
-releases/               ignored local package outputs
+tests/reference/              reference identity and archive manifests
+tests/support/snapshot/       test-only binary32 transport consumers
+tools/                        context, architecture, validation and resource tools
+third_party/                  required third-party source
+share/qualx/                  consumed runtime data with original names/attribution
+deploy/                       Windows/Linux packaging resources and catalogues
+docs/user/                    user manual
+docs/developer/               architecture, numerical contracts and developer guides
+history/                      retained acceptance records and independent archive index
+LICENSES/                     third-party and dependency license texts
+.github/workflows/            build and quality CI workflows
+.agent/                       AI working rules, documentation navigation and task handoff
 ```
+
+Build trees such as `build/<configuration>/` and package outputs under `releases/`
+are generated locally and ignored by Git. Some sealed reference ZIPs and private
+regression datasets must be provisioned separately; see
+[test prerequisites](tests/README.md#independent-references).
 
 [Directory responsibilities](docs/developer/repository-layout.md) and
 [build/contribution instructions](docs/developer/building.md) describe shared

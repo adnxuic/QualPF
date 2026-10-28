@@ -10,6 +10,12 @@ reports are no longer used for routine development.
 
 ## [Unreleased]
 
+### Fixed
+
+- Align the README and developer repository layout with Git-tracked content,
+  distinguishing committed test fixtures from separately provisioned references
+  and ignored local build/package outputs.
+
 ### Documentation
 
 - Render the web manual's inline and display formulas as static MathML during

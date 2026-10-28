@@ -1,5 +1,7 @@
 # Repository layout
 
+The table describes tracked repository content.
+
 | Area | Current responsibility |
 | --- | --- |
 | `CHANGELOG.md` | Ongoing record of notable completed features, fixes, optimizations and maintenance |
@@ -9,21 +11,20 @@
 | `tests/support/snapshot`, `src/gui/reference` | Test-only binary32 snapshot transport and GUI presentation helpers; production compat targets are retired |
 | `tests/unit`, `tests/integration`, `tests/product`, `tests/profile` | Unit, SQL/GUI integration, workflows and isolated profile properties |
 | `tests/compatibility`, `tests/reference_checks` | Current C++ numerical replay and independent comparison/protocol tests |
-| `tests/data`, `tests/regression/references`, `tests/reference` | Stable independent inputs/provenance and their hash manifest |
+| `tests/data`, `tests/regression/references`, `tests/reference` | Tracked numerical/CIF fixtures, frozen resources/provenance and reference/archive manifests |
 | `cmake/modules`, `cmake/templates`, `cmake/packaging` | Build policy/dependencies/options, generated headers and Windows/Linux deployment |
 | `tools/architecture`, `tools/validation`, `tools/agent`, `tools/crystallography` | Current boundary/build capture, product/baseline validation, Agent context and numerical-table reproduction |
 | `tools/gui`, `src/gui/resources/icons` | Offline icon export helper, editable SVG masters and committed PNG action resources |
 | `share/qualx`, `src/gui/resources`, `third_party` | Consumed runtime/GUI data and third-party sources; original scientific resource naming/attribution remains |
 | `deploy` | Current QualPF installer scripts, desktop templates, icons and release/source/rights catalogues; see the [deployment-input index](../../deploy/README.md) |
 | `scripts`, `install.sh` | Existing platform build/install/package helpers |
+| `.github/workflows` | Build and quality CI workflows |
+| `LICENSES` | Third-party and dependency license texts |
 | `docs/user` | User manual: installation, operation, parameters and result interpretation |
 | `docs/developer` | Developer guides: architecture, scientific contracts, formats, build and test |
 | `AGENTS.md`, `.agent` | Agent working rules, task-specific navigation and one mutable handoff; product acceptance lives in project-baseline.json |
 | `history` | Necessary acceptance records and portable recovery/retention indexes; full raw history is archived independently |
 | Retained acceptance, consolidation and dated maintenance reports | Historical snapshots indexed by migration history; no Phase workflow for new development |
-| Archived `history/refactoring/deferred-defects` members | Nine original investigation records, recoverable from the independent ZIP; no normal-build dependency |
-| `build`, `releases` | Ignored local builds/logs/packages; never source prerequisites |
-| `references` | Ignored local design drafts; current contracts belong in `docs`, frozen scientific references in `tests` |
 
 Public headers remain module-local. `.inc` tables are required C++ source data.
 Same-name test helpers with different behavior remain beside their consuming probes;
@@ -37,6 +38,13 @@ generated Python caches. See [architecture](architecture/overview.md),
 indexed in [migration history](../../history/README.md).
 
 ## Publication boundary
+
+Local `build/` trees and `releases/` packages are generated outputs. Local
+`references/` contains design drafts; current contracts belong in `docs/`, and
+frozen scientific references belong in `tests/`. These ignored directories are
+outside the tracked layout above. The nine archived
+`history/refactoring/deferred-defects` investigation records are recoverable from
+the independent ZIP and are not normal-build dependencies.
 
 Publish the tracked product, build/deployment inputs, tests/tools, runtime data,
 documentation, license and repository rules. Keep generated C++ `.inc` tables,
