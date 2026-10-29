@@ -50,7 +50,7 @@ Defaults listed here are factory values; saved user defaults can differ.
 | **Range — Use saved range for explicit Range command** | Off | Preprocessing only. Bounds default to `0`–`180`°; cropping is always explicit, never an automatic search prerequisite. |
 | **Background — Method** | `Chebyshev` | `Chebyshev`, `Polynomial`, `Cosine`, `Spline`, `Bezier`, `Bruckner`, `None`. |
 | **Automatic coefficients / Coefficients** | On / `6` | Manual coefficient field `0`–`36`; the selected method also validates usable counts. |
-| **Bruckner iterations / half-window (samples)** | `5` / `50` | `0`–`100000` in defaults. Automatic preparation uses the full current pattern; compatible manual background takes precedence. |
+| **Bruckner iterations / half-window (samples)** | `5` / `50` | Defaults editors allow `0`–`100000`, but the estimator accepts at most `10000` iterations. Automatic preparation uses the full pattern; compatible manual background can be reused. |
 | **Initial Peaks — Derivative threshold** | `0.1` | `0`–`200`. Used by Gaussian SG preparation; geometric FWHM detects its own candidates. |
 | **Automatic window / Half-window (samples)** | On / `11` | Manual half-window `2`–`100`; full window is `2m+1` samples. |
 | **SG polynomial degree** | `9` | `3`–`20`; effective degree is capped by the window. |
@@ -58,7 +58,7 @@ Defaults listed here are factory values; saved user defaults can differ.
 | **Use fixed width / Fixed FWHM** | Off / `0.1`° | A checked fixed width bypasses estimation. Positive width up to `180`°; automatic failure does not silently substitute it. |
 | **Minimum samples per FWHM (Q)** | `6` | `2`–`8` for geometric estimation. |
 | **Smoothing — Method** | `Savitzky–Golay` | Savitzky–Golay or Averaging; Preprocessing only, executed explicitly. |
-| **Half-window / Polynomial degree** | `4` / `5` | Half-window `1`–`100000`; degree `0`–`20`, subject to method validation. Individual Smoothing dialog controls differ. |
+| **Half-window / Polynomial degree** | `4` / `5` | Defaults editors: half-window `1`–`100000`, degree `0`–`20`. SG execution requires half-window at most `100`, degree at most `2m` and at least `2m+1` samples; invalid combinations fail rather than cap the degree. The individual project dialog has narrower controls. |
 | **Kα2** | Informational page | Explicit stripping operation; no enable-default checkbox or adjustable algorithm parameters. Source radiation and stripping history must be known. |
 
 ### 2. Peak Search and CSM Module Tabs
@@ -71,11 +71,11 @@ Defaults listed here are factory values; saved user defaults can differ.
 | **Minimum relative height (%)** | `1.5` | `0`–`100`. |
 | **Maximum peaks (−1: all)** | `-1` | Editor `-1`–`100000`; use `-1` for no count cap. |
 | **Retain peaks outside this range** | Off | Preserves outside-range peaks when combining a new selection. These selection controls are in CSM's Peak Extraction tab and standalone Peak Search's Peak Selection tab. |
-| **CSM — Use strongest-reflection screening** | On | Applies the stored strongest-reflection screening rules. |
+| **CSM — Use strongest-reflection screening** | On | All first up to three stored strong-line d-spacings must pass, not just one. See the [screening rules](search-match/search-match.md#how-check-strongest-peaks-actually-screens-cards). |
 | **Exclude deleted entries** | On | Filters deleted cards. The current-project **Check deleted cards** checkbox represents this exclusion check. |
 | **Maximum entries** | `3000` | Positive integer; Candidate Screening tab. |
-| **Automatic tolerance / Tolerance** | On / `0.08`° | Defaults editor `0`–`180`°; current-project CSM dialog permits `0.01`–`0.50`°. |
-| **Position / Intensity / Phase weight** | `0.5` each | `0`–`1` in FOM tab. |
+| **Automatic tolerance / Tolerance** | On / saved manual `0.08`° | Auto uses the current peak-width rule, not the saved manual value. Defaults editor `0`–`180`°; execution requires a positive tolerance. The project manual editor permits `0.01`–`0.50`°. |
+| **Position / Intensity / Phase weight** | `0.5` each | `0`–`1` in FOM tab. The phase value controls coverage weighting and the divisor `round(10-9p)`; see [CSM options](search-match/search-match.md#parameter-reference-csm-options-dialog). |
 | **Minimum FOM** | `0.35` | `0`–`1`. A ranking score, not a probability of correct identification. |
 | **Subtract accepted phase residual** | On | Residual tab. Removing a Classical phase does not restore previously subtracted residual intensities. |
 
@@ -120,21 +120,27 @@ The status text below the table reports the current or most recent attempt.
 
 ### Viewing Step Details (`Details`)
 
-Select any row in the **Workflow — Current Project** table and click **Details** (or double-click the row) to open the **Workflow step details** dialog.
+Select a row and click **Details** to open the **Workflow step details** dialog.
 
 ![Workflow step details dialog showing exact runtime parameters, dependencies, and status for a completed step](images/workflow-step-details.png)
 
 This read-only inspector displays:
-- The step identifier, parent workflow, origin (`Manual` vs. `Auto`), and completion status;
+- The step name, workflow, status, record ID and input source; manual/automatic origin is shown in the dock's **Source** column;
 - Upstream step IDs (`Dependencies`) whose outputs fed into this step;
-- The exact **Actual Parameters** dictionary (`method`, `q`, `fwhm_deg`, `shift_lower_deg`, `template_cache`, etc.) recorded at execution time.
+- The recorded actual parameters as flattened name/value fields, including the relevant preprocessing or search configuration and resolved evidence.
 
 ### Rolling Back Project Steps (`Undo Selected`)
 
-If you want to revert a step (for example, to try a different background model or undo a search-match run together with its prerequisite steps):
+To undo a search while retaining its prerequisites, select its Search step.
+To undo preparation and its dependent search, select the earlier preparation step:
 
 1. Highlight the step you wish to roll back in the **Workflow — Current Project** table.
 2. Click **Undo Selected**.
 3. Review any dependency confirmation. QualPF atomically restores the retained pre-step snapshot and removes the affected results.
 
-Undo requires a completed step with a snapshot retained in this session. QPF saves workflow records and parameters, but does not save undo snapshots. After reopening, records remain inspectable; use explicit recomputation or reimport when rollback is unavailable.
+Undo requires a completed or fixed-configuration step with a checkpoint retained
+in this session. It restores affected outputs through the dependency closure;
+current project settings and unrelated presentation remain current, so it is not
+a wholesale return to all pre-step options. QPF saves records and parameters,
+but not undo checkpoints. After reopening, inspect records and explicitly
+recompute or reimport when rollback is unavailable.

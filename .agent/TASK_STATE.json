@@ -1,21 +1,5 @@
 {
   "schema": "qualpf.agent_task_state.v1",
   "baseline_ref": "docs/developer/project-baseline.json",
-  "active_task": {
-    "id": "user-manual-behavior-audit",
-    "goal": "Audit all 17 user manual pages against current product execution and correct contradictions and material omissions without changing product behavior.",
-    "in_scope": ["docs/user/**", "CHANGELOG.md", ".agent/TASK_STATE.json"],
-    "out_of_scope": ["Product code, algorithms, public APIs and project formats", "Scientific references and frozen historical evidence", "Remote publication and push"],
-    "status": "in_progress",
-    "base_commit": "ddbaf9b787ce5e4eeeff6038711d8aa8beec0adf",
-    "checkpoint_commit": null,
-    "completed": ["Corrected search-match descriptions and repeated overview/tutorial text for stored strongest screening, CSM input/FOM/residual behavior, restraints/browsing, Compare and PFSM/RIR controls."],
-    "next_action": "Audit and correct preprocessing, peak editing, database, project, settings, installation and reference guidance; regenerate and inspect the PDF.",
-    "blockers": [],
-    "checks": [
-      {"command": "python -B tools/validation/check_documentation.py --self-test", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": null},
-      {"command": "build/manual-behavior-audit-20261029/venv/Scripts/python.exe -B tests/unit/tools/documentation_math_test.py -v", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": "build/manual-behavior-audit-20261029/batch1-math.log"},
-      {"command": "build/manual-behavior-audit-20261029/venv/Scripts/python.exe -B -m mkdocs build --strict -f docs/mkdocs.yml", "result": "PASS", "kind": "FRESH_VALIDATION", "evidence_ref": "build/manual-behavior-audit-20261029/batch1-site.log"}
-    ]
-  }
+  "active_task": null
 }

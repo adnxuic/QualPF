@@ -69,7 +69,7 @@ The **Create Database** dialog is organized into two sections:
 | **ICDD PDF** (group checkbox) | Unchecked | Enabled / Disabled | Selects an official ICDD Powder Diffraction File (PDF-2) distribution in NBS*AIDS83 ASCII format for conversion into a QualPF SQLite database. |
 | **PDF file** | Empty | Path to `*.dat` | Path to the licensed ICDD PDF-2 `.dat` file in NBS*AIDS83 format. |
 | **User database** (group checkbox) | Unchecked | Enabled / Disabled | Builds a database from a folder of Crystallographic Information Files (`.cif`) or registers an existing `.sq` database. |
-| **CIF files** (radio button) | Selected | Radio option | Compiles diffraction patterns and phase cards directly from `.cif` structure or powder files inside the chosen **CIF folder**. |
+| **CIF files** (radio button) | Selected | Radio option | Calculates reference cards from importable crystal structures in `.cif` files. A powder-observation loop alone is not an atomic structure and cannot supply a calculated reference card. |
 | **CIF folder** | Empty | Directory path | Root folder containing `.cif` files to import. |
 | **Scan subfolders recursively** | Unchecked | Checked / Unchecked | When checked, QualPF traverses all nested subdirectories under **CIF folder** and imports every valid `.cif` file found. When unchecked, only `.cif` files in the top-level folder are imported. |
 | **QualX database (.sq)** (radio button) | Unselected | Radio option | Registers the existing database specified in **Database file**, using its current files and indexes. |
@@ -106,13 +106,23 @@ Use this workflow if you already have a compiled database directory containing a
 
 When working with proprietary synthetic phases, newly refined crystal structures, or project-specific mineral subsets:
 
-1. Place your `.cif` files into a folder on disk.
+1. Place your structure `.cif` files into a folder. Use distinct numeric filename
+   stems such as `1001.cif` and `1002.cif`: the stem converted to a signed 32-bit
+   integer becomes the card ID. Nonnumeric or out-of-range stems map to `0`;
+   duplicate converted IDs, including `001` and `1`, cause per-file rejection.
 2. Open **S&M > Manage Databases** and click **Create**.
 3. Check **User database** and select the **CIF files** radio button.
 4. Click **...** next to **CIF folder** and select your CIF directory.
 5. Check **Scan subfolders recursively** if your `.cif` files are organized into nested subdirectories.
 6. Uncheck **Automatic name** and enter a descriptive name (such as `USR_BatteryCathodes`).
-7. Click **OK**. QualPF parses each CIF entry, calculates reflection $d$-spacings, intensities, and reference RIR values where atomic structure data are present, and registers the resulting database in **Manage Databases**.
+7. Click **OK**. QualPF imports a supported structure block and calculates
+   reflections and reference RIR using its fixed Cu Kα1 generation defaults.
+   If several eligible structure blocks are present, choose one in the block
+   selection dialog; the build does not automatically turn all blocks into cards.
+8. Review committed/rejected counts and diagnostic details before selecting the
+   database. Individual invalid files are skipped, so a completed build can be
+   registered with rejected files, or even with no committed cards. Completion
+   does not certify that every source file was imported.
 
 ### 4. Building an ICDD PDF-2 Database
 
@@ -121,7 +131,8 @@ When working with proprietary synthetic phases, newly refined crystal structures
 3. Set **Database name** and **Database folder**, then click **OK**.
 4. After a successful build, select its **Use** checkbox and click **Quit**.
 
-A parsing or database write failure reports a failed build and does not register
-it as successful. Cancellation can leave already committed records in the output
-files; those partial files are not automatically registered. Keep the original
-input and rebuild into a suitable output location before using the database.
+Fatal build errors and cancellation prevent automatic registration. Cancellation
+can leave already committed records in the output files. CIF builds distinguish
+those failures from individual rejected files, which are reported while the
+batch continues and can still register its output. Keep original inputs, inspect
+the entry count and diagnostics, and rebuild incomplete output before using it.

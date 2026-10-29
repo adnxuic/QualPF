@@ -98,7 +98,9 @@ When working with a pattern that has noisy low-angle air scatter, weak trace-pha
 
 1. Open **Preprocessing > Range...**, drag the left cursor past any low-angle direct-beam spill (or enter **Min** / **Max** degrees $2\theta$), and click **OK**.
 2. Open **Preprocessing > Background Options...** and select `Chebyshev` (or `Filter` for undulating amorphous backgrounds). Click **OK**.
-3. If the background curve under- or over-shoots near a broad peak cluster, select **Preprocessing > Add Background Point** and click on the true baseline between reflections to anchor the curve.
+3. With Chebyshev, Polynomial or Cosine, use **Add Background Point** to add a
+   fitting observation between reflections. Spline, Bezier and Filter reject
+   manual point edits; adjust the supported model/filter controls instead.
 4. Toggle **View > Subtract Background** to verify that the net baseline is flat.
 
 ![Range dialog for cropping noisy boundary regions](../images/range-dialog.png)
@@ -120,7 +122,11 @@ When working with a pattern that has noisy low-angle air scatter, weak trace-pha
 
 1. Open **Peak Search > Peak Search Options...**, set **Intensity threshold (%)** to `0.80` and **Sensitivity** to `65`, and click **OK**.
 2. Inspect the extracted reflections in the **Peaks** dock (**Window > Peaks**).
-3. If a weak minor-phase shoulder was not split automatically, right-click inside the **Peaks** dock and choose **Add Peak...** (or double-click an existing row to open **Modify table peak**), enter its position in `2 theta` or `d spacing`, check **Infer width from neighboring peaks** only when compatible neighbors are available, and click **OK**.
+3. If a shoulder was missed, use **Add Peak** in the Peaks dock. For a full-row
+   edit, choose **Modify measured peak...** from its context menu. Enter position,
+   intensity and a measured FWHM, plus area
+   when the table contains areas. Width inference is optional; it uses neighbor
+   widths or `0.2`° when none exist. Inspect that value before accepting it.
 4. Open **S&M > CSM Options...**, verify that **Residual Searching** is checked, and click **OK**.
 5. Select **S&M > CSM (Classical SM)** to rank candidates against your curated peak table.
 

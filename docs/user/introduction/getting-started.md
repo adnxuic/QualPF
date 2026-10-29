@@ -57,7 +57,7 @@ Menu labels below follow the application. Only explicitly assigned shortcuts are
 | **FWHM Estimation / FWHM Estimation Options...** | Measures a representative Gaussian/geometric width or uses an explicit fixed width. |
 | **Smoothing** | Previews Savitzky-Golay or adjacent averaging on the working observations. |
 | **K-α2 Stripping** | Runs the fixed operation when source radiation and processing history permit it. |
-| **Restart preprocessing...** | Restores the original source for a new analysis after confirmation. |
+| **Restart preprocessing...** | Restores stored original intensities within the current cropped domain after confirmation; reimport to recover discarded samples. |
 
 ### `Peak Search` Menu
 
@@ -77,7 +77,7 @@ Menu labels below follow the application. Only explicitly assigned shortcuts are
 | **S&M > Test Database / Recalculate FOMs** | Invokes the existing database test or candidate rescoring route. |
 | **S&M > Manage Databases** | Registers, selects, renames, creates or deletes database entries. |
 | **Entry > Accept Selected Entries** (`Ctrl+Return`) | Accepts selected cards. PFSM publishes their joint fit and refreshed ranking together. |
-| **Entry > Delete Selected Entries / Change Color** | Deletes selected candidate rows or changes their display color. |
+| **Entry > Delete Selected Entries / Change Color** | Deletes selected candidate rows. Change Color edits the first selected card only. |
 | **Entry > Load/Add Entry by ID...** (`Ctrl+E`) | Loads a known reference identifier. |
 
 ### `Setting` and `Help` Menus
@@ -101,13 +101,18 @@ reimport it with the correct radiation.
 | Parameter | Default / options | Meaning |
 | :--- | :--- | :--- |
 | **Radiation** | `X-ray`, `Synchrotron`, `Neutron` | Import classification. Electron scattering exists in crystallographic calculations but is not an option in this dialog. |
-| **Wavelength** | Cu-Ka1 `1.54059307` Å; Cr `2.28973`, Fe `1.93604`, Co `1.78900`, Mo `0.70932`; `User defined` | Primary wavelength for angle/spacing conversion. The admitted wavelength must be positive. |
+| **Wavelength** | Cu-Ka1 `1.54059307` Å; Cr `2.28973`, Fe `1.93604`, Co `1.78900`, Mo `0.70932`; `User defined` | Primary wavelength for angle/spacing conversion. Custom wavelength editors admit values up to `5` Å; product import requires a positive wavelength. The dialog remembers the saved wavelength choice. |
 | **Use second wavelength** | Off | Enables the second radiation component. |
 | **Wavelength 2** | Corresponding anode value, or a supplied value | Secondary wavelength; confirm it against the measurement. |
 | **Ratio** | `0.5` when enabled with an empty ratio | Relative secondary intensity. The editor accepts `0`–`1`; downstream operations also validate radiation compatibility. |
 
 Imported file metadata and QPF projects retain their own radiation. A positive
 signal alone does not establish raw counting statistics.
+
+For ordinary XY/ASCII input, the first two numeric columns are $2\theta$ in
+degrees and observed intensity. Additional columns are not selected as a
+different signal or interpreted as uncertainty. Use the source format's
+wavelength metadata, or verify the import radiation dialog when it is absent.
 
 ## Interactive Central Plot Controls
 
@@ -144,10 +149,21 @@ Workflow records survive saving, but session undo snapshots do not.
 ### Exporting Patterns, Images, CSVs, and PDF Reports
 
 1. **File > Export Diffraction Pattern** saves the active pattern in the chosen
-   supported format.
+   supported format. It exports working observations, not a PFSM joint trial or
+   the Subtract Background display. The powder-CIF exporter records the primary
+   wavelength only; it is not a complete radiation/project round trip.
 2. **File > Export Image** opens image-size/resolution settings and an output-format
    selector.
 3. **Peak Search > Save Peaks** exports experimental peaks. **Export CSV** in the
    quantification panel writes accepted phases, RIR provenance and available percentages.
 4. **File > Print...** opens its content selector. Choose **Report**, then use the
    available printer/PDF destination. The active dock does not choose print content.
+
+**Load Peaks** imports coordinates, then measures their heights, areas and widths
+from the current continuous pattern and aligned background. It replaces the
+table, ignores coordinates outside or exactly on the calculation boundaries,
+and can fail when a measurement is undefined. It does not restore a saved set of
+measured intensities and widths. The simple **Save Peaks** formats contain
+positions only; the detailed listing additionally reports width and intensity
+normalized to `100`, rather than a complete editable project state. Use QPF to
+preserve measured peak values and provenance.

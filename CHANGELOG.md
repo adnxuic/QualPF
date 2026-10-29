@@ -15,6 +15,8 @@ reports are no longer used for routine development.
 - Correct the user manual's stored strongest-line screening, continuous-spectrum
   requirements, Classical FOM/residual semantics, restrained browsing, symmetry
   filters, Compare table and PFSM/RIR operation descriptions against product code.
+- Align preprocessing, peak import/editing, CIF database creation, exports and
+  workflow rollback guidance with executed validation, defaults and state changes.
 - Resolve dependency-notice outputs consistently with their build boundary,
   accepting Windows path aliases while retaining escape and build-root rejection.
 - Restore sealed reference inputs before hosted quality gates, so distribution

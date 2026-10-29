@@ -21,7 +21,7 @@ Select **S&M > CSM Options...** to configure the Figure of Merit (FOM) weights, 
 | **FOM Settings** | **Δ2θ (°)** & **Auto** | `Auto` on; saved manual value `0.08`° | Manual editor: `0.01` – `0.50`° | Angular matching tolerance. Auto uses $\min(0.5,\ 1.3\,\overline{\mathrm{FWHM}})$ degrees from the current experimental peak widths, with `0.5`° for an empty table. The saved manual value is inactive while Auto is on. Strongest-line screening uses the corresponding per-peak d-spacing tolerances. |
 | **Search Settings** | **Residual Searching** | Checked | Checked / Unchecked | On phase acceptance, subtracts matched contributions from the current experimental peak intensities, removes exhausted peaks and recalculates the remaining candidates. Original heights of surviving peaks are retained. It does not subtract a continuous profile or perform another database query. |
 | **Search Settings** | **Check strongest peaks** | Checked | Checked / Unchecked | Requires **all** of the first up to three stored strongest-line d-spacings to pass the experimental-peak screen. See the rules below before using it with missing or out-of-range strong lines. |
-| **Search Settings** | **Check deleted cards** | Checked | Checked / Unchecked | Checks deletion status and excludes cards marked deleted. Unchecking disables that exclusion. |
+| **Search Settings** | **Check deleted cards** | Checked | Checked / Unchecked | Excludes cards whose space-trimmed quality is `D`. On the SQL query route, a NULL quality also fails this predicate. Unchecking disables this exclusion. |
 | **Search Settings** | **Max. number of resulting entries** | `3000` | Positive integer | Caps retained candidates on initial CSM search and recalculation. It does not cap restrained card browsing or set the number of rows per display page. |
 
 The **Phases** value $p$ enters the calculation twice: it weights an experimental
@@ -43,9 +43,10 @@ has to complement another, and an effective zero weight denominator is an error.
   $|d_{\mathrm{stored}}-d_{\mathrm{exp}}|\leq\Delta d_{\mathrm{exp}}$ in the
   ordered peak-list lookup. Experimental intensities are not compared here,
   and the same experimental peak may satisfy several stored lines.
-- A stored index with one or two lines tests all available lines. An empty
-  stored index passes this screen; it does not establish that the card will
-  receive an acceptable FOM.
+- A stored index with one or two lines tests all available lines. An existing
+  index row with no stored spacings passes this screen; a card missing entirely
+  from that index is not recalled by this route. Passing does not establish an
+  acceptable FOM.
 - Stored lines are not first restricted to the calculation range. Missing
   lines, including strong reflections outside the measured range, can reject
   a phase before scoring. The ordered lookup uses a bounded neighbor search;
@@ -146,7 +147,7 @@ a new fit:
 
 Open the **Compare** dock (**Window > Compare**) to inspect numerical reflection matching between the experimental peak table and the currently selected candidate (plus any accepted phases).
 
-![Compare dock showing experimental peaks aligned against reference card reflections and angular discrepancies](../images/compare-dock.png)
+![Compare dock with experimental and reference angle/intensity pairs and association colors](../images/compare-dock.png)
 
 The table has `2θ exp` / `I exp` columns and one `2θ [ID]` / `I [ID]` pair
 for each accepted phase and the selected card. It has no d-spacing or
@@ -198,7 +199,7 @@ amorphous material are excluded. Reference-library RIR source conditions are
 unverified and preferred orientation, microabsorption and model mismatch can bias
 these semi-quantitative estimates. FOM is not a confidence probability.
 
-> **Important:** > **RIR Completeness Rule**:
+> **RIR completeness:**
 > **Every accepted phase must have a finite positive RIR**, including a PFSM
 > phase whose fitted scale is zero. One invalid phase makes all percentages
 > unavailable. The panel shows `Quantification unavailable`, phase-specific
@@ -232,8 +233,8 @@ Switch to the **Report** dock (**Window > Report**) to view a comprehensive, pub
 The **Report** document updates automatically as you accept phases or refine RIR values and includes:
 
 1. **Pattern & Radiation Summary** — Source filename, angular calculation range, radiation kind, and $\lambda_1 / \lambda_2$ wavelengths.
-2. **Data-Reduction & Peak Search Parameters** — Active angular interval, intensity threshold, sensitivity, and restraints summary.
-3. **Search Results & Quantitative Breakdown** — Up to 100 current result cards with IDs, chemical/mineral names, formulas, FOM and scale, followed by the accepted-phase quantification table, active RIR values, provenance and normalized `Wt.%` when available.
+2. **Peak Search Readout & Restraints** — The peak-search dialog's interval, threshold and sensitivity readouts, plus the current restraints summary. For the actual parameters of an automatic CSM/PFSM run, select its record in **Workflow — Current Project** and click **Details**.
+3. **Search Results & Quantitative Breakdown** — Up to 100 cards from the canonical result collection, followed by accepted-phase quantification and RIR provenance. This is not just the currently filtered display page or a guarantee of its displayed ordering.
 4. **Experimental Peak List** — Extracted experimental $2\theta$ positions and intensities. Use the **Peaks** table or peak export for $d$-spacing and FWHM details, and **Compare** for reflection comparisons.
 
 Source paths, card metadata and restraint text retain their literal characters

@@ -128,7 +128,7 @@ The bottom toolbar of the **Restraints** dialog provides five workflow actions:
 | **Load Cards** | Classical mode, idle | Requires an active restraint to perform a query. With experimental peaks present, computes classical FOM using the continuous spectrum and keeps every defined score, including zero, without the normal minimum-FOM/result cap. With no peaks, loads unscored cards. Replaces the Results List. |
 | **Load and Merge Cards** | Classical mode, idle, with existing result cards | Uses the same scored/unscored browse rules and appends IDs not already present. Existing IDs retain their current card. An active restraint is required; this route is disabled in PFSM. |
 | **Search with Restraints** | At least three continuous-spectrum samples, no active edit/task, and an active restraint | Starts the selected CSM or PFSM engine with these restraints. Missing prerequisites, including CSM peaks, are prepared automatically. The dialog can remain open while its controls are disabled during the task. |
-| **Cancel All Restraints** | Always | Clears every field and checkbox across all five tabs (`Composition`, `Subfiles`, `Properties`, `Entries`, and `Symmetry`). Use this dialog action; there is no separate S&M menu command with this label. |
+| **Cancel All Restraints** | When idle | Clears restraint fields and selections across all five tabs. It is disabled during a search; use this dialog action rather than a separate S&M menu command. |
 | **Close** | Always | Closes the **Restraints** dialog while keeping the configured restraints active in the session for subsequent **Run CSM** or **Run PFSM** commands. |
 
 Unscored reference cards can be inspected but cannot be accepted as phases.

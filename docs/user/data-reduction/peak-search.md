@@ -21,19 +21,30 @@ Choose **Preprocessing > FWHM Estimation Options...** to configure how QualPF de
 
 | Parameter | Default | Range / Options | Role and Effect |
 | :--- | :--- | :--- | :--- |
-| **Algorithm** | `Gaussian fit (Classical)` (Preprocessing / CSM / Peak Search)<br/>`Geometric FWHM` (PFSM) | `Gaussian fit (Classical)`, `Geometric FWHM` | Selects the automatic FWHM estimation method executed when **Use fixed Default FWHM** is unchecked. |
-| **Minimum sampling density Q** | `6` | `2` – `8` (integer) | Shown only when **Algorithm** is `Geometric FWHM`. Specifies the minimum number of data samples across a reflection required for that candidate peak to be included in the geometric width estimate. Lowering $Q$ (for example, to `3` or `4`) allows coarser step-size patterns to succeed without falling back to a fixed width. |
+| **Algorithm** | `Gaussian fit (Classical)` in this manual Preprocessing dialog | `Gaussian fit (Classical)`, `Geometric FWHM` | Chooses automatic estimation when fixed width is off. CSM and Peak Search have separate prerequisite profiles; automatic PFSM preparation uses geometric estimation. |
+| **Minimum sampling density Q** | `6` | `2` – `8` (integer) | Geometric only. Requires FWHM divided by the largest local sample step to be at least $Q$. Lowering $Q$ may admit coarser peaks. If none is eligible, the operation stops; it does not switch to a fixed width. |
 | **Use fixed Default FWHM** | Unchecked | Checked / Unchecked | When checked, disables automatic `Gaussian fit` and `Geometric FWHM` estimation and directly assigns **Default FWHM (°2θ)** as the representative pattern width. Fixed and automatic geometric PFSM widths both bypass the separate SG Initial Peak Search. |
 | **Default FWHM (°2θ)** | `0.1` | `> 0.0` – `180.0` | Explicit fixed width in degrees $2\theta$. Automatic estimation failure stops the operation; it does not silently use this value. The field is read-only in automatic mode. |
 
 ### Comparing the Three FWHM Modes
 
 1. **Gaussian fit (Classical)**:
-   Selects isolated reflections from the **Initial Peak Search** candidate list and fits local Gaussian bell curves to determine the representative FWHM. Best suited for standard laboratory scans used with **Peak Search** and **CSM**.
+   Fits and refines candidates from **Initial Peak Search**, then averages the
+   widths of the up to three strongest usable peaks. This is not an average over
+   every detected peak. A failed automatic GUI estimate stops downstream work.
 2. **Geometric FWHM**:
-   Implements the [IAEA F1 geometric half-maximum chord procedure](../references.md#f1-iaea-fwhm-procedure) using its own internal candidate detection and peaks that satisfy the **Minimum sampling density Q** criterion (`2`–`8` samples). Because it measures the half-height width directly from background-referenced profile geometry without assuming a pure Gaussian peak shape, **Geometric FWHM** is the recommended default for **PFSM**.
+   Uses the [IAEA F1 half-maximum chord construction](../references.md#f1-iaea-fwhm-procedure)
+   with its own candidate detection. It chooses the strongest eligible peak by
+   net height; uncertainty, prominence and sample order break ties. It does not
+   average all eligible widths. Automatic PFSM preparation uses this route.
 3. **Fixed Default FWHM**:
    Directly applies the user-supplied **Default FWHM (°2θ)** value. Ideal when analyzing patterns with very few or severely overlapped reflections where automatic single-peak isolation is not possible.
+
+This dialog executes and saves the **Preprocessing** profile. Changing its width
+does not rerun an existing peak table. A later CSM/Peak Search preparation reuses
+only compatible evidence or uses that workflow's own settings. PFSM can reuse a
+compatible manually measured width; its templates all share one physical width,
+with no per-phase or angle-dependent width refinement.
 
 ---
 
@@ -50,9 +61,16 @@ To extract or update the discrete experimental peak table in the **Peaks** dock,
 | **Interval** | **Append new peaks** | Unchecked | Checked / Unchecked | When unchecked, running Peak Search replaces the entire experimental peak list. When checked, existing peaks outside the $[\text{Min}, \text{Max}]$ search sub-interval are preserved and newly detected peaks inside $[\text{Min}, \text{Max}]$ are merged into the table. |
 | **Interval** | **Min (°2θ)** | Pattern start angle | Within calculation range | Lower angular bound for peak extraction. Synchronized with the left vertical cursor on the central plot. |
 | **Interval** | **Max (°2θ)** | Pattern end angle | Within calculation range | Upper angular bound for peak extraction. Synchronized with the right vertical cursor on the central plot. |
-| **Settings** | **Intensity threshold (%)** | `1.50` | `0.00` – `100.00` | Minimum relative peak height (expressed as a percentage of the strongest peak's net intensity) required to keep a detected reflection. Increase to `2.0`–`5.0%` to ignore trace noise; decrease to `0.2`–`0.5%` to capture weak minor-phase reflections. |
-| **Settings** | **Sensitivity** | Derived from the current extraction window | `0` – `100` (slider & spinbox) | Controls second/third-derivative curvature sensitivity for resolving closely spaced doublets and shoulders. Higher values split shoulders more aggressively; lower values retain only well-separated maxima. |
-| **Settings** | **Number of peaks** | Current selected count | Up to the detected candidate count | Reselects the strongest $N$ candidates and updates the associated threshold. It is a count field, not an enable checkbox. |
+| **Settings** | **Intensity threshold (%)** | `1.50` | `0.00` – `100.00` | Height threshold relative to the strongest candidate in the current detection pool. Changing it reselects that pool; it cannot restore candidates rejected during detection/refinement. The reference maximum is computed before the selected interval is applied. |
+| **Settings** | **Sensitivity** | Derived from the current extraction window | `0` – `100` (slider & spinbox) | Higher values request a smaller SG half-window and rerun detection. This can expose narrow features and noise; it is not a direct change to the derivative threshold and does not guarantee shoulder separation. |
+| **Settings** | **Number of peaks** | Current selected count | `0` to the detected candidate count | Selects the strongest $N$ available candidates in the interval. Updates the height threshold only when **Append new peaks** is off. It is a count field, not an enable checkbox. |
+
+Changing interval bounds, height or count reselects existing candidates without
+remeasuring FWHM. Changing Sensitivity redetects within the selected interval and
+reevaluates width preparation. Fresh extraction can retry with a `0.6%` threshold
+when too few peaks were found, so inspect the applied threshold and result.
+Manual peak edits and imports invalidate the detector pool; reopening Options
+cannot reconstruct rejected or unavailable candidates merely by lowering a filter.
 
 > **Tip:** > Combining **Append new peaks** with a narrow **Min / Max (°2θ)** window lets you apply high sensitivity (`Sensitivity = 85`, `Intensity threshold = 0.3%`) in a specific high-angle region without flooding the low-angle region with noise peaks.
 
@@ -70,10 +88,11 @@ All extracted and manually added experimental peaks are listed in the **Peaks** 
 | :--- | :--- |
 | **2θ (°)** | Bragg angle of the experimental reflection in degrees $2\theta$. |
 | **d (Å)** | Interplanar spacing $d = \lambda_1 / (2 \sin\theta)$ in Ångströms calculated from the primary wavelength. |
-| **Intensity** | Peak intensity (net above background when a background curve is present). |
+| **Intensity** | Current peak height. Formal extraction subtracts the modeled background and then a local straight baseline. CSM residual acceptance can reduce this value or remove the row; it is not always the original extracted height. |
 | **FWHM (°2θ)** | Full Width at Half Maximum of the individual reflection in degrees $2\theta$. |
-| **Right-Click > Add Peak...** | Opens the **Add table peak** dialog to insert a reflection by typing its exact $2\theta$ or $d$-spacing coordinate, intensity, and width. |
-| **Right-Click > Modify measured peak...** (or double-click row) | Opens the **Modify table peak** dialog to edit the selected peak's coordinates, intensity, or FWHM. |
+| **Right-Click > Add Peak** | Opens the **Add table peak** dialog to enter a coordinate, intensity and width. |
+| **Right-Click > Modify measured peak...** | Opens the **Modify table peak** dialog for the row under the context menu. |
+| **Double-click a numeric cell** | Edits that value directly in the table. It does not open the full-row dialog. The other measurements are retained; rejected input restores the prior table and reports the failure. |
 | **Right-Click > Delete Peaks** | Removes the highlighted row(s) from the experimental peak list. |
 
 ---
@@ -84,16 +103,19 @@ Even with optimal automatic settings, weak shoulders or partially overlapped ref
 
 ### 1. Tabular Peak Addition and Modification (`Add / Modify table peak` Dialog)
 
-Double-clicking a row in the **Peaks** dock (or choosing **Add Peak...** / **Modify Peak...** from its context menu) opens the **Modify table peak** (or **Add table peak**) dialog.
+Choose **Add Peak** or **Modify measured peak...** from the Peaks dock's context
+menu to open the **Add table peak** or **Modify table peak** dialog. Use this
+dialog for width inference or an explicit area change; double-clicking a table
+cell instead edits just that numeric value.
 
 ![Modify table peak dialog showing Coordinate representation, Position, Intensity, Infer width from neighboring peaks, and FWHM](../images/manual-peak-dialog.png)
 
 | Parameter | Default | Options / Range | Role and Effect |
 | :--- | :--- | :--- | :--- |
 | **Coordinate representation** | `2 theta` | `2 theta`, `d spacing` | Chooses whether you enter the peak position in degrees $2\theta$ (`2 theta`) or in Ångströms (`d spacing`). QualPF automatically converts the complementary coordinate using the active primary wavelength $\lambda_1$. |
-| **Position (°2θ)** / **d-spacing (Å)** | Selected peak coordinate | Valid diffraction domain | Exact peak position. Must lie within the pattern's valid angular domain $(0^\circ, 180^\circ)$ and satisfy $d > \lambda / 2$. |
+| **Position (°2θ)** / **d-spacing (Å)** | Selected peak coordinate | Valid diffraction domain | Requires $0<2\theta<180^\circ$ and $d>\lambda/2$. Typed table positions are not restricted to the measured scan interval; they do not extend the continuous spectrum. Duplicate positions are refused. |
 | **Intensity** | Selected peak height | `>= 0` | Net peak intensity assigned to the reflection. |
-| **Infer width from neighboring peaks** | Unchecked | Checked / Unchecked | When checked, QualPF automatically interpolates the peak's **FWHM** from compatible neighboring experimental reflections; insufficient neighbors cause a reported failure, disabling the manual **FWHM** input box. Uncheck to enter a custom **FWHM (°2θ)**. |
+| **Infer width from neighboring peaks** | Unchecked | Checked / Unchecked | Disables manual FWHM entry. Uses a single/outer neighbor's width or the mean of the neighboring pair around the position. With no neighbors, uses `0.2`°; absence of neighbors alone is not a failure. The edited row is excluded from its own neighbor list. |
 | **FWHM (°2θ)** | Enter or retain a measured width | Finite and positive | Explicit Full Width at Half Maximum in degrees $2\theta$ when **Infer width from neighboring peaks** is unchecked. |
 
 ### 2. Graphical Peak Addition and Deletion on the Central Plot
@@ -101,6 +123,17 @@ Double-clicking a row in the **Peaks** dock (or choosing **Add Peak...** / **Mod
 - **Add Peak on Graph (`Peak Search > Add Peak`)**:
   Activate **Add Peak** from the **Peak Search** menu or toolbar, then left-click on a peak maximum in the central diffraction plot. The measured-peak dialog requires explicit intensity and FWHM. **Add inferred peak** is a separate command; it does not silently replace a failed measured input.
 - **Delete Peak on Graph (`Peak Search > Delete Peak`)**:
-  Activate **Delete Peak** and left-click a peak marker (or drag a selection rectangle around multiple peak markers) on the central plot to remove them immediately.
+  Activate **Delete Peak** and click near a peak to remove the nearest angular
+  position. This mode deletes one peak per click. To remove several, select
+  rows in the **Peaks** dock and use **Delete Peaks**.
 
-When the peak snapshot includes integrated intensities, manual edits also require an explicit integrated intensity. Cancel preserves the prior peak table.
+When the snapshot includes integrated intensities, manual edits also require an
+explicit area. Formal extraction stores a trapezoidal integral of its
+background-subtracted analysis samples; unlike the height, that integral does
+not subtract the extra local straight baseline. Manual areas retain the values
+you enter. Cancel preserves the prior table.
+
+A changed matching input (position, height, width or table membership) clears
+candidate/accepted-phase results, restores original heights of surviving rows
+and recalculates automatic tolerance. Removed rows are not reconstructed. Manual
+changes invalidate the detection pool; an unchanged edit leaves results intact.

@@ -20,11 +20,11 @@ When **Function Type** is switched to **Filter**, the dialog displays the iterat
 
 | Function Type | Mathematical Model | Best Suited For |
 | :--- | :--- | :--- |
-| **Chebyshev** (Default) | Orthogonal Chebyshev polynomial series $\sum_{k=0}^{N-1} c_k T_k(x)$ fitted to background base points | General-purpose laboratory and synchrotron patterns; numerically stable up to high orders (`1`–`36` coefficients) and handles broad low-angle air-scatter roll-offs well. |
+| **Chebyshev** (Default) | $c_0/2+\sum_{k=1}^{N-1}c_kT_k(u)$ fitted to base points, with $u$ scaled to `[-1, 1]` | A series background model with `1`–`36` manually selected coefficients; inspect the fitted curve rather than assuming a high order is appropriate. |
 | **Polynomial** | Standard power polynomial $\sum_{k=0}^{N-1} a_k x^k$ fitted to background base points | Smooth, gently varying backgrounds requiring low-to-moderate polynomial degree (`1`–`12` coefficients). |
 | **Cosine Fourier Series** | Trigonometric cosine series fitted to background base points | Periodic or undulating background baselines (`1`–`12` coefficients). |
-| **Cubic Spline** | Piecewise cubic spline interpolation through background control points | Patterns with localized amorphous humps (e.g., glass capillaries or polymer substrates) where manual control points guide the curve. |
-| **Bezier Spline** | Smooth Bezier curve governed by background control points | Highly smooth, tensioned baseline curves guided by control points without spline overshoot. |
+| **Cubic Spline** | Cubic interpolation through automatically selected background points | An alternative to the fitted series. Current manual point editing is refused for this method. |
+| **Bezier Spline** | Sampled Bezier curve from automatically selected background points | A smooth alternative background construction. Current manual point editing is refused for this method; there is no tension control. |
 | **Filter** (Bruckner) | Iterative moving-average minimum filter operating directly on pattern intensities | Complex, rapidly varying backgrounds or patterns where automatic base-point selection struggles; requires no control points. |
 | **None** | Zero / flat disabled background | Pre-subtracted patterns imported from external software where background removal has already been performed. |
 
@@ -37,8 +37,8 @@ When **Function Type** is switched to **Filter**, the dialog displays the iterat
 | Parameter | Default | Range / Options | Role and Effect |
 | :--- | :--- | :--- | :--- |
 | **Function Type** | `Chebyshev` | `Chebyshev`, `Polynomial`, `Cosine Fourier Series`, `Cubic Spline`, `Bezier Spline`, `Filter`, `None` | Selects the active background estimation algorithm. |
-| **Automatic** | Checked | Checked / Unchecked | When checked, QualPF automatically determines the optimal number of basis coefficients by evaluating fit quality across candidate orders. Uncheck to lock a fixed number of coefficients. |
-| **No. of coefficients** | `6` | `1` – `36` (`Chebyshev`)<br/>`1` – `12` (`Polynomial`, `Cosine Fourier Series`) | Number of basis terms fitted to the background control points when **Automatic** is unchecked. Higher values allow sharper curvature but can cut into broad diffraction peaks if set too high. |
+| **Automatic** | Checked | Checked / Unchecked | Tests coefficient counts from `1` to a limit set by `70%` of the selected point count, rounded to the nearest integer, and capped at `20` for Chebyshev or `8` for Polynomial/Cosine. Selects the smallest residual among those trials; it does not explore the entire manual editor range. |
+| **No. of coefficients** | Saved manual value `6`; resolved count in Auto | `1` – `36` (`Chebyshev`)<br/>`1` – `12` (`Polynomial`, `Cosine Fourier Series`) | Number of basis terms when **Automatic** is off. In Auto the displayed count is the estimator's result. Excessive orders can follow peaks rather than the baseline. |
 
 ### 2. Iterative Filter Model (`Filter`)
 
@@ -46,23 +46,31 @@ When **Function Type** is switched to **Filter**, the dialog displays the iterat
 | :--- | :--- | :--- | :--- |
 | **No. of iterations** | `5` | `1` – `1000` | Number of Bruckner filter passes applied to erode Bragg peaks down to the underlying baseline. Increase if broad peaks remain partially inside the background curve. |
 | **Window size** | `50` | `1` – `1000` (samples) | Half-window width (in pattern data points) of the moving average in each filter iteration. Should be wider than the broadest Bragg reflection you want to preserve. |
-| **Min (°2θ)** / **Max (°2θ)** | Active calculation range | Within pattern bounds | Restricts the Bruckner filter pass to a specific angular sub-interval. |
-| **Apply** | Button | Live preview | Executes the filter with the current parameters and updates the background curve on the central plot immediately. |
-| **Reset** | Button | Restore pre-filter state | Reverts uncommitted filter preview changes inside the dialog. |
+| **Min (°2θ)** / **Max (°2θ)** | Active calculation range | Within pattern bounds | Interval for an additional filter pass on the existing background curve. Fresh background estimation uses the full current pattern. |
+| **Apply** | Button | Live preview | Adds a filter pass to the background preview, retaining the curve outside the selected interval. Repeated applications accumulate. |
+| **Reset** | Button | Fresh full estimate | Recomputes the full background with the current model settings and clears accumulated filter passes. **Cancel** discards the dialog's draft. |
 
 ---
 
 ## Interactive Background Control-Point Editing
 
-For `Chebyshev`, `Polynomial`, `Cosine Fourier Series`, `Cubic Spline`, and `Bezier Spline` models, the background curve is fitted through a set of **background base points** shown as markers along the base of the diffraction pattern. You can refine these points interactively on the central plot:
+For **Chebyshev**, **Polynomial** and **Cosine Fourier Series**, you can edit the
+base points used by the least-squares fit. These are fitting observations, so the
+result is not required to pass exactly through every point. The current Spline,
+Bezier and Filter routes reject manual point edits.
+
+Use the central plot to edit supported points:
 
 1. **Add Background Points (`Preprocessing > Add Background Point`)**:
    Activate this mode and left-click anywhere along the baseline of the diffraction pattern (for example, between overlapping peak clusters or across an amorphous halo) to insert a new anchor point. The background curve updates immediately.
 2. **Delete Background Points (`Preprocessing > Delete Background Point`)**:
-   Activate this mode and left-click an existing background anchor point (or drag a box around multiple anchor points) to remove points that were accidentally placed on a peak tail.
-Manual point edits retain their supported model-specific behavior. Spline, Bezier
-and Bruckner paths reselect their own points; a manually placed point is not
-guaranteed to constrain every model. There is no Clear Background Points menu command.
+   Activate this mode and click near a background point to delete the nearest
+   point by angular coordinate. At least two points must remain. This mode does
+   not delete a rectangle of points. There is no Clear Background Points command.
+
+Changing a supported point refits the background. If experimental peak markers
+are visible, the same operation also requests peak redetection; otherwise
+dependent peak/search results are invalidated. Review the dependency confirmation.
 
 ---
 

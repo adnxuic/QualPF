@@ -22,6 +22,13 @@ increasing sample grid. A second declared wavelength is not mandatory:
 4. Confirm import. Unknown stripping history remains unknown; reimport the
    original measurement rather than inferring its history from appearance.
 
+The single-component admission interval is `1.5405`–`1.54195` Å. For a declared
+doublet, the primary must be `1.5405`–`1.5407` Å, the secondary
+`1.5443`–`1.5445` Å and the secondary/primary ratio within `0.000001` of `0.5`.
+Synchrotron imports are refused by this operation. Samples must remain finite
+and strictly increasing after binary32 conversion and inside the fixed model's
+angular domain; a valid general import can still fail this narrower check.
+
 ![Set Wavelength Radiation dialog configured with Cu-Ka1 primary wavelength, Cu-Ka2 second wavelength, and 0.5 intensity ratio](../images/wavelength-dialog.png)
 
 ---
@@ -32,6 +39,13 @@ Once the radiation and processing history are valid:
 
 1. Select **Preprocessing > K-alpha2 Stripping** from the menu bar. The **Setting > Preprocessing > Kα2** page is informational; stripping is always explicit.
 2. QualPF strips the $K\alpha_2$ contribution across the active calculation range, updates the central diffraction plot, and records a `Kα2` step in the **Workflow — Current Project** dock.
+
+When intensities change, dependent background, width, peak and search results
+are invalidated. The radiation declaration itself is retained. In particular,
+stripping a declared two-component input does not collapse it to one wavelength;
+PFSM refuses a stripped input that still declares two components. For that PFSM
+workflow, retain the original unstripped doublet or undo the stripping operation
+while its checkpoint is available.
 
 ### Relationship to Bragg's Law Split
 

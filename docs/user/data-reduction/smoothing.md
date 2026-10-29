@@ -16,7 +16,7 @@ Select **Preprocessing > Smoothing...** from the menu bar to open the **Smoothin
 | :--- | :--- | :--- | :--- |
 | **Method** | `Savitzky-Golay` | `Savitzky-Golay`, `Adjacent-Averaging` | Selects the digital filter algorithm applied to the working pattern intensities. |
 | **Points of Window** | `4` | `2` – `50` (`Savitzky-Golay`)<br/>`1` – `50` (`Adjacent-Averaging`) | Half-window in sample points; a value $m$ uses $2m+1$ samples. Larger window widths remove more noise but increase the risk of broadening narrow reflections or clipping peak maxima. |
-| **Polynomial Order** | `5` | `1` – `10` | Enabled only when **Method** is `Savitzky-Golay`. Specifies the degree of the local least-squares polynomial fitted within each moving window. The effective degree is capped at twice the half-window. Higher polynomial orders (`3`–`4`) preserve peak heights and widths much better than `Adjacent-Averaging`. |
+| **Polynomial Order** | `5` | `1` – `10` | Savitzky-Golay only. Must be at most twice the half-window; an incompatible degree is rejected, not automatically capped. The pattern must contain at least a full window of samples. |
 
 ---
 
@@ -25,7 +25,17 @@ Select **Preprocessing > Smoothing...** from the menu bar to open the **Smoothin
 1. **Savitzky-Golay (Recommended)**:
    Fits a local polynomial of degree $k$ (**Polynomial Order**) across $2m+1$ points, where $m$ is **Points of Window** by linear least squares. Unlike a simple moving average, a local polynomial can retain shape better than averaging, but smoothing can still alter peak heights, areas and widths. Inspect the preview before committing.
 2. **Adjacent-Averaging**:
-   Replaces each intensity value with the unweighted arithmetic mean of its neighboring samples inside **Points of Window**. While effective at suppressing extreme noise spikes, it attenuates sharp Bragg peak maxima and broadens reflection tails if the window exceeds a few samples.
+   Uses the arithmetic mean over the full window in the interior and shorter
+   symmetric windows near the ends, retaining the endpoint values. A pattern
+   shorter than the full window is unchanged by averaging. Large windows can
+   attenuate narrow maxima and change reflection widths.
+
+Savitzky-Golay also preserves endpoints and uses reduced fitting neighborhoods
+near boundaries; where there are too few points for the requested degree, it
+retains that sample. Preview failures and Cancel leave the committed pattern
+unchanged. Successful intensity changes invalidate peak/FWHM/search results
+after the applicable dependency confirmation; they do not overwrite stored
+original observations.
 
 ---
 
