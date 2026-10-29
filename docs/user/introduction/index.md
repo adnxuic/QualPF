@@ -30,7 +30,7 @@ In QualPF, data reduction transforms raw experimental data into a clean **workin
 During search-match, QualPF queries the single selected reference database (filtered by any active **Restraints**) and ranks candidate phases by a **Figure of Merit (FOM)**. You then review the top candidates using synchronized views:
 1. **Results List** dock — sortable candidate table showing FOM, scale factor, peak-position score, intensity score, chemical formula, and quality mark.
 2. **Central Diffraction Plot** — overlays candidate stick reflections ($d$/$2\theta$ bars) and, in PFSM mode, the live **Joint Trial** profile and difference curve.
-3. **Compare** dock — line-by-line tabular alignment of experimental peaks against candidate and accepted phase reflections.
+3. **Compare** dock (CSM) — angle/intensity pairs for experimental peaks, associated reference reflections and unmatched reflections of the selected card. PFSM uses its joint-profile diagnostics.
 4. **Quantification** panel — tracks accepted phases, calculates **Reference Intensity Ratio (RIR)** weight percentages, and displays a live composition pie chart.
 
 ---
@@ -41,12 +41,12 @@ QualPF offers two distinct search-match engines. Understanding how they consume 
 
 | Characteristic | CSM (`S&M > CSM (Classical SM)`) | PFSM (`S&M > PFSM`) |
 | :--- | :--- | :--- |
-| **Primary Experimental Input** | Discrete **Experimental Peak List** ($2\theta$, $d$, $I$, FWHM) extracted via **Peak Search > Peak Search**. | Continuous **working diffraction profile** plus estimated **background** and representative **FWHM**. |
-| **Prerequisite Steps** | Requires a non-empty peak table in the **Peaks** dock. Background estimation and $K\alpha_2$ stripping are recommended prior to peak search. | Requires a valid pattern, background curve, and representative FWHM. Automatically executes missing prerequisite steps (`Background` and geometric `FWHM` with internal candidates; fixed width skips estimation) according to the active PFSM workflow profile. |
+| **Primary Experimental Input** | A real continuous spectrum with a calculation range, plus a compatible experimental peak table extracted, imported or manually edited for that pattern. | Continuous **working diffraction profile** plus estimated **background** and one common representative **FWHM**. |
+| **Prerequisite Steps** | Requires a non-empty reusable peak table; missing preparation is run automatically. A peak table alone cannot replace the continuous spectrum used by the score. | Requires a valid pattern with retained original-signal provenance, a background curve and representative FWHM. Automatically executes missing Background and geometric FWHM preparation; a compatible manual or fixed width can be supplied. |
 | **Handling of Peak Overlap** | Relies on accurate peak picking; severe peak overlap in low-symmetry or multi-phase mixtures can hide weak shoulders or shift centroids. | Fits complete multi-reflection phase templates directly against the profile, providing joint trial profiles for assessing overlapping peaks; this does not guarantee correct identification or uniquely determined phase amounts. |
-| **Specimen Displacement / Zero Shift** | Controlled via angular match tolerance **$\Delta 2\theta$** (manual or automatic). | Explicitly optimizes phase angular shift within configurable **Shift bounds** (default `-0.500` to `+0.500` °$2\theta$). |
+| **Specimen Displacement / Zero Shift** | Controlled via angular match tolerance **$\Delta 2\theta$** (manual or automatic). | Fits a constant additive angular shift for each phase within **Shift bounds** (default `-0.500` to `+0.500` °$2\theta$); it does not fit an angle-dependent displacement law. |
 | **Multi-Phase Identification** | Uses **Residual Searching** to attenuate matched experimental peaks as phases are accepted or iterated. | Uses **Joint Multiphase Profile Fitting**: selecting a candidate previews a joint fit of all accepted phases plus the trial candidate, and accepting a phase updates the joint profile and residual curve. |
-| **Best Suited For** | Clean patterns with well-resolved peaks; imported peak-only datasets; rapid classical Hanawalt/Frevel-style screening. | Complex multi-phase mixtures, patterns with severe peak overlap, broad or weak reflections, and quantitative profile-guided phase verification. |
+| **Best Suited For** | Continuous patterns with well-resolved, curated peaks and classical stored-line screening. | Complex multi-phase mixtures, patterns with severe peak overlap, broad or weak reflections, and quantitative profile-guided phase verification. |
 
 ---
 

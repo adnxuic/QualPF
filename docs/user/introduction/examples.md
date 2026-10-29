@@ -70,7 +70,7 @@ Suppose you are analyzing a ceramic mixture known from EDS analysis to contain *
 ### Step 2: Verify Reflections in the `Compare` Dock and Accept Phases
 
 1. Highlight each top candidate (`Silicon` and `Corundum`) in the **Results List** dock.
-2. Switch to the **Compare** dock (**Window > Compare**) to verify that every experimental reflection is accounted for within a small angular offset $\Delta 2\theta$.
+2. In **PFSM**, inspect the joint calculated profile, difference curve and fit metrics. In **CSM**, use **Window > Compare** to compare experimental and reference angle/intensity pairs, including unmatched reference rows. This table does not show d-spacing or $\Delta 2\theta$ columns and does not certify that all reflections are explained.
 3. Accept both phases into the **Quantification** panel.
 
 ![Compare dock verifying reflection positions and intensities across candidate and accepted phases](../images/compare-dock.png)
@@ -79,7 +79,7 @@ Suppose you are analyzing a ceramic mixture known from EDS analysis to contain *
 
 1. In this example use **PFSM** if RIR overrides are required. Inspect the **Quantification** panel (**Window > Quantitative analysis**) on the right side of the workspace. QualPF automatically computes normalized weight percentages (`Wt.%`) and displays the composition pie chart using the database Reference Intensity Ratios ($\text{RIR}$).
 2. If you have an internally calibrated RIR value for one of the phases (or if a user CIF card lacks a database RIR), select that row in the **Quantification** table and click **Edit RIR...**.
-3. Enter the calibrated **RIR value** and an explanatory **RIR source** note, then click **OK**. The `Wt.%` column, pie chart, and **Report** dock update immediately.
+3. Enter a finite positive **Effective RIR** and a required **Source / calibration** note, then click **OK**. The quantification and Report update; percentages and the pie chart are available only when every accepted phase and the joint fit satisfy the [quantification requirements](../search-match/search-match.md#how-reference-intensity-ratio-rir-quantification-works).
 4. Switch to the **Report** dock (**Window > Report**) and select **File > Print...** (`Ctrl+P`), choose **Report**, then select a PDF printer/output, or click **Export CSV** in the **Quantification** panel.
 
 ![Quantification panel displaying accepted phases, Wt.% breakdown, and pie chart](../images/quantification-panel.png)

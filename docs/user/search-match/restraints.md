@@ -8,12 +8,16 @@ In phase identification of minerals, ceramics, alloys, and synthetic materials, 
 
 Open **S&M > Restraints...** to access the five-tab **Restraints** window:
 1. **Composition** — Periodic Table elemental logic and chemical species count bounds.
-2. **Subfiles** — Database subfile category filters (Inorganic, Mineral, Metal & Alloy, Ceramic, etc.).
+2. **Subfiles** — Database subfile category filters (Inorganic, Mineral, Alloy, Ceramic, etc.).
 3. **Properties** — Chemical/mineral name substring, color, and crystal density filters.
 4. **Entries** — Direct lookup by space-separated database card IDs.
 5. **Symmetry** — Crystal system, space-group symbol, and unit-cell parameter ($a, b, c, \alpha, \beta, \gamma$) restraints.
 
-> **Note:** > All five restraint tabs combine with **logical AND**: if you configure a chemical restraint on the **Composition** tab and check `Inorganic` on the **Subfiles** tab, a database entry must satisfy **both** conditions to pass screening.
+> **Note:** Restraint categories intersect: a composition restriction and
+> `Inorganic` must both be satisfied. Within Symmetry, however, selected
+> **space groups and crystal systems combine with OR**; adding a crystal system
+> can broaden a space-group selection. Populated unit-cell bounds still
+> intersect that union.
 
 ---
 
@@ -29,14 +33,14 @@ You can specify elemental restraints either by clicking element buttons on the i
 
 | Control / Parameter | Default | Options / Range | Role and Effect |
 | :--- | :--- | :--- | :--- |
-| **Formula / Restraint Expression Bar** | Empty | Boolean element expression | Displays the active elemental filter expression (for example, `Si AND O OR (Al)`). Can be edited via Periodic Table clicks or cleared with **Cancel**. |
+| **Formula / Restraint Expression Bar** | Empty | Boolean element expression | Displays the active elemental expression. Edit it directly or build it with Periodic Table selections and the operator buttons. **Clear** resets the composition controls. |
 | **And** (Must Be Present) | Mode button | Element group | Requires all selected elements in the group to be present in the candidate phase's chemical formula. |
 | **Or** (Possible) | Mode button | Element group | Allows any of the selected elements in the group to be present. |
 | **Not** (Excluded) | Mode button | Element group | Excludes any database phase containing one or more of the selected elements. |
 | **Exact elements** | Mode button | Element set | Restricts results to phases composed **exclusively** of the exact set of selected elements (no additional elements permitted). |
 | **Contains any** | Mode button | Element set | Allows any nonempty subset of the selected elements and excludes elements outside that set. In contrast, the **Or** mode can also admit unselected elements. |
-| **Wildcard Category Buttons** | Unselected | Group toggles | Quickly selects or excludes entire chemical families on the Periodic Table (such as Alkali Metals, Alkaline Earths, Transition Metals, Lanthanides, Actinides, Halogens, or Noble Gases). |
-| **Cancel** (Formula bar button) | Button | Action | Clears only the current composition formula expression on the **Composition** tab. |
+| **Period / Group / Series Buttons** | Unselected | Selection toggles | `P1`–`P7`, groups `1`–`18`, `La *` and `Ac **` select or deselect the corresponding elements. The active composition operator determines their filtering meaning. |
+| **Clear** (Composition button) | Button | Action | Clears element selections and the expression, returns to `And`, and resets both species bounds to `any`. Other tabs are unchanged. |
 | **SM (`CSM` / `PFSM`)** | `CSM` (or active workflow) | `CSM`, `PFSM` | Selects which search-match engine will be launched if you click **Search with Restraints** at the bottom of the dialog. This selection stays synchronized across all five tabs. |
 | **Minimum number of species** | `any` (`0`) | `0` (`any`) – `99` | Minimum number of distinct chemical elements (species) that a candidate phase must contain. For example, setting `Min = 2` and `Max = 2` restricts results to binary compounds. |
 | **Maximum number of species** | `any` (`0`) | `0` (`any`) – `99` | Maximum number of distinct chemical elements that a candidate phase may contain (`0` means `any`, i.e., no upper bound). |
@@ -53,8 +57,8 @@ Switch to the **Subfiles** tab to filter candidate cards by their curated databa
 
 | Group | Available Checkboxes | Role and Effect |
 | :--- | :--- | :--- |
-| **Main Subfiles** | `Inorganic`, `Organic`, `Metal & Alloy` | Filters phases by primary material domain. Multiple checked subfiles combine by intersection: a card must belong to **all** selected subfiles. |
-| **Additional Subfiles** | `Mineral`, `NBS`, `Forensic`, `Corrosion`, `Common Phases`, `Educational`, `High Pressure`, `Superconductor`, `Zeolite`, `Ceramic`, `Cement`, `Explosive`, `Pharmaceutical`, `Polymer`, `Detergent`, `Pigment & Dye`, `calculated from ICSD` | Filters phases by specialized application or provenance subfile categories indexed in ICDD PDF-2 or COD/User databases. |
+| **Main Subfiles** | `Inorganic`, `Organic`, `Mineral` | Multiple checked subfiles intersect: a card must belong to **all** selected subfiles. |
+| **Additional Subfiles** | `Alloy`, `Battery material`, `Cement`, `Ceramic`, `Corrosion`, `Coordination Polymer`, `Detected`, `Educational`, `Experimental`, `Forensic`, `Ionic Conductor`, `NBS`, `Pharmaceutical`, `Pigment`, `Polymer`, `Superconductor`, `Zeolite` | Uses the selected database's recorded subfile codes. These checkboxes also intersect; a checkbox does not establish that the active database contains that category. |
 
 ---
 
@@ -69,11 +73,11 @@ Switch to the **Properties** tab to filter phases by name, physical color, or cr
 | Parameter / Control | Default | Format / Range | Role and Effect |
 | :--- | :--- | :--- | :--- |
 | **Chemical name** | Empty | Space-separated words (e.g., `silicon oxide`) | Requires every word to match within the chemical name, or every word within the mineral name, using SQLite LIKE. |
-| **Color** | Empty | Semicolon-separated color tokens (e.g., `gray ; colorless`) | Filters cards by recorded mineral/compound color description. |
+| **Color** | Empty | Semicolon-separated color tokens (e.g., `gray ; colorless`) | Matches any selected recorded color with SQLite LIKE. Tokens have no implicit surrounding wildcard; `%` and `_` retain their LIKE meanings. |
 | **Available colors...** | Button | Interactive picker dialog | Opens a list of standardized color descriptors present in the database; selected colors are inserted into the **Color** field separated by `;`. |
 | **Density — Calculated** | Empty | Positive number ($\text{g/cm}^3$) | Target X-ray/crystallographic calculated density $D_x$. Matches cards within $[\text{Calculated} - \text{Tolerance}, \text{Calculated} + \text{Tolerance}]$. |
 | **Density — Measured** | Empty | Positive number ($\text{g/cm}^3$) | Target experimentally measured density $D_m$. Matches cards within $[\text{Measured} - \text{Tolerance}, \text{Measured} + \text{Tolerance}]$. |
-| **Density — Tolerance** | `0.1` | Positive number ($\text{g/cm}^3$) | Half-width $\pm \Delta D$ of the allowed density interval around **Calculated** and/or **Measured** density. |
+| **Density — Tolerance** | `0.1` | Nonnegative number ($\text{g/cm}^3$) | Half-width $\pm \Delta D$; zero requests an exact value. Invalid or negative text uses `0.1`. Calculated and measured bounds, when both active, intersect. |
 
 ---
 
@@ -101,13 +105,17 @@ Switch to the **Symmetry** tab to constrain candidates by crystallographic symme
 
 | Group | Parameter / Control | Default | Range / Options | Role and Effect |
 | :--- | :--- | :--- | :--- | :--- |
-| **Crystal system** | `Cubic`, `Hexagonal/Trigonal`, `Tetragonal`, `Orthorhombic`, `Monoclinic`, `Triclinic`, `Unknown` | All unchecked (no filter) | Checkboxes | Retains cards belonging to any of the checked crystal systems. Checking `Hexagonal/Trigonal` matches both hexagonal and trigonal/rhombohedral entries. |
-| **Space group(s)** | **Space group text box** | Empty | Semicolon-separated Hermann-Mauguin symbols (e.g., `F d -3 m ; R -3 c`) | Filters candidates by space-group symbol. |
+| **Crystal system** | `Cubic`, `Hexagonal/trigonal`, `Tetragonal`, `Orthorhombic`, `Monoclinic`, `Triclinic`, `Rhombohedral` | All unchecked (no filter) | Checkboxes | Selected systems form a union. `Hexagonal/trigonal` selects hexagonal and trigonal entries with hexagonal axes; the separate `Rhombohedral` checkbox selects trigonal entries with rhombohedral axes. There is no `Unknown` checkbox. |
+| **Space group(s)** | **Space group text box** | Empty | Semicolon-separated Hermann-Mauguin symbols (e.g., `F d -3 m ; R -3 c`) | Matches stored trimmed symbols exactly. Multiple symbols and any checked crystal systems form one union. |
 | **Space group(s)** | **Symbol List...** | Button | Interactive picker dialog | Opens a searchable list of standard crystallographic space-group symbols and inserts chosen symbols into the text box separated by `;`. |
-| **Unit Cell Parameters** | **a (Å)**, **b (Å)**, **c (Å)** | Empty | `0.0` – `100.0` Å | Target unit-cell edge lengths. Any populated edge length restricts candidates to $[L - \Delta L, L + \Delta L]$ using **Length tolerance**. Leave blank to ignore that axis. |
-| **Unit Cell Parameters** | **Alpha (°)**, **Beta (°)**, **Gamma (°)** | Empty | `0.0` – `180.0`° | Target unit-cell interaxial angles ($\alpha, \beta, \gamma$). Any populated angle restricts candidates to $[\theta - \Delta\theta, \theta + \Delta\theta]$ using **Angle tolerance**. |
-| **Unit Cell Parameters** | **Length tolerance (Å)** | `1.5` | `0.0` – `100.0` Å | Allowed $\pm$ tolerance in Ångströms for populated unit-cell lengths $a$, $b$, and $c$. |
-| **Unit Cell Parameters** | **Angle tolerance (°)** | `2.0` | `0.0` – `180.0`° | Allowed $\pm$ tolerance in degrees for populated unit-cell angles $\alpha$, $\beta$, and $\gamma$. |
+| **Unit Cell Parameters** | **a (Å)**, **b (Å)**, **c (Å)** | Empty | Positive numeric text | Restricts each active length to $[L-\Delta L,L+\Delta L]$. The text fields do not impose a `100` Å upper limit. Blank, nonnumeric and nonpositive values are ignored. |
+| **Unit Cell Parameters** | **Alpha (°)**, **Beta (°)**, **Gamma (°)** | Empty | Positive numeric text | Restricts each active angle to $[\theta-\Delta\theta,\theta+\Delta\theta]$. These text fields do not enforce a `180`° limit. Blank, nonnumeric and nonpositive values are ignored. |
+| **Unit Cell Parameters** | **Length tolerance (Å)** | `1.5` | Nonnegative spinbox value | Allowed $\pm$ tolerance for active lengths; zero requests an exact value. |
+| **Unit Cell Parameters** | **Angle tolerance (°)** | `2.0` | Nonnegative spinbox value | Allowed $\pm$ tolerance for active angles; zero requests an exact value. |
+
+Use physically meaningful numeric values. The current query builder omits a
+density or unit-cell interval if either endpoint is at most `-1`; an excessively
+large tolerance can therefore leave that restriction unapplied.
 
 ---
 
@@ -117,8 +125,14 @@ The bottom toolbar of the **Restraints** dialog provides five workflow actions:
 
 | Button | When Enabled | Role and Behavior |
 | :--- | :--- | :--- |
-| **Load Cards** | When at least one restraint is active | Queries the selected database using the current restraints **without running CSM or PFSM scoring** and replaces the **Results List** dock with all matching reference cards. Ideal for browsing reference patterns or manually accepting a known phase. |
-| **Load and Merge Cards** | When at least one restraint is active and the **Results List** already contains cards | Queries the selected database using the current restraints and **appends/merges** matching cards into the existing list under the current operation's provenance rules. Browsed cards do not acquire fitted scores or PFSM evidence. |
-| **Search with Restraints** | When an experimental pattern (and peak list for CSM) is ready and restraints are configured | Closes the dialog and immediately executes **Run CSM** or **Run PFSM** (according to the **SM: CSM / PFSM** toggle on the **Composition** tab) with the configured restraints applied. |
+| **Load Cards** | Classical mode, idle | Requires an active restraint to perform a query. With experimental peaks present, computes classical FOM using the continuous spectrum and keeps every defined score, including zero, without the normal minimum-FOM/result cap. With no peaks, loads unscored cards. Replaces the Results List. |
+| **Load and Merge Cards** | Classical mode, idle, with existing result cards | Uses the same scored/unscored browse rules and appends IDs not already present. Existing IDs retain their current card. An active restraint is required; this route is disabled in PFSM. |
+| **Search with Restraints** | At least three continuous-spectrum samples, no active edit/task, and an active restraint | Starts the selected CSM or PFSM engine with these restraints. Missing prerequisites, including CSM peaks, are prepared automatically. The dialog can remain open while its controls are disabled during the task. |
 | **Cancel All Restraints** | Always | Clears every field and checkbox across all five tabs (`Composition`, `Subfiles`, `Properties`, `Entries`, and `Symmetry`). Use this dialog action; there is no separate S&M menu command with this label. |
 | **Close** | Always | Closes the **Restraints** dialog while keeping the configured restraints active in the session for subsequent **Run CSM** or **Run PFSM** commands. |
+
+Unscored reference cards can be inspected but cannot be accepted as phases.
+Import a compatible continuous pattern and run a scored search before accepting
+them. Neither browse action applies `Check strongest peaks`; active restraints
+and deleted-card checks still apply. In PFSM, use **Search with Restraints** to
+start a new candidate universe, confirming the end of an existing analysis.
